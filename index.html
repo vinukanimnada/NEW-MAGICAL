@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sinhala Cartoons</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="logo">SINHALA <span>CARTOONS</span></div>
+    <div class="header-right">
+      <i class="fa fa-search" id="searchBtn"></i>
+      <i class="fa fa-bars" id="menuBtn"></i>
+    </div>
+  </header>
+
+  <!-- Search Bar -->
+  <div class="search-box" id="searchBox">
+    <input type="text" placeholder="Search cartoons or movies...">
+    <i class="fa fa-times" id="closeSearch"></i>
+  </div>
+
+  <!-- Sidebar Menu -->
+  <div class="sidebar" id="sidebar">
+    <ul>
+      <li class="active">Home</li>
+      <li>Cartoon Movies</li>
+      <li>Cartoon Series</li>
+      <li>About Us</li>
+      <li>Contact Us</li>
+    </ul>
+  </div>
+  <div class="overlay" id="overlay"></div>
+
+  <!-- Hero Slider -->
+  <section class="hero">
+    <div class="hero-slide active" style="background-image: url('https://image.tmdb.org/t/p/original/3V4kLkYBkPnZOK3ghHR6g3kMYjR.jpg');">
+      <div class="hero-content">
+        <h1>Rango 2011<br>Sinhala Dubbed | සිංහල හඬකැවු</h1>
+        <span class="imdb">IMDb: 6.9</span> <span class="year">2011</span>
+        <p>Cartoon Movies</p>
+        <p class="desc">තමන් වීරයෙකු යැයි සිතාගෙන සිටින, එහෙත් සාමාන්‍ය විදුරු කටුවක ජීවත් වු 'රන්ගෝ' නම් කටුස්සාගේ ජීවිත...</p>
+        <button class="watch-btn"><i class="fa fa-play"></i> WATCH NOW</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Daily Trending -->
+  <section class="trending">
+    <div class="section-head">
+      <h2><span class="red-line"></span> Daily Trending</h2>
+      <button class="view-all">VIEW ALL</button>
+    </div>
+    
+    <div class="movie-grid">
+      <div class="movie-card">
+        <span class="badge hd">HD</span>
+        <span class="rating"><i class="fa fa-star"></i> 6.3</span>
+        <img src="https://image.tmdb.org/t/p/w500/yCcRWNdg6OgIEXKwMjlGXpR6Qdp.jpg" alt="Diary of A Wimpy Kid">
+        <div class="card-info">
+          <h3>Diary of A Wimpy Kid</h3>
+          <p>Cartoon Movies</p>
+        </div>
+      </div>
+
+      <div class="movie-card">
+        <span class="badge webdl">WEB-DL</span>
+        <span class="rating"><i class="fa fa-star"></i> 7.9</span>
+        <img src="https://image.tmdb.org/t/p/w500/2jwnSw2b85Tjmh6e90g4p9sb6k5.jpg" alt="Ne Zha">
+        <div class="card-info">
+          <h3>Ne Zha 2019 Sinhala I</h3>
+          <p>Cartoon Movies</p>
+        </div>
+      </div>
+
+      <div class="movie-card">
+        <span class="badge fhd">FHD</span>
+        <span class="rating"><i class="fa fa-star"></i> 7.8</span>
+        <img src="https://image.tmdb.org/t/p/w500/lPsDqLTtpXgFjXbFpUHyeS6lsxs.jpg" alt="Raya">
+        <div class="card-info">
+          <h3>Raya and the Last Dragon</h3>
+          <p>Cartoon Movies</p>
+        </div>
+      </div>
+
+      <div class="movie-card">
+        <span class="badge webdl">WEB-DL</span>
+        <span class="rating"><i class="fa fa-star"></i> 6.4</span>
+        <img src="https://image.tmdb.org/t/p/w500/6ra0Erl5NSf5Eo6hQq9EY2AbxUL.jpg" alt="Baby's Day Out">
+        <div class="card-info">
+          <h3>Baby's Day Out</h3>
+          <p>Cartoon Movies</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script src="script.js"></script>
+</body>
+</html>
