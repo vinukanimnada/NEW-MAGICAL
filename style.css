@@ -101,20 +101,16 @@ header{
   right: 0;
 }
 
-/* මේකට යටින් අලුත් code එක අදින්න */
-.sidebar-header{
-  display: flex;
-  justify-content: flex-end;
-  padding: 5px 15px 10px 20px;  /* උඩ padding අඩු කරා 15px > 5px */
-  border-bottom: 1px solid #222;
-}
-
 .close-btn{
+  position: fixed;
+  top: 15px;      /* header එකේ උස අනුව adjust කරපන් */
+  right: 20px;    /* ☰ button එක තිබ්බ තැනම */
   font-size: 32px;
   color: #fff;
   cursor: pointer;
+  z-index: 1001;  /* sidebar එකට වඩා උඩින් */
+  display: none;  /* මුලින් hide */
   line-height: 1;
-  margin-top: -5px;
   transition: 0.2s;
 }
 
