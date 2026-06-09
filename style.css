@@ -24,8 +24,8 @@ header{
 
 .logo{
   font-size: 22px;
-  font-weight: bold;
-  color: #fff;
+  font-weight: 700;
+  white-space: nowrap; /* මේක අලුත් - line break වෙන්නේ නෑ */
 }
 
 .logo span{
