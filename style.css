@@ -24,8 +24,9 @@ header{
 
 .logo{
   font-size: 22px;
-  font-weight: bold;
+  font-weight: 700;
   color: #fff;
+  letter-spacing: 1px;
 }
 
 .logo span{
