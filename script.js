@@ -35,3 +35,7 @@ closeSearch.onclick = () => {
 }
 
 console.log("Sinhala Cartoons loaded ✅");
+
+// Close sidebar button
+const closeSidebar = document.getElementById('closeSidebar');
+closeSidebar.onclick = closeMenu;
