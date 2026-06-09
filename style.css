@@ -394,3 +394,19 @@ header{
   color: #aaa;
 }
 
+.hero-banner::before{
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(0,0,0,0) 0%,        /* මැද 100% clear */
+    rgba(0,0,0,0) 40%,       /* 40% වෙනකන් clear */
+    rgba(0,0,0,0.4) 70%,     /* 70% ඉඳන් dark වෙන්න පටන් ගන්නවා */
+    rgba(0,0,0,0.85) 100%    /* හතර කෙළවර full dark */
+  );
+  z-index: 1;
+}
