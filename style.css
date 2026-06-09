@@ -85,6 +85,42 @@ header{
   right: 0;
 }
 
+.sidebar{
+  position: fixed;
+  top: 0;
+  right: -250px;
+  width: 250px;
+  height: 100%;
+  background: #111;
+  transition: 0.3s;
+  z-index: 1000;
+  padding-top: 70px;
+}
+
+.sidebar.active{
+  right: 0;
+}
+
+/* මේකට යටින් අලුත් code එක අදින්න */
+.sidebar-header{
+  display: flex;
+  justify-content: flex-end;
+  padding: 15px 20px;
+  border-bottom: 1px solid #222;
+}
+
+.close-btn{
+  font-size: 32px;
+  color: #fff;
+  cursor: pointer;
+  line-height: 1;
+  transition: 0.2s;
+}
+
+.close-btn:hover{
+  color: #e50914;
+}
+
 .sidebar ul{
   list-style: none;
 }
