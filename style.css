@@ -435,3 +435,23 @@ section p{
   z-index: 2 !important;
   pointer-events: none !important;
 }
+
+/* Movie card title - ලොකු කරන්න */
+.movie-card .movie-title,
+.movie-card h3,
+.card-title {
+  font-size: 1.1rem !important;
+  font-weight: 600 !important;
+  line-height: 1.3 !important;
+  margin-bottom: 4px !important;
+}
+
+/* Category text - පොඩි කරන්න */
+.movie-card .movie-category,
+.movie-card .category,
+.card-category {
+  font-size: 0.75rem !important;
+  font-weight: 400 !important;
+  opacity: 0.8 !important;
+  color: #ccc !important;
+}
