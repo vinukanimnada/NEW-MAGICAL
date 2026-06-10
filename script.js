@@ -32,3 +32,11 @@ function closeMenu(){
 // const searchBtn = document.getElementById('searchBtn');
 // const searchBox = document.getElementById('searchBox');
 // const closeSearch = document.getElementById('closeSearch');
+
+<div class="menu-item" onclick="goToSeries()">Series</div>
+
+<script>
+function goToSeries() {
+  window.location.href = 'series.html';
+}
+</script>
