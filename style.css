@@ -314,12 +314,14 @@ header{
 }
 
 .card-info h3{
-  font-size: 14px;
+  font-size: 12px;
   margin-bottom: 3px;
+  font-weight: 700;
+  line-height: 1.3;
 }
 
 .card-info p{
-  font-size: 12px;
+  font-size: 10px;
   color: #aaa;
 }
 
@@ -333,4 +335,12 @@ header{
   .hero{
     height: 80vh;
   }
+}
+
+.card-info h3{
+  font-size: 12px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* උපරිම lines 2 */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
