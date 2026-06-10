@@ -416,3 +416,22 @@ section p{
     width: 200px !important;
   }
 }
+
+/* දෙපැත්ත අඳුරු කරන්න - Force Override */
+.hero-slide::before{
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  background: linear-gradient(
+    to right,
+    rgba(0,0,0,0.8) 0%,
+    rgba(0,0,0,0) 10%,
+    rgba(0,0,0,0) 90%,
+    rgba(0,0,0,0.8) 100%
+  ) !important;
+  z-index: 2 !important;
+  pointer-events: none !important;
+}
