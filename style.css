@@ -375,3 +375,26 @@ header{
   height: 45px;
   object-fit: contain;
 }
+
+/* Page content text ලොකු කරන්න */
+section h1{
+  font-size: 32px !important;
+  font-weight: 700;
+  margin-bottom: 15px !important;
+}
+
+section p{
+  font-size: 16px !important;
+  color: #ccc !important;
+  line-height: 1.6;
+}
+
+/* Mobile එකේත් ලොකු වෙන්න */
+@media (max-width: 768px){
+  section h1{
+    font-size: 28px !important;
+  }
+  section p{
+    font-size: 15px !important;
+  }
+}
