@@ -363,3 +363,21 @@ header{
   overflow: hidden !important;
   text-overflow: ellipsis !important;
 }
+
+/* Movie Card Title */
+.movie-card h3, 
+.movie-card .movie-title {
+  font-size: 16px; /* ලොකු කරන්න - 14px → 16px → 18px */
+  font-weight: 700; /* Bold */
+  color: #fff;
+  margin: 5px 0;
+}
+
+/* Movie Card Category - "Cartoon Movies" */
+.movie-card .category, 
+.movie-card p {
+  font-size: 13px; /* පොඩ්ඩක් ලොකු කරන්න */
+  font-weight: 600; /* Semi bold */
+  color: #aaa; /* ලා අළු පාට */
+  margin: 0;
+}
