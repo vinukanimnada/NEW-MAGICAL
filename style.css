@@ -398,3 +398,21 @@ section p{
     font-size: 15px !important;
   }
 }
+
+/* Sidebar පළල අඩු කරන්න */
+.sidebar {
+  width: 220px !important;
+  max-width: 75vw !important;
+}
+
+.sidebar ul li a {
+  padding: 12px 20px !important;
+  font-size: 15px !important;
+}
+
+/* Mobile එකේ තව පොඩ්ඩක් */
+@media (max-width: 480px){
+  .sidebar {
+    width: 200px !important;
+  }
+}
