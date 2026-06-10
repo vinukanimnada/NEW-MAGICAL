@@ -381,3 +381,16 @@ header{
   color: #aaa; /* ලා අළු පාට */
   margin: 0;
 }
+
+.site-header {
+  display: flex;
+  align-items: center;
+  gap: 12px; /* logo එකයි text එකයි අතර space */
+  padding: 15px 20px;
+}
+
+.site-logo {
+  width: 45px;  /* Logo size එක */
+  height: 45px;
+  object-fit: contain;
+}
