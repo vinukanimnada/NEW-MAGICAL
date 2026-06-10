@@ -28,8 +28,15 @@ function closeMenu(){
   closeSidebar.style.display = 'none'; // × button එක හංගනවා
 }
 
+// Link click කරාම menu close වෙන code එක - IMPORTANT!
+document.querySelectorAll('.sidebar ul li a').forEach(link => {
+  link.addEventListener('click', () => {
+    // Menu එක close කරනවා විතරයි. preventDefault නෑ.
+    closeMenu();
+  });
+});
+
 // Search Toggle - උඹේ පැරණි code එක තියෙනවා නම් ඒකත් එහෙම්ම තියපන්
 // const searchBtn = document.getElementById('searchBtn');
 // const searchBox = document.getElementById('searchBox');
 // const closeSearch = document.getElementById('closeSearch');
-
