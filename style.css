@@ -375,3 +375,31 @@ header{
   height: 45px;
   object-fit: contain;
 }
+
+/* ===== Sidebar Menu Fix - අන්තිමට add කරපන් ===== */
+
+/* Sidebar Menu Text - ලොකු කරන්න */
+.sidebar ul li a{
+  font-size: 16px !important;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+/* Sidebar Width - mobile එකේ හරියට පේන්න */
+.sidebar{
+  width: 280px !important;
+  right: -280px !important;
+}
+
+.sidebar.active{
+  right: 0 !important;
+}
+
+/* Menu items අතර space */
+.sidebar li{
+  padding: 0;
+}
+
+.sidebar li a{
+  padding: 18px 25px !important;
+}
