@@ -117,7 +117,7 @@ header{
 }
 
 .sidebar li.active a{
-  background: #e50914;
+  background: #ff00ff;
   color: #fff;
 }
 
@@ -224,7 +224,7 @@ header{
 }
 
 .watch-btn{
-  background: #e50914;
+  background: #ff69b4;
   border: none;
   padding: 12px 25px;
   color: #fff;
