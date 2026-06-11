@@ -449,7 +449,7 @@ section p{
 /* Category text - පොඩි කරන්න */
 .movie-card .movie-category,
 .movie-card .category,
-.card-category {
+.card-category  {
   font-size: 0.60rem !important;
   font-weight: 350 !important;
   opacity: 0.8 !important;
