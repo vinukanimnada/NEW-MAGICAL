@@ -440,7 +440,7 @@ section p{
 .movie-card .movie-title,
 .movie-card h3,
 .card-title {
-  font-size: 0.85rem !important;
+  font-size: 0.87rem !important;
   font-weight: 600 !important;
   line-height: 1.3 !important;
   margin-bottom: 4px !important;
@@ -450,7 +450,7 @@ section p{
 .movie-card .movie-category,
 .movie-card .category,
 .card-category {
-  font-size: 0.68rem !important;
+  font-size: 0.60rem !important;
   font-weight: 400 !important;
   opacity: 0.8 !important;
   color: #ccc !important;
