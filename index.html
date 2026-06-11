@@ -311,6 +311,36 @@
     </div>
   </section>
   
+  <script>
+const slides = document.querySelectorAll('.hero-slide');
+const dots = document.querySelectorAll('.dot');
+let currentSlide = 0;
+
+function showSlide(n) {
+  slides.forEach(slide => slide.classList.remove('active'));
+  dots.forEach(dot => dot.classList.remove('active'));
+
+  slides[n].classList.add('active');
+  dots[n].classList.add('active');
+  currentSlide = n;
+}
+
+function nextSlide() {
+  currentSlide = (currentSlide + 1) % slides.length;
+  showSlide(currentSlide);
+}
+
+// Auto slide every 5 seconds
+setInterval(nextSlide, 5000);
+
+// Dot click event
+dots.forEach((dot, index) => {
+  dot.addEventListener('click', () => showSlide(index));
+});
+</script>
+</body>
+</html>
+  
   <script src="script.js"></script>
 </body>
 </html>
