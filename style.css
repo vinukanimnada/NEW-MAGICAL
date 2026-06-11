@@ -445,9 +445,9 @@ section p{
   left: 12px;
   top: 14px;
   width: 3px;
-  height: 15px;
+  height: 16px;
   background: #ff1493;
-  border-radius: 1px;
+  border-radius: 2px;
 }
 
 .section-header h2 {
