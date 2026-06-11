@@ -439,10 +439,10 @@ section p{
 
 .section-header {
   display: flex;
-  justify-content: space-between; /* දෙපැත්තට තල්ලු කරනවා */
-  align-items: center;            /* උඩ යට align කරනවා */
+  justify-content: space-between;
+  align-items: center;
   padding: 15px 12px 10px 12px;
-  border-left: 3px solid #ff1493; /* වම් පැත්තේ pink line එක */
+  border-left: 3px solid #ff1493;
 }
 
 .section-header h2 {
@@ -460,6 +460,5 @@ section p{
   text-decoration: none;
   font-size: 12px;
   font-weight: bold;
-  flex-shrink: 0; /* පොඩි screen එකේ button එක කැඩෙන්නේ නෑ */
+  flex-shrink: 0;
 }
-
