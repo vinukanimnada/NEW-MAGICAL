@@ -68,12 +68,13 @@ header {
   font-size: 18px;
 }
 
-/* Sidebar - Width 280px + Font 16px Fix */
+/* Sidebar - Width 220px */
 .sidebar{
   position: fixed;
   top: 0;
-  right: -280px;
-  width: 280px;
+  right: -220px;
+  width: 220px;
+  max-width: 75vw;
   height: 100%;
   background: #222;
   transition: 0.3s;
@@ -101,10 +102,10 @@ header {
 .sidebar li a{
   display: block;
   width: 100%;
-  padding: 18px 25px;
+  padding: 12px 20px;
   color: #fff;
   text-decoration: none;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 500;
   letter-spacing: 0.5px;
   cursor: pointer;
@@ -112,7 +113,14 @@ header {
 }
 
 .sidebar li a:hover{
-  background: #222;
+  background: #2a2a2a;
+}
+
+/* Home එකට උඩ Border එක */
+.sidebar li:first-child a{
+  border-top: 1px solid rgba(255,255,255,0.15);
+  margin-top: 12px;
+  padding-top: 14px;
 }
 
 .sidebar li.active a{
@@ -152,7 +160,7 @@ header {
   display: block;
 }
 
-/* Hero */
+/* Hero - වම් පැත්ත තව තද කළා */
 .hero{
   height: 70vh;
   position: relative;
@@ -179,9 +187,9 @@ header {
   height: 100%;
   background: linear-gradient(
     to right,
-    rgba(0,0,0,0.85) 2%,     /* වම් පැත්ත තද */
-    rgba(0,0,0,0.7) 40%,     /* මැදට යනකොට ලා */
-    rgba(0,0,0,0.3) 70%,     /* මැද */
+    rgba(0,0,0,0.95) 0%,     /* වම් පැත්ත 0.85 → 0.95 තදට */
+    rgba(0,0,0,0.7) 30%,     /* 40% → 30% ඉක්මනට fade */
+    rgba(0,0,0,0.3) 70%,     /* මැද ලා */
     rgba(0,0,0,0.85) 100%    /* දකුණ පැත්ත තද */
   );
   z-index: 1;
@@ -210,6 +218,7 @@ header {
   margin-bottom: 10px;
   font-weight: 950;
   line-height: 1.3;
+  text-shadow: 2px 2px 8px rgba(0,0,0,0.8); /* text shadow දැම්මා */
 }
 
 .imdb{
@@ -382,41 +391,12 @@ section p{
   }
 }
 
-/* Sidebar පළල අඩු කරන්න */
-.sidebar {
-  width: 220px !important;
-  max-width: 75vw !important;
-}
-
-.sidebar ul li a {
-  padding: 12px 20px !important;
-  font-size: 15px !important;
-}
-
-/* Mobile එකේ තව පොඩ්ඩක් */
+/* Mobile එකේ sidebar තව පොඩ්ඩක් */
 @media (max-width: 480px){
   .sidebar {
     width: 200px !important;
+    right: -200px;
   }
-}
-
-/* දෙපැත්ත අඳුරු කරන්න - Force Override */
-.hero-slide::before{
-  content: '' !important;
-  position: absolute !important;
-  top: 0 !important;
-  left: 0 !important;
-  width: 100% !important;
-  height: 100% !important;
-  background: linear-gradient(
-    to right,
-    rgba(0,0,0,0.5) 0%,
-    rgba(0,0,0,0) 15%,
-    rgba(0,0,0,0) 85%,
-    rgba(0,0,0,0.8) 100%
-  ) !important;
-  z-index: 2 !important;
-  pointer-events: none !important;
 }
 
 /* Movie card title - ලොකු කරන්න */
@@ -439,7 +419,7 @@ section p{
   color: #ccc !important;
 }
 
-/* ===== SECTION HEADER FIX - හැම section එකටම ===== */
+/* ===== SECTION HEADER FIX ===== */
 .section-header {
   display: flex;
   justify-content: space-between;
