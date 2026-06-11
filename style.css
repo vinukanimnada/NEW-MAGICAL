@@ -453,5 +453,29 @@ section p{
   color: #ccc !important;
 }
 
+.section-header {
+  display: flex;
+  justify-content: space-between; /* දෙපැත්තට තල්ලු කරනවා */
+  align-items: center;            /* උඩ යට align කරනවා */
+  padding: 15px 12px 10px 12px;
+  border-left: 3px solid #ff1493; /* වම් පැත්තේ pink line එක */
+}
 
+.section-header h2 {
+  margin: 0;
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.view-all {
+  background: #ff1493;
+  color: white;
+  padding: 5px 12px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: bold;
+  flex-shrink: 0; /* පොඩි screen එකේ button එක කැඩෙන්නේ නෑ */
+}
 
