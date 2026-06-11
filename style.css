@@ -490,39 +490,3 @@ section p{
   opacity: 0.8;
 }
 
-.section-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 15px 10px;
-  border-left: 3px solid #ff1493;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.section-header h2 {
-  margin: 0;
-  color: white;
-  font-size: 18px;
-  display: flex;
-  align-items: center;
-}
-
-.pink-line {
-  width: 3px;
-  height: 18px;
-  background: #ff1493;
-  margin-right: 8px;
-  display: inline-block;
-}
-
-.view-all {
-  background: #ff1493;
-  color: white;
-  padding: 5px 12px;
-  border-radius: 5px;
-  text-decoration: none;
-  font-size: 12px;
-  font-weight: bold;
-  flex-shrink: 0;
-}
