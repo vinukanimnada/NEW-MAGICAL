@@ -252,12 +252,12 @@ header{
 }
 
 .red-line{
-  border-left: 3px solid #e50914;
+  border-left: 3px solid #ff007f;
   padding-left: 8px;
 }
 
 .view-all{
-  background: #e50914;
+  background: #ff007f;
   border: none;
   padding: 6px 12px;
   color: #fff;
