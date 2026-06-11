@@ -256,7 +256,7 @@ header{
   padding-left: 8px;
 }
 
-.view-all-btn{
+.view-all{
   background: #ff007f;
   border: none;
   padding: 6px 12px;
@@ -266,9 +266,6 @@ header{
   font-size: 12px;
 }
 
-.view-all-btn:hover {
-  opacity: 0.8;
-}
 
 /* Movie Grid */
 .movie-grid{
