@@ -459,3 +459,33 @@ section p{
   opacity: 0.8 !important;
   color: #ccc !important;
 }
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding: 0 10px;
+}
+
+.section-header h2 {
+  margin: 0;
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.view-all {
+  background: #ff1493;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.view-all:hover {
+  opacity: 0.8;
+}
