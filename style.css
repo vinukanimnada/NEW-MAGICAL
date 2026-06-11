@@ -188,6 +188,15 @@ header {
   pointer-events: none;
 }
 
+.hero-slide h1, 
+.hero-slide p, 
+.hero-slide .imdb,
+.hero-slide .btn {
+  position: relative;
+  z-index: 2;
+  color: white;
+}
+
 .hero-content{
   position: absolute;
   bottom: 40px;
