@@ -451,7 +451,7 @@ section p{
 .movie-card .category,
 .card-category {
   font-size: 0.60rem !important;
-  font-weight: 400 !important;
+  font-weight: 350 !important;
   opacity: 0.8 !important;
   color: #ccc !important;
 }
