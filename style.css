@@ -256,14 +256,17 @@ header{
   padding-left: 8px;
 }
 
-.view-all{
-  background: #ff007f;
-  border: none;
-  padding: 6px 12px;
-  color: #fff;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 12px;
+.view-all-btn {
+  background: #ff1493;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: bold;
+}
+.view-all-btn:hover {
+  opacity: 0.8;
 }
 
 
