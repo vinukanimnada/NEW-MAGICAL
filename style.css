@@ -98,7 +98,6 @@ header{
   background: #e50914;
 }
 
-/* IMPORTANT FIX - a tag එක full width + font ලොකු කරා */
 .sidebar li a{
   display: block;
   width: 100%;
@@ -181,7 +180,7 @@ header{
   background: linear-gradient(
     to right,
     rgba(0,0,0,0.6) 0%,
-    rgba(0,0,0,0) 15%,
+    rgba(0,0,0) 15%,
     rgba(0,0,0,0) 85%,
     rgba(0,0,0,0.6) 100%
   );
@@ -239,13 +238,6 @@ header{
 .trending{
   padding: 30px 20px;
 }
-
-
-
-.view-all:hover {
-  opacity: 0.8;
-} 
-
 
 /* Movie Grid */
 .movie-grid{
@@ -437,12 +429,14 @@ section p{
   color: #ccc !important;
 }
 
+/* ===== SECTION HEADER FIX - හැම section එකටම ===== */
 .section-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 15px 12px 10px 12px;
   border-left: 3px solid #ff1493;
+  margin-bottom: 15px;
 }
 
 .section-header h2 {
@@ -461,4 +455,9 @@ section p{
   font-size: 12px;
   font-weight: bold;
   flex-shrink: 0;
+  transition: 0.2s;
+}
+
+.view-all:hover {
+  opacity: 0.8;
 }
