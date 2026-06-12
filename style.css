@@ -162,8 +162,11 @@ header {
 
 /* Hero - වම් පැත්ත තද */
 .hero{
-  height: 70vh;
+  min-height: 60vh;
+  height: 400px;
   position: relative;
+  display: flex;
+  align-items: center;
 }
 
 .hero-slide{
