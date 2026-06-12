@@ -538,3 +538,20 @@ section p{
 .hero-slide.active .hero-content .watch-btn {
   transition-delay: 0.4s;
 }
+
+/* Movie card link එක ලස්සනට */
+a .movie-card {
+  cursor: pointer;
+  transition: transform 0.2s;
+  display: block; /* a tag එක block වගේ හැසිරෙන්න */
+}
+
+a .movie-card:hover {
+  transform: scale(1.03);
+}
+
+/* a tag එකේ default underline + blue color අයින් කරන්න */
+a {
+  text-decoration: none;
+  color: inherit;
+}
