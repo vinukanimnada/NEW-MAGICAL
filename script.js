@@ -1,38 +1,12 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-  // ===== 1. Header + Sidebar + Overlay Auto Inject =====
-  const header = document.querySelector('header');
-  if (header) {
-    header.innerHTML = `
-      <div class="logo">MAGICAL <span>MOVIE LAND</span></div>
-      <div class="header-right">
-        <i class="fa fa-search" id="searchBtn"></i>
-        <i class="fa fa-bars" id="menuBtn"></i>
-      </div>
-
-      <!-- Sidebar Menu -->
-      <div class="sidebar" id="sidebar">
-        <i class="fa fa-times close-btn" id="closeSidebar"></i>
-        <ul>
-          <li><a href="index.html">Home</a></li>
-          <li><a href="#">Movies</a></li>
-          <li><a href="#">Cartoon</a></li>
-          <li><a href="#">Sinhala Dubbed</a></li>
-          <li><a href="#">Contact</a></li>
-        </ul>
-      </div>
-
-      <!-- Overlay -->
-      <div class="overlay" id="overlay"></div>
-    `;
-  }
-
-  // ===== 2. Menu Toggle + Sidebar Close =====
+  // ===== Menu Toggle =====
   const menuBtn = document.getElementById('menuBtn');
   const sidebar = document.getElementById('sidebar');
   const overlay = document.getElementById('overlay');
   const closeSidebar = document.getElementById('closeSidebar');
 
+  // Menu button click - open sidebar
   if (menuBtn && sidebar && overlay && closeSidebar) {
     menuBtn.onclick = () => {
       sidebar.classList.add('active');
@@ -42,9 +16,13 @@ document.addEventListener('DOMContentLoaded', () => {
       closeSidebar.style.display = 'block';
     }
 
+    // Overlay click - close sidebar
     overlay.onclick = closeMenu;
+
+    // Close button click - close sidebar
     closeSidebar.onclick = closeMenu;
 
+    // Close sidebar function
     function closeMenu(){
       sidebar.classList.remove('active');
       overlay.classList.remove('active');
@@ -61,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // ===== 3. Hero Slider - Auto + Dots + Swipe =====
+  // ===== Hero Slider - Auto + Dots + Swipe =====
   let currentSlide = 0;
   const slides = document.querySelectorAll('.hero-slide');
   const dotsContainer = document.querySelector('.hero-dots');
@@ -95,7 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Auto slide - තත්පර 5
-    let autoSlide = setInterval(nextSlide, 5000);
+    let autoSlide = setInterval(nextSlide, 3000);
 
     function resetAutoSlide() {
       clearInterval(autoSlide);
@@ -121,11 +99,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
       function handleSwipe() {
         const swipeDistance = endX - startX;
+
         // දකුණට swipe = පරණ slide
         if (swipeDistance > 50) {
           currentSlide = (currentSlide - 1 + slides.length) % slides.length;
           showSlide(currentSlide);
         }
+
         // වම්පැත්තට swipe = අලුත් slide
         if (swipeDistance < -50) {
           nextSlide();
@@ -134,9 +114,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // ===== 4. Search Toggle - ඕන නම් පහලින් code එක දාපන් =====
+  // Search Toggle - උඹේ පැරණි code එක තියෙනවා නම් ඒකත් එහෙම්ම තියපන්
   // const searchBtn = document.getElementById('searchBtn');
   // const searchBox = document.getElementById('searchBox');
   // const closeSearch = document.getElementById('closeSearch');
 
-});
+}); // DOMContentLoaded අවසාන bracket එක
+
