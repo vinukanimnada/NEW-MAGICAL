@@ -73,7 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Auto slide - තත්පර 5
-    let autoSlide = setInterval(nextSlide, 5000);
+    let autoSlide = setInterval(nextSlide, 3000);
 
     function resetAutoSlide() {
       clearInterval(autoSlide);
