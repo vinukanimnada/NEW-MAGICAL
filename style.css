@@ -251,8 +251,8 @@ header {
   cursor: pointer;
   margin-top: 10px;
   font-size: 16px;
-  text-decoration: none; /* මේක add කරපන් */
-  display: inline-block; /* a tag එකට මේකත් දැම්මොත් හොඳයි */
+  text-decoration: none;
+  display: inline-block;
 }
 
 /* Trending Section */
@@ -411,7 +411,7 @@ section p{
   }
 }
 
-/* Mobile එකේ sidebar තව පොඩ්ඩක් */
+/* Mobile එකේ sidebar තව පොඩ්�ක් */
 @media (max-width: 480px){
   .sidebar {
     width: 200px !important;
@@ -439,7 +439,7 @@ section p{
   color: #ccc !important;
 }
 
-/* ===== SECTION HEADER FIX ===== */
+/* ===== SECTION HEADER FIX - ::before අයින් කරා ===== */
 .section-header {
   display: flex;
   justify-content: space-between;
@@ -447,17 +447,6 @@ section p{
   padding: 15px 12px 10px 20px;
   position: relative;
   margin-bottom: 15px;
-}
-
-.section-header::before {
-  content: '';
-  position: absolute;
-  left: 12px;
-  top: 16px;
-  width: 3px;
-  height: 16px;
-  background: #ff1493;
-  border-radius: 2px;
 }
 
 .section-header h2 {
@@ -511,4 +500,4 @@ section p{
 .hero-dots .dot.active{
   width: 24px;
   background: #FF10F0;
-  border-radius: 4px;
+}
