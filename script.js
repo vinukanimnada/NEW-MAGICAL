@@ -6,6 +6,16 @@ document.addEventListener('DOMContentLoaded', () => {
   const overlay = document.getElementById('overlay');
   const closeSidebar = document.getElementById('closeSidebar');
 
+  function closeMenu(){
+    if(sidebar) sidebar.classList.remove('active');
+    if(overlay) overlay.classList.remove('active');
+    if(menuBtn){
+      menuBtn.classList.remove('fa-times');
+      menuBtn.classList.add('fa-bars');
+    }
+    if(closeSidebar) closeSidebar.style.display = 'none';
+  }
+
   // Menu button click - open sidebar
   if (menuBtn && sidebar && overlay && closeSidebar) {
     menuBtn.onclick = () => {
@@ -22,21 +32,14 @@ document.addEventListener('DOMContentLoaded', () => {
     // Close button click - close sidebar
     closeSidebar.onclick = closeMenu;
 
-    // Close sidebar function
-    function closeMenu(){
-      sidebar.classList.remove('active');
-      overlay.classList.remove('active');
-      menuBtn.classList.remove('fa-times');
-      menuBtn.classList.add('fa-bars');
-      closeSidebar.style.display = 'none';
-    }
-
     // Link click කරාම menu close වෙන code එක
-    document.querySelectorAll('.sidebar ul li a').forEach(link => {
+    document.querySelectorAll('#sidebar ul li a').forEach(link => {
       link.addEventListener('click', () => {
         closeMenu();
       });
     });
+  } else {
+    console.log('Menu elements missing. Check id="menuBtn", id="sidebar", id="overlay", id="closeSidebar"');
   }
 
   // ===== Hero Slider - Auto + Dots + Swipe =====
@@ -73,7 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Auto slide - තත්පර 5
-    let autoSlide = setInterval(nextSlide, 3000);
+    let autoSlide = setInterval(nextSlide, 5000);
 
     function resetAutoSlide() {
       clearInterval(autoSlide);
@@ -100,13 +103,11 @@ document.addEventListener('DOMContentLoaded', () => {
       function handleSwipe() {
         const swipeDistance = endX - startX;
 
-        // දකුණට swipe = පරණ slide
         if (swipeDistance > 50) {
           currentSlide = (currentSlide - 1 + slides.length) % slides.length;
           showSlide(currentSlide);
         }
 
-        // වම්පැත්තට swipe = අලුත් slide
         if (swipeDistance < -50) {
           nextSlide();
         }
@@ -114,10 +115,4 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Search Toggle - උඹේ පැරණි code එක තියෙනවා නම් ඒකත් එහෙම්ම තියපන්
-  // const searchBtn = document.getElementById('searchBtn');
-  // const searchBox = document.getElementById('searchBox');
-  // const closeSearch = document.getElementById('closeSearch');
-
 }); // DOMContentLoaded අවසාන bracket එක
-
