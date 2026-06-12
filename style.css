@@ -258,11 +258,12 @@ header {
   padding: 30px 20px;
 }
 
-/* Movie Grid */
+/* ===== Movie Grid - FIXED ===== */
 .movie-grid{
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 15px;
+  gap: 12px;
+  padding: 0;
 }
 
 .movie-card{
@@ -271,11 +272,12 @@ header {
   border-radius: 8px;
   overflow: hidden;
   cursor: pointer;
+  width: 100%;
 }
 
 .movie-card img{
   width: 100%;
-  height: 280px;
+  height: 250px;
   object-fit: cover;
   display: block;
 }
@@ -326,7 +328,7 @@ header {
 }
 
 .card-info h3{
-  font-size: 12px;
+  font-size: 14px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -336,22 +338,38 @@ header {
 }
 
 .card-info p{
-  font-size: 10px;
+  font-size: 11px;
   color: #aaa;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
+/* Tablet */
 @media (min-width: 768px){
   .movie-grid{
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
   }
   .hero-content h1{
     font-size: 38px;
   }
   .hero{
     height: 80vh;
+  }
+  .movie-card img{
+    height: 280px;
+  }
+}
+
+/* Desktop */
+@media (min-width: 1024px){
+  .movie-grid{
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+  }
+  .movie-card img{
+    height: 320px;
   }
 }
 
@@ -466,7 +484,7 @@ section p{
 
 /* Hero Dots - Fix කරපු version */
 .hero {
-  position: relative; /* මේක අනිවාර්යයි */
+  position: relative;
 }
 
 .hero-dots{
@@ -492,33 +510,4 @@ section p{
   width: 24px;
   background: #e50914;
   border-radius: 4px;
-}
-
-// Swipe කරලා slide මාරු කරන code
-let startX = 0;
-let endX = 0;
-const hero = document.querySelector('.hero');
-
-hero.addEventListener('touchstart', (e) => {
-  startX = e.touches[0].clientX;
-  clearInterval(autoSlide);
-});
-
-hero.addEventListener('touchend', (e) => {
-  endX = e.changedTouches[0].clientX;
-  handleSwipe();
-  autoSlide = setInterval(nextSlide, 5000);
-});
-
-function handleSwipe() {
-  const swipeDistance = endX - startX;
-
-  if (swipeDistance > 50) {
-    currentSlide = (currentSlide - 1 + slides.length) % slides.length;
-    showSlide(currentSlide);
-  }
-
-  if (swipeDistance < -50) {
-    nextSlide();
-  }
 }
