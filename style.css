@@ -502,3 +502,39 @@ section p{
   background: #FF10F0;
   border-redius: 4px;
 }
+
+/* Hero slide animation */
+.hero-slide {
+  opacity: 0;
+  transform: translateX(30px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.hero-slide.active {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Text එක පොඩ්ඩක් පරක්කු වෙලා එන animation */
+.hero-content h1,
+.hero-content .desc,
+.hero-content .watch-btn {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease 0.2s, transform 0.5s ease 0.2s;
+}
+
+.hero-slide.active .hero-content h1,
+.hero-slide.active .hero-content .desc,
+.hero-slide.active .hero-content .watch-btn {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.hero-slide.active .hero-content .desc {
+  transition-delay: 0.3s;
+}
+
+.hero-slide.active .hero-content .watch-btn {
+  transition-delay: 0.4s;
+}
