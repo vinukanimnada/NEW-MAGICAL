@@ -251,6 +251,8 @@ header {
   cursor: pointer;
   margin-top: 10px;
   font-size: 16px;
+  text-decoration: none; /* මේක add කරපන් */
+  display: inline-block; /* a tag එකට මේකත් දැම්මොත් හොඳයි */
 }
 
 /* Trending Section */
