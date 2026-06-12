@@ -464,7 +464,11 @@ section p{
   opacity: 0.8;
 }
 
-/* Hero Dots */
+/* Hero Dots - Fix කරපු version */
+.hero {
+  position: relative; /* මේක අනිවාර්යයි */
+}
+
 .hero-dots{
   position: absolute;
   bottom: 20px;
@@ -472,19 +476,19 @@ section p{
   transform: translateX(-50%);
   display: flex;
   gap: 8px;
-  z-index: 3;
+  z-index: 10;
 }
 
-.hero-dots.dot{
+.hero-dots .dot{
   width: 8px;
   height: 8px;
-  background: rgba(255,255,255,0.4);
+  background: rgba(255,255,255,0.5);
   border-radius: 50%;
   transition: 0.3s;
   cursor: pointer;
 }
 
-.hero-dots.dot.active{
+.hero-dots .dot.active{
   width: 24px;
   background: #e50914;
   border-radius: 4px;
