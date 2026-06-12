@@ -500,4 +500,5 @@ section p{
 .hero-dots .dot.active{
   width: 24px;
   background: #FF10F0;
+  border-redius: 8px;
 }
