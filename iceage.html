@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Garfield Movie 2024 - Sinhala Dubbed</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="style.css">
+  
+<style>
+body {
+  background: #0b0b0b;
+  color: #fff;
+  margin: 0;
+  padding: 0;
+}
+
+/* Header */
+header {
+  background: #000;
+  padding: 12px 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 999;
+}
+.logo {
+  font-size: 22px;
+  font-weight: 700;
+}
+.logo span {
+  color: #FF10F0;
+}
+
+/* Video Player */
+.video-player {
+  width: 100%;
+  background: #000;
+  position: relative;
+  aspect-ratio: 16/9;
+}
+.video-player video {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* Alert Box */
+.alert-box {
+  background: #2a2a2a;
+  margin: 15px;
+  padding: 15px;
+  border-radius: 8px;
+  text-align: center;
+  font-size: 14px;
+  line-height: 1.6;
+}
+.alert-box span.red {
+  color: #ff3333;
+  font-weight: bold;
+}
+
+/* Movie Details Card */
+.movie-details {
+  display: flex;
+  gap: 15px;
+  padding: 20px 15px;
+  background: #1a1a1a;
+  margin: 15px;
+  border-radius: 10px;
+}
+.movie-details img {
+  width: 120px;
+  height: 170px;
+  border-radius: 8px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+.movie-info h1 {
+  font-size: 20px;
+  margin: 0 0 8px 0;
+  line-height: 1.3;
+}
+.movie-info p {
+  margin: 5px 0;
+  font-size: 14px;
+  color: #ccc;
+}
+.movie-info strong {
+  color: #fff;
+}
+.rating-star {
+  color: #f5c518;
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  .movie-details img {
+    width: 100px;
+    height: 145px;
+  }
+  .movie-info h1 {
+    font-size: 18px;
+  }
+}
+</style>
+</head>
+<body>
+
+<header>
+    <div class="logo">𝗠𝗔𝗚𝗜𝗖𝗔𝗟 <span>𝗠𝗢𝗩𝗜𝗘 𝗟𝗔𝗡𝗗</span></div> 
+    <div class="header-right">
+      <i class="fa fa-search" id="searchBtn"></i>
+      <i class="fa fa-bars" id="menuBtn"></i>
+    </div>
+  </header>
+  
+  <div class="sidebar" id="sidebar">
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li class="active"><a href="movies.html">All Movies</a></li>
+      <li><a href="series.html">Tv Shows</a></li>
+      <li><a href="chanels.html">Join Chanels</a></li>
+      <li><a href="about.html">About Us</a></li>
+      <li><a href="contact.html">Contact Us</a></li>
+    </ul>
+  </div>
+  <span class="close-btn" id="closeSidebar">×</span>
+  <div class="overlay" id="overlay"></div>
+
+<!-- Video Player -->
+<div class="video-player">
+  <video controls poster="images/garfield-poster.jpg">
+    <source src="videos/garfield-2024.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+</div>
+
+<!-- Alert Box -->
+<div class="alert-box">
+  <span class="red">Click</span> කිරිමේදි, ඔබට ඇඩ් එකක් සඳහා <span class="red">redirect</span> වුවහොත්, නැවත අපගේ වෙබ් අඩවියට <span class="red">Back</span> වන්න.
+</div>
+
+<!-- Movie Details Card -->
+<div class="movie-details">
+  <img src="https://m.media-amazon.com/images/S/pv-target-images/9552935dbc42f282810b432318ec0dad3717f4c743caf56e92ac10040a67f675.jpg">
+  <div class="movie-info">
+    <h1>Ice Age 05 2016 2024<br>Sinhala Dubbed | සිංහල හඬකැවු</h1>
+    <p><strong>Director:</strong> Mark Dindal</p>
+    <p><strong>Release Year:</strong> 2016</p>
+    <p><strong>IMDb Rating:</strong> <span class="rating-star">★</span> xx</p>
+    <p><strong>Category:</strong> xxxxx</p>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
