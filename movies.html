@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Series - Magical Movie Land</title>
+  <title>All Movies - Magical Movie Land</title>
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
@@ -38,13 +38,116 @@
   <div class="overlay" id="overlay"></div>
   
   <!-- Page Content -->
-  <section style="padding: 50px 20px; text-align: center;">
-    <h1 style="font-size: 32px; margin-bottom: 20px;">Series</h1>
-    <p style="color: #aaa; font-size: 16px;">මෙතනට ඔයාගේ Series list එක දාන්න</p>
-    <br><br>
-    <a href="index.html" style="display: inline-block; padding: 12px 25px; background: #e50914; color: #fff; text-decoration: none; border-radius: 4px; font-weight: bold;">← Back to Home</a>
-  </section>
+  
+  <style>
+    body {
+      margin: 0;
+      background: #0a0a0a;
+      font-family: Arial, sans-serif;
+      color: white;
+      padding: 20px;
+    }
+    h2 {
+      margin-bottom: 20px;
+      font-size: 24px;
+    }
+    .movies-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 15px;
+    }
+    .movie-card {
+      position: relative;
+      border-radius: 8px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .movie-card:hover {
+      transform: scale(1.05);
+    }
+    .movie-card img {
+      width: 100%;
+      height: 210px;
+      object-fit: cover;
+      display: block;
+    }
+    /* Red quality tag - උඩ වම් */
+    .quality-tag {
+      position: absolute;
+      top: 6px;
+      left: 6px;
+      background: #e50914;
+      padding: 3px 6px;
+      font-size: 11px;
+      font-weight: bold;
+      border-radius: 3px;
+    }
+    /* Yellow rating tag - උඩ දකුණ */
+    .rating-tag {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      background: #f5c518;
+      color: black;
+      padding: 3px 6px;
+      font-size: 11px;
+      font-weight: bold;
+      border-radius: 3px;
+    }
+    /* Movie title - යට */
+    .movie-title {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(transparent, rgba(0,0,0,0.9));
+      padding: 25px 5px 5px 5px;
+      font-size: 13px;
+      font-weight: bold;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
 
-  <script src="script.js"></script>
+  <h2>All Movies</h2>
+  
+  <div class="movies-grid">
+    
+    <!-- Movie Card 1 -->
+    <div class="movie-card">
+      <img src="poster1.jpg" alt="Karuppu">
+      <span class="quality-tag">WEB</span>
+      <span class="rating-tag">★ 7.2</span>
+      <div class="movie-title">Karuppu (2026)</div>
+    </div>
+
+    <!-- Movie Card 2 -->
+    <div class="movie-card">
+      <img src="poster2.jpg" alt="Dridam">
+      <span class="quality-tag">WEB-DL</span>
+      <span class="rating-tag">★ 7.5</span>
+      <div class="movie-title">Dridam (2026)</div>
+    </div>
+
+    <!-- Movie Card 3 -->
+    <div class="movie-card">
+      <img src="poster3.jpg" alt="Blades">
+      <span class="quality-tag">BLURAY</span>
+      <span class="rating-tag">★ 7.3</span>
+      <div class="movie-title">Blades of the G...</div>
+    </div>
+
+    <!-- තව cards add කරන්න ඕන නම් මේ block එක copy කරපන් -->
+    <div class="movie-card">
+      <img src="poster4.jpg" alt="Movie">
+      <span class="quality-tag">WEB-DL</span>
+      <span class="rating-tag">★ 5.7</span>
+      <div class="movie-title">Movie Name (2025)</div>
+    </div>
+
+  </div>
+
 </body>
 </html>
