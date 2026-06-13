@@ -201,3 +201,40 @@ async function loadMovies() {
 }
 
 loadMovies();
+
+async function loadTrendingMovies() {
+
+  const trendingGrid = document.getElementById("trendingMovies");
+
+  if (!trendingGrid) return;
+
+  const snapshot = await getDocs(collection(db, "movies"));
+
+  trendingGrid.innerHTML = "";
+
+  snapshot.forEach((doc) => {
+
+    const movie = doc.data();
+
+    trendingGrid.innerHTML += `
+      <a href="${movie.video}" style="text-decoration:none;color:inherit;">
+        <div class="movie-card">
+
+          <span class="badge hd">HD</span>
+
+          <img src="${movie.poster}" alt="${movie.title}">
+
+          <div class="card-info">
+            <h3>${movie.title}</h3>
+            <p>Movie Land</p>
+          </div>
+
+        </div>
+      </a>
+    `;
+  });
+
+}
+
+loadMovies();
+loadTrendingMovies();
