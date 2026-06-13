@@ -1,11 +1,63 @@
-<h2>Add Movie</h2>
+<!DOCTYPE html>
+<html lang="si">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - MAGICAL MOVIE LAND</title>
 
-<input type="text" id="title" placeholder="Ice Age"><br><br>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #111;
+            color: white;
+            max-width: 500px;
+            margin: 30px auto;
+            padding: 20px;
+        }
 
-<input type="text" id="poster" placeholder="https://i.ibb.co/wN7yRkYL/b53fcca6907a.jpg"><br><br>
+        h2 {
+            text-align: center;
+        }
 
-<input type="text" id="video" placeholder="iceage.html"><br><br>
+        input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: none;
+            border-radius: 8px;
+            box-sizing: border-box;
+        }
 
-<button onclick="addMovie()">Save Movie</button>
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #ff2d95;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+        }
 
-<script type="module" src="script.js"></script>
+        button:hover {
+            opacity: 0.9;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h2>🎬 Add Movie</h2>
+
+    <input type="text" id="title" placeholder="Movie Title">
+
+    <input type="text" id="poster" placeholder="Poster URL">
+
+    <input type="text" id="video" placeholder="Video URL or movie page">
+
+    <button onclick="addMovie()">Save Movie</button>
+
+    <script type="module" src="script.js"></script>
+
+</body>
+</html>
