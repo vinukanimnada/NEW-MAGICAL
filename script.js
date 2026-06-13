@@ -179,7 +179,7 @@ async function loadMovies() {
 
   if (!movieGrid) return;
 
-  const snapshot = await getDocs(collection(db, "movies"));
+  const snapshot = await getDocs(collection(db, "latestMovies"));
 
   movieGrid.innerHTML = "";
 
@@ -209,7 +209,7 @@ async function loadTrendingMovies() {
 
   if (!trendingGrid) return;
 
-  const snapshot = await getDocs(collection(db, "movies"));
+  const snapshot = await getDocs(collection(db, "trendingMovies"));
 
   trendingGrid.innerHTML = "";
 
