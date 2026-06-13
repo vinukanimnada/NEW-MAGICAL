@@ -215,7 +215,7 @@
 </h2>
       <a href="movies.html" class="view-all">VIEW ALL</a>
     </div>
-    <div class="movie-grid">
+    <div class="movie-grid" id="latestMovies">
       <div class="movie-card">
         <span class="badge hd">HD</span>
         <span class="rating"><i class="fa fa-star"></i> 6.3</span>
@@ -324,5 +324,51 @@
   
   <!-- JS file එක body එක වහන කලින් තිබිය යුතුය.  -->
   <script src="script.js"></script>
+  <script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
+
+import {
+  getFirestore,
+  collection,
+  getDocs
+} from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCx0TEmgr3GCyvfeok9Y42yR1PTM4_8y9M",
+  authDomain: "magical-movie-land.firebaseapp.com",
+  projectId: "magical-movie-land",
+  storageBucket: "magical-movie-land.firebasestorage.app",
+  messagingSenderId: "27757424288",
+  appId: "1:27757424288:web:93f8549fc39e4537c823c5"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+const movieGrid = document.getElementById("latestMovies");
+
+async function loadMovies() {
+  const querySnapshot = await getDocs(collection(db, "movies"));
+
+  querySnapshot.forEach((doc) => {
+    const movie = doc.data();
+
+    movieGrid.innerHTML += `
+      <a href="${movie.video}" style="text-decoration:none; color:inherit;">
+        <div class="movie-card">
+          <img src="${movie.poster}" alt="${movie.title}">
+          <div class="card-info">
+            <h3>${movie.title}</h3>
+            <p>Movie Land</p>
+          </div>
+        </div>
+      </a>
+    `;
+  });
+}
+
+loadMovies();
+</script>
+
 </body>
 </html>
