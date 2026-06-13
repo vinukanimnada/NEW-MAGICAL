@@ -50,64 +50,70 @@
     h2 {
       margin-bottom: 20px;
       font-size: 24px;
-    }
     .movies-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* ← 3,1fr කියන්නේ එක පේළියට 3යි */
-  gap: 10px; /* cards අතර space ටිකක් අඩු කරපන් */
+  grid-template-columns: repeat(3, 1fr); /* එක පේළියට 3යි */
+  gap: 8px; /* cards අතර space අඩු කරපන් */
   padding: 10px;
 }
-    .movie-card {
-      position: relative;
-      border-radius: 8px;
-      overflow: hidden;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-    .movie-card:hover {
-      transform: scale(1.05);
-    }
-    .movie-card img {
-      width: 100%;
-      height: 210px;
-      object-fit: cover;
-      display: block;
-    }
-    /* Red quality tag - උඩ වම් */
-    .quality-tag {
-      position: absolute;
-      top: 6px;
-      left: 6px;
-      background: #e50914;
-      padding: 3px 6px;
-      font-size: 11px;
-      font-weight: bold;
-      border-radius: 3px;
-    }
-    /* Yellow rating tag - උඩ දකුණ */
-    .rating-tag {
-      position: absolute;
-      top: 6px;
-      right: 6px;
-      background: #f5c518;
-      color: black;
-      padding: 3px 6px;
-      font-size: 11px;
-      font-weight: bold;
-      border-radius: 3px;
-    }
-    /* Movie title - යට */
-    .movie-title {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: linear-gradient(transparent, rgba(0,0,0,0.9));
-      padding: 25px 5px 5px 5px;
-      font-size: 13px;
-      font-weight: bold;
-      text-align: center;
-    }
+
+.movie-card {
+  position: relative;
+  border-radius: 6px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: 0.3s;
+  aspect-ratio: 2/3; /* ← මේක තමයි හරියට උස දෙන්නේ. Cinesubz ratio එක */
+}
+
+.movie-card img {
+  width: 100%;
+  height: 100%; /* aspect-ratio එකට ගැලපෙන විදියට */
+  object-fit: cover;
+  display: block;
+}
+
+/* Green quality/episode tag - උඩ වම් */
+.quality-tag {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  background: #1e9b4d; /* Cinesubz green */
+  color: white;
+  padding: 3px 5px;
+  font-size: 10px;
+  font-weight: bold;
+  border-radius: 3px;
+}
+
+/* Yellow rating tag - උඩ දකුණ */
+.rating-tag {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background: #f5c518;
+  color: black;
+  padding: 3px 5px;
+  font-size: 10px;
+  font-weight: bold;
+  border-radius: 3px;
+}
+
+/* Movie title - යට */
+.movie-title {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(transparent, rgba(0,0,0,0.85));
+  padding: 30px 4px 6px 4px;
+  font-size: 11px; /* Cinesubz වගේ පොඩි font */
+  font-weight: 600;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; /* "Raakh (2026) T..." වගේ ... දානවා */
+}
   </style>
 </head>
 <body>
