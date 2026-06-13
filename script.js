@@ -148,3 +148,28 @@ window.addMovie = async function () {
 
   alert("Movie Added Successfully");
 };
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
+import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCx0TEmgr3GCyvfeok9Y42yR1PTM4_8y9M",
+  authDomain: "magical-movie-land.firebaseapp.com",
+  projectId: "magical-movie-land",
+  storageBucket: "magical-movie-land.firebasestorage.app",
+  messagingSenderId: "27757424288",
+  appId: "1:27757424288:web:93f8549fc39e4537c823c5"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+window.addMovie = async function () {
+  await addDoc(collection(db, "movies"), {
+    title: document.getElementById("title").value,
+    poster: document.getElementById("poster").value,
+    video: document.getElementById("video").value
+  });
+
+  alert("Movie Added Successfully");
+};
