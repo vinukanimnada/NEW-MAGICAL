@@ -214,17 +214,8 @@
   Latest Uploads
 </h2>
       <a href="movies.html" class="view-all">VIEW ALL</a>
-    </div>
-    <div class="movie-grid" id="latestMovies">
-      <div class="movie-card">
-        <span class="badge hd">HD</span>
-        <span class="rating"><i class="fa fa-star"></i> 6.3</span>
-        <img src="https://play-lh.googleusercontent.com/qWv3eGPqFKhTG4vCuoDLDsfMkkMxZRGn646EZo-3C2tC3sL4tAjnmoeA9EEdUFrChqgTHA" alt="Jurassic World">
-        <div class="card-info">
-          <h3>Jurassic World</h3>
-          <p>Movie Land</p>
-        </div>
-      </div>
+      
+      <div class="movie-grid" id="latestMovies"></div>
 
       <div class="movie-card">
         <span class="badge webdl">WEB-DL</span>
@@ -322,53 +313,21 @@
   </div>
 </section>
   
-  <!-- JS file එක body එක වහන කලින් තිබිය යුතුය.  -->
-  <script src="script.js"></script>
-  <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
+<!-- Latest Uploads -->
+<section class="trending">
+  <div class="section-header">
+    <h2>Latest Uploads</h2>
+    <a href="movies.html" class="view-all">VIEW ALL</a>
+  </div>
 
-import {
-  getFirestore,
-  collection,
-  getDocs
-} from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
+  <div class="movie-grid" id="latestMovies"></div>
+</section>
 
-const firebaseConfig = {
-  apiKey: "AIzaSyCx0TEmgr3GCyvfeok9Y42yR1PTM4_8y9M",
-  authDomain: "magical-movie-land.firebaseapp.com",
-  projectId: "magical-movie-land",
-  storageBucket: "magical-movie-land.firebasestorage.app",
-  messagingSenderId: "27757424288",
-  appId: "1:27757424288:web:93f8549fc39e4537c823c5"
-};
+<script type="module" src="script.js"></script>
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+</body>
+</html>
 
-const movieGrid = document.getElementById("latestMovies");
-
-async function loadMovies() {
-  const querySnapshot = await getDocs(collection(db, "movies"));
-
-  querySnapshot.forEach((doc) => {
-    const movie = doc.data();
-
-    movieGrid.innerHTML += `
-      <a href="${movie.video}" style="text-decoration:none; color:inherit;">
-        <div class="movie-card">
-          <img src="${movie.poster}" alt="${movie.title}">
-          <div class="card-info">
-            <h3>${movie.title}</h3>
-            <p>Movie Land</p>
-          </div>
-        </div>
-      </a>
-    `;
-  });
-}
-
-loadMovies();
-</script>
 
 </body>
 </html>
