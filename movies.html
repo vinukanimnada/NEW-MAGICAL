@@ -52,10 +52,11 @@
       font-size: 24px;
     }
     .movies-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-      gap: 15px;
-    }
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* ← 3,1fr කියන්නේ එක පේළියට 3යි */
+  gap: 10px; /* cards අතර space ටිකක් අඩු කරපන් */
+  padding: 10px;
+}
     .movie-card {
       position: relative;
       border-radius: 8px;
