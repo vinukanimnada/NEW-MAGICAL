@@ -147,26 +147,27 @@ const db = getFirestore(app);
 
 window.addMovie = async function () {
 
-  const title = document.getElementById("title").value;
-  const poster = document.getElementById("poster").value;
-  const video = document.getElementById("video").value;
+    const title = document.getElementById("title").value;
+    const poster = document.getElementById("poster").value;
+    const video = document.getElementById("video").value;
+    const category = document.getElementById("category").value;
 
-  if (!title || !poster || !video) {
-    alert("Please fill all fields");
-    return;
-  }
+    if (!title || !poster || !video) {
+        alert("Please fill all fields");
+        return;
+    }
 
-  await addDoc(collection(db, "movies"), {
-    title,
-    poster,
-    video
-  });
+    await addDoc(collection(db, category), {
+        title,
+        poster,
+        video
+    });
 
-  alert("Movie Added Successfully");
+    alert("Movie Added Successfully");
 
-  document.getElementById("title").value = "";
-  document.getElementById("poster").value = "";
-  document.getElementById("video").value = "";
+    document.getElementById("title").value = "";
+    document.getElementById("poster").value = "";
+    document.getElementById("video").value = "";
 };
 
 
