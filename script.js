@@ -174,28 +174,28 @@ window.addMovie = async function () {
 
 async function loadMovies() {
 
-  const movieGrid = document.getElementById("movieGrid");
+  const movieGrid = document.getElementById("latestMovies");
 
   if (!movieGrid) return;
 
   const snapshot = await getDocs(collection(db, "movies"));
+
+  movieGrid.innerHTML = "";
 
   snapshot.forEach((doc) => {
 
     const movie = doc.data();
 
     movieGrid.innerHTML += `
-      <div class="movie-card">
-        <img src="${movie.poster}" alt="${movie.title}">
-        <div class="card-info">
-          <h3>${movie.title}</h3>
-
-          <a href="${movie.video}" target="_blank">
-            <button>WATCH NOW</button>
-          </a>
-
+      <a href="${movie.video}" style="text-decoration:none; color:inherit;">
+        <div class="movie-card">
+          <img src="${movie.poster}" alt="${movie.title}">
+          <div class="card-info">
+            <h3>${movie.title}</h3>
+            <p>Movie Land</p>
+          </div>
         </div>
-      </div>
+      </a>
     `;
   });
 }
