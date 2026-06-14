@@ -10,13 +10,14 @@
             font-family: Arial, sans-serif;
             background: #111;
             color: white;
-            max-width: 500px;
+            max-width: 600px;
             margin: 30px auto;
             padding: 20px;
         }
 
         h2 {
             text-align: center;
+            color: #ff2d95;
         }
 
         input, select {
@@ -39,6 +40,7 @@
             border-radius: 8px;
             font-size: 16px;
             cursor: pointer;
+            margin-bottom: 10px;
         }
 
         button:hover {
@@ -49,6 +51,55 @@
             text-align: center;
             margin-top: 15px;
             color: #00ff88;
+        }
+
+        /* Movie List Styles */
+        .movie-list {
+            margin-top: 40px;
+            border-top: 2px solid #333;
+            padding-top: 20px;
+        }
+
+        .movie-item {
+            background: #1a1a1a;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .movie-info {
+            flex: 1;
+        }
+
+        .movie-info h4 {
+            margin: 0 0 5px 0;
+            color: #fff;
+        }
+
+        .movie-info p {
+            margin: 0;
+            font-size: 12px;
+            color: #aaa;
+        }
+
+        .delete-btn {
+            background: #ff4444;
+            padding: 8px 15px;
+            width: auto;
+            font-size: 14px;
+            margin: 0;
+        }
+
+        .delete-btn:hover {
+            background: #cc0000;
+        }
+
+        .loading {
+            text-align: center;
+            color: #666;
         }
     </style>
 </head>
@@ -74,10 +125,16 @@
     
     <p id="msg"></p>
 
+    <!-- Movie List with Delete -->
+    <div class="movie-list">
+        <h2>📋 All Movies - Delete Here</h2>
+        <div id="movieList" class="loading">Loading movies...</div>
+    </div>
+
     <!-- Firebase Code -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, serverTimestamp, getDocs, deleteDoc, doc, orderBy, query } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
           apiKey: "AIzaSyCx0TEmgr3GCyvfeok9Y42yR1PTM4_8y9M",
@@ -92,6 +149,7 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
+        // Add Movie
         window.addMovie = async function() {
             const title = document.getElementById('title').value;
             const poster = document.getElementById('poster').value;
@@ -113,7 +171,7 @@
                     video: video,
                     year: year,
                     category: category,
-                    createdAt: serverTimestamp() // sorting වෙන්න මේක අනිවා
+                    createdAt: serverTimestamp()
                 });
                 
                 msg.style.color = '#00ff88';
@@ -125,12 +183,66 @@
                 document.getElementById('video').value = '';
                 document.getElementById('year').value = '2024';
 
+                // List එක refresh කරමු
+                loadMovies();
+
             } catch(err) {
                 console.error(err);
                 msg.style.color = 'red';
                 msg.innerText = 'Error: ' + err.message;
             }
         }
+
+        // Load Movies List
+        async function loadMovies() {
+            const movieList = document.getElementById('movieList');
+            movieList.innerHTML = '<div class="loading">Loading movies...</div>';
+
+            try {
+                const q = query(collection(db, "movies"), orderBy("createdAt", "desc"));
+                const snapshot = await getDocs(q);
+                
+                if(snapshot.empty) {
+                    movieList.innerHTML = '<p style="text-align:center; color:#666;">Movies නැත</p>';
+                    return;
+                }
+
+                let html = '';
+                snapshot.forEach(docSnap => {
+                    const m = docSnap.data();
+                    html += `
+                        <div class="movie-item">
+                            <div class="movie-info">
+                                <h4>${m.title}</h4>
+                                <p>Year: ${m.year} | Category: ${m.category}</p>
+                            </div>
+                            <button class="delete-btn" onclick="deleteMovie('${docSnap.id}', '${m.title}')">Delete</button>
+                        </div>
+                    `;
+                });
+                movieList.innerHTML = html;
+
+            } catch(err) {
+                console.error(err);
+                movieList.innerHTML = '<p style="color:red; text-align:center;">Error loading movies</p>';
+            }
+        }
+
+        // Delete Movie
+        window.deleteMovie = async function(id, title) {
+            if(confirm(`"${title}" delete කරන්නද?`)) {
+                try {
+                    await deleteDoc(doc(db, "movies", id));
+                    alert('✅ Delete උනා!');
+                    loadMovies(); // List එක refresh
+                } catch(err) {
+                    alert('Error: ' + err.message);
+                }
+            }
+        }
+
+        // Page load උනාම movies load කරමු
+        loadMovies();
     </script>
 
 </body>
