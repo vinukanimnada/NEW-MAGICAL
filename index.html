@@ -5,11 +5,10 @@
   <meta name="google-site-verification" content="9x-_hTOkmrjADkTX5qBPDI2QNIMCrp3LEuD5lxw-ZnI" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MAGICAL MOVIE LAND - Free HD Cartoon Movies Online</title>
-  
+
   <meta name="description" content="Watch free HD cartoon movies online. Diary of a Wimpy Kid, Ne Zha, Elemental and more. No ads, fast streaming on MAGICAL MOVIE LAND.">
-  
   <meta name="keywords" content="cartoon movies, free movies online, HD movies, Magical Movie Land">
-  
+
   <link rel="icon" href="favicon.png" type="image/png">
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -17,7 +16,7 @@
 <body>
   <!-- Header -->
   <header>
-    <div class="logo">𝗠𝗔𝗚𝗜𝗖𝗔𝗟 <span>𝗠𝗢𝗩𝗜𝗘 𝗟𝗔𝗡𝗗</span></div> 
+    <div class="logo">𝗠𝗔𝗚𝗜𝗖𝗔𝗟 <span>𝗠𝗢𝗩𝗜𝗘 𝗟𝗔𝗡𝗗</span></div>
     <div class="header-right">
       <i class="fa fa-search" id="searchBtn"></i>
       <i class="fa fa-bars" id="menuBtn"></i>
@@ -35,7 +34,7 @@
     <ul>
       <li class="active"><a href="index.html">Home</a></li>
       <li><a href="movies.html">All Movies</a></li>
-      <li><a href="series.html">TV Shows</a></li>
+      <li><a href="tvshows.html">TV Shows</a></li>
       <li><a href="chanels.html">Join Chanels</a></li>
       <li><a href="about.html">About Us</a></li>
       <li><a href="contact.html">Contact Us</a></li>
@@ -43,7 +42,7 @@
   </div>
   <span class="close-btn" id="closeSidebar">×</span>
   <div class="overlay" id="overlay"></div>
-  
+
   <!-- Hero Slider -->
   <section class="hero">
     <div class="hero-slide active" style="background-image: url('https://i.ibb.co/zW6T57d5/91a7e11fa39e.jpg')">
@@ -52,7 +51,7 @@
         <span class="imdb">IMDb: 7.0</span> <span class="year">2024</span>
         <p class="desc">Cartoon Movies</p>
         <p class="desc">Garfield, the world-famous, Monday-hating, lasagna-loving indoor cat...</p>
-        <a href="garfield.html" class="watch-btn" style="text-decoration: none;">
+        <a href="garfield.html" class="watch-btn">
           <i class="fa fa-play"></i> WATCH NOW
         </a>
       </div>
@@ -64,26 +63,13 @@
         <span class="imdb">IMDb: 8.2</span> <span class="year">2023</span>
         <p class="desc">Cartoon Movies</p>
         <p class="desc">Nobita and Doraemon go on an amazing adventure...</p>
-        <a href="garfield.html" class="watch-btn" style="text-decoration: none;">
+        <a href="garfield.html" class="watch-btn">
           <i class="fa fa-play"></i> WATCH NOW
         </a>
       </div>
     </div>
 
     <div class="hero-dots"></div>
-  </section>
-
-  <!-- Daily Trending -->
-  <section class="trending">
-    <div class="section-header">
-      <h2 style="position:relative; padding-left:12px;">
-        <span style="position:absolute; left:-4px; top:50%; transform:translateY(-50%);
-        width:4px; height:28px; background:#ff2d95; border-radius:2px;"></span>
-        Daily Trending
-      </h2>
-      <a href="movies.html" class="view-all">VIEW ALL</a>
-    </div>
-    <div class="movie-grid" id="trendingMovies"></div>
   </section>
 
   <!-- Latest Uploads -->
@@ -99,113 +85,30 @@
   </section>
 
   <!-- TV Shows Section - Latest එකට පස්සේ -->
-<section class="trending">
-  <div class="section-header">
-    <h2>TV Shows</h2>
-    <a href="tvshows.html" class="view-all">VIEW ALL</a>
-  </div>
-  <div class="movie-grid" id="tvShowsMovies"></div>
-</section>
+  <section class="trending">
+    <div class="section-header">
+       <h2 style="position:relative; padding-left:12px;">
+        <span style="position:absolute; left:0; top:50%; transform:translateY(-50%); width:4px; height:28px; background:#ff2d95; border-radius:2px;"></span>
+        TV Shows
+      </h2>
+      <a href="tvshows.html" class="view-all">VIEW ALL</a>
+    </div>
+    <div class="movie-grid" id="tvShowsMovies"></div>
+  </section>
 
-  <!-- Firebase + Auto Load Movies Code - FIXED -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getFirestore, collection, getDocs, orderBy, query, limit } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+  <!-- Daily Trending -->
+  <section class="trending">
+    <div class="section-header">
+      <h2 style="position:relative; padding-left:12px;">
+        <span style="position:absolute; left:-4px; top:50%; transform:translateY(-50%); width:4px; height:28px; background:#ff2d95; border-radius:2px;"></span>
+        Daily Trending
+      </h2>
+      <a href="movies.html" class="view-all">VIEW ALL</a>
+    </div>
+    <div class="movie-grid" id="trendingMovies"></div>
+  </section>
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyCx0TEmgr3GCyvfeok9Y42yR1PTM4_8y9M",
-      authDomain: "magical-movie-land.firebaseapp.com",
-      projectId: "magical-movie-land",
-      storageBucket: "magical-movie-land.firebasestorage.app",
-      messagingSenderId: "27757424288",
-      appId: "1:27757424288:web:d650e2659f09f0b9c823c5",
-      measurementId: "G-KK84DYV9EP"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-
-    function createCard(m) {
-      return `
-        <div class="movie-card">
-          <span class="badge hd">HD</span>
-          <img src="${m.poster || m.thumbnail}" alt="${m.title}">
-          <div class="card-info">
-            <h3>${m.title}</h3>
-            <p>${m.year || '2024'} | ${m.category || 'Movie'}</p>
-          </div>
-        </div>
-      `;
-    }
-
-    // Latest Uploads - අලුත්ම movies 12
-    async function loadLatestMovies() {
-      const grid = document.getElementById("latestMovies");
-      grid.innerHTML = '<p style="color:#666; grid-column:1/-1; text-align:center;">Loading...</p>';
-      
-      try {
-        const q = query(collection(db, "movies"), orderBy("createdAt", "desc"), limit(12));
-        const snapshot = await getDocs(q);
-        
-        if(snapshot.empty) {
-          grid.innerHTML = '<p style="color:#666; grid-column:1/-1; text-align:center;">Movies නැත</p>';
-          return;
-        }
-        
-        let html = '';
-        snapshot.forEach(doc => {
-          html += createCard(doc.data());
-        });
-        grid.innerHTML = html;
-
-      } catch(err) {
-        console.error("Error loading latest:", err);
-        grid.innerHTML = '<p style="color:red; grid-column:1/-1; text-align:center;">Error loading movies</p>';
-      }
-    }
-
-    // Daily Trending - views වැඩි movies 12. views නැත්තම් අලුත් ඒවා
-    async function loadTrendingMovies() {
-      const grid = document.getElementById("trendingMovies");
-      grid.innerHTML = '<p style="color:#666; grid-column:1/-1; text-align:center;">Loading...</p>';
-      
-      try {
-        // views field එක තියෙනව නම් ඒකෙන් order කරමු, නැත්තම් createdAt
-        const q = query(collection(db, "movies"), orderBy("views", "desc"), limit(12));
-        const snapshot = await getDocs(q);
-        
-        if(snapshot.empty) {
-          // views නැත්තම් latest ටිකම දාමු
-          const q2 = query(collection(db, "movies"), orderBy("createdAt", "desc"), limit(12));
-          const snapshot2 = await getDocs(q2);
-          let html = '';
-          snapshot2.forEach(doc => {
-            html += createCard(doc.data());
-          });
-          grid.innerHTML = html;
-          return;
-        }
-        
-        let html = '';
-        snapshot.forEach(doc => {
-          html += createCard(doc.data());
-        });
-        grid.innerHTML = html;
-
-      } catch(err) {
-        console.error("Error loading trending:", err);
-        // views index නැත්තම් latest පෙන්නමු
-        loadLatestMovies();
-        grid.innerHTML = '<p style="color:#666; grid-column:1/-1; text-align:center;">Loading...</p>';
-        setTimeout(loadLatestMovies, 500);
-      }
-    }
-
-    // Page load උනාම දෙකම load කරමු
-    loadLatestMovies();
-    loadTrendingMovies();
-  </script>
-
+  <!-- Firebase Code - script.js එකට move කරා -->
   <script type="module" src="script.js"></script>
 </body>
 </html>
