@@ -54,8 +54,8 @@
         <p class="desc">Cartoon Movies</p>
         <p class="desc">Garfield, the world-famous, Monday-hating, lasagna-loving indoor cat...</p>
         <a href="garfield.html" class="watch-btn" style="text-decoration: none;">
-  <i class="fa fa-play"></i> WATCH NOW
-</a>
+          <i class="fa fa-play"></i> WATCH NOW
+        </a>
       </div>
     </div>
 
@@ -67,8 +67,8 @@
         <p class="desc">Cartoon Movies</p>
         <p class="desc">Nobita and Doraemon go on an amazing adventure...</p>
         <a href="garfield.html" class="watch-btn" style="text-decoration: none;">
-  <i class="fa fa-play"></i> WATCH NOW
-</a>
+          <i class="fa fa-play"></i> WATCH NOW
+        </a>
       </div>
     </div>
 
@@ -80,8 +80,8 @@
         <p class="desc">Animation Movies</p>
         <p class="desc">Scrat's nutty pursuit of the acorn has world-changing consequences...</p>
         <a href="garfield.html" class="watch-btn" style="text-decoration: none;">
-  <i class="fa fa-play"></i> WATCH NOW
-</a>
+          <i class="fa fa-play"></i> WATCH NOW
+        </a>
       </div>
     </div>
 
@@ -93,8 +93,8 @@
         <p class="desc">Animation Movies</p>
         <p class="desc">Hiccup and Toothless discover their true destinies...</p>
        <a href="httydmovie.html" class="watch-btn" style="text-decoration: none;">
-  <i class="fa fa-play"></i> WATCH NOW
-</a>
+        <i class="fa fa-play"></i> WATCH NOW
+       </a>
       </div>
     </div>
     
@@ -111,88 +111,132 @@
       </div>
     </div>
 
-    <!-- Dots / Indicators - JS එකෙන් generate කරන නිසා හිස් div එකක් විතරක් තියපන් -->
     <div class="hero-dots"></div>
   </section>
 
   <!-- Daily Trending -->
+  <section class="trending">
+    <div class="section-header">
+      <h2 style="position:relative; padding-left:12px;">
+        <span style="position:absolute; left:-4px; top:50%; transform:translateY(-50%);
+        width:4px; height:28px; background:#ff2d95; border-radius:2px;"></span>
+        Daily Trending
+      </h2>
+      <a href="movies.html" class="view-all">VIEW ALL</a>
+    </div>
+    <div class="movie-grid" id="trendingMovies"></div>
+  </section>
 
-     <section class="trending">
-  <div class="section-header">
-    <h2 style="position:relative; padding-left:12px;">
-      <span style="position:absolute; left:-4px; top:50%; transform:translateY(-50%);
-      width:4px; height:28px; background:#ff2d95; border-radius:2px;"></span>
-      Daily Trending
-    </h2>
+  <!-- Latest Uploads -->
+  <section class="trending">
+    <div class="section-header">
+      <h2 style="position:relative; padding-left:12px;">
+        <span style="position:absolute; left:0; top:50%; transform:translateY(-50%); width:4px; height:28px; background:#ff2d95; border-radius:2px;"></span>
+        Latest Uploads
+      </h2>
+      <a href="movies.html" class="view-all">VIEW ALL</a>
+    </div>
+    <div class="movie-grid" id="latestMovies"></div>
+  </section>
 
-    <a href="movies.html" class="view-all">VIEW ALL</a>
-  </div>
+  <!-- TV Shows Section -->
+  <section class="trending">
+    <div class="section-header">
+       <h2 style="position:relative; padding-left:12px;">
+        <span style="position:absolute; left:0; top:50%; transform:translateY(-50%); width:4px; height:28px; background:#ff2d95; border-radius:2px;"></span>
+        TV Shows
+      </h2>
+      <a href="series.html" class="view-all">VIEW ALL</a>
+    </div>
+    
+    <div class="movie-grid">
+      <div class="movie-card">
+        <span class="badge hd">HD</span>
+        <span class="rating"><i class="fa fa-star"></i> 6.3</span>
+        <img src="https://m.media-amazon.com/images/MV5BYjJmZjU5MDYtMTljMy00YmRkLWJlMWMtZDQ2NjYxNzIyYzXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg" alt="Weak Hero Class 1">
+        <div class="card-info">
+          <h3>Weak Hero Class 1</h3>
+          <p>Movie Land</p>
+        </div>
+      </div>
 
-  <div class="movie-grid" id="trendingMovies"></div>
-</section>
+      <div class="movie-card">
+        <span class="badge hd">HD</span>
+        <span class="rating"><i class="fa fa-star"></i> 8.5</span>
+        <img src="https://image.tmdb.org/t/p/w500/1XDDXPXGiI8id7MrUxK36ke7gkX.jpg" alt="Wednesday">
+        <div class="card-info">
+          <h3>Wednesday Season 2</h3>
+          <p>Movie Land</p>
+        </div>
+      </div>
 
-<!-- Latest Uploads -->
-<section class="trending">
-  <div class="section-header">
-    <h2 style="position:relative; padding-left:12px;">
-      <span style="position:absolute; left:0; top:50%; transform:translateY(-50%); width:4px; height:28px; background:#ff2d95; border-radius:2px;"></span>
-      Latest Uploads
-    </h2>
-
-    <a href="movies.html" class="view-all">VIEW ALL</a>
-  </div>
-
-  <div class="movie-grid" id="latestMovies"></div>
-</section>
-
-
-  <!-- TV Shows Section - Fixed -->
-<section class="trending">
-  <div class="section-header">
-     <h2 style="position:relative; padding-left:12px;">
-  <span style="position:absolute; left:0; top:50%; transform:translateY(-50%); width:4px; height:28px; background:#ff2d95; border-radius:2px;"></span>
-  TV Shows
-</h2>
-    <a href="series.html" class="view-all">VIEW ALL</a>
-  </div>
-  
-  <div class="movie-grid">
-    <div class="movie-card">
-      <span class="badge hd">HD</span>
-      <span class="rating"><i class="fa fa-star"></i> 6.3</span>
-      <img src="https://m.media-amazon.com/images/M/MV5BYjJmZjU5MDYtMTljMy00YmRkLWJlMWMtZDQ2NjYxNzIyYzYzXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg" alt="Weak Hero Class 1">
-      <div class="card-info">
-        <h3>Weak Hero Class 1</h3>
-        <p>Movie Land</p>
+      <div class="movie-card">
+        <span class="badge fhd">FHD</span>
+        <span class="rating"><i class="fa fa-star"></i> 9.2</span>
+        <img src="https://image.tmdb.org/t/p/w500/49WJfeN0moxb9IPfGn8AIqMGskD.jpg" alt="Stranger Things">
+        <div class="card-info">
+          <h3>Stranger Things S4</h3>
+          <p>Movie Land</p>
+        </div>
       </div>
     </div>
+  </section>
 
-    <div class="movie-card">
-      <span class="badge hd">HD</span>
-      <span class="rating"><i class="fa fa-star"></i> 8.5</span>
-      <img src="https://image.tmdb.org/t/p/w500/1XDDXPXGiI8id7MrUxK36ke7gkX.jpg" alt="Wednesday">
-      <div class="card-info">
-        <h3>Wednesday Season 2</h3>
-        <p>Movie Land</p>
-      </div>
-    </div>
+  <!-- Firebase + Auto Load Movies Code -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getFirestore, collection, getDocs, orderBy, query } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-    <div class="movie-card">
-      <span class="badge fhd">FHD</span>
-      <span class="rating"><i class="fa fa-star"></i> 9.2</span>
-      <img src="https://image.tmdb.org/t/p/w500/49WJfeN0moxb9IPfGn8AIqMGskD.jpg" alt="Stranger Things">
-      <div class="card-info">
-        <h3>Stranger Things S4</h3>
-        <p>Movie Land</p>
-      </div>
-    </div>
-  </div>
-</section>
-  
+    // උඹේ Firebase config එක මෙතන paste කරපන්
+    const firebaseConfig = {
+      apiKey: "උඹේ_API_KEY",
+      authDomain: "උඹේ_PROJECT.firebaseapp.com",
+      projectId: "උඹේ_PROJECT_ID",
+      storageBucket: "උඹේ_PROJECT.appspot.com",
+      messagingSenderId: "123456789",
+      appId: "1:123456789:web:abcdef"
+    };
 
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
 
-<script type="module" src="script.js"></script>
+    async function loadMovies() {
+      try {
+        const q = query(collection(db, "movies"), orderBy("createdAt", "desc"));
+        const snapshot = await getDocs(q);
+        const movies = snapshot.docs.map(doc => doc.data());
+        
+        const trendingDiv = document.getElementById('trendingMovies');
+        const latestDiv = document.getElementById('latestMovies');
 
+        trendingDiv.innerHTML = '';
+        latestDiv.innerHTML = '';
+
+        movies.forEach((m, index) => {
+          const card = `
+            <div class="movie-card">
+              <span class="badge hd">HD</span>
+              <img src="${m.poster}" alt="${m.title}">
+              <div class="card-info">
+                <h3>${m.title}</h3>
+                <p>${m.year || '2024'}</p>
+              </div>
+            </div>
+          `;
+          
+          // මුල් 6 trending, අලුත් ටික latest
+          if(index < 6) trendingDiv.innerHTML += card;
+          latestDiv.innerHTML += card;
+        });
+
+      } catch(err) {
+        console.error("Error loading movies:", err);
+      }
+    }
+
+    loadMovies();
+  </script>
+
+  <script type="module" src="script.js"></script>
 </body>
 </html>
-
