@@ -19,13 +19,15 @@
             text-align: center;
         }
 
-        input {
+        input, select {
             width: 100%;
             padding: 12px;
             margin-bottom: 15px;
             border: none;
             border-radius: 8px;
             box-sizing: border-box;
+            background: #222;
+            color: white;
         }
 
         button {
@@ -42,6 +44,12 @@
         button:hover {
             opacity: 0.9;
         }
+        
+        #msg {
+            text-align: center;
+            margin-top: 15px;
+            color: #00ff88;
+        }
     </style>
 </head>
 
@@ -49,22 +57,81 @@
 
     <h2>🎬 Add Movie</h2>
 
-    <input type="text" id="title" placeholder="movie name">
+    <input type="text" id="title" placeholder="Movie Name" required>
 
-    <input type="text" id="poster" placeholder="img.url">
+    <input type="text" id="poster" placeholder="Poster Image URL" required>
 
-    <input type="text" id="video" placeholder="video.url">
+    <input type="text" id="video" placeholder="Video URL" required>
+    
+    <input type="text" id="year" placeholder="Year - 2024" value="2024">
     
     <select id="category">
-    <option value="movies">Latest Uploads</option>
-    <option value="trending">Daily Trending</option>
-</select>
-
-<br><br>
+        <option value="latest">Latest Uploads</option>
+        <option value="trending">Daily Trending</option>
+    </select>
 
     <button onclick="addMovie()">Save Movie</button>
+    
+    <p id="msg"></p>
 
-    <script type="module" src="script.js"></script>
+    <!-- Firebase Code -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+          apiKey: "AIzaSyCx0TEmgr3GCyvfeok9Y42yR1PTM4_8y9M",
+          authDomain: "magical-movie-land.firebaseapp.com",
+          projectId: "magical-movie-land",
+          storageBucket: "magical-movie-land.firebasestorage.app",
+          messagingSenderId: "27757424288",
+          appId: "1:27757424288:web:d650e2659f09f0b9c823c5",
+          measurementId: "G-KK84DYV9EP"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        window.addMovie = async function() {
+            const title = document.getElementById('title').value;
+            const poster = document.getElementById('poster').value;
+            const video = document.getElementById('video').value;
+            const year = document.getElementById('year').value;
+            const category = document.getElementById('category').value;
+            const msg = document.getElementById('msg');
+
+            if(!title || !poster || !video) {
+                msg.style.color = 'red';
+                msg.innerText = 'සියලුම fields පුරවන්න!';
+                return;
+            }
+
+            try {
+                await addDoc(collection(db, "movies"), {
+                    title: title,
+                    poster: poster,
+                    video: video,
+                    year: year,
+                    category: category,
+                    createdAt: serverTimestamp() // sorting වෙන්න මේක අනිවා
+                });
+                
+                msg.style.color = '#00ff88';
+                msg.innerText = '✅ Movie එක Save උනා!';
+                
+                // fields clear කරමු
+                document.getElementById('title').value = '';
+                document.getElementById('poster').value = '';
+                document.getElementById('video').value = '';
+                document.getElementById('year').value = '2024';
+
+            } catch(err) {
+                console.error(err);
+                msg.style.color = 'red';
+                msg.innerText = 'Error: ' + err.message;
+            }
+        }
+    </script>
 
 </body>
 </html>
