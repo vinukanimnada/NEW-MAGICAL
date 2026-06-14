@@ -70,42 +70,6 @@
       </div>
     </div>
 
-    <div class="hero-slide" style="background-image: url('https://i.ibb.co/WvTswV40/cde91e748bd8.jpg')">
-      <div class="hero-content">
-        <h1>Ice Age 5 Sinhala Dubbed – සිංහල හඬකැවූ</h1>
-        <span class="imdb">IMDb: 6.5</span> <span class="year">2016</span>
-        <p class="desc">Animation Movies</p>
-        <p class="desc">Scrat's nutty pursuit of the acorn has world-changing consequences...</p>
-        <a href="garfield.html" class="watch-btn" style="text-decoration: none;">
-          <i class="fa fa-play"></i> WATCH NOW
-        </a>
-      </div>
-    </div>
-
-    <div class="hero-slide" style="background-image: url('https://i.ibb.co/DfpLzhmD/bbfc664e7935.jpg')">
-      <div class="hero-content">
-        <h1>How To Train Your Dragon 3 Sinhala Dubbed</h1>
-        <span class="imdb">IMDb: 7.4</span> <span class="year">2019</span>
-        <p class="desc">Animation Movies</p>
-        <p class="desc">Hiccup and Toothless discover their true destinies...</p>
-       <a href="httydmovie.html" class="watch-btn" style="text-decoration: none;">
-        <i class="fa fa-play"></i> WATCH NOW
-       </a>
-      </div>
-    </div>
-    
-    <div class="hero-slide" style="background-image: url('https://i.ibb.co/DHtF1JTL/e35097acfa77.jpg')">
-      <div class="hero-content">
-        <h1>Ben 10 Season 01 | <br>Sinhala Dubbed - සිංහල හඬකැවූ </h1>
-        <span class="imdb">IMDb: 7.4</span> <span class="year">2019</span>
-        <p class="desc">Animation Movies</p>
-        <p class="desc">Hiccup and Toothless discover their true destinies...</p>
-       <a href="bentenseries.html" class="watch-btn" style="text-decoration: none;">
-        📦 VIEW
-      </a>
-      </div>
-    </div>
-
     <div class="hero-dots"></div>
   </section>
 
@@ -154,33 +118,13 @@
           <p>Movie Land</p>
         </div>
       </div>
-
-      <div class="movie-card">
-        <span class="badge hd">HD</span>
-        <span class="rating"><i class="fa fa-star"></i> 8.5</span>
-        <img src="https://image.tmdb.org/t/p/w500/1XDDXPXGiI8id7MrUxK36ke7gkX.jpg" alt="Wednesday">
-        <div class="card-info">
-          <h3>Wednesday Season 2</h3>
-          <p>Movie Land</p>
-        </div>
-      </div>
-
-      <div class="movie-card">
-        <span class="badge fhd">FHD</span>
-        <span class="rating"><i class="fa fa-star"></i> 9.2</span>
-        <img src="https://image.tmdb.org/t/p/w500/49WJfeN0moxb9IPfGn8AIqMGskD.jpg" alt="Stranger Things">
-        <div class="card-info">
-          <h3>Stranger Things S4</h3>
-          <p>Movie Land</p>
-        </div>
-      </div>
     </div>
   </section>
 
-  <!-- Firebase + Auto Load Movies Code -->
+  <!-- Firebase + Auto Load Movies Code - CATEGORY FILTER එක එක්ක -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getFirestore, collection, getDocs, orderBy, query } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getFirestore, collection, getDocs, orderBy, query, where, limit } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyCx0TEmgr3GCyvfeok9Y42yR1PTM4_8y9M",
@@ -195,40 +139,53 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    async function loadMovies() {
+    function createCard(m) {
+      return `
+        <div class="movie-card">
+          <span class="badge hd">HD</span>
+          <img src="${m.poster}" alt="${m.title}">
+          <div class="card-info">
+            <h3>${m.title}</h3>
+            <p>${m.year || '2024'}</p>
+          </div>
+        </div>
+      `;
+    }
+
+    async function loadMoviesByCategory(category, gridId) {
+      const grid = document.getElementById(gridId);
+      grid.innerHTML = '<p style="color:#666; grid-column:1/-1; text-align:center;">Loading...</p>';
+      
       try {
-        const q = query(collection(db, "movies"), orderBy("createdAt", "desc"));
+        const q = query(
+          collection(db, "movies"), 
+          where("category", "==", category), 
+          orderBy("createdAt", "desc"), 
+          limit(12)
+        );
         const snapshot = await getDocs(q);
-        const movies = snapshot.docs.map(doc => doc.data());
         
-        const trendingDiv = document.getElementById('trendingMovies');
-        const latestDiv = document.getElementById('latestMovies');
-
-        trendingDiv.innerHTML = '';
-        latestDiv.innerHTML = '';
-
-        movies.forEach((m, index) => {
-          const card = `
-            <div class="movie-card">
-              <span class="badge hd">HD</span>
-              <img src="${m.poster}" alt="${m.title}">
-              <div class="card-info">
-                <h3>${m.title}</h3>
-                <p>${m.year || '2024'}</p>
-              </div>
-            </div>
-          `;
-          
-          if(index < 6) trendingDiv.innerHTML += card;
-          latestDiv.innerHTML += card;
+        if(snapshot.empty) {
+          grid.innerHTML = '<p style="color:#666; grid-column:1/-1; text-align:center;">Movies නැත</p>';
+          return;
+        }
+        
+        let html = '';
+        snapshot.forEach(doc => {
+          html += createCard(doc.data());
         });
+        grid.innerHTML = html;
 
       } catch(err) {
-        console.error("Error loading movies:", err);
+        console.error("Error loading " + category + ":", err);
+        grid.innerHTML = '<p style="color:red; grid-column:1/-1; text-align:center;">Error loading movies</p>';
+        // Console එකේ "Create index" link එක ආවොත් click කරපන්
       }
     }
 
-    loadMovies();
+    // Page load උනාම දෙකම load කරමු
+    loadMoviesByCategory("trending", "trendingMovies");
+    loadMoviesByCategory("latest", "latestMovies");
   </script>
 
   <script type="module" src="script.js"></script>
