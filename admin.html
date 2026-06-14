@@ -36,12 +36,12 @@
             margin-bottom: 10px;
         }
         #msg { text-align: center; margin-top: 15px; color: #00ff88; }
-        .movie-list {
+       .movie-list {
             margin-top: 40px;
             border-top: 2px solid #333;
             padding-top: 20px;
         }
-        .movie-item {
+       .movie-item {
             background: #1a1a1a;
             padding: 15px;
             border-radius: 8px;
@@ -50,10 +50,10 @@
             justify-content: space-between;
             align-items: center;
         }
-        .movie-info { flex: 1; }
-        .movie-info h4 { margin: 0 0 5px 0; }
-        .movie-info p { margin: 0; font-size: 12px; color: #aaa; }
-        .delete-btn {
+       .movie-info { flex: 1; }
+       .movie-info h4 { margin: 0 0 5px 0; }
+       .movie-info p { margin: 0; font-size: 12px; color: #aaa; }
+       .delete-btn {
             background: #ff4444;
             padding: 8px 15px;
             width: auto;
@@ -70,7 +70,7 @@
     <input type="text" id="poster" placeholder="Poster Image URL" required>
     <input type="text" id="video" placeholder="Video URL" required>
     <input type="text" id="year" placeholder="Year - 2024" value="2024">
-    
+
     <select id="category">
         <option value="latest">Latest Uploads - Home</option>
         <option value="trending">Daily Trending - Home</option>
@@ -112,7 +112,7 @@
             const category = document.getElementById('category').value;
             const msg = document.getElementById('msg');
 
-            if(!title || !poster || !video) {
+            if(!title ||!poster ||!video) {
                 msg.style.color = 'red';
                 msg.innerText = 'සියලුම fields පුරවන්න!';
                 return;
@@ -127,9 +127,9 @@
                     category: category,
                     createdAt: serverTimestamp()
                 });
-                
+
                 msg.style.color = '#00ff88';
-                msg.innerText = '✅ Save උනා!';
+                msg.innerText = '✅ Saved Movie!';
                 document.getElementById('title').value = '';
                 document.getElementById('poster').value = '';
                 document.getElementById('video').value = '';
@@ -145,7 +145,7 @@
             const movieList = document.getElementById('movieList');
             const q = query(collection(db, "movies"), orderBy("createdAt", "desc"));
             const snapshot = await getDocs(q);
-            
+
             if(snapshot.empty) {
                 movieList.innerHTML = '<p style="text-align:center; color:#666;">Movies නැත</p>';
                 return;
@@ -170,7 +170,7 @@
         window.deleteMovie = async function(id, title) {
             if(confirm(`"${title}" delete කරන්නද?`)) {
                 await deleteDoc(doc(db, "movies", id));
-                alert('✅ Delete උනා!');
+                alert('✅ Deleted Movie!');
                 loadMovies();
             }
         }
