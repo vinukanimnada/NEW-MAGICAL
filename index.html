@@ -121,10 +121,10 @@
     </div>
   </section>
 
-  <!-- Firebase + Auto Load Movies Code - CATEGORY FILTER එක එක්ක -->
+  <!-- Firebase + Auto Load Movies Code - FIXED -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getFirestore, collection, getDocs, orderBy, query, where, limit } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getFirestore, collection, getDocs, orderBy, query, limit } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyCx0TEmgr3GCyvfeok9Y42yR1PTM4_8y9M",
@@ -143,26 +143,22 @@
       return `
         <div class="movie-card">
           <span class="badge hd">HD</span>
-          <img src="${m.poster}" alt="${m.title}">
+          <img src="${m.poster || m.thumbnail}" alt="${m.title}">
           <div class="card-info">
             <h3>${m.title}</h3>
-            <p>${m.year || '2024'}</p>
+            <p>${m.year || '2024'} | ${m.category || 'Movie'}</p>
           </div>
         </div>
       `;
     }
 
-    async function loadMoviesByCategory(category, gridId) {
-      const grid = document.getElementById(gridId);
+    // Latest Uploads - අලුත්ම movies 12
+    async function loadLatestMovies() {
+      const grid = document.getElementById("latestMovies");
       grid.innerHTML = '<p style="color:#666; grid-column:1/-1; text-align:center;">Loading...</p>';
       
       try {
-        const q = query(
-          collection(db, "movies"), 
-          where("category", "==", category), 
-          orderBy("createdAt", "desc"), 
-          limit(12)
-        );
+        const q = query(collection(db, "movies"), orderBy("createdAt", "desc"), limit(12));
         const snapshot = await getDocs(q);
         
         if(snapshot.empty) {
@@ -177,15 +173,51 @@
         grid.innerHTML = html;
 
       } catch(err) {
-        console.error("Error loading " + category + ":", err);
+        console.error("Error loading latest:", err);
         grid.innerHTML = '<p style="color:red; grid-column:1/-1; text-align:center;">Error loading movies</p>';
-        // Console එකේ "Create index" link එක ආවොත් click කරපන්
+      }
+    }
+
+    // Daily Trending - views වැඩි movies 12. views නැත්තම් අලුත් ඒවා
+    async function loadTrendingMovies() {
+      const grid = document.getElementById("trendingMovies");
+      grid.innerHTML = '<p style="color:#666; grid-column:1/-1; text-align:center;">Loading...</p>';
+      
+      try {
+        // views field එක තියෙනව නම් ඒකෙන් order කරමු, නැත්තම් createdAt
+        const q = query(collection(db, "movies"), orderBy("views", "desc"), limit(12));
+        const snapshot = await getDocs(q);
+        
+        if(snapshot.empty) {
+          // views නැත්තම් latest ටිකම දාමු
+          const q2 = query(collection(db, "movies"), orderBy("createdAt", "desc"), limit(12));
+          const snapshot2 = await getDocs(q2);
+          let html = '';
+          snapshot2.forEach(doc => {
+            html += createCard(doc.data());
+          });
+          grid.innerHTML = html;
+          return;
+        }
+        
+        let html = '';
+        snapshot.forEach(doc => {
+          html += createCard(doc.data());
+        });
+        grid.innerHTML = html;
+
+      } catch(err) {
+        console.error("Error loading trending:", err);
+        // views index නැත්තම් latest පෙන්නමු
+        loadLatestMovies();
+        grid.innerHTML = '<p style="color:#666; grid-column:1/-1; text-align:center;">Loading...</p>';
+        setTimeout(loadLatestMovies, 500);
       }
     }
 
     // Page load උනාම දෙකම load කරමු
-    loadMoviesByCategory("trending", "trendingMovies");
-    loadMoviesByCategory("latest", "latestMovies");
+    loadLatestMovies();
+    loadTrendingMovies();
   </script>
 
   <script type="module" src="script.js"></script>
