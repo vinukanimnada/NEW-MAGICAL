@@ -1,134 +1,68 @@
-document.addEventListener('DOMContentLoaded', () => {
+// Menu + Search Toggle
+const menuBtn = document.getElementById("menuBtn");
+const sidebar = document.getElementById("sidebar");
+const overlay = document.getElementById("overlay");
+const closeSidebar = document.getElementById("closeSidebar");
 
-  // ===== Menu Toggle =====
-  const menuBtn = document.getElementById('menuBtn');
-  const sidebar = document.getElementById('sidebar');
-  const overlay = document.getElementById('overlay');
-  const closeSidebar = document.getElementById('closeSidebar');
+menuBtn.onclick = () => {
+  sidebar.classList.add("active");
+  overlay.classList.add("active");
+  closeSidebar.style.display = "block";
+};
 
-  function closeMenu() {
-    if (sidebar) sidebar.classList.remove('active');
-    if (overlay) overlay.classList.remove('active');
+closeSidebar.onclick = () => {
+  sidebar.classList.remove("active");
+  overlay.classList.remove("active");
+  closeSidebar.style.display = "none";
+};
 
-    if (menuBtn) {
-      menuBtn.classList.remove('fa-times');
-      menuBtn.classList.add('fa-bars');
-    }
+overlay.onclick = () => {
+  sidebar.classList.remove("active");
+  overlay.classList.remove("active");
+  closeSidebar.style.display = "none";
+};
 
-    if (closeSidebar) closeSidebar.style.display = 'none';
-  }
+const searchBtn = document.getElementById("searchBtn");
+const searchBox = document.getElementById("searchBox");
+const closeSearch = document.getElementById("closeSearch");
 
-  if (menuBtn && sidebar && overlay && closeSidebar) {
-    menuBtn.onclick = () => {
-      sidebar.classList.add('active');
-      overlay.classList.add('active');
+searchBtn.onclick = () => searchBox.classList.add("active");
+closeSearch.onclick = () => searchBox.classList.remove("active");
 
-      menuBtn.classList.remove('fa-bars');
-      menuBtn.classList.add('fa-times');
+// Hero Slider
+let slides = document.querySelectorAll(".hero-slide");
+let dotsContainer = document.querySelector(".hero-dots");
+let current = 0;
 
-      closeSidebar.style.display = 'block';
-    };
-
-    overlay.onclick = closeMenu;
-    closeSidebar.onclick = closeMenu;
-
-    document.querySelectorAll('#sidebar ul li a').forEach(link => {
-      link.addEventListener('click', closeMenu);
-    });
-  }
-
-  // ===== Hero Slider =====
-  let currentSlide = 0;
-  const slides = document.querySelectorAll('.hero-slide');
-  const dotsContainer = document.querySelector('.hero-dots');
-
-  if (dotsContainer && slides.length > 0) {
-
-    slides.forEach((_, i) => {
-      const dot = document.createElement('span');
-
-      dot.classList.add('dot');
-
-      if (i === 0) {
-        dot.classList.add('active');
-      }
-
-      dot.addEventListener('click', () => {
-        showSlide(i);
-        resetAutoSlide();
-      });
-
-      dotsContainer.appendChild(dot);
-    });
-
-    const dots = document.querySelectorAll('.dot');
-
-    function showSlide(n) {
-      slides.forEach(slide => slide.classList.remove('active'));
-      dots.forEach(dot => dot.classList.remove('active'));
-
-      slides[n].classList.add('active');
-      dots[n].classList.add('active');
-
-      currentSlide = n;
-    }
-
-    function nextSlide() {
-      currentSlide = (currentSlide + 1) % slides.length;
-      showSlide(currentSlide);
-    }
-
-    let autoSlide = setInterval(nextSlide, 5000);
-
-    function resetAutoSlide() {
-      clearInterval(autoSlide);
-      autoSlide = setInterval(nextSlide, 5000);
-    }
-
-    let startX = 0;
-    let endX = 0;
-
-    const hero = document.querySelector('.hero');
-
-    if (hero) {
-
-      hero.addEventListener('touchstart', (e) => {
-        startX = e.touches[0].clientX;
-        clearInterval(autoSlide);
-      });
-
-      hero.addEventListener('touchend', (e) => {
-        endX = e.changedTouches[0].clientX;
-
-        const swipeDistance = endX - startX;
-
-        if (swipeDistance > 50) {
-          currentSlide = (currentSlide - 1 + slides.length) % slides.length;
-          showSlide(currentSlide);
-        }
-
-        if (swipeDistance < -50) {
-          nextSlide();
-        }
-
-        autoSlide = setInterval(nextSlide, 5000);
-      });
-    }
-  }
+slides.forEach((_, i) => {
+  let dot = document.createElement("span");
+  if (i === 0) dot.classList.add("active");
+  dot.addEventListener("click", () => goToSlide(i));
+  dotsContainer.appendChild(dot);
 });
 
+function showSlide(index) {
+  slides.forEach((s, i) => {
+    s.classList.remove("active");
+    dotsContainer.children[i].classList.remove("active");
+  });
+  slides[index].classList.add("active");
+  dotsContainer.children[index].classList.add("active");
+}
 
-// ===== Firebase =====
+function goToSlide(index) {
+  current = index;
+  showSlide(current);
+}
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
+setInterval(() => {
+  current = (current + 1) % slides.length;
+  showSlide(current);
+}, 5000);
 
-import {
-  getFirestore,
-  collection,
-  addDoc,
-  getDocs
-} from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
-
+// ================= Firebase Load Movies =================
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getFirestore, collection, getDocs, orderBy, query, where, limit } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCx0TEmgr3GCyvfeok9Y42yR1PTM4_8y9M",
@@ -136,106 +70,78 @@ const firebaseConfig = {
   projectId: "magical-movie-land",
   storageBucket: "magical-movie-land.firebasestorage.app",
   messagingSenderId: "27757424288",
-  appId: "1:27757424288:web:93f8549fc39e4537c823c5"
+  appId: "1:27757424288:web:d650e2659f09f0b9c823c5",
+  measurementId: "G-KK84DYV9EP"
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-
-// ===== Admin Panel - Add Movie =====
-
-window.addMovie = async function () {
-
-    const title = document.getElementById("title").value;
-    const poster = document.getElementById("poster").value;
-    const video = document.getElementById("video").value;
-    const category = document.getElementById("category").value;
-
-    if (!title || !poster || !video) {
-        alert("Please fill all fields");
-        return;
-    }
-
-    await addDoc(collection(db, category), {
-        title,
-        poster,
-        video
-    });
-
-    alert("Movie Added Successfully");
-
-    document.getElementById("title").value = "";
-    document.getElementById("poster").value = "";
-    document.getElementById("video").value = "";
-};
-
-
-// ===== Auto Load Movies =====
-
-async function loadMovies() {
-
-  const movieGrid = document.getElementById("latestMovies");
-
-  if (!movieGrid) return;
-
-  const snapshot = await getDocs(collection(db, "latestMovies"));
-
-  movieGrid.innerHTML = "";
-
-  snapshot.forEach((doc) => {
-
-    const movie = doc.data();
-
-    movieGrid.innerHTML += `
-      <a href="${movie.video}" style="text-decoration:none; color:inherit;">
-        <div class="movie-card">
-          <img src="${movie.poster}" alt="${movie.title}">
-          <div class="card-info">
-            <h3>${movie.title}</h3>
-            <p>Movie Land</p>
-          </div>
-        </div>
-      </a>
-    `;
-  });
+function createCard(m) {
+  return `
+    <div class="movie-card">
+      <span class="badge hd">HD</span>
+      <img src="${m.poster || m.thumbnail}" alt="${m.title}">
+      <div class="card-info">
+        <h3>${m.title}</h3>
+        <p>${m.year || '2024'} | ${m.category}</p>
+      </div>
+    </div>
+  `;
 }
 
-loadMovies();
+// 1. Latest Uploads
+async function loadLatestMovies() {
+  const grid = document.getElementById("latestMovies");
+  if(!grid) return;
 
+  try {
+    const q = query(collection(db, "movies"), where("category", "==", "latest"), orderBy("createdAt", "desc"), limit(12));
+    const snapshot = await getDocs(q);
+    let html = '';
+    snapshot.forEach(doc => { html += createCard(doc.data()); });
+    grid.innerHTML = html || '<p style="color:#666; grid-column:1/-1; text-align:center;">Movies නැත</p>';
+  } catch(err) {
+    console.error("Latest Error:", err);
+    grid.innerHTML = '<p style="color:red; grid-column:1/-1; text-align:center;">Error loading</p>';
+  }
+}
+
+// 2. TV Shows
+async function loadTVShows() {
+  const grid = document.getElementById("tvShowsMovies");
+  if(!grid) return;
+
+  try {
+    const q = query(collection(db, "movies"), where("category", "==", "tvshows"), orderBy("createdAt", "desc"), limit(12));
+    const snapshot = await getDocs(q);
+    let html = '';
+    snapshot.forEach(doc => { html += createCard(doc.data()); });
+    grid.innerHTML = html || '<p style="color:#666; grid-column:1/-1; text-align:center;">TV Shows නැත</p>';
+  } catch(err) {
+    console.error("TV Shows Error:", err);
+    grid.innerHTML = '<p style="color:red; grid-column:1/-1; text-align:center;">Error loading</p>';
+  }
+}
+
+// 3. Daily Trending
 async function loadTrendingMovies() {
+  const grid = document.getElementById("trendingMovies");
+  if(!grid) return;
 
-  const trendingGrid = document.getElementById("trendingMovies");
-
-  if (!trendingGrid) return;
-
-  const snapshot = await getDocs(collection(db, "trendingMovies"));
-
-  trendingGrid.innerHTML = "";
-
-  snapshot.forEach((doc) => {
-
-    const movie = doc.data();
-
-    trendingGrid.innerHTML += `
-      <a href="${movie.video}" style="text-decoration:none;color:inherit;">
-        <div class="movie-card">
-
-          <span class="badge hd">HD</span>
-
-          <img src="${movie.poster}" alt="${movie.title}">
-
-          <div class="card-info">
-            <h3>${movie.title}</h3>
-            <p>Movie Land</p>
-          </div>
-
-        </div>
-      </a>
-    `;
-  });
-
+  try {
+    const q = query(collection(db, "movies"), where("category", "==", "trending"), orderBy("createdAt", "desc"), limit(12));
+    const snapshot = await getDocs(q);
+    let html = '';
+    snapshot.forEach(doc => { html += createCard(doc.data()); });
+    grid.innerHTML = html || '<p style="color:#666; grid-column:1/-1; text-align:center;">Trending නැත</p>';
+  } catch(err) {
+    console.error("Trending Error:", err);
+    grid.innerHTML = '<p style="color:red; grid-column:1/-1; text-align:center;">Error loading</p>';
+  }
 }
 
-loadMovies();
+// Page load වෙද්දි 3ම run වෙනවා
+loadLatestMovies();
+loadTVShows();
 loadTrendingMovies();
