@@ -46,7 +46,6 @@
   
   <!-- Hero Slider -->
   <section class="hero">
-    <!-- Slide 1 - Garfield -->
     <div class="hero-slide active" style="background-image: url('https://i.ibb.co/zW6T57d5/91a7e11fa39e.jpg')">
       <div class="hero-content">
         <h1>The Garfield Movie 2024 Sinhala Dubbed – සිංහල හඬකැවූ</h1>
@@ -59,7 +58,6 @@
       </div>
     </div>
 
-    <!-- Slide 2 -->
     <div class="hero-slide" style="background-image: url('https://i.ibb.co/5WpXKw6L/6f90c94e13d2.jpg')">
       <div class="hero-content">
         <h1>Doraemon Movie 2023 Sinhala Dubbed – සිංහල හඬකැවූ</h1>
@@ -72,7 +70,6 @@
       </div>
     </div>
 
-    <!-- Slide 3 -->
     <div class="hero-slide" style="background-image: url('https://i.ibb.co/WvTswV40/cde91e748bd8.jpg')">
       <div class="hero-content">
         <h1>Ice Age 5 Sinhala Dubbed – සිංහල හඬකැවූ</h1>
@@ -85,7 +82,6 @@
       </div>
     </div>
 
-    <!-- Slide 4 -->
     <div class="hero-slide" style="background-image: url('https://i.ibb.co/DfpLzhmD/bbfc664e7935.jpg')">
       <div class="hero-content">
         <h1>How To Train Your Dragon 3 Sinhala Dubbed</h1>
@@ -98,7 +94,6 @@
       </div>
     </div>
     
-    <!-- Slide 5 -->
     <div class="hero-slide" style="background-image: url('https://i.ibb.co/DHtF1JTL/e35097acfa77.jpg')">
       <div class="hero-content">
         <h1>Ben 10 Season 01 | <br>Sinhala Dubbed - සිංහල හඬකැවූ </h1>
@@ -187,14 +182,14 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getFirestore, collection, getDocs, orderBy, query } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-    // උඹේ Firebase config එක මෙතන paste කරපන්
     const firebaseConfig = {
-      apiKey: "උඹේ_API_KEY",
-      authDomain: "උඹේ_PROJECT.firebaseapp.com",
-      projectId: "උඹේ_PROJECT_ID",
-      storageBucket: "උඹේ_PROJECT.appspot.com",
-      messagingSenderId: "123456789",
-      appId: "1:123456789:web:abcdef"
+      apiKey: "AIzaSyCx0TEmgr3GCyvfeok9Y42yR1PTM4_8y9M",
+      authDomain: "magical-movie-land.firebaseapp.com",
+      projectId: "magical-movie-land",
+      storageBucket: "magical-movie-land.firebasestorage.app",
+      messagingSenderId: "27757424288",
+      appId: "1:27757424288:web:d650e2659f09f0b9c823c5",
+      measurementId: "G-KK84DYV9EP"
     };
 
     const app = initializeApp(firebaseConfig);
@@ -224,7 +219,6 @@
             </div>
           `;
           
-          // මුල් 6 trending, අලුත් ටික latest
           if(index < 6) trendingDiv.innerHTML += card;
           latestDiv.innerHTML += card;
         });
