@@ -60,6 +60,7 @@
             font-size: 14px;
             margin: 0;
         }
+        label{font-size:12px;color:#aaa;margin-bottom:5px;display:block}
     </style>
 </head>
 <body>
@@ -70,6 +71,13 @@
     <input type="text" id="poster" placeholder="Poster Image URL" required>
     <input type="text" id="video" placeholder="Video URL" required>
     <input type="text" id="year" placeholder="Year - 2024" value="2024">
+
+    <!-- IMDb Fields අලුතෙන් add කලේ මේක -->
+    <label>IMDb Rating</label>
+    <input type="text" id="imdbRating" placeholder="ex: 8.2/10">
+    
+    <label>IMDb Votes</label>
+    <input type="text" id="imdbVotes" placeholder="ex: 250K">
 
     <select id="category">
         <option value="latest">Latest Uploads - Home</option>
@@ -109,6 +117,8 @@
             const poster = document.getElementById('poster').value;
             const video = document.getElementById('video').value;
             const year = document.getElementById('year').value;
+            const imdbRating = document.getElementById('imdbRating').value;
+            const imdbVotes = document.getElementById('imdbVotes').value;
             const category = document.getElementById('category').value;
             const msg = document.getElementById('msg');
 
@@ -124,6 +134,8 @@
                     poster: poster,
                     video: video,
                     year: year,
+                    imdbRating: imdbRating,  // Firebase එකට save වෙනවා
+                    imdbVotes: imdbVotes,    // Firebase එකට save වෙනවා
                     category: category,
                     createdAt: serverTimestamp()
                 });
@@ -133,6 +145,8 @@
                 document.getElementById('title').value = '';
                 document.getElementById('poster').value = '';
                 document.getElementById('video').value = '';
+                document.getElementById('imdbRating').value = '';
+                document.getElementById('imdbVotes').value = '';
                 loadMovies();
 
             } catch(err) {
@@ -158,7 +172,7 @@
                     <div class="movie-item">
                         <div class="movie-info">
                             <h4>${m.title}</h4>
-                            <p>Year: ${m.year} | Category: ${m.category}</p>
+                            <p>Year: ${m.year} | IMDb: ${m.imdbRating || 'N/A'} | Category: ${m.category}</p>
                         </div>
                         <button class="delete-btn" onclick="deleteMovie('${docSnap.id}', '${m.title}')">Delete</button>
                     </div>
