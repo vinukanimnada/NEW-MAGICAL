@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title id="pageTitle">Watch - MAGICAL MOVIE LAND</title>
+<style>
+body{background:#000;color:white;font-family:Arial;margin:0;padding:0}
+.header{padding:15px;background:#111;display:flex;align-items:center;gap:15px}
+.header a{color:#ff2d95;text-decoration:none;font-size:24px}
+.header h2{margin:0;font-size:18px;flex:1}
+.player{width:100%;height:55vh;background:#000}
+iframe{width:100%;height:100%;border:none}
+.alert{background:#2a1a1a;border:1px solid #ff4444;color:#ff8888;padding:12px;margin:15px;border-radius:8px;font-size:13px;text-align:center}
+.alert span{color:#ff4444;font-weight:bold}
+.info{padding:20px;max-width:900px;margin:auto}
+.movie-detail{display:flex;gap:15px;margin-top:15px}
+.movie-detail img{width:120px;border-radius:8px}
+.movie-detail h1{margin:0 0 10px 0;font-size:20px;color:#fff}
+.movie-detail p{margin:5px 0;color:#ccc;font-size:14px}
+.movie-detail p strong{color:#fff}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <a href="index.html">←</a>
+  <h2 id="title">Loading...</h2>
+</div>
+
+<div class="player">
+  <iframe id="videoFrame" src="" allowfullscreen allow="autoplay"></iframe>
+</div>
+
+<div class="alert">
+  <span>Click</span> කිරීමේදී, ඔබ අදාල එකක් සඳහා <span>redirect</span> වූවොත්, නැවත අපගේ වෙබ් අඩවියට <span>Back</span> වන්න.
+</div>
+
+<div class="info">
+  <div class="movie-detail">
+    <img id="poster" src="" alt="">
+    <div>
+      <h1 id="movieTitle"></h1>
+      <p><strong>Release Year:</strong> <span id="year"></span></p>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCx0TEmgr3GCyvfeok9Y42yR1PTM4_8y9M",
+  authDomain: "magical-movie-land.firebaseapp.com",
+  projectId: "magical-movie-land",
+  storageBucket: "magical-movie-land.firebasestorage.app",
+  messagingSenderId: "27757424288",
+  appId: "1:27757424288:web:d650e2659f09f0b9c823c5",
+  measurementId: "G-KK84DYV9EP"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+const params = new URLSearchParams(window.location.search);
+const movieId = params.get('id');
+
+async function loadMovie() {
+  if(!movieId) {
+    document.getElementById('title').innerText = 'Movie හම්බුනේ නෑ';
+    return;
+  }
+  
+  const docRef = doc(db, "movies", movieId);
+  const docSnap = await getDoc(docRef);
+  
+  if(docSnap.exists()) {
+    const m = docSnap.data();
+    document.getElementById('pageTitle').innerText = m.title + ' - MAGICAL MOVIE LAND';
+    document.getElementById('title').innerText = m.title;
+    document.getElementById('movieTitle').innerText = m.title;
+    document.getElementById('year').innerText = m.year || '2024';
+    document.getElementById('poster').src = m.poster;
+    document.getElementById('videoFrame').src = m.video;
+  } else {
+    document.getElementById('title').innerText = 'Movie හොයාගන්න බැරි උනා';
+  }
+}
+
+loadMovie();
+</script>
+</body>
+</html>
