@@ -69,14 +69,29 @@
 
     <input type="text" id="title" placeholder="Movie / Series Name" required>
     <input type="text" id="poster" placeholder="Poster Image URL" required>
-    <input type="text" id="video" placeholder="Video URL" required>
+    <input type="text" id="video" placeholder="Video URL - Doodstream Link" required>
     <input type="text" id="year" placeholder="Year - 2024" value="2024">
 
-    <!-- IMDb Fields අලුතෙන් add කලේ මේක -->
-    <label>IMDb Rating</label>
+    <!-- අලුතෙන් add කරපු fields 5 -->
+    <label>🎭 Genres</label>
+    <input type="text" id="genres" placeholder="ex: Action, Adventure, Fantasy">
+    
+    <label>👨‍🎬 Director</label>
+    <input type="text" id="director" placeholder="ex: David Yates">
+    
+    <label>⏱️ Duration</label>
+    <input type="text" id="duration" placeholder="ex: 2h 10m">
+    
+    <label>🗣️ Language</label>
+    <input type="text" id="language" placeholder="ex: English, Sinhala Dub">
+    
+    <label>🌍 Country</label>
+    <input type="text" id="country" placeholder="ex: USA, UK">
+
+    <label>⭐ IMDb Rating</label>
     <input type="text" id="imdbRating" placeholder="ex: 8.2/10">
     
-    <label>IMDb Votes</label>
+    <label>📊 IMDb Votes</label>
     <input type="text" id="imdbVotes" placeholder="ex: 250K">
 
     <select id="category">
@@ -117,6 +132,11 @@
             const poster = document.getElementById('poster').value;
             const video = document.getElementById('video').value;
             const year = document.getElementById('year').value;
+            const genres = document.getElementById('genres').value;
+            const director = document.getElementById('director').value;
+            const duration = document.getElementById('duration').value;
+            const language = document.getElementById('language').value;
+            const country = document.getElementById('country').value;
             const imdbRating = document.getElementById('imdbRating').value;
             const imdbVotes = document.getElementById('imdbVotes').value;
             const category = document.getElementById('category').value;
@@ -124,29 +144,22 @@
 
             if(!title ||!poster ||!video) {
                 msg.style.color = 'red';
-                msg.innerText = 'සියලුම fields පුරවන්න!';
+                msg.innerText = 'Title, Poster, Video 3ම අනිවාර්යයි!';
                 return;
             }
 
             try {
                 await addDoc(collection(db, "movies"), {
-                    title: title,
-                    poster: poster,
-                    video: video,
-                    year: year,
-                    imdbRating: imdbRating,  // Firebase එකට save වෙනවා
-                    imdbVotes: imdbVotes,    // Firebase එකට save වෙනවා
-                    category: category,
+                    title, poster, video, year, genres, director, duration, language, country, imdbRating, imdbVotes, category,
                     createdAt: serverTimestamp()
                 });
 
                 msg.style.color = '#00ff88';
-                msg.innerText = '✅ Saved Movie!';
-                document.getElementById('title').value = '';
-                document.getElementById('poster').value = '';
-                document.getElementById('video').value = '';
-                document.getElementById('imdbRating').value = '';
-                document.getElementById('imdbVotes').value = '';
+                msg.innerText = '✅ Movie Saved Successfully!';
+                ['title','poster','video','genres','director','duration','language','country','imdbRating','imdbVotes'].forEach(id=>{
+                    document.getElementById(id).value = '';
+                });
+                document.getElementById('year').value = '2024';
                 loadMovies();
 
             } catch(err) {
@@ -172,7 +185,7 @@
                     <div class="movie-item">
                         <div class="movie-info">
                             <h4>${m.title}</h4>
-                            <p>Year: ${m.year} | IMDb: ${m.imdbRating || 'N/A'} | Category: ${m.category}</p>
+                            <p>Year: ${m.year} | IMDb: ${m.imdbRating || 'N/A'} | ${m.genres || ''}</p>
                         </div>
                         <button class="delete-btn" onclick="deleteMovie('${docSnap.id}', '${m.title}')">Delete</button>
                     </div>
@@ -184,7 +197,7 @@
         window.deleteMovie = async function(id, title) {
             if(confirm(`"${title}" delete කරන්නද?`)) {
                 await deleteDoc(doc(db, "movies", id));
-                alert('✅ Deleted Movie!');
+                alert('✅ Deleted!');
                 loadMovies();
             }
         }
