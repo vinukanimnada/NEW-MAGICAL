@@ -8,18 +8,27 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
 body{background:#000;color:white;font-family:Arial;margin:0;padding:0}
-.player{width:100%;height:55vh;background:#000}
+.player{width:100%;height:55vh;background:#000;position:relative;border-radius:12px;overflow:hidden;margin-bottom:15px}
 iframe{width:100%;height:100%;border:none}
 .alert{background:#2a1a1a;border:1px solid #ff4444;color:#ff8888;padding:12px;margin:15px;border-radius:8px;font-size:13px;text-align:center}
 .alert span{color:#ff4444;font-weight:bold}
 .info{padding:20px;max-width:900px;margin:auto}
-.movie-detail{display:flex;gap:15px;margin-top:15px}
-.movie-detail img{width:120px;border-radius:8px}
+.movie-detail{display:flex;gap:15px;margin-top:15px;flex-wrap:wrap}
+.movie-detail img{width:120px;border-radius:8px;flex-shrink:0}
 .movie-detail h1{margin:0 0 10px 0;font-size:20px;color:#fff}
 .movie-detail p{margin:5px 0;color:#ccc;font-size:14px}
 .movie-detail p strong{color:#fff}
 .imdb-box{color:#f5c518;font-weight:bold}
 .imdb-box small{color:#aaa;font-size:12px}
+
+/* Quality Badge */
+.badges{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap}
+.badge{padding:4px 10px;border-radius:5px;font-size:12px;font-weight:bold}
+.badge.fhd{background:#ff1493;color:white}
+.badge.hd{background:#ff4500;color:white}
+.badge.web-dl{background:#00bfff;color:white}
+.badge.cam{background:#888;color:white}
+.badge.imdb{background:#f5c518;color:#000}
 </style>
 </head>
 <body>
@@ -53,8 +62,9 @@ iframe{width:100%;height:100%;border:none}
   <span class="close-btn" id="closeSidebar">×</span>
   <div class="overlay" id="overlay"></div>
   
-<div class="player">
-  <iframe id="videoFrame" src="" allowfullscreen allow="autoplay"></iframe>
+<!-- Player - මේකම replace වෙයි -->
+<div class="player" id="playerBox">
+  <iframe id="videoFrame" src="" allowfullscreen allow="autoplay" referrerpolicy="no-referrer"></iframe>
 </div>
 
 <div class="alert">
@@ -66,6 +76,9 @@ iframe{width:100%;height:100%;border:none}
     <img id="poster" src="" alt="">
     <div>
       <h1 id="movieTitle"></h1>
+      
+      <!-- Quality + IMDb Badges -->
+      <div class="badges" id="badges"></div>
       
       <!-- Screenshot එකේ වගේම details ටික -->
       <p><strong>🎭 Genres:</strong> <span id="genres"></span></p>
@@ -111,8 +124,15 @@ async function loadMovie() {
   
   if(docSnap.exists()) {
     const m = docSnap.data();
-    document.getElementById('pageTitle').innerText = m.title + ' - MAGICAL MOVIE LAND';
-    document.getElementById('movieTitle').innerText = m.title;
+    document.getElementById('pageTitle').innerText = (m.title || 'Movie') + ' - MAGICAL MOVIE LAND';
+    document.getElementById('movieTitle').innerText = m.title || 'Untitled';
+    
+    // Quality Badge + IMDb Badge
+    const quality = m.quality || 'HD';
+    const qualityClass = quality.toLowerCase().replace('.', '-');
+    let badgesHTML = `<span class="badge ${qualityClass}">${quality}</span>`;
+    if(m.imdbRating) badgesHTML += `<span class="badge imdb">⭐ ${m.imdbRating}</span>`;
+    document.getElementById('badges').innerHTML = badgesHTML;
     
     // Firebase data load කරන code - අලුත් fields ටික
     document.getElementById('genres').innerText = m.genres || 'N/A';
@@ -127,10 +147,27 @@ async function loadMovie() {
     document.getElementById('imdbVotes').innerText = m.imdbVotes ? '(' + m.imdbVotes + ' votes)' : '';
     
     document.getElementById('category').innerText = m.category || 'Movie';
-    document.getElementById('poster').src = m.poster || '';
-    document.getElementById('videoFrame').src = m.video || '';
+    document.getElementById('poster').src = m.poster || 'https://via.placeholder.com/120x180/222/fff?text=No+Image';
+    
+    // Video Player - Check කරලා දාන්නේ
+    const playerBox = document.getElementById('playerBox');
+    if(m.video && m.video.trim() !== '' && m.video !== '#') {
+      document.getElementById('videoFrame').src = m.video;
+    } else {
+      playerBox.innerHTML = `
+        <div style="width:100%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; background:linear-gradient(135deg, #1a1a1a 0%, #111 100%); color:#666; text-align:center; padding:20px;">
+            <div style="font-size:60px; margin-bottom:20px;">🎬</div>
+            <div style="font-size:20px; font-weight:bold; color:#ff2d95; margin-bottom:10px;">Video එක තාම Ready නෑ</div>
+            <div style="font-size:14px; color:#888; line-height:1.6;">
+                Admin එකෙන් Doodstream link එක add කරපු ගමන්<br>
+                මේක auto play වෙයි ✅
+            </div>
+        </div>
+      `;
+    }
   } else {
     document.getElementById('movieTitle').innerText = 'Movie හොයාගන්න බැරි උනා';
+    document.getElementById('playerBox').innerHTML = '<div style="text-align:center; padding:100px; color:#ff4444;">Movie එක හොයාගන්න බැරි වුනා</div>';
   }
 }
 
