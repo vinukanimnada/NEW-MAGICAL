@@ -14,7 +14,7 @@ iframe{width:100%;height:100%;border:none}
 .alert span{color:#ff4444;font-weight:bold}
 .info{padding:20px;max-width:1000px;margin:auto}
 
-/* Poster දකුණට + Details පැත්තට + ලොකු font */
+/* Poster වම් පැත්තට, Details දකුණු පැත්තට */
 .movie-detail{
     display:flex;
     gap:25px;
@@ -22,7 +22,7 @@ iframe{width:100%;height:100%;border:none}
     align-items:flex-start;
 }
 
-/* Poster 120px > 200px + glow */
+/* Poster එක - වම් පැත්තට fix width */
 .movie-detail img{
     width:200px;
     flex-shrink:0;
@@ -30,19 +30,25 @@ iframe{width:100%;height:100%;border:none}
     box-shadow:0 4px 20px rgba(255,45,149,0.3);
 }
 
-.movie-detail > div{flex:1;min-width:0}
+/* Details ටික - දකුණු පැත්තට ඉඩ අරන් */
+.movie-detail > div{
+    flex:1;
+    min-width:0;
+}
 
 .movie-detail h1{
     margin:0 0 12px 0;
     font-size:26px;
     color:#fff;
     line-height:1.3;
+    text-align:left;
 }
 
 .movie-detail p{
     margin:8px 0;
     font-size:15px;
     color:#ccc;
+    text-align:left;
 }
 
 .movie-detail p strong{
@@ -55,7 +61,7 @@ iframe{width:100%;height:100%;border:none}
 .imdb-box small{color:#aaa;font-size:13px}
 
 /* Quality Badge */
-.badges{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.badges{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;justify-content:flex-start}
 .badge{padding:5px 12px;border-radius:6px;font-size:13px;font-weight:bold}
 .badge.fhd{background:#ff1493;color:white}
 .badge.hd{background:#ff4500;color:white}
@@ -63,7 +69,7 @@ iframe{width:100%;height:100%;border:none}
 .badge.cam{background:#888;color:white}
 .badge.imdb{background:#f5c518;color:#000}
 
-/* Mobile responsive */
+/* Mobile responsive - පොඩි screen වල column */
 @media (max-width: 768px){
     .movie-detail{
         flex-direction:column;
@@ -71,8 +77,9 @@ iframe{width:100%;height:100%;border:none}
         text-align:center;
     }
     .movie-detail img{width:160px}
-    .movie-detail h1{font-size:22px}
+    .movie-detail h1{font-size:22px;text-align:center}
     .badges{justify-content:center}
+    .movie-detail p{text-align:left}
 </style>
 </head>
 <body>
@@ -124,7 +131,7 @@ iframe{width:100%;height:100%;border:none}
       <!-- Quality + IMDb Badges -->
       <div class="badges" id="badges"></div>
       
-      <!-- Details ටික -->
+      <!-- Details ටික - දැන් දකුණු පැත්තට -->
       <p><strong>🎭 Genres:</strong> <span id="genres"></span></p>
       <p><strong>👨‍🎬 Director:</strong> <span id="director"></span></p>
       <p><strong>⏱️ Duration:</strong> <span id="duration"></span></p>
