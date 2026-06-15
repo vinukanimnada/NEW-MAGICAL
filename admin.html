@@ -35,7 +35,7 @@
             cursor: pointer;
             margin-bottom: 10px;
         }
-        #msg { text-align: center; margin-top: 15px; color: #00ff88; }
+        #msg { text-align: center; margin-top: 15px; color: #00ff88; min-height: 20px; }
        .movie-list {
             margin-top: 40px;
             border-top: 2px solid #333;
@@ -67,12 +67,20 @@
 
     <h2>🎬 Add Movie / TV Show</h2>
 
-    <input type="text" id="title" placeholder="Movie / Series Name" required>
-    <input type="text" id="poster" placeholder="Poster Image URL" required>
-    <input type="text" id="video" placeholder="Video URL - Doodstream Link" required>
+    <input type="text" id="title" placeholder="Movie / Series Name">
+    <input type="text" id="poster" placeholder="Poster Image URL">
+    <input type="text" id="video" placeholder="Video URL - Doodstream Link">
     <input type="text" id="year" placeholder="Year - 2024" value="2024">
 
-    <!-- අලුතෙන් add කරපු fields 5 -->
+    <!-- Quality Select - අලුතෙන් -->
+    <label>📺 Quality</label>
+    <select id="quality">
+        <option value="FHD">FHD - Full HD 1080p</option>
+        <option value="HD">HD - 720p</option>
+        <option value="WEB-DL">WEB-DL</option>
+        <option value="CAM">CAM</option>
+    </select>
+
     <label>🎭 Genres</label>
     <input type="text" id="genres" placeholder="ex: Action, Adventure, Fantasy">
     
@@ -127,44 +135,56 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
+        // 100% Optional Save - Validation නෑ
         window.addMovie = async function() {
-            const title = document.getElementById('title').value;
-            const poster = document.getElementById('poster').value;
-            const video = document.getElementById('video').value;
-            const year = document.getElementById('year').value;
-            const genres = document.getElementById('genres').value;
-            const director = document.getElementById('director').value;
-            const duration = document.getElementById('duration').value;
-            const language = document.getElementById('language').value;
-            const country = document.getElementById('country').value;
-            const imdbRating = document.getElementById('imdbRating').value;
-            const imdbVotes = document.getElementById('imdbVotes').value;
+            const title = document.getElementById('title').value.trim();
+            const poster = document.getElementById('poster').value.trim();
+            const video = document.getElementById('video').value.trim();
+            const year = document.getElementById('year').value.trim();
+            const quality = document.getElementById('quality').value;
+            const genres = document.getElementById('genres').value.trim();
+            const director = document.getElementById('director').value.trim();
+            const duration = document.getElementById('duration').value.trim();
+            const language = document.getElementById('language').value.trim();
+            const country = document.getElementById('country').value.trim();
+            const imdbRating = document.getElementById('imdbRating').value.trim();
+            const imdbVotes = document.getElementById('imdbVotes').value.trim();
             const category = document.getElementById('category').value;
             const msg = document.getElementById('msg');
 
-            if(!title ||!poster ||!video) {
-                msg.style.color = 'red';
-                msg.innerText = 'Title, Poster, Video 3ම අනිවාර්යයි!';
-                return;
-            }
-
             try {
                 await addDoc(collection(db, "movies"), {
-                    title, poster, video, year, genres, director, duration, language, country, imdbRating, imdbVotes, category,
+                    title: title || null,
+                    poster: poster || null,
+                    video: video || null,
+                    year: year || null,
+                    quality: quality || null,
+                    genres: genres || null,
+                    director: director || null,
+                    duration: duration || null,
+                    language: language || null,
+                    country: country || null,
+                    imdbRating: imdbRating || null,
+                    imdbVotes: imdbVotes || null,
+                    category: category,
                     createdAt: serverTimestamp()
                 });
 
                 msg.style.color = '#00ff88';
-                msg.innerText = '✅ Movie Saved Successfully!';
-                ['title','poster','video','genres','director','duration','language','country','imdbRating','imdbVotes'].forEach(id=>{
-                    document.getElementById(id).value = '';
-                });
+                msg.innerText = '✅ Movie Saved!';
+                
+                // Clear කරන්න
+                document.querySelectorAll('input[type="text"]').forEach(input => input.value = '');
                 document.getElementById('year').value = '2024';
+                document.getElementById('quality').value = 'FHD';
+                
+                setTimeout(()=> msg.innerText = '', 2000);
                 loadMovies();
 
             } catch(err) {
                 msg.style.color = 'red';
                 msg.innerText = 'Error: ' + err.message;
+                setTimeout(()=> msg.innerText = '', 3000);
             }
         }
 
@@ -184,10 +204,10 @@
                 html += `
                     <div class="movie-item">
                         <div class="movie-info">
-                            <h4>${m.title}</h4>
-                            <p>Year: ${m.year} | IMDb: ${m.imdbRating || 'N/A'} | ${m.genres || ''}</p>
+                            <h4>${m.title || 'Untitled'}</h4>
+                            <p>Quality: ${m.quality || 'N/A'} | Year: ${m.year || 'N/A'} | IMDb: ${m.imdbRating || 'N/A'}</p>
                         </div>
-                        <button class="delete-btn" onclick="deleteMovie('${docSnap.id}', '${m.title}')">Delete</button>
+                        <button class="delete-btn" onclick="deleteMovie('${docSnap.id}', '${m.title || 'Movie'}')">Delete</button>
                     </div>
                 `;
             });
