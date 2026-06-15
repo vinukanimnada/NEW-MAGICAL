@@ -66,10 +66,16 @@ iframe{width:100%;height:100%;border:none}
     <img id="poster" src="" alt="">
     <div>
       <h1 id="movieTitle"></h1>
-      <p><strong>Director:</strong> <span id="director"></span></p>
-      <p><strong>Release Year:</strong> <span id="year"></span></p>
-      <p><strong>IMDb Rating:</strong> <span class="imdb-box">⭐ <span id="imdb"></span> <small id="imdbVotes"></small></span></p>
-      <p><strong>Category:</strong> <span id="category"></span></p>
+      
+      <!-- Screenshot එකේ වගේම details ටික -->
+      <p><strong>🎭 Genres:</strong> <span id="genres"></span></p>
+      <p><strong>👨‍🎬 Director:</strong> <span id="director"></span></p>
+      <p><strong>⏱️ Duration:</strong> <span id="duration"></span></p>
+      <p><strong>🗣️ Language:</strong> <span id="language"></span></p>
+      <p><strong>🌍 Country:</strong> <span id="country"></span></p>
+      <p><strong>📅 Release Year:</strong> <span id="year"></span></p>
+      <p><strong>⭐ IMDb Rating:</strong> <span class="imdb-box">⭐ <span id="imdb"></span> <small id="imdbVotes"></small></span></p>
+      <p><strong>📂 Category:</strong> <span id="category"></span></p>
     </div>
   </div>
 </div>
@@ -107,10 +113,16 @@ async function loadMovie() {
     const m = docSnap.data();
     document.getElementById('pageTitle').innerText = m.title + ' - MAGICAL MOVIE LAND';
     document.getElementById('movieTitle').innerText = m.title;
-    document.getElementById('year').innerText = m.year || '2024';
-    document.getElementById('director').innerText = m.director || 'N/A';
     
-    // IMDb Rating + Votes පෙන්න code
+    // Firebase data load කරන code - අලුත් fields ටික
+    document.getElementById('genres').innerText = m.genres || 'N/A';
+    document.getElementById('director').innerText = m.director || 'N/A';
+    document.getElementById('duration').innerText = m.duration || 'N/A';
+    document.getElementById('language').innerText = m.language || 'N/A';
+    document.getElementById('country').innerText = m.country || 'N/A';
+    document.getElementById('year').innerText = m.year || '2024';
+    
+    // IMDb Rating + Votes
     document.getElementById('imdb').innerText = m.imdbRating || 'N/A';
     document.getElementById('imdbVotes').innerText = m.imdbVotes ? '(' + m.imdbVotes + ' votes)' : '';
     
