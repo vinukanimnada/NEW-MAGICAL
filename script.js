@@ -15,16 +15,20 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// ================= Create Card with Link =================
+// ================= Create Card with Link + IMDb Badge =================
 function createCard(m, id) {
   return `
     <div class="movie-card">
       <a href="watch.html?id=${id}" style="text-decoration:none; color:inherit; display:block;">
         <span class="badge hd">HD</span>
+
+        <!-- IMDb Rating Badge - අලුතෙන් add කලේ -->
+        ${m.imdbRating? `<span class="badge imdb">⭐ ${m.imdbRating}</span>` : ''}
+
         <img src="${m.poster || m.thumbnail}" alt="${m.title}">
         <div class="card-info">
           <h3>${m.title}</h3>
-          <p>${m.year || '2024'} | ${m.category}</p>
+          <p>${m.year || '2024'} | ${m.category || 'Movie'}</p>
         </div>
       </a>
     </div>
