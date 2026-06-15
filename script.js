@@ -15,19 +15,23 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// ================= Create Card with Link + IMDb Badge =================
+// ================= Create Card with Link + Quality + IMDb Badge =================
 function createCard(m, id) {
+  const quality = m.quality || 'HD';
+  const qualityClass = quality.toLowerCase().replace('.', '-'); // WEB-DL -> web-dl
+
   return `
     <div class="movie-card">
       <a href="watch.html?id=${id}" style="text-decoration:none; color:inherit; display:block;">
-        <span class="badge hd">HD</span>
+        <!-- Quality Badge - Firebase එකෙන් ගන්නවා -->
+        <span class="badge ${qualityClass}">${quality}</span>
 
-        <!-- IMDb Rating Badge - අලුතෙන් add කලේ -->
+        <!-- IMDb Rating Badge - තියෙනවනම් විතරක් -->
         ${m.imdbRating? `<span class="badge imdb">⭐ ${m.imdbRating}</span>` : ''}
 
-        <img src="${m.poster || m.thumbnail}" alt="${m.title}">
+        <img src="${m.poster || m.thumbnail || 'https://via.placeholder.com/300x450'}" alt="${m.title || 'Movie'}">
         <div class="card-info">
-          <h3>${m.title}</h3>
+          <h3>${m.title || 'Untitled Movie'}</h3>
           <p>${m.year || '2024'} | ${m.category || 'Movie'}</p>
         </div>
       </a>
@@ -137,6 +141,7 @@ document.addEventListener('DOMContentLoaded', function() {
   if(slides.length > 0 && dotsContainer) {
     slides.forEach((_, i) => {
       let dot = document.createElement("span");
+      dot.classList.add("dot");
       if (i === 0) dot.classList.add("active");
       dot.addEventListener("click", () => goToSlide(i));
       dotsContainer.appendChild(dot);
