@@ -284,29 +284,53 @@ header {
   display: block;
 }
 
+/* Badge - HD, FHD, IMDb etc */
 .badge{
   position: absolute;
   top: 8px;
-  left: 8px;
-  background: #e50914;
-  padding: 3px 6px;
-  font-size: 10px;
+  padding: 4px 8px;
+  font-size: 11px;
   font-weight: bold;
-  border-radius: 3px;
+  border-radius: 5px;
   z-index: 2;
   color: white;
 }
 
-.badge.webdl{
-  background: #e50914;
+/* Quality Badge - වම් පැත්ත */
+.badge.fhd{
+  left: 8px;
+  background: #ff1493; /* FHD = Pink */
 }
 
 .badge.hd{
-  background: #ff4500;
+  left: 8px;
+  background: #ff4500; /* HD = Orange */
 }
 
-.badge.fhd{
-  background: #ff8c00;
+.badge.web-dl{
+  left: 8px;
+  background: #00bfff; /* WEB-DL = Blue */
+}
+
+.badge.cam{
+  left: 8px;
+  background: #888; /* CAM = Grey */
+}
+
+.badge.webdl{
+  left: 8px;
+  background: #e50914;
+}
+
+/* IMDb Badge - දකුණු පැත්ත කහ පාට */
+.badge.imdb{
+  right: 8px;
+  left: auto;
+  background: #f5c518;
+  color: #000;
+  font-size: 11px;
+  padding: 4px 8px;
+  border-radius: 5px;
 }
 
 .rating{
@@ -411,7 +435,7 @@ section p{
   }
 }
 
-/* Mobile එකේ sidebar තව පොඩ්�ක් */
+/* Mobile එකේ sidebar තව පොඩ්ඩක් */
 @media (max-width: 480px){
   .sidebar {
     width: 200px !important;
@@ -500,7 +524,7 @@ section p{
 .hero-dots .dot.active{
   width: 24px;
   background: #FF10F0;
-  border-redius: 8px;
+  border-radius: 8px; /* typo එක හදලා */
 }
 
 /* Hero slide animation */
@@ -543,7 +567,7 @@ section p{
 a .movie-card {
   cursor: pointer;
   transition: transform 0.2s;
-  display: block; /* a tag එක block වගේ හැසිරෙන්න */
+  display: block;
 }
 
 a .movie-card:hover {
@@ -554,3 +578,4 @@ a .movie-card:hover {
 a {
   text-decoration: none;
   color: inherit;
+}
