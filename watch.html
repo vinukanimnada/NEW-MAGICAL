@@ -9,24 +9,44 @@
 <style>
 body{background:#000;color:white;font-family:Arial;margin:0;padding:0}
 
-/* Player - screenshot එක වගේ play button */
-.player{width:100%;height:55vh;background:#111;position:relative;border-radius:0;overflow:hidden;margin-bottom:15px;display:flex;align-items:center;justify-content:center}
-.player::after{
-    content:'▶';
+/* Player - උඩ යට අළු bar නෑ, edge to edge */
+.player{width:100%;height:55vh;background:#000;position:relative;overflow:hidden;margin-bottom:0}
+iframe{width:100%;height:100%;border:none;position:absolute;top:0;left:0;display:none}
+
+/* Clickable play button overlay */
+.play-overlay{
+    position:absolute;
+    top:0;left:0;
+    width:100%;
+    height:100%;
+    background:#000;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    z-index:2;
+}
+
+.play-btn{
     font-size:70px;
     color:#fff;
     background:rgba(0,0,0,0.6);
     width:90px;
     height:90px;
     border-radius:50%;
+    border:none;
+    cursor:pointer;
     display:flex;
     align-items:center;
     justify-content:center;
-    position:absolute;
+    transition:0.2s;
 }
-iframe{width:100%;height:100%;border:none;position:absolute;top:0;left:0}
+.play-btn:hover{transform:scale(1.1);background:rgba(255,45,149,0.8)}
+.play-btn:active{transform:scale(0.95)}
 
-/* Alert card - අළු box */
+.playing iframe{display:block}
+.playing .play-overlay{display:none}
+
+/* Alert card */
 .alert{background:#1a1a1a;color:#ccc;padding:15px;margin:15px;border-radius:10px;font-size:14px;text-align:center;line-height:1.6}
 .alert span{color:#ff4444;font-weight:bold}
 
@@ -90,10 +110,10 @@ iframe{width:100%;height:100%;border:none;position:absolute;top:0;left:0}
 .badge.cam{background:#888;color:white}
 .badge.imdb{background:#f5c518;color:#000}
 
-/* Mobile responsive - screenshot එක වගේම */
+/* Mobile responsive */
 @media (max-width: 768px){
     .player{height:45vh}
-    .player::after{font-size:60px;width:75px;height:75px}
+    .play-btn{font-size:60px;width:75px;height:75px}
     .movie-detail img{width:110px}
     .movie-detail h1{font-size:17px}
     .movie-detail p{font-size:13px}
@@ -130,8 +150,11 @@ iframe{width:100%;height:100%;border:none;position:absolute;top:0;left:0}
   <span class="close-btn" id="closeSidebar">×</span>
   <div class="overlay" id="overlay"></div>
   
-<!-- Player - Video check කරලා -->
+<!-- Player - Play button + Video -->
 <div class="player" id="playerBox">
+  <div class="play-overlay" id="playOverlay">
+    <button class="play-btn" id="playBtn">▶</button>
+  </div>
   <iframe id="videoFrame" src="" allowfullscreen allow="autoplay" referrerpolicy="no-referrer"></iframe>
 </div>
 
@@ -148,7 +171,7 @@ iframe{width:100%;height:100%;border:none;position:absolute;top:0;left:0}
       <!-- Quality + IMDb Badges -->
       <div class="badges" id="badges"></div>
       
-      <!-- Details ටික - screenshot එක වගේ compact -->
+      <!-- Details ටික -->
       <p><strong>Director:</strong> <span id="director"></span></p>
       <p><strong>Release Year:</strong> <span id="year"></span></p>
       <p><strong>IMDb Rating:</strong> ⭐ <span id="imdb"></span></p>
@@ -205,17 +228,27 @@ async function loadMovie() {
     document.getElementById('category').innerText = m.category || 'Movie';
     document.getElementById('poster').src = m.poster || 'https://via.placeholder.com/120x180/222/fff?text=No+Image';
     
-    // Video Player - Check කරලා
+    // Video Player + Play button logic
     const playerBox = document.getElementById('playerBox');
+    const playOverlay = document.getElementById('playOverlay');
+    const playBtn = document.getElementById('playBtn');
+    const videoFrame = document.getElementById('videoFrame');
+
     if(m.video && m.video.trim() !== '' && m.video !== '#') {
-      document.getElementById('videoFrame').src = m.video;
+        playOverlay.style.display = 'flex';
+        
+        playBtn.onclick = function() {
+            videoFrame.src = m.video;
+            videoFrame.style.display = 'block';
+            playerBox.classList.add('playing');
+        };
     } else {
-      playerBox.innerHTML = `
-        <div style="width:100%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; background:#111; color:#666; text-align:center;">
-            <div style="font-size:60px; margin-bottom:15px;">🎬</div>
-            <div style="font-size:18px; font-weight:bold; color:#ff2d95;">Video එක තාම Ready නෑ</div>
-        </div>
-      `;
+        playOverlay.innerHTML = `
+            <div style="text-align:center; color:#666;">
+                <div style="font-size:60px; margin-bottom:15px;">🎬</div>
+                <div style="font-size:18px; font-weight:bold; color:#ff2d95;">Video එක තාම Ready නෑ</div>
+            </div>
+        `;
     }
   } else {
     document.getElementById('movieTitle').innerText = 'Movie හොයාගන්න බැරි උනා';
