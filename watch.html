@@ -20,7 +20,6 @@ iframe{width:100%;height:100%;border:none}
 </head>
 <body>
 
-
 <div class="player">
   <iframe id="videoFrame" src="" allowfullscreen allow="autoplay"></iframe>
 </div>
@@ -34,7 +33,10 @@ iframe{width:100%;height:100%;border:none}
     <img id="poster" src="" alt="">
     <div>
       <h1 id="movieTitle"></h1>
+      <p><strong>Director:</strong> <span id="director"></span></p>
       <p><strong>Release Year:</strong> <span id="year"></span></p>
+      <p><strong>IMDb Rating:</strong> ⭐ <span id="imdb"></span></p>
+      <p><strong>Category:</strong> <span id="category"></span></p>
     </div>
   </div>
 </div>
@@ -61,7 +63,7 @@ const movieId = params.get('id');
 
 async function loadMovie() {
   if(!movieId) {
-    document.getElementById('title').innerText = 'Movie හම්බුනේ නෑ';
+    document.getElementById('movieTitle').innerText = 'Movie හම්බුනේ නෑ';
     return;
   }
   
@@ -71,13 +73,15 @@ async function loadMovie() {
   if(docSnap.exists()) {
     const m = docSnap.data();
     document.getElementById('pageTitle').innerText = m.title + ' - MAGICAL MOVIE LAND';
-    document.getElementById('title').innerText = m.title;
     document.getElementById('movieTitle').innerText = m.title;
     document.getElementById('year').innerText = m.year || '2024';
-    document.getElementById('poster').src = m.poster;
-    document.getElementById('videoFrame').src = m.video;
+    document.getElementById('director').innerText = m.director || 'N/A';
+    document.getElementById('imdb').innerText = m.imdb || 'N/A';
+    document.getElementById('category').innerText = m.category || 'Movie';
+    document.getElementById('poster').src = m.poster || '';
+    document.getElementById('videoFrame').src = m.video || '';
   } else {
-    document.getElementById('title').innerText = 'Movie හොයාගන්න බැරි උනා';
+    document.getElementById('movieTitle').innerText = 'Movie හොයාගන්න බැරි උනා';
   }
 }
 
