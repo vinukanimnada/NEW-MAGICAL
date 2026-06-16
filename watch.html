@@ -12,34 +12,6 @@ body{background:#000;color:white;font-family:Arial;margin:0;padding:0}
 .player{width:100%;height:55vh;background:#000;position:relative;overflow:hidden;margin-bottom:0}
 .player video{width:100%;height:100%;object-fit:contain;background:#000;display:block}
 
-.play-overlay{
-    position:absolute;
-    top:0;left:0;
-    width:100%;
-    height:100%;
-    background:#000;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    z-index:2;
-}
-
-.play-btn{
-    font-size:70px;
-    color:#fff;
-    background:rgba(0,0,0,0.6);
-    width:90px;
-    height:90px;
-    border-radius:50%;
-    border:none;
-    cursor:pointer;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    transition:0.2s;
-}
-.play-btn:hover{transform:scale(1.1);background:rgba(255,45,149,0.8)}
-
 .info{padding:0 15px 20px;max-width:1000px;margin:auto}
 
 .movie-detail{
@@ -72,7 +44,6 @@ body{background:#000;color:white;font-family:Arial;margin:0;padding:0}
 
 @media (max-width: 768px){
     .player{height:45vh}
-    .play-btn{font-size:60px;width:75px;height:75px}
     .movie-detail{gap:15px;padding:15px}
     .left-col img{width:130px;border-radius:10px}
     .left-col h1{font-size:16px;max-width:130px}
@@ -109,12 +80,8 @@ body{background:#000;color:white;font-family:Arial;margin:0;padding:0}
   <span class="close-btn" id="closeSidebar">×</span>
   <div class="overlay" id="overlay"></div>
   
-<!-- Video Player - HTML5 video + Play overlay, No poster, No alert -->
+<!-- Video Player - Direct controls only, No overlay button -->
 <div class="player" id="playerBox">
-  <div class="play-overlay" id="playOverlay">
-    <button class="play-btn" id="playBtn">▶</button>
-  </div>
-  
   <video 
     id="videoPlayer" 
     controls 
@@ -199,13 +166,10 @@ async function loadMovie() {
     // Poster එක යට card එකේ විතරක්
     document.getElementById('poster').src = m.poster || 'https://via.placeholder.com/200x300/222/fff?text=No+Image';
     
-    // Video Player
+    // Video Player - Direct controls
     const videoPlayer = document.getElementById('videoPlayer');
     const videoSource = document.getElementById('videoSource');
-    const playOverlay = document.getElementById('playOverlay');
-    const playBtn = document.getElementById('playBtn');
     
-    // Poster set කරන්නේ නෑ
     if(m.video && m.video.trim() !== '' && m.video !== '#') {
         videoSource.src = m.video;
     } else {
@@ -213,20 +177,6 @@ async function loadMovie() {
     }
     
     videoPlayer.load();
-    
-    // Play button click - Alert නෑ, overlay විතරක් අයින් වෙනවා
-    playBtn.onclick = function() {
-        playOverlay.style.display = 'none';
-        if(m.video && m.video.trim() !== '' && m.video !== '#') {
-            videoPlayer.play();
-        }
-        // URL නැත්තම් මොකුත් වෙන්නේ නෑ - 0:00 පෙන්නවා විතරයි
-    };
-    
-    // Video play වුනාම overlay අයින් වෙනවා
-    videoPlayer.onplay = function() {
-        playOverlay.style.display = 'none';
-    }
     
   } else {
     document.getElementById('movieTitle').innerText = 'Movie හොයාගන්න බැරි උනා';
