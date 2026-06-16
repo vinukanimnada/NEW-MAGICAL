@@ -11,42 +11,7 @@ body{background:#000;color:white;font-family:Arial;margin:0;padding:0}
 
 /* Player - edge to edge කළු */
 .player{width:100%;height:55vh;background:#000;position:relative;overflow:hidden;margin-bottom:0}
-iframe{width:100%;height:100%;border:none;position:absolute;top:0;left:0;display:none}
-
-.play-overlay{
-    position:absolute;
-    top:0;left:0;
-    width:100%;
-    height:100%;
-    background:#000;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    z-index:2;
-}
-
-.play-btn{
-    font-size:70px;
-    color:#fff;
-    background:rgba(0,0,0,0.6);
-    width:90px;
-    height:90px;
-    border-radius:50%;
-    border:none;
-    cursor:pointer;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    transition:0.2s;
-}
-.play-btn:hover{transform:scale(1.1);background:rgba(255,45,149,0.8)}
-
-.playing iframe{display:block}
-.playing .play-overlay{display:none}
-
-/* Alert card */
-.alert{background:#1a1a1a;color:#ccc;padding:15px;margin:15px;border-radius:10px;font-size:14px;text-align:center;line-height:1.6}
-.alert span{color:#ff4444;font-weight:bold}
+.player video{width:100%;height:100%;object-fit:contain;background:#000;display:block}
 
 .info{padding:0 15px 20px;max-width:1000px;margin:auto}
 
@@ -129,13 +94,13 @@ iframe{width:100%;height:100%;border:none;position:absolute;top:0;left:0;display
 /* Mobile responsive */
 @media (max-width: 768px){
     .player{height:45vh}
-    .play-btn{font-size:60px;width:75px;height:75px}
     .movie-detail{gap:15px;padding:15px}
     .left-col img{width:130px;border-radius:10px}
     .left-col h1{font-size:16px;max-width:130px}
     .details-list p{font-size:13px;margin:6px 0}
     .details-list p strong{min-width:100px;font-size:13px}
     .badge{font-size:11px;padding:3px 8px}
+}
 </style>
 </head>
 <body>
@@ -166,16 +131,17 @@ iframe{width:100%;height:100%;border:none;position:absolute;top:0;left:0;display
   <span class="close-btn" id="closeSidebar">×</span>
   <div class="overlay" id="overlay"></div>
   
+<!-- Video Player - HTML5 video tag -->
 <div class="player" id="playerBox">
-  <div class="play-overlay" id="playOverlay">
-    <button class="play-btn" id="playBtn">▶</button>
-  </div>
-  <!-- IMPORTANT: allow attributes වැඩි කළා -->
-  <iframe id="videoFrame" src="" allowfullscreen allow="autoplay; encrypted-media; picture-in-picture" referrerpolicy="no-referrer"></iframe>
-</div>
-
-<div class="alert">
-  <span>Click</span> කිරීමේදී, ඔබ අදාල එකක් සඳහා <span>redirect</span> වූවොත්, නැවත අපගේ වෙබ් අඩවියට <span>Back</span> වන්න.
+  <video 
+    id="videoPlayer" 
+    controls 
+    preload="metadata"
+    poster="" 
+    style="width:100%; height:100%; background:#000; display:block;">
+    <source id="videoSource" src="" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
 </div>
 
 <div class="info">
@@ -257,32 +223,26 @@ async function loadMovie() {
     document.getElementById('imdbVotes').innerText = m.imdbVotes ? '(' + m.imdbVotes + ' votes)' : '';
     document.getElementById('poster').src = m.poster || 'https://via.placeholder.com/200x300/222/fff?text=No+Image';
     
-    // Video Player + Play button
-    const playerBox = document.getElementById('playerBox');
-    const playOverlay = document.getElementById('playOverlay');
-    const playBtn = document.getElementById('playBtn');
-    const videoFrame = document.getElementById('videoFrame');
-
-    if(m.video && m.video.trim() !== '' && m.video !== '#') {
-        playOverlay.style.display = 'flex';
-        playBtn.onclick = function() {
-            // Playmogo /e/ link එක iframe src එකට දානවා
-            videoFrame.src = m.video;
-            videoFrame.style.display = 'block';
-            playerBox.classList.add('playing');
-        };
-    } else {
-        playOverlay.innerHTML = `
-            <div style="width:100%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; background:#000; color:#666; text-align:center;">
-                <div style="font-size:60px; margin-bottom:20px;">🎬</div>
-                <div style="font-size:20px; font-weight:bold; color:#ff2d95; margin-bottom:10px;">Video එක තාම Ready නෑ</div>
-                <div style="font-size:14px; color:#888; line-height:1.6;">
-                    Admin එකෙන් Doodstream/Playmogo link එක add කරපු ගමන්<br>
-                    මේක auto play වෙයි ✅
-                </div>
-            </div>
-        `;
+    // Video Player - HTML5 video tag
+    const videoPlayer = document.getElementById('videoPlayer');
+    const videoSource = document.getElementById('videoSource');
+    
+    // Poster එක player background එකට
+    if(m.poster) {
+        videoPlayer.poster = m.poster;
     }
+    
+    // URL එක තියෙනවා නම් source එකට දානවා
+    if(m.video && m.video.trim() !== '' && m.video !== '#') {
+        videoSource.src = m.video;
+    } else {
+        // URL නැත්තම් src එක blank - එතකොට 0:00 පෙන්නවා
+        videoSource.src = '';
+    }
+    
+    // Video tag එක reload කරන්න ඕන source change කරාට පස්සේ
+    videoPlayer.load();
+    
   } else {
     document.getElementById('movieTitle').innerText = 'Movie හොයාගන්න බැරි උනා';
     document.getElementById('playerBox').innerHTML = '<div style="text-align:center; padding:100px; color:#ff4444;">Movie එක හොයාගන්න බැරි වුනා</div>';
