@@ -70,8 +70,9 @@ async function loadHeroSlider() {
         heroMovies.slice(0, 5).forEach((m, index) => {
             const bannerURL = m.banner.startsWith('http') ? m.banner : 'https://via.placeholder.com/1920x1080/111/fff?text=Invalid+Banner+URL';
             
+            // FIX 1: පලවෙනි slide එකට active class එක add කරා
             slidesHTML += `
-            <div class="hero-slide" style="background-image: url('${bannerURL}')">
+            <div class="hero-slide ${index === 0 ? 'active' : ''}" style="background-image: url('${bannerURL}')">
                 <div class="hero-content">
                     <h1>${m.title || 'Movie'}</h1>
                     ${(m.imdbRating || m.year) ? `
@@ -106,11 +107,22 @@ async function loadHeroSlider() {
     }
 }
 
+// FIX 2: goToSlide function එක active class toggle කරන විදිහට හදලා
 window.goToSlide = function(n) {
-    const slides = document.getElementById('heroSlides');
+    const slides = document.querySelectorAll('.hero-slide');
     const dots = document.querySelectorAll('.hero-dots .dot');
-    if(slides) slides.style.transform = `translateX(-${n * 100}%)`;
-    dots.forEach((dot, i) => dot.classList.toggle('active', i === n));
+    
+    // ඔක්කොම slides වලින් active අයින් කරලා
+    slides.forEach(s => s.classList.remove('active'));
+    dots.forEach(d => d.classList.remove('active'));
+    
+    // select කරපු slide එකට active දැම්මා
+    if(slides[n]) slides[n].classList.add('active');
+    if(dots[n]) dots[n].classList.add('active');
+    
+    // transform එක smooth slide එකට
+    const heroSlidesContainer = document.getElementById('heroSlides');
+    if(heroSlidesContainer) heroSlidesContainer.style.transform = `translateX(-${n * 100}%)`;
 }
 
 // ================= Firebase Load Movies =================
