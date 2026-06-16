@@ -8,18 +8,59 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
 body{background:#000;color:white;font-family:Arial;margin:0;padding:0}
-.player{width:100%;height:55vh;background:#000;position:relative;border-radius:12px;overflow:hidden;margin-bottom:15px}
-iframe{width:100%;height:100%;border:none}
-.alert{background:#2a1a1a;border:1px solid #ff4444;color:#ff8888;padding:12px;margin:15px;border-radius:8px;font-size:13px;text-align:center}
-.alert span{color:#ff4444;font-weight:bold}
-.info{padding:20px;max-width:1000px;margin:auto}
 
-/* Poster වම් පැත්තට, Details දකුණු පැත්තට */
+/* Player - edge to edge කළු */
+.player{width:100%;height:55vh;background:#000;position:relative;overflow:hidden;margin-bottom:0}
+iframe{width:100%;height:100%;border:none;position:absolute;top:0;left:0;display:none}
+
+/* Play button overlay */
+.play-overlay{
+    position:absolute;
+    top:0;left:0;
+    width:100%;
+    height:100%;
+    background:#000;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    z-index:2;
+}
+
+.play-btn{
+    font-size:70px;
+    color:#fff;
+    background:rgba(0,0,0,0.6);
+    width:90px;
+    height:90px;
+    border-radius:50%;
+    border:none;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    transition:0.2s;
+}
+.play-btn:hover{transform:scale(1.1);background:rgba(255,45,149,0.8)}
+.play-btn:active{transform:scale(0.95)}
+
+.playing iframe{display:block}
+.playing .play-overlay{display:none}
+
+/* Alert card */
+.alert{background:#1a1a1a;color:#ccc;padding:15px;margin:15px;border-radius:10px;font-size:14px;text-align:center;line-height:1.6}
+.alert span{color:#ff4444;font-weight:bold}
+
+.info{padding:0 15px 20px;max-width:1000px;margin:auto}
+
+/* Poster වම්, Details දකුණ - PC + Mobile දෙකටම */
 .movie-detail{
     display:flex;
     gap:25px;
     margin-top:20px;
     align-items:flex-start;
+    background:#1a1a1a;
+    padding:20px;
+    border-radius:12px;
 }
 
 /* Poster එක - වම් පැත්තට fix width */
@@ -30,7 +71,7 @@ iframe{width:100%;height:100%;border:none}
     box-shadow:0 4px 20px rgba(255,45,149,0.3);
 }
 
-/* Details ටික - දකුණු පැත්තට ඉඩ අරන් */
+/* Details ටික - දකුණු පැත්තට */
 .movie-detail > div{
     flex:1;
     min-width:0;
@@ -49,12 +90,18 @@ iframe{width:100%;height:100%;border:none}
     font-size:15px;
     color:#ccc;
     text-align:left;
+    display:flex;
+    align-items:center;
 }
 
 .movie-detail p strong{
     color:#fff;
     font-weight:600;
     margin-right:8px;
+    min-width:130px;
+    display:flex;
+    align-items:center;
+    gap:6px;
 }
 
 .imdb-box{color:#f5c518;font-weight:bold;font-size:15px}
@@ -69,17 +116,35 @@ iframe{width:100%;height:100%;border:none}
 .badge.cam{background:#888;color:white}
 .badge.imdb{background:#f5c518;color:#000}
 
-/* Mobile responsive - පොඩි screen වල column */
+/* Mobile responsive - පොඩි කරලා side-by-side ම */
 @media (max-width: 768px){
+    .player{height:45vh}
+    .play-btn{font-size:60px;width:75px;height:75px}
+    
     .movie-detail{
-        flex-direction:column;
-        align-items:center;
-        text-align:center;
+        gap:15px;
+        padding:15px;
     }
-    .movie-detail img{width:160px}
-    .movie-detail h1{font-size:22px;text-align:center}
-    .badges{justify-content:center}
-    .movie-detail p{text-align:left}
+    .movie-detail img{
+        width:130px; /* Mobile එකේ පොඩි කරා */
+        border-radius:10px;
+    }
+    .movie-detail h1{
+        font-size:18px;
+        line-height:1.4;
+    }
+    .movie-detail p{
+        font-size:13px;
+        margin:6px 0;
+    }
+    .movie-detail p strong{
+        min-width:100px;
+        font-size:13px;
+    }
+    .badge{
+        font-size:11px;
+        padding:3px 8px;
+    }
 </style>
 </head>
 <body>
@@ -113,8 +178,11 @@ iframe{width:100%;height:100%;border:none}
   <span class="close-btn" id="closeSidebar">×</span>
   <div class="overlay" id="overlay"></div>
   
-<!-- Player - Video check කරලා -->
+<!-- Player - Play button + Video -->
 <div class="player" id="playerBox">
+  <div class="play-overlay" id="playOverlay">
+    <button class="play-btn" id="playBtn">▶</button>
+  </div>
   <iframe id="videoFrame" src="" allowfullscreen allow="autoplay" referrerpolicy="no-referrer"></iframe>
 </div>
 
@@ -131,7 +199,7 @@ iframe{width:100%;height:100%;border:none}
       <!-- Quality + IMDb Badges -->
       <div class="badges" id="badges"></div>
       
-      <!-- Details ටික - දැන් දකුණු පැත්තට -->
+      <!-- Details ටික - දකුණු පැත්තට -->
       <p><strong>🎭 Genres:</strong> <span id="genres"></span></p>
       <p><strong>👨‍🎬 Director:</strong> <span id="director"></span></p>
       <p><strong>⏱️ Duration:</strong> <span id="duration"></span></p>
@@ -199,21 +267,30 @@ async function loadMovie() {
     document.getElementById('category').innerText = m.category || 'Movie';
     document.getElementById('poster').src = m.poster || 'https://via.placeholder.com/200x300/222/fff?text=No+Image';
     
-    // Video Player - Check කරලා
+    // Video Player + Play button
     const playerBox = document.getElementById('playerBox');
+    const playOverlay = document.getElementById('playOverlay');
+    const playBtn = document.getElementById('playBtn');
+    const videoFrame = document.getElementById('videoFrame');
+
     if(m.video && m.video.trim() !== '' && m.video !== '#') {
-      document.getElementById('videoFrame').src = m.video;
+        playOverlay.style.display = 'flex';
+        playBtn.onclick = function() {
+            videoFrame.src = m.video;
+            videoFrame.style.display = 'block';
+            playerBox.classList.add('playing');
+        };
     } else {
-      playerBox.innerHTML = `
-        <div style="width:100%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; background:linear-gradient(135deg, #1a1a1a 0%, #111 100%); color:#666; text-align:center; padding:20px;">
-            <div style="font-size:60px; margin-bottom:20px;">🎬</div>
-            <div style="font-size:20px; font-weight:bold; color:#ff2d95; margin-bottom:10px;">Video එක තාම Ready නෑ</div>
-            <div style="font-size:14px; color:#888; line-height:1.6;">
-                Admin එකෙන් Doodstream link එක add කරපු ගමන්<br>
-                මේක auto play වෙයි ✅
+        playOverlay.innerHTML = `
+            <div style="width:100%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; background:#000; color:#666; text-align:center;">
+                <div style="font-size:60px; margin-bottom:20px;">🎬</div>
+                <div style="font-size:20px; font-weight:bold; color:#ff2d95; margin-bottom:10px;">Video එක තාම Ready නෑ</div>
+                <div style="font-size:14px; color:#888; line-height:1.6;">
+                    Admin එකෙන් Doodstream link එක add කරපු ගමන්<br>
+                    මේක auto play වෙයි ✅
+                </div>
             </div>
-        </div>
-      `;
+        `;
     }
   } else {
     document.getElementById('movieTitle').innerText = 'Movie හොයාගන්න බැරි උනා';
