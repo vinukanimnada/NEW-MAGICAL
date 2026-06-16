@@ -1,222 +1,222 @@
-// ================= Firebase Imports - මුලින්ම තියන්න ඕන =================
+// ================= Firebase Imports =================
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, collection, getDocs, orderBy, query, where, limit, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getFirestore, collection, getDocs, query, where, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
+// ================= Firebase Config =================
 const firebaseConfig = {
   apiKey: "AIzaSyCx0TEmgr3GCyvfeok9Y42yR1PTM4_8y9M",
-  authDomain: "magical-movie-land.firebaseapp.com",
-  projectId: "magical-movie-land",
-  storageBucket: "magical-movie-land.firebasestorage.app",
-  messagingSenderId: "27757424288",
-  appId: "1:27757424288:web:d650e2659f09f0b9c823c5",
-  measurementId: "G-KK84DYV9EP"
+  authDomain: "mag-movies-9a3e7.firebaseapp.com",
+  projectId: "mag-movies-9a3e7",
+  storageBucket: "mag-movies-9a3e7.firebasestorage.app",
+  messagingSenderId: "772535584323",
+  appId: "1:772535584323:web:d1d4c0b3e8a4c2f1b9d8e7"
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// ================= Create Card with Link + Quality + IMDb Badge =================
-function createCard(m, id) {
-  const quality = m.quality || 'HD';
-  const qualityClass = quality.toLowerCase().replace('.', '-'); // WEB-DL -> web-dl
+// ================= DOM Elements =================
+const heroSlider = document.getElementById('heroSlider');
+const heroDots = document.getElementById('heroDots');
+const movieGrid = document.getElementById('movieGrid');
+const latestGrid = document.getElementById('latestGrid');
+const seriesGrid = document.getElementById('seriesGrid');
+const searchInput = document.getElementById('searchInput');
+
+// Global variable
+let allMovies = [];
+let currentSlide = 0;
+let slideInterval;
+
+// ================= Create Movie Card with WATCH LINK =================
+function createCard(movie, id) {
+  const quality = movie.quality || 'HD';
+  const rating = movie.rating || 'N/A';
 
   return `
-    <div class="movie-card">
+    <div class="card">
       <a href="watch.html?id=${id}" style="text-decoration:none; color:inherit; display:block;">
-        <span class="badge ${qualityClass}">${quality}</span>
-        ${m.imdbRating? `<span class="badge imdb">⭐ ${m.imdbRating}</span>` : ''}
-        <img src="${m.poster || m.thumbnail || 'https://via.placeholder.com/300x450'}" alt="${m.title || 'Movie'}">
+        <div class="card-img">
+          <img src="${movie.poster || 'https://via.placeholder.com/300x450/1a1a1a/666?text=No+Image'}"
+               alt="${movie.title}"
+               loading="lazy"
+               onerror="this.src='https://via.placeholder.com/300x450/1a1a1a/666?text=No+Image'">
+          <span class="quality-badge">${quality}</span>
+          ${rating!== 'N/A'? `<span class="rating-badge">⭐ ${rating}</span>` : ''}
+          <div class="play-overlay">
+            <i class="fa fa-play"></i>
+          </div>
+        </div>
         <div class="card-info">
-          <h3>${m.title || 'Untitled Movie'}</h3>
-          <p>${m.year || '2024'} | ${m.category || 'Movie'}</p>
+          <h3>${movie.title || 'Untitled'}</h3>
+          <p>${movie.year || '2024'} • ${movie.genre || 'Movie'}</p>
         </div>
       </a>
     </div>
   `;
 }
 
-// ================= HERO SLIDER - FIREBASE එකෙන් Load කරනවා =================
+// ================= Load Hero Slider =================
 async function loadHeroSlider() {
-    const heroSlides = document.getElementById('heroSlides');
-    const heroDots = document.getElementById('heroDots');
-    const heroSlider = document.getElementById('heroSlider');
-    
-    if(!heroSlides) return;
-    
-    try {
-        // featured: true + banner තියෙන movies ගන්න
-        const q = query(collection(db, "movies"), limit(10));
-        const querySnapshot = await getDocs(q);
-        
-        const heroMovies = [];
-        querySnapshot.forEach((doc) => {
-            const m = doc.data();
-            if(m.featured === true && m.banner && m.banner.trim() !== '') {
-                heroMovies.push({id: doc.id, ...m});
-            }
-        });
-        
-        console.log('Hero movies found:', heroMovies.length);
-        
-        if(heroMovies.length === 0) {
-            console.log('Hero එකක් නෑ. Admin එකෙන් featured tick + banner URL දාපන්');
-            if(heroSlider) heroSlider.style.display = 'none';
-            return;
-        }
-        
-        let slidesHTML = '';
-        let dotsHTML = '';
-        
-        heroMovies.slice(0, 5).forEach((m, index) => {
-            const bannerURL = m.banner.startsWith('http') ? m.banner : 'https://via.placeholder.com/1920x1080/111/fff?text=Invalid+Banner+URL';
-            
-            // FIX 1: පලවෙනි slide එකට active class එක add කරා
-            slidesHTML += `
-            <div class="hero-slide ${index === 0 ? 'active' : ''}" style="background-image: url('${bannerURL}')">
-                <div class="hero-content">
-                    <h1>${m.title || 'Movie'}</h1>
-                    ${(m.imdbRating || m.year) ? `
-                    <div class="hero-meta">
-                        ${m.imdbRating ? `<span class="imdb">IMDb: ${m.imdbRating}</span>` : ''}
-                        ${m.year ? `<span class="year">${m.year}</span>` : ''}
-                    </div>` : ''}
-                    ${m.genres ? `<p class="desc">${m.genres}</p>` : ''}
-                    ${m.description ? `<p class="desc">${m.description.substring(0, 120)}...</p>` : ''}
-                    <a href="movie.html?id=${m.id}" class="watch-btn">
-                        <i class="fa fa-play"></i> WATCH NOW
-                    </a>
-                </div>
-            </div>`;
-            
-            dotsHTML += `<div class="dot ${index === 0 ? 'active' : ''}" onclick="goToSlide(${index})"></div>`;
-        });
-        
-        heroSlides.innerHTML = slidesHTML;
-        heroDots.innerHTML = dotsHTML;
-        
-        // Auto slide 5sec
-        let currentSlide = 0;
-        setInterval(() => {
-            currentSlide = (currentSlide + 1) % heroMovies.length;
-            goToSlide(currentSlide);
-        }, 5000);
-        
-    } catch(error) {
-        console.error('Hero load error:', error);
-        if(heroSlider) heroSlider.style.display = 'none';
+  try {
+    const q = query(
+      collection(db, "movies"),
+      where("featured", "==", true),
+      limit(5)
+    );
+    const snapshot = await getDocs(q);
+
+    let heroMovies = [];
+    snapshot.forEach(doc => {
+      heroMovies.push({ id: doc.id,...doc.data() });
+    });
+
+    // Featured නැත්තම් latest 5 ගනින්
+    if (heroMovies.length === 0) {
+      const q2 = query(collection(db, "movies"), orderBy("createdAt", "desc"), limit(5));
+      const snap2 = await getDocs(q2);
+      snap2.forEach(doc => {
+        heroMovies.push({ id: doc.id,...doc.data() });
+      });
     }
+
+    if (heroMovies.length === 0) {
+      heroSlider.innerHTML = '<p style="text-align:center; padding:100px;">No movies found</p>';
+      return;
+    }
+
+    // Slides හදනවා - WATCH LINK එක දාලා
+    heroSlider.innerHTML = heroMovies.map((m, index) => `
+      <div class="hero-slide ${index === 0? 'active' : ''}"
+           style="background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.8)), url('${m.backdrop || m.poster}')">
+        <div class="hero-content">
+          <h1>${m.title}</h1>
+          <div class="hero-meta">
+            ${m.rating? `<span>⭐ ${m.rating}</span>` : ''}
+            ${m.year? `<span>${m.year}</span>` : ''}
+            ${m.quality? `<span class="quality">${m.quality}</span>` : ''}
+          </div>
+          <p>${m.description? m.description.substring(0, 150) + '...' : 'No description available'}</p>
+          <a href="watch.html?id=${m.id}" class="watch-btn">
+            <i class="fa fa-play"></i> WATCH NOW
+          </a>
+        </div>
+      </div>
+    `).join('');
+
+    // Dots හදනවා
+    heroDots.innerHTML = heroMovies.map((_, i) => `
+      <span class="dot ${i === 0? 'active' : ''}" onclick="changeSlide(${i})"></span>
+    `).join('');
+
+    // Auto slide
+    startAutoSlide(heroMovies.length);
+
+  } catch (error) {
+    console.error("Hero load error:", error);
+    heroSlider.innerHTML = '<p style="text-align:center; padding:100px;">Error loading hero</p>';
+  }
 }
 
-// FIX 2: goToSlide function එක active class toggle කරන විදිහට හදලා
-window.goToSlide = function(n) {
-    const slides = document.querySelectorAll('.hero-slide');
-    const dots = document.querySelectorAll('.hero-dots .dot');
-    
-    // ඔක්කොම slides වලින් active අයින් කරලා
-    slides.forEach(s => s.classList.remove('active'));
-    dots.forEach(d => d.classList.remove('active'));
-    
-    // select කරපු slide එකට active දැම්මා
-    if(slides[n]) slides[n].classList.add('active');
-    if(dots[n]) dots[n].classList.add('active');
-    
-    // transform එක smooth slide එකට
-    const heroSlidesContainer = document.getElementById('heroSlides');
-    if(heroSlidesContainer) heroSlidesContainer.style.transform = `translateX(-${n * 100}%)`;
+// ================= Auto Slide Function =================
+function startAutoSlide(total) {
+  clearInterval(slideInterval);
+  slideInterval = setInterval(() => {
+    currentSlide = (currentSlide + 1) % total;
+    changeSlide(currentSlide);
+  }, 5000);
 }
 
-// ================= Firebase Load Movies =================
-// 1. Latest Uploads
-async function loadLatestMovies() {
-  const grid = document.getElementById("latestMovies");
-  if(!grid) return;
-  grid.innerHTML = '<p style="color:#666; grid-column:1/-1; text-align:center;">Loading...</p>';
+// ================= Change Slide =================
+window.changeSlide = function(n) {
+  const slides = document.querySelectorAll('.hero-slide');
+  const dots = document.querySelectorAll('.dot');
+
+  slides.forEach(s => s.classList.remove('active'));
+  dots.forEach(d => d.classList.remove('active'));
+
+  if (slides[n]) slides[n].classList.add('active');
+  if (dots[n]) dots[n].classList.add('active');
+
+  currentSlide = n;
+  clearInterval(slideInterval);
+  startAutoSlide(slides.length);
+}
+
+// ================= Load Movies by Category =================
+async function loadMovies(category, gridElement) {
+  if (!gridElement) return;
+
+  gridElement.innerHTML = '<p style="text-align:center; grid-column:1/-1;">Loading...</p>';
 
   try {
-    const q = query(collection(db, "movies"), where("category", "==", "latest"), orderBy("createdAt", "desc"), limit(12));
+    let q;
+    if (category === 'latest') {
+      q = query(collection(db, "movies"), orderBy("createdAt", "desc"), limit(12));
+    } else if (category === 'series') {
+      q = query(collection(db, "movies"), where("type", "==", "series"), orderBy("createdAt", "desc"), limit(12));
+    } else {
+      q = query(collection(db, "movies"), where("category", "==", category), orderBy("createdAt", "desc"), limit(12));
+    }
+
     const snapshot = await getDocs(q);
     let html = '';
-    snapshot.forEach(doc => { html += createCard(doc.data(), doc.id); });
-    grid.innerHTML = html || '<p style="color:#666; grid-column:1/-1; text-align:center;">Movies නැත</p>';
-  } catch(err) {
-    console.error("Latest Error:", err);
-    grid.innerHTML = '<p style="color:red; grid-column:1/-1; text-align:center;">Index Error - Firebase Console බලන්න</p>';
+
+    snapshot.forEach(doc => {
+      html += createCard(doc.data(), doc.id);
+    });
+
+    gridElement.innerHTML = html || '<p style="text-align:center; grid-column:1/-1;">No movies found</p>';
+
+  } catch (error) {
+    console.error(`${category} load error:`, error);
+    gridElement.innerHTML = '<p style="text-align:center; grid-column:1/-1; color:red;">Error loading movies</p>';
   }
 }
 
-// 2. TV Shows
-async function loadTVShows() {
-  const grid = document.getElementById("tvShowsMovies");
-  if(!grid) return;
-  grid.innerHTML = '<p style="color:#666; grid-column:1/-1; text-align:center;">Loading...</p>';
+// ================= Search Function =================
+async function searchMovies(searchTerm) {
+  if (!searchTerm || searchTerm.length < 2) {
+    loadMovies('latest', latestGrid);
+    return;
+  }
+
+  movieGrid.innerHTML = '<p style="text-align:center; grid-column:1/-1;">Searching...</p>';
 
   try {
-    const q = query(collection(db, "movies"), where("category", "==", "tvshows"), orderBy("createdAt", "desc"), limit(12));
+    const q = query(collection(db, "movies"), orderBy("title"));
     const snapshot = await getDocs(q);
     let html = '';
-    snapshot.forEach(doc => { html += createCard(doc.data(), doc.id); });
-    grid.innerHTML = html || '<p style="color:#666; grid-column:1/-1; text-align:center;">TV Shows නැත</p>';
-  } catch(err) {
-    console.error("TV Shows Error:", err);
+
+    snapshot.forEach(doc => {
+      const data = doc.data();
+      if (data.title && data.title.toLowerCase().includes(searchTerm.toLowerCase())) {
+        html += createCard(data, doc.id);
+      }
+    });
+
+    movieGrid.innerHTML = html || '<p style="text-align:center; grid-column:1/-1;">No results found</p>';
+
+  } catch (error) {
+    console.error("Search error:", error);
   }
 }
 
-// 3. Daily Trending
-async function loadTrendingMovies() {
-  const grid = document.getElementById("trendingMovies");
-  if(!grid) return;
-  grid.innerHTML = '<p style="color:#666; grid-column:1/-1; text-align:center;">Loading...</p>';
+// ================= Initialize on Page Load =================
+document.addEventListener('DOMContentLoaded', () => {
+  loadHeroSlider();
+  loadMovies('latest', latestGrid);
+  loadMovies('series', seriesGrid);
 
-  try {
-    const q = query(collection(db, "movies"), where("category", "==", "trending"), orderBy("createdAt", "desc"), limit(12));
-    const snapshot = await getDocs(q);
-    let html = '';
-    snapshot.forEach(doc => { html += createCard(doc.data(), doc.id); });
-    grid.innerHTML = html || '<p style="color:#666; grid-column:1/-1; text-align:center;">Trending නැත</p>';
-  } catch(err) {
-    console.error("Trending Error:", err);
+  // Search
+  if (searchInput) {
+    searchInput.addEventListener('input', (e) => {
+      searchMovies(e.target.value);
+    });
   }
-}
-
-// Page load වෙද්දි Firebase data load වෙනවා
-loadHeroSlider(); // Hero එක මුලින්ම load කරගමු
-loadLatestMovies();
-loadTVShows();
-loadTrendingMovies();
-
-// ================= Menu + Search =================
-document.addEventListener('DOMContentLoaded', function() {
-  // Menu Toggle
-  const menuBtn = document.getElementById("menuBtn");
-  const sidebar = document.getElementById("sidebar");
-  const overlay = document.getElementById("overlay");
-  const closeSidebar = document.getElementById("closeSidebar");
-
-  if(menuBtn) {
-    menuBtn.onclick = () => {
-      sidebar.classList.add("active");
-      overlay.classList.add("active");
-      closeSidebar.style.display = "block";
-    };
-  }
-
-  if(closeSidebar) closeSidebar.onclick = () => {
-    sidebar.classList.remove("active");
-    overlay.classList.remove("active");
-    closeSidebar.style.display = "none";
-  };
-
-  if(overlay) overlay.onclick = () => {
-    sidebar.classList.remove("active");
-    overlay.classList.remove("active");
-    closeSidebar.style.display = "none";
-  };
-
-  // Search Toggle
-  const searchBtn = document.getElementById("searchBtn");
-  const searchBox = document.getElementById("searchBox");
-  const closeSearch = document.getElementById("closeSearch");
-
-  if(searchBtn) searchBtn.onclick = () => searchBox.classList.add("active");
-  if(closeSearch) closeSearch.onclick = () => searchBox.classList.remove("active");
 });
+
+// ================= Mobile Menu Toggle =================
+window.toggleMenu = function() {
+  document.querySelector('.nav-links').classList.toggle('active');
+}
