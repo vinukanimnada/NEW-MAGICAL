@@ -126,35 +126,16 @@ iframe{width:100%;height:100%;border:none;position:absolute;top:0;left:0;display
 .imdb-box{color:#f5c518;font-weight:bold;font-size:15px}
 .imdb-box small{color:#aaa;font-size:13px}
 
-/* Mobile responsive - පොඩි කරලා side-by-side ම */
+/* Mobile responsive */
 @media (max-width: 768px){
     .player{height:45vh}
     .play-btn{font-size:60px;width:75px;height:75px}
-    
-    .movie-detail{
-        gap:15px;
-        padding:15px;
-    }
-    .left-col img{
-        width:130px;
-        border-radius:10px;
-    }
-    .left-col h1{
-        font-size:16px;
-        max-width:130px;
-    }
-    .details-list p{
-        font-size:13px;
-        margin:6px 0;
-    }
-    .details-list p strong{
-        min-width:100px;
-        font-size:13px;
-    }
-    .badge{
-        font-size:11px;
-        padding:3px 8px;
-    }
+    .movie-detail{gap:15px;padding:15px}
+    .left-col img{width:130px;border-radius:10px}
+    .left-col h1{font-size:16px;max-width:130px}
+    .details-list p{font-size:13px;margin:6px 0}
+    .details-list p strong{min-width:100px;font-size:13px}
+    .badge{font-size:11px;padding:3px 8px}
 </style>
 </head>
 <body>
@@ -189,7 +170,8 @@ iframe{width:100%;height:100%;border:none;position:absolute;top:0;left:0;display
   <div class="play-overlay" id="playOverlay">
     <button class="play-btn" id="playBtn">▶</button>
   </div>
-  <iframe id="videoFrame" src="" allowfullscreen allow="autoplay" referrerpolicy="no-referrer"></iframe>
+  <!-- IMPORTANT: allow attributes වැඩි කළා -->
+  <iframe id="videoFrame" src="" allowfullscreen allow="autoplay; encrypted-media; picture-in-picture" referrerpolicy="no-referrer"></iframe>
 </div>
 
 <div class="alert">
@@ -273,7 +255,6 @@ async function loadMovie() {
     document.getElementById('year').innerText = m.year || '2024';
     document.getElementById('imdb').innerText = m.imdbRating || 'N/A';
     document.getElementById('imdbVotes').innerText = m.imdbVotes ? '(' + m.imdbVotes + ' votes)' : '';
-    document.getElementById('category').innerText = m.category || 'Movie';
     document.getElementById('poster').src = m.poster || 'https://via.placeholder.com/200x300/222/fff?text=No+Image';
     
     // Video Player + Play button
@@ -285,6 +266,7 @@ async function loadMovie() {
     if(m.video && m.video.trim() !== '' && m.video !== '#') {
         playOverlay.style.display = 'flex';
         playBtn.onclick = function() {
+            // Playmogo /e/ link එක iframe src එකට දානවා
             videoFrame.src = m.video;
             videoFrame.style.display = 'block';
             playerBox.classList.add('playing');
@@ -295,7 +277,7 @@ async function loadMovie() {
                 <div style="font-size:60px; margin-bottom:20px;">🎬</div>
                 <div style="font-size:20px; font-weight:bold; color:#ff2d95; margin-bottom:10px;">Video එක තාම Ready නෑ</div>
                 <div style="font-size:14px; color:#888; line-height:1.6;">
-                    Admin එකෙන් Doodstream link එක add කරපු ගමන්<br>
+                    Admin එකෙන් Doodstream/Playmogo link එක add කරපු ගමන්<br>
                     මේක auto play වෙයි ✅
                 </div>
             </div>
@@ -308,6 +290,26 @@ async function loadMovie() {
 }
 
 loadMovie();
+
+// Sidebar + Search toggle
+document.getElementById('menuBtn').onclick = () => {
+  document.getElementById('sidebar').classList.add('active');
+  document.getElementById('overlay').classList.add('active');
+}
+document.getElementById('closeSidebar').onclick = () => {
+  document.getElementById('sidebar').classList.remove('active');
+  document.getElementById('overlay').classList.remove('active');
+}
+document.getElementById('overlay').onclick = () => {
+  document.getElementById('sidebar').classList.remove('active');
+  document.getElementById('overlay').classList.remove('active');
+}
+document.getElementById('searchBtn').onclick = () => {
+  document.getElementById('searchBox').classList.toggle('active');
+}
+document.getElementById('closeSearch').onclick = () => {
+  document.getElementById('searchBox').classList.remove('active');
+}
 </script>
 </body>
 </html>
