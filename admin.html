@@ -3,48 +3,90 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel - MAGICAL MOVIE LAND</title>
+    <title>Admin Panel - MAG Movies</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             background: #111;
             color: white;
-            max-width: 650px;
-            margin: 30px auto;
+            margin: 0;
             padding: 20px;
         }
-        h2 { text-align: center; color: #ff2d95; }
-        label{font-size:12px;color:#aaa;margin-bottom:5px;display:block}
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        h2 {
+            color: #ff2d95;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .form-section {
+            background: #1a1a1a;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #333;
+        }
+        .form-section h3 {
+            color: #ff2d95;
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
         input, select, textarea {
             width: 100%;
             padding: 12px;
-            margin-bottom: 15px;
-            border: none;
-            border-radius: 8px;
+            margin-bottom: 12px;
             background: #222;
+            border: 1px solid #444;
+            border-radius: 5px;
             color: white;
             box-sizing: border-box;
+            font-size: 14px;
         }
-        textarea{resize:vertical;min-height:80px}
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #ff2d95;
+        }
         button {
             width: 100%;
-            padding: 12px;
+            padding: 14px;
             background: #ff2d95;
             color: white;
             border: none;
-            border-radius: 8px;
-            font-size: 16px;
+            border-radius: 5px;
             cursor: pointer;
-            margin-bottom: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            transition: 0.3s;
         }
-        button.secondary{background:#00bfff}
-        button.edit{background:#ffa500}
-        .cancel-btn{background:#555;margin-top:5px}
-        #msg { text-align: center; margin-top: 15px; color: #00ff88; min-height: 20px; }
-        .movie-list {
-            margin-top: 40px;
-            border-top: 2px solid #333;
-            padding-top: 20px;
+        button:hover {
+            background: #e02580;
+        }
+        button.secondary {
+            background: #555;
+            margin-top: 10px;
+        }
+        button.secondary:hover {
+            background: #666;
+        }
+        #msg {
+            text-align: center;
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 5px;
+            font-weight: bold;
+            display: none;
+        }
+        .success {
+            background: #2d5a2d;
+            color: #4caf50;
+            border: 1px solid #4caf50;
+        }
+        .error {
+            background: #5a2d2d;
+            color: #ff4444;
+            border: 1px solid #ff4444;
         }
         .movie-item {
             background: #1a1a1a;
@@ -54,294 +96,302 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            border: 1px solid #333;
         }
-        .movie-info { flex: 1; }
-        .movie-info h4 { margin: 0 0 5px 0; }
-        .movie-info p { margin: 0; font-size: 12px; color: #aaa; }
-        .btn-group{display:flex;gap:8px}
-        .delete-btn {
-            background: #ff4444;
-            padding: 8px 15px;
-            width: auto;
-            font-size: 14px;
+        .movie-info h4 {
+            margin: 0 0 5px 0;
+            color: #ff2d95;
+        }
+        .movie-info p {
             margin: 0;
+            font-size: 13px;
+            color: #aaa;
+        }
+        .btn-group {
+            display: flex;
+            gap: 8px;
         }
         .edit-btn {
             background: #ffa500;
             padding: 8px 15px;
+            font-size: 13px;
             width: auto;
-            font-size: 14px;
-            margin: 0;
         }
-        select#contentType{border:2px solid #ff2d95;margin-bottom:20px;font-weight:bold}
-        .badge-hero{background:#ff2d95;color:white;padding:3px 8px;border-radius:4px;font-size:11px;margin-left:8px}
+        .delete-btn {
+            background: #ff4444;
+            padding: 8px 15px;
+            font-size: 13px;
+            width: auto;
+        }
+        label {
+            font-size: 13px;
+            color: #aaa;
+            display: block;
+            margin-bottom: 5px;
+        }
     </style>
 </head>
 <body>
-
-    <h2>🎬 Add / Edit Movie / TV Show</h2>
-
-    <input type="hidden" id="editId" value="">
-    
-    <!-- Select Box අලුත් එක -->
-    <label>📍 Add කරන්නේ කොහෙද?</label>
-    <select id="contentType" onchange="toggleFields()">
-        <option value="movieCard">Movie Cards</option>
-        <option value="heroPoster">Hero Poster</option>
-    </select>
-
-    <!-- Movie Card Fields -->
-    <div id="movieCardFields">
-        <input type="text" id="title" placeholder="Movie / Series Name">
-        <input type="text" id="poster" placeholder="Poster Image URL">
-        <input type="text" id="video" placeholder="Video URL - Doodstream Link">
-        <input type="text" id="year" placeholder="Year - 2024" value="2024">
-
-        <label>📺 Quality</label>
-        <select id="quality">
-            <option value="FHD">FHD - Full HD 1080p</option>
-            <option value="HD">HD - 720p</option>
-            <option value="WEB-DL">WEB-DL</option>
-            <option value="CAM">CAM</option>
-        </select>
-
-        <label>🎭 Genres</label>
-        <input type="text" id="genres" placeholder="ex: Action, Adventure, Fantasy">
+    <div class="container">
+        <h2>🎬 Admin Panel - MAG Movies</h2>
         
-        <label>👨‍🎬 Director</label>
-        <input type="text" id="director" placeholder="ex: David Yates">
-        
-        <label>⏱️ Duration</label>
-        <input type="text" id="duration" placeholder="ex: 2h 10m">
-        
-        <label>🗣️ Language</label>
-        <input type="text" id="language" placeholder="ex: English, Sinhala Dub">
-        
-        <label>🌍 Country</label>
-        <input type="text" id="country" placeholder="ex: USA, UK">
+        <!-- Movie Form -->
+        <div class="form-section">
+            <h3 id="formTitle">Add New Movie</h3>
+            <input type="hidden" id="editId">
+            
+            <label>Movie Title *</label>
+            <input type="text" id="title" placeholder="Enter movie title" required>
+            
+            <label>Poster Image URL *</label>
+            <input type="text" id="poster" placeholder="https://example.com/poster.jpg" required>
+            
+            <label>Video URL</label>
+            <input type="text" id="video" placeholder="https://youtube.com/watch?v=... or .mp4 link">
+            
+            <label>Year</label>
+            <input type="text" id="year" placeholder="2024">
+            
+            <label>Genre</label>
+            <input type="text" id="genre" placeholder="Action, Drama, Comedy">
+            
+            <label>IMDb Rating</label>
+            <input type="text" id="imdb" placeholder="8.5/10">
+            
+            <label>Description</label>
+            <textarea id="description" rows="3" placeholder="Movie description..."></textarea>
+            
+            <label>Category</label>
+            <select id="category">
+                <option value="latest">Latest Uploads</option>
+                <option value="trending">Trending Now</option>
+                <option value="all">All Movies</option>
+            </select>
+            
+            <button onclick="addMovie()" id="saveBtn">Save Movie</button>
+            <button onclick="cancelEdit()" class="secondary" id="cancelBtn" style="display:none;">Cancel Edit</button>
+            <div id="msg"></div>
+        </div>
 
-        <label>⭐ IMDb Rating</label>
-        <input type="text" id="imdbRating" placeholder="ex: 8.2/10">
-        
-        <label>📊 IMDb Votes</label>
-        <input type="text" id="imdbVotes" placeholder="ex: 250K">
+        <!-- Hero Banner Form -->
+        <div class="form-section">
+            <h3>🎯 Hero Banner - Featured Movie</h3>
+            
+            <label>Movie Title *</label>
+            <input type="text" id="heroTitle" placeholder="Featured movie title" required>
+            
+            <label>Banner Image URL * 16:9 Ratio</label>
+            <input type="text" id="heroBanner" placeholder="https://example.com/banner.jpg" required>
+            
+            <label>IMDb Rating</label>
+            <input type="text" id="heroImdb" placeholder="8.5/10">
+            
+            <label>Year</label>
+            <input type="text" id="heroYear" placeholder="2024">
+            
+            <label>Description</label>
+            <textarea id="heroDesc" rows="3" placeholder="Featured movie description..."></textarea>
+            
+            <button onclick="addHeroBanner()">Save Hero Banner</button>
+            <div id="heroMsg"></div>
+        </div>
 
-        <select id="category">
-            <option value="latest">Latest Uploads - Home</option>
-            <option value="trending">Daily Trending - Home</option>
-            <option value="tvshows">TV Shows - Home</option>
-            <option value="allmovies">All Movies Page</option>
-            <option value="alltvshows">All TV Shows Page</option>
-        </select>
-    </div>
-
-    <!-- Hero Poster Fields -->
-    <div id="heroFields" style="display: none;">
-        <input type="text" id="heroTitle" placeholder="Movie / Series Name">
-        <input type="text" id="heroBanner" placeholder="Hero Poster/Banner URL 16:9">
-        <input type="text" id="heroImdb" placeholder="IMDb Rate - ex: 7.0">
-        <input type="text" id="heroYear" placeholder="Released year">
-        <textarea id="heroDesc" placeholder="Movie short description"></textarea>
-    </div>
-
-    <button onclick="addMovie()" id="saveBtn">Save</button>
-    <button onclick="cancelEdit()" class="cancel-btn" id="cancelBtn" style="display:none;">Cancel Edit</button>
-    <p id="msg"></p>
-
-    <div class="movie-list">
-        <h2>📋 All Content - Edit / Delete Here</h2>
-        <div id="movieList">Loading...</div>
+        <!-- Movie List -->
+        <div class="form-section">
+            <h3>📋 All Movies</h3>
+            <div id="movieList">Loading...</div>
+        </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, serverTimestamp, getDocs, deleteDoc, doc, orderBy, query, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc, orderBy, query } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
-          apiKey: "AIzaSyCx0TEmgr3GCyvfeok9Y42yR1PTM4_8y9M",
-          authDomain: "magical-movie-land.firebaseapp.com",
-          projectId: "magical-movie-land",
-          storageBucket: "magical-movie-land.firebasestorage.app",
-          messagingSenderId: "27757424288",
-          appId: "1:27757424288:web:d650e2659f09f0b9c823c5",
-          measurementId: "G-KK84DYV9EP"
+          apiKey: "AIzaSyCx0X0X0X0X0X0X0X0X0X0X0X0X0X0X0X0",
+          authDomain: "mag-movies.firebaseapp.com",
+          projectId: "mag-movies",
+          storageBucket: "mag-movies.appspot.com",
+          messagingSenderId: "123456789",
+          appId: "1:123456789:web:abc123def456"
         };
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Select box එක මාරු වෙනකොට field hide/show
-        window.toggleFields = function() {
-            const type = document.getElementById('contentType').value;
-            const movieFields = document.getElementById('movieCardFields');
-            const heroFields = document.getElementById('heroFields');
-            
-            if(type === 'heroPoster') {
-                movieFields.style.display = 'none';
-                heroFields.style.display = 'block';
-            } else {
-                movieFields.style.display = 'block';
-                heroFields.style.display = 'none';
-            }
+        // Show message function
+        function showMsg(elementId, message, type) {
+            const msgDiv = document.getElementById(elementId);
+            msgDiv.className = type;
+            msgDiv.innerText = message;
+            msgDiv.style.display = 'block';
+            setTimeout(() => msgDiv.style.display = 'none', 3000);
         }
 
-        // Save / Update 100%
+        // Add/Update Movie
         window.addMovie = async function() {
-            const editId = document.getElementById('editId').value;
-            const type = document.getElementById('contentType').value;
-            const msg = document.getElementById('msg');
+            const id = document.getElementById('editId').value;
+            const title = document.getElementById('title').value.trim();
+            const poster = document.getElementById('poster').value.trim();
+            
+            if(!title || !poster) {
+                showMsg('msg', 'Title and Poster URL are required!', 'error');
+                return;
+            }
 
-            let data = {};
+            const data = {
+                title: title,
+                poster: poster,
+                video: document.getElementById('video').value.trim(),
+                year: document.getElementById('year').value.trim(),
+                genre: document.getElementById('genre').value.trim(),
+                imdb: document.getElementById('imdb').value.trim(),
+                description: document.getElementById('description').value.trim(),
+                category: document.getElementById('category').value,
+                featured: false,
+                createdAt: new Date()
+            };
 
             try {
-                if(type === 'heroPoster') {
-                    // Hero Poster save
-                    data = {
-                        title: document.getElementById('heroTitle').value.trim() || null,
-                        banner: document.getElementById('heroBanner').value.trim() || null,
-                        imdbRating: document.getElementById('heroImdb').value.trim() || null,
-                        year: document.getElementById('heroYear').value.trim() || null,
-                        description: document.getElementById('heroDesc').value.trim() || null,
-                        featured: true,
-                        type: 'hero'
-                    };
-                } else {
-                    // Movie Card save
-                    data = {
-                        title: document.getElementById('title').value.trim() || null,
-                        poster: document.getElementById('poster').value.trim() || null,
-                        video: document.getElementById('video').value.trim() || null,
-                        year: document.getElementById('year').value.trim() || null,
-                        quality: document.getElementById('quality').value,
-                        genres: document.getElementById('genres').value.trim() || null,
-                        director: document.getElementById('director').value.trim() || null,
-                        duration: document.getElementById('duration').value.trim() || null,
-                        language: document.getElementById('language').value.trim() || null,
-                        country: document.getElementById('country').value.trim() || null,
-                        imdbRating: document.getElementById('imdbRating').value.trim() || null,
-                        imdbVotes: document.getElementById('imdbVotes').value.trim() || null,
-                        category: document.getElementById('category').value,
-                        featured: false,
-                        type: 'movie'
-                    };
-                }
-
-                if(editId) {
-                    await updateDoc(doc(db, "movies", editId), data);
-                    msg.style.color = '#00ff88';
-                    msg.innerText = '✅ Updated Successfully!';
+                if(id) {
+                    await updateDoc(doc(db, "movies", id), data);
+                    showMsg('msg', 'Movie updated successfully!', 'success');
                     cancelEdit();
                 } else {
-                    data.createdAt = serverTimestamp();
                     await addDoc(collection(db, "movies"), data);
-                    msg.style.color = '#00ff88';
-                    msg.innerText = type === 'heroPoster' ? '✅ Hero Poster Saved!' : '✅ Movie Saved!';
+                    showMsg('msg', 'Movie added successfully!', 'success');
                 }
-                
                 clearForm();
-                setTimeout(()=> msg.innerText = '', 2000);
                 loadMovies();
-
-            } catch(err) {
-                msg.style.color = 'red';
-                msg.innerText = 'Error: ' + err.message;
-                setTimeout(()=> msg.innerText = '', 3000);
+            } catch(e) {
+                showMsg('msg', 'Error: ' + e.message, 'error');
             }
         }
 
-        // Edit button click
-        window.editMovie = async function(id) {
-            const docRef = doc(db, "movies", id);
-            const docSnap = await getDoc(docRef);
+        // Add Hero Banner
+        window.addHeroBanner = async function() {
+            const title = document.getElementById('heroTitle').value.trim();
+            const banner = document.getElementById('heroBanner').value.trim();
             
-            if(docSnap.exists()) {
-                const m = docSnap.data();
-                document.getElementById('editId').value = id;
-                
-                if(m.type === 'hero' || m.featured === true) {
-                    document.getElementById('contentType').value = 'heroPoster';
-                    toggleFields();
-                    document.getElementById('heroTitle').value = m.title || '';
-                    document.getElementById('heroBanner').value = m.banner || '';
-                    document.getElementById('heroImdb').value = m.imdbRating || '';
-                    document.getElementById('heroYear').value = m.year || '';
-                    document.getElementById('heroDesc').value = m.description || '';
-                } else {
-                    document.getElementById('contentType').value = 'movieCard';
-                    toggleFields();
-                    document.getElementById('title').value = m.title || '';
-                    document.getElementById('poster').value = m.poster || '';
-                    document.getElementById('video').value = m.video || '';
-                    document.getElementById('year').value = m.year || '2024';
-                    document.getElementById('quality').value = m.quality || 'FHD';
-                    document.getElementById('genres').value = m.genres || '';
-                    document.getElementById('director').value = m.director || '';
-                    document.getElementById('duration').value = m.duration || '';
-                    document.getElementById('language').value = m.language || '';
-                    document.getElementById('country').value = m.country || '';
-                    document.getElementById('imdbRating').value = m.imdbRating || '';
-                    document.getElementById('imdbVotes').value = m.imdbVotes || '';
-                    document.getElementById('category').value = m.category || 'latest';
-                }
-                
-                document.getElementById('saveBtn').innerText = 'Update Movie';
-                document.getElementById('cancelBtn').style.display = 'block';
-                window.scrollTo({top: 0, behavior: 'smooth'});
+            if(!title || !banner) {
+                showMsg('heroMsg', 'Title and Banner URL are required!', 'error');
+                return;
             }
+
+            const data = {
+                title: title,
+                banner: banner,
+                imdb: document.getElementById('heroImdb').value.trim(),
+                year: document.getElementById('heroYear').value.trim(),
+                description: document.getElementById('heroDesc').value.trim(),
+                featured: true,
+                createdAt: new Date()
+            };
+
+            try {
+                await addDoc(collection(db, "movies"), data);
+                showMsg('heroMsg', 'Hero banner added successfully!', 'success');
+                clearHeroForm();
+                loadMovies();
+            } catch(e) {
+                showMsg('heroMsg', 'Error: ' + e.message, 'error');
+            }
+        }
+
+        // Clear form
+        function clearForm() {
+            document.getElementById('editId').value = '';
+            document.getElementById('title').value = '';
+            document.getElementById('poster').value = '';
+            document.getElementById('video').value = '';
+            document.getElementById('year').value = '';
+            document.getElementById('genre').value = '';
+            document.getElementById('imdb').value = '';
+            document.getElementById('description').value = '';
+            document.getElementById('category').value = 'latest';
+            document.getElementById('formTitle').innerText = 'Add New Movie';
+            document.getElementById('saveBtn').innerText = 'Save Movie';
+            document.getElementById('cancelBtn').style.display = 'none';
+        }
+
+        // Clear hero form
+        function clearHeroForm() {
+            document.getElementById('heroTitle').value = '';
+            document.getElementById('heroBanner').value = '';
+            document.getElementById('heroImdb').value = '';
+            document.getElementById('heroYear').value = '';
+            document.getElementById('heroDesc').value = '';
         }
 
         // Cancel edit
         window.cancelEdit = function() {
-            document.getElementById('editId').value = '';
-            document.getElementById('saveBtn').innerText = 'Save';
-            document.getElementById('cancelBtn').style.display = 'none';
-            document.getElementById('contentType').value = 'movieCard';
-            toggleFields();
             clearForm();
         }
 
-        function clearForm() {
-            document.querySelectorAll('#movieCardFields input[type="text"]').forEach(input => input.value = '');
-            document.getElementById('year').value = '2024';
-            document.getElementById('quality').value = 'FHD';
-            document.querySelectorAll('#heroFields input, #heroFields textarea').forEach(input => input.value = '');
+        // Edit movie
+        window.editMovie = function(id, data) {
+            document.getElementById('editId').value = id;
+            document.getElementById('title').value = data.title || '';
+            document.getElementById('poster').value = data.poster || '';
+            document.getElementById('video').value = data.video || '';
+            document.getElementById('year').value = data.year || '';
+            document.getElementById('genre').value = data.genre || '';
+            document.getElementById('imdb').value = data.imdb || '';
+            document.getElementById('description').value = data.description || '';
+            document.getElementById('category').value = data.category || 'latest';
+            document.getElementById('formTitle').innerText = 'Edit Movie';
+            document.getElementById('saveBtn').innerText = 'Update Movie';
+            document.getElementById('cancelBtn').style.display = 'block';
+            window.scrollTo({top: 0, behavior: 'smooth'});
         }
 
+        // Delete movie
+        window.deleteMovie = async function(id) {
+            if(confirm('Delete this movie?')) {
+                try {
+                    await deleteDoc(doc(db, "movies", id));
+                    showMsg('msg', 'Movie deleted!', 'success');
+                    loadMovies();
+                } catch(e) {
+                    showMsg('msg', 'Error: ' + e.message, 'error');
+                }
+            }
+        }
+
+        // Load movies
         async function loadMovies() {
             const movieList = document.getElementById('movieList');
-            const q = query(collection(db, "movies"), orderBy("createdAt", "desc"));
-            const snapshot = await getDocs(q);
+            movieList.innerHTML = 'Loading...';
+            
+            try {
+                const q = query(collection(db, "movies"), orderBy("createdAt", "desc"));
+                const snapshot = await getDocs(q);
+                
+                if(snapshot.empty) {
+                    movieList.innerHTML = '<p style="text-align:center;color:#666;">No movies found</p>';
+                    return;
+                }
 
-            if(snapshot.empty) {
-                movieList.innerHTML = '<p style="text-align:center; color:#666;">Movies නැත</p>';
-                return;
-            }
-
-            let html = '';
-            snapshot.forEach(docSnap => {
-                const m = docSnap.data();
-                const isHero = m.featured === true || m.type === 'hero';
-                html += `
-                    <div class="movie-item">
-                        <div class="movie-info">
-                            <h4>${m.title || 'Untitled'} ${isHero ? '<span class="badge-hero">HERO</span>' : ''}</h4>
-                            <p>${isHero ? 'Hero Banner' : 'Quality: ' + (m.quality || 'N/A')} | Year: ${m.year || 'N/A'} | IMDb: ${m.imdbRating || 'N/A'}</p>
+                let html = '';
+                snapshot.forEach(docSnap => {
+                    const data = docSnap.data();
+                    const type = data.featured ? '🎯 Hero Banner' : '🎬 ' + (data.category || 'Movie');
+                    html += `
+                        <div class="movie-item">
+                            <div class="movie-info">
+                                <h4>${data.title || 'No Title'}</h4>
+                                <p>${type} | Year: ${data.year || 'N/A'} | IMDb: ${data.imdb || 'N/A'}</p>
+                            </div>
+                            <div class="btn-group">
+                                <button class="edit-btn" onclick='editMovie("${docSnap.id}", ${JSON.stringify(data).replace(/"/g, '&quot;')})'>Edit</button>
+                                <button class="delete-btn" onclick="deleteMovie('${docSnap.id}')">Delete</button>
+                            </div>
                         </div>
-                        <div class="btn-group">
-                            <button class="edit-btn" onclick="editMovie('${docSnap.id}')">Edit</button>
-                            <button class="delete-btn" onclick="deleteMovie('${docSnap.id}', '${m.title || 'Movie'}')">Delete</button>
-                        </div>
-                    </div>
-                `;
-            });
-            movieList.innerHTML = html;
-        }
-
-        window.deleteMovie = async function(id, title) {
-            if(confirm(`"${title}" delete කරන්නද?`)) {
-                await deleteDoc(doc(db, "movies", id));
-                alert('✅ Deleted!');
-                loadMovies();
+                    `;
+                });
+                movieList.innerHTML = html;
+            } catch(e) {
+                movieList.innerHTML = '<p style="text-align:center;color:#ff4444;">Error loading movies: ' + e.message + '</p>';
             }
         }
 
