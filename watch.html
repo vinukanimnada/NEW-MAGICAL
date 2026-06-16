@@ -13,7 +13,6 @@ body{background:#000;color:white;font-family:Arial;margin:0;padding:0}
 .player{width:100%;height:55vh;background:#000;position:relative;overflow:hidden;margin-bottom:0}
 iframe{width:100%;height:100%;border:none;position:absolute;top:0;left:0;display:none}
 
-/* Play button overlay */
 .play-overlay{
     position:absolute;
     top:0;left:0;
@@ -41,7 +40,6 @@ iframe{width:100%;height:100%;border:none;position:absolute;top:0;left:0;display
     transition:0.2s;
 }
 .play-btn:hover{transform:scale(1.1);background:rgba(255,45,149,0.8)}
-.play-btn:active{transform:scale(0.95)}
 
 .playing iframe{display:block}
 .playing .play-overlay{display:none}
@@ -52,10 +50,10 @@ iframe{width:100%;height:100%;border:none;position:absolute;top:0;left:0;display
 
 .info{padding:0 15px 20px;max-width:1000px;margin:auto}
 
-/* Poster වම්, Details දකුණ - PC + Mobile දෙකටම */
+/* Poster + Details wrapper - flex row */
 .movie-detail{
     display:flex;
-    gap:25px;
+    gap:20px;
     margin-top:20px;
     align-items:flex-start;
     background:#1a1a1a;
@@ -63,29 +61,50 @@ iframe{width:100%;height:100%;border:none;position:absolute;top:0;left:0;display
     border-radius:12px;
 }
 
-/* Poster එක - වම් පැත්තට fix width */
-.movie-detail img{
-    width:200px;
+/* Left side - Poster + Title column */
+.left-col{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
     flex-shrink:0;
-    border-radius:12px;
-    box-shadow:0 4px 20px rgba(255,45,149,0.3);
 }
 
-/* Details ටික - දකුණු පැත්තට */
-.movie-detail > div{
+.left-col img{
+    width:200px;
+    border-radius:12px;
+    box-shadow:0 4px 20px rgba(255,45,149,0.3);
+    margin-bottom:12px;
+}
+
+/* Title එක - Poster යට මැදට */
+.left-col h1{
+    margin:0;
+    font-size:22px;
+    color:#fff;
+    text-align:center;
+    font-weight:600;
+    line-height:1.3;
+    max-width:200px;
+    word-wrap:break-word;
+}
+
+/* Right side - Details ටික උඩට */
+.right-col{
     flex:1;
     min-width:0;
 }
 
-.movie-detail h1{
-    margin:0 0 12px 0;
-    font-size:26px;
-    color:#fff;
-    line-height:1.3;
-    text-align:left;
-}
+/* Badges උඩින්ම */
+.badges{display:flex;gap:8px;margin-bottom:15px;flex-wrap:wrap;justify-content:flex-start}
+.badge{padding:5px 12px;border-radius:6px;font-size:13px;font-weight:bold}
+.badge.fhd{background:#ff1493;color:white}
+.badge.hd{background:#ff4500;color:white}
+.badge.web-dl{background:#00bfff;color:white}
+.badge.cam{background:#888;color:white}
+.badge.imdb{background:#f5c518;color:#000}
 
-.movie-detail p{
+/* Details ටික - right side උඩින් */
+.details-list p{
     margin:8px 0;
     font-size:15px;
     color:#ccc;
@@ -94,7 +113,7 @@ iframe{width:100%;height:100%;border:none;position:absolute;top:0;left:0;display
     align-items:center;
 }
 
-.movie-detail p strong{
+.details-list p strong{
     color:#fff;
     font-weight:600;
     margin-right:8px;
@@ -107,15 +126,6 @@ iframe{width:100%;height:100%;border:none;position:absolute;top:0;left:0;display
 .imdb-box{color:#f5c518;font-weight:bold;font-size:15px}
 .imdb-box small{color:#aaa;font-size:13px}
 
-/* Quality Badge */
-.badges{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;justify-content:flex-start}
-.badge{padding:5px 12px;border-radius:6px;font-size:13px;font-weight:bold}
-.badge.fhd{background:#ff1493;color:white}
-.badge.hd{background:#ff4500;color:white}
-.badge.web-dl{background:#00bfff;color:white}
-.badge.cam{background:#888;color:white}
-.badge.imdb{background:#f5c518;color:#000}
-
 /* Mobile responsive - පොඩි කරලා side-by-side ම */
 @media (max-width: 768px){
     .player{height:45vh}
@@ -125,19 +135,19 @@ iframe{width:100%;height:100%;border:none;position:absolute;top:0;left:0;display
         gap:15px;
         padding:15px;
     }
-    .movie-detail img{
-        width:130px; /* Mobile එකේ පොඩි කරා */
+    .left-col img{
+        width:130px;
         border-radius:10px;
     }
-    .movie-detail h1{
-        font-size:18px;
-        line-height:1.4;
+    .left-col h1{
+        font-size:16px;
+        max-width:130px;
     }
-    .movie-detail p{
+    .details-list p{
         font-size:13px;
         margin:6px 0;
     }
-    .movie-detail p strong{
+    .details-list p strong{
         min-width:100px;
         font-size:13px;
     }
@@ -149,7 +159,6 @@ iframe{width:100%;height:100%;border:none;position:absolute;top:0;left:0;display
 </head>
 <body>
   
-  <!-- Header -->
   <header>
     <div class="logo">𝗠𝗔𝗚𝗜𝗖𝗔𝗟 <span>𝗠𝗢𝗩𝗜𝗘 𝗟𝗔𝗡𝗗</span></div>
     <div class="header-right">
@@ -158,13 +167,11 @@ iframe{width:100%;height:100%;border:none;position:absolute;top:0;left:0;display
     </div>
   </header>
 
-  <!-- Search Bar -->
   <div class="search-box" id="searchBox">
     <input type="text" placeholder="Search cartoons or movies...">
     <i class="fa fa-times" id="closeSearch"></i>
   </div>
 
-  <!-- Sidebar Menu -->
   <div class="sidebar" id="sidebar">
     <ul>
       <li><a href="index.html">Home</a></li>
@@ -178,7 +185,6 @@ iframe{width:100%;height:100%;border:none;position:absolute;top:0;left:0;display
   <span class="close-btn" id="closeSidebar">×</span>
   <div class="overlay" id="overlay"></div>
   
-<!-- Player - Play button + Video -->
 <div class="player" id="playerBox">
   <div class="play-overlay" id="playOverlay">
     <button class="play-btn" id="playBtn">▶</button>
@@ -192,21 +198,28 @@ iframe{width:100%;height:100%;border:none;position:absolute;top:0;left:0;display
 
 <div class="info">
   <div class="movie-detail">
-    <img id="poster" src="" alt="">
-    <div>
+    <!-- වම් පැත්ත: Poster + Title යට -->
+    <div class="left-col">
+      <img id="poster" src="" alt="">
       <h1 id="movieTitle"></h1>
-      
+    </div>
+    
+    <!-- දකුණු පැත්ත: Details ටික උඩින්ම -->
+    <div class="right-col">
       <!-- Quality + IMDb Badges -->
       <div class="badges" id="badges"></div>
       
-      <!-- Details ටික - දකුණු පැත්තට -->
-      <p><strong>🎭 Genres:</strong> <span id="genres"></span></p>
-      <p><strong>👨‍💼 Director:</strong> <span id="director"></span></p>
-      <p><strong>⏱️ Duration:</strong> <span id="duration"></span></p>
-      <p><strong>🗣️ Language:</strong> <span id="language"></span></p>
-      <p><strong>🌍 Country:</strong> <span id="country"></span></p>
-      <p><strong>📅 Release Year:</strong> <span id="year"></span></p>
-      <p><strong>⭐ IMDb Rating:</strong> <span class="imdb-box">⭐ <span id="imdb"></span> <small id="imdbVotes"></small></span></p>
+      <!-- Details ටික -->
+      <div class="details-list">
+        <p><strong>🎭 Genres:</strong> <span id="genres"></span></p>
+        <p><strong>👨‍🎬 Director:</strong> <span id="director"></span></p>
+        <p><strong>⏱️ Duration:</strong> <span id="duration"></span></p>
+        <p><strong>🗣️ Language:</strong> <span id="language"></span></p>
+        <p><strong>🌍 Country:</strong> <span id="country"></span></p>
+        <p><strong>📅 Release Year:</strong> <span id="year"></span></p>
+        <p><strong>⭐ IMDb Rating:</strong> <span class="imdb-box">⭐ <span id="imdb"></span> <small id="imdbVotes"></small></span></p>
+        <p><strong>📂 Category:</strong> <span id="category"></span></p>
+      </div>
     </div>
   </div>
 </div>
@@ -259,10 +272,8 @@ async function loadMovie() {
     document.getElementById('language').innerText = m.language || 'N/A';
     document.getElementById('country').innerText = m.country || 'N/A';
     document.getElementById('year').innerText = m.year || '2024';
-    
     document.getElementById('imdb').innerText = m.imdbRating || 'N/A';
     document.getElementById('imdbVotes').innerText = m.imdbVotes ? '(' + m.imdbVotes + ' votes)' : '';
-    
     document.getElementById('category').innerText = m.category || 'Movie';
     document.getElementById('poster').src = m.poster || 'https://via.placeholder.com/200x300/222/fff?text=No+Image';
     
