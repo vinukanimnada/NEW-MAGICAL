@@ -108,9 +108,136 @@
     <div class="movie-grid" id="tvShowsMovies"></div>
   </section>
 
-  
+  <!-- Firebase + Load Script -->
+  <script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getFirestore, collection, getDocs, query, where, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-  <!-- Firebase Code - script.js එකට move කරා -->
-  <script type="module" src="script.js"></script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyCx0TEmgr3GCyvfeok9Y42yR1PTM4_8y9M",
+    authDomain: "magical-movie-land.firebaseapp.com",
+    projectId: "magical-movie-land",
+    storageBucket: "magical-movie-land.firebasestorage.app",
+    messagingSenderId: "27757424288",
+    appId: "1:27757424288:web:d650e2659f09f0b9c823c5"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  // Card generate function එක
+  function createCard(m, id) {
+    return `
+      <div class="movie-card" onclick="window.location.href='watch.html?id=${id}'">
+        <img src="${m.poster || 'https://via.placeholder.com/300x450/222/fff?text=No+Image'}" alt="${m.title}">
+        <div class="movie-info">
+          <h3>${m.title || 'Untitled'}</h3>
+          <p>${m.year || '2024'} • ⭐ ${m.imdbRating || 'N/A'}</p>
+        </div>
+      </div>
+    `;
+  }
+
+  // Trending Movies Load
+  async function loadTrending() {
+    const grid = document.getElementById('trendingMovies');
+    grid.innerHTML = '<p style="text-align:center; padding:30px; color:#888;">Loading...</p>';
+    
+    const q = query(
+      collection(db, "movies"), 
+      where("category", "==", "trending"),
+      orderBy("timestamp", "desc"),
+      limit(12)
+    );
+    
+    const snapshot = await getDocs(q);
+    if(snapshot.empty) {
+      grid.innerHTML = '<p style="text-align:center; padding:30px; color:#888;">Trending movies නෑ</p>';
+      return;
+    }
+    
+    grid.innerHTML = '';
+    snapshot.forEach(doc => {
+      grid.innerHTML += createCard(doc.data(), doc.id);
+    });
+  }
+
+  // Latest Movies Load
+  async function loadLatest() {
+    const grid = document.getElementById('latestMovies');
+    grid.innerHTML = '<p style="text-align:center; padding:30px; color:#888;">Loading...</p>';
+    
+    const q = query(
+      collection(db, "movies"), 
+      where("category", "==", "latest"),
+      orderBy("timestamp", "desc"),
+      limit(12)
+    );
+    
+    const snapshot = await getDocs(q);
+    if(snapshot.empty) {
+      grid.innerHTML = '<p style="text-align:center; padding:30px; color:#888;">Latest movies නෑ</p>';
+      return;
+    }
+    
+    grid.innerHTML = '';
+    snapshot.forEach(doc => {
+      grid.innerHTML += createCard(doc.data(), doc.id);
+    });
+  }
+
+  // TV Shows Load - Home page එකේ TV Shows section එකට
+  async function loadTvShows() {
+    const grid = document.getElementById('tvShowsMovies');
+    grid.innerHTML = '<p style="text-align:center; padding:30px; color:#888;">Loading TV Shows...</p>';
+    
+    // IMPORTANT: Admin panel එකේ category dropdown value එක මෙතන දාන්න
+    // Admin එකේ <option value="tvshows"> නම් "tvshows" දාන්න
+    const q = query(
+      collection(db, "movies"), 
+      where("category", "==", "tvshows"), // <<-- Admin එකේ value එකට match කරන්න
+      orderBy("timestamp", "desc"),
+      limit(12)
+    );
+    
+    const snapshot = await getDocs(q);
+    if(snapshot.empty) {
+      grid.innerHTML = '<p style="text-align:center; padding:30px; color:#888;">TV Shows තාම add කරලා නෑ</p>';
+      return;
+    }
+    
+    grid.innerHTML = '';
+    snapshot.forEach(doc => {
+      grid.innerHTML += createCard(doc.data(), doc.id);
+    });
+  }
+
+  // Page load වෙද්දි 3ම call කරන්න
+  loadTrending();
+  loadLatest();
+  loadTvShows();
+
+  // Sidebar toggle
+  document.getElementById('menuBtn').onclick = () => {
+    document.getElementById('sidebar').classList.add('active');
+    document.getElementById('overlay').classList.add('active');
+  }
+  document.getElementById('closeSidebar').onclick = () => {
+    document.getElementById('sidebar').classList.remove('active');
+    document.getElementById('overlay').classList.remove('active');
+  }
+  document.getElementById('overlay').onclick = () => {
+    document.getElementById('sidebar').classList.remove('active');
+    document.getElementById('overlay').classList.remove('active');
+  }
+
+  // Search toggle
+  document.getElementById('searchBtn').onclick = () => {
+    document.getElementById('searchBox').classList.toggle('active');
+  }
+  document.getElementById('closeSearch').onclick = () => {
+    document.getElementById('searchBox').classList.remove('active');
+  }
+  </script>
 </body>
 </html>
