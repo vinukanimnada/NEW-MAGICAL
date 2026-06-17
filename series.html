@@ -9,32 +9,32 @@
   
   <style>
   /* Header */ 
-header {
-  background: #111;
-  padding: 12px 15px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  position: sticky;
-  top: 0;
-  z-index: 999;
-}
+  header {
+    background: #111;
+    padding: 12px 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 999;
+  }
 
-.logo{
-  font-size: 22px;
-  font-weight: 700;
-  white-space: nowrap;
-}
+  .logo{
+    font-size: 22px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
 
-.logo span{
-  color: #ff2d95;
-}
+  .logo span{
+    color: #ff2d95;
+  }
 
-.header-right i{
-  font-size: 20px;
-  margin-left: 20px;
-  cursor: pointer;
-}
+  .header-right i{
+    font-size: 20px;
+    margin-left: 20px;
+    cursor: pointer;
+  }
 
   /* Sidebar + Overlay CSS */
   .sidebar {
@@ -148,14 +148,12 @@ header {
     </div>
     
     <!-- Search Bar -->
-  <div class="search-box" id="searchBox">
-    <input type="text" placeholder="Search cartoons or movies...">
-    <i class="fa fa-times" id="closeSearch"></i>
-  </div>
+    <div class="search-box" id="searchBox">
+      <input type="text" placeholder="Search cartoons or movies...">
+      <i class="fa fa-times" id="closeSearch"></i>
+    </div>
     
   </header>
-
-
 
   <!-- Sidebar Menu - close-btn එක ඇතුලට දැම්මා -->
   <div class="sidebar" id="sidebar">
@@ -164,7 +162,7 @@ header {
       <li><a href="index.html">Home</a></li>
       <li><a href="movies.html">All Movies</a></li>
       <li class="active"><a href="series.html">TV Shows</a></li>
-      <li><a href="chanels.html">Join Chanels</a></li>
+      <li><a href="channels.html">Join Channels</a></li>
       <li><a href="about.html">About Us</a></li>
       <li><a href="contact.html">Contact Us</a></li>
     </ul>
@@ -174,12 +172,12 @@ header {
   <!-- Page Content -->
   <section style="padding: 50px 20px; text-align: center;">
     <h1 style="font-size: 32px; margin-bottom: 20px; color: white;">Series</h1>
-    <p style="color: #aaa; font-size: 16px;">මෙතනට ඔයාගේ Series list එක දාන්න</p>
+    <p style="color: #aaa; font-size: 16px;">මෙතනට ඔයාගේ Series ලිස්ට් එක දාන්න</p>
     <br><br>
     <a href="index.html" style="display: inline-block; padding: 12px 25px; background: #e50914; color: #fff; text-decoration: none; border-radius: 4px; font-weight: bold;">← Back to Home</a>
   </section>
 
-  <!-- Menu + Search JS -->
+  <!-- Menu + Search JS - එක පාරක් විතරක් -->
   <script>
   const menuBtn = document.getElementById('menuBtn');
   const sidebar = document.getElementById('sidebar');
@@ -215,38 +213,6 @@ header {
   closeSearch?.addEventListener('click', () => {
     searchBox.classList.remove('active');
   });
-  
-  
-  
-  // Menu open/close
-document.getElementById('menuBtn').onclick = () => {
-  document.getElementById('sidebar').classList.add('active');
-  document.getElementById('overlay').classList.add('active');
-}
-
-document.getElementById('closeSidebar').onclick = () => {
-  document.getElementById('sidebar').classList.remove('active');
-  document.getElementById('overlay').classList.remove('active');
-}
-
-document.getElementById('overlay').onclick = () => {
-  document.getElementById('sidebar').classList.remove('active');
-  document.getElementById('overlay').classList.remove('active');
-}
-
-// Search open/close
-document.getElementById('searchBtn').onclick = () => {
-  document.getElementById('searchBox').classList.toggle('active');
-  if(document.getElementById('searchBox').classList.contains('active')) {
-    document.getElementById('searchBox').querySelector('input').focus();
-  }
-}
-
-document.getElementById('closeSearch').onclick = () => {
-  document.getElementById('searchBox').classList.remove('active');
-}
-
-
   </script>
 </body>
 </html>
