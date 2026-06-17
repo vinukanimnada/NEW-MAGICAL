@@ -113,30 +113,34 @@ body{background:#000;color:white;font-family:Arial;margin:0;padding:0}
 </head>
 <body>
   
+  <!-- Header -->
   <header>
-    <div class="logo">𝗠𝗔𝗚𝗜𝗖𝗔𝗟 <span>𝗠𝗢𝗩𝗜𝗘 𝗟𝗔𝗡𝗗</span></div>
+    <div class="logo">𝗠𝗔𝗚𝗜𝗖𝗔𝗟 <span>𝗠𝗢𝗩𝗜𝗘 𝗟𝗔𝗡𝗗</span></div> 
     <div class="header-right">
       <i class="fa fa-search" id="searchBtn"></i>
       <i class="fa fa-bars" id="menuBtn"></i>
     </div>
+    
+    <!-- Search Bar -->
+    <div class="search-box" id="searchBox">
+      <input type="text" placeholder="Search cartoons or movies...">
+      <i class="fa fa-times" id="closeSearch"></i>
+    </div>
+    
   </header>
 
-  <div class="search-box" id="searchBox">
-    <input type="text" placeholder="Search cartoons or movies...">
-    <i class="fa fa-times" id="closeSearch"></i>
-  </div>
-
+  <!-- Sidebar Menu - close-btn එක ඇතුලට දැම්මා -->
   <div class="sidebar" id="sidebar">
-    <ul>
-      <li><a href="index.html">Home</a></li>
-      <li><a href="movies.html">All Movies</a></li>
-      <li><a href="tvshows.html">TV Shows</a></li>
-      <li><a href="chanels.html">Join Chanels</a></li>
-      <li><a href="about.html">About Us</a></li>
-      <li><a href="contact.html">Contact Us</a></li>
-    </ul>
-  </div>
   <span class="close-btn" id="closeSidebar">×</span>
+  <ul>
+    <li><a href="index.html"><i class="fa fa-home"></i> Home</a></li>
+    <li><a href="movies.html"><i class="fa fa-film"></i> All Movies</a></li>
+    <li><a href="series.html"><i class="fa fa-tv"></i> TV Shows</a></li>
+    <li><a href="channels.html"><i class="fa-solid fa-users"></i> Join Channels</a></li>
+    <li><a href="about.html"><i class="fa fa-info-circle"></i> About Us</a></li>
+    <li><a href="contact.html"><i class="fa fa-envelope"></i> Contact Us</a></li>
+  </ul>
+</div>
   <div class="overlay" id="overlay"></div>
   
 <!-- Video Player - playsinline add කරා -->
