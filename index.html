@@ -25,6 +25,49 @@
       min-width: 100vw;
       height: 100%;
     }
+    
+    /* ========== Search Bar Design - Screenshot එක වගේ ========== */
+  .search-box {
+    position: absolute;
+    top: 60px;
+    left: 0;
+    width: 100%;
+    background: #0a0a0a;
+    padding: 12px 15px;
+    display: none;
+    z-index: 999;
+    border-bottom: 1px solid #222;
+    box-sizing: border-box;
+  }
+  .search-box.active {
+    display: flex;
+    align-items: center;
+  }
+  .search-box input {
+    flex: 1;
+    height: 45px;
+    background: #1a1a1a;
+    border: none;
+    border-radius: 25px;
+    padding: 0 45px 0 20px;
+    color: white;
+    font-size: 16px;
+    outline: none;
+  }
+  .search-box input::placeholder {
+    color: #666;
+  }
+  #closeSearch {
+    position: absolute;
+    right: 30px;
+    font-size: 20px;
+    color: #888;
+    cursor: pointer;
+  }
+  #closeSearch:hover {
+    color: #ff2d95;
+  }
+  
   </style>
 </head>
 <body>
