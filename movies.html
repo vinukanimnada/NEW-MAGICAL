@@ -8,23 +8,35 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   
   <style>
-    * {margin:0; padding:0; box-sizing:border-box;}
-  
-  /* Header */
+  /* Header */ 
   header {
-    position: relative;
+    background: #111;
+    padding: 12px 15px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: #000;
-    padding: 15px 20px;
-    z-index: 1000;
+    position: sticky;
+    top: 0;
+    z-index: 999;
   }
-  .logo {color: white; font-size: 20px; font-weight: bold;}
-  .logo span {color: #ff2d95;}
-  .header-right i {color: white; font-size: 22px; margin-left: 20px; cursor: pointer;}
 
-  /* Sidebar - padding-top අයින් කරා */
+  .logo{
+    font-size: 22px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  .logo span{
+    color: #ff2d95;
+  }
+
+  .header-right i{
+    font-size: 20px;
+    margin-left: 20px;
+    cursor: pointer;
+  }
+
+  /* Sidebar + Overlay CSS */
   .sidebar {
     position: fixed;
     top: 0;
@@ -33,29 +45,16 @@
     height: 100%;
     background: #1a1a1a;
     transition: right 0.3s ease;
-    z-index: 9999; /* z-index වැඩි කරා */
+    z-index: 1001;
+    padding-top: 60px;
   }
-  .sidebar.active {right: 0;}
-  
-  /* Close button - උඩම corner එකටම */
-  .close-btn {
-    position: absolute;
-    top: 15px;
-    right: 20px;
-    font-size: 35px;
-    color: white;
-    cursor: pointer;
-    z-index: 10000; /* z-index තව වැඩි කරා */
-    line-height: 1;
-    font-weight: bold;
+  .sidebar.active {
+    right: 0;
   }
-  .close-btn:hover {color: #ff2d95;}
-
-  /* Menu items පහලට */
   .sidebar ul {
     list-style: none;
     padding: 0;
-    margin-top: 60px; /* close button එකට ඉඩ */
+    margin: 0;
   }
   .sidebar ul li a {
     display: block;
@@ -68,8 +67,6 @@
     background: #ff2d95;
     color: white;
   }
-
-  /* Overlay */
   .overlay {
     position: fixed;
     top: 0;
@@ -78,11 +75,26 @@
     height: 100%;
     background: rgba(0,0,0,0.7);
     display: none;
-    z-index: 9998;
+    z-index: 1000;
   }
-  .overlay.active {display: block;}
+  .overlay.active {
+    display: block;
+  }
+  .close-btn {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 30px;
+    color: white;
+    cursor: pointer;
+    z-index: 1002;
+    line-height: 1;
+  }
+  .close-btn:hover {
+    color: #ff2d95;
+  }
 
-  /* Search Bar */
+  /* Search Bar Design */
   .search-box {
     position: absolute;
     top: 60px;
@@ -95,7 +107,10 @@
     border-bottom: 1px solid #222;
     box-sizing: border-box;
   }
-  .search-box.active {display: flex; align-items: center;}
+  .search-box.active {
+    display: flex;
+    align-items: center;
+  }
   .search-box input {
     flex: 1;
     height: 45px;
@@ -107,6 +122,9 @@
     font-size: 16px;
     outline: none;
   }
+  .search-box input::placeholder {
+    color: #666;
+  }
   #closeSearch {
     position: absolute;
     right: 30px;
@@ -114,9 +132,12 @@
     color: #888;
     cursor: pointer;
   }
+  #closeSearch:hover {
+    color: #ff2d95;
+  }
   </style>
 </head>
-<body style="background:#111; color:white; font-family:Arial;">
+<body style="margin:0; background:#000;">
 
   <!-- Header -->
   <header>
@@ -125,22 +146,23 @@
       <i class="fa fa-search" id="searchBtn"></i>
       <i class="fa fa-bars" id="menuBtn"></i>
     </div>
+    
+    <!-- Search Bar -->
+    <div class="search-box" id="searchBox">
+      <input type="text" placeholder="Search cartoons or movies...">
+      <i class="fa fa-times" id="closeSearch"></i>
+    </div>
+    
   </header>
 
-  <!-- Search Bar -->
-  <div class="search-box" id="searchBox">
-    <input type="text" placeholder="Search cartoons or movies...">
-    <i class="fa fa-times" id="closeSearch"></i>
-  </div>
-
-  <!-- Sidebar - close-btn උඩම -->
+  <!-- Sidebar Menu - close-btn එක ඇතුලට දැම්මා -->
   <div class="sidebar" id="sidebar">
   <span class="close-btn" id="closeSidebar">×</span>
   <ul>
     <li><a href="index.html"><i class="fa fa-home"></i> Home</a></li>
     <li class="active"><a href="movies.html"><i class="fa fa-film"></i> All Movies</a></li>
     <li><a href="series.html"><i class="fa fa-tv"></i> TV Shows</a></li>
-    <li><a href="chanels.html"><i class="fa-solid fa-users"></i> Join Channels</a></li>
+    <li><a href="channels.html"><i class="fa-solid fa-users"></i> Join Channels</a></li>
     <li><a href="about.html"><i class="fa fa-info-circle"></i> About Us</a></li>
     <li><a href="contact.html"><i class="fa fa-envelope"></i> Contact Us</a></li>
   </ul>
@@ -149,12 +171,13 @@
   
   <!-- Page Content -->
   <section style="padding: 50px 20px; text-align: center;">
-    <h1 style="font-size: 32px; margin-bottom: 20px;">Series</h1>
-    <p style="color: #aaa; font-size: 16px;">මෙතනට ඔයාගේ Series list එක දාන්න</p>
+    <h1 style="font-size: 32px; margin-bottom: 20px; color: white;">Series</h1>
+    <p style="color: #aaa; font-size: 16px;">මෙතනට ඔයාගේ Series ලිස්ට් එක දාන්න</p>
     <br><br>
     <a href="index.html" style="display: inline-block; padding: 12px 25px; background: #e50914; color: #fff; text-decoration: none; border-radius: 4px; font-weight: bold;">← Back to Home</a>
   </section>
 
+  <!-- Menu + Search JS - එක පාරක් විතරක් -->
   <script>
   const menuBtn = document.getElementById('menuBtn');
   const sidebar = document.getElementById('sidebar');
@@ -164,31 +187,32 @@
   const searchBox = document.getElementById('searchBox');
   const closeSearch = document.getElementById('closeSearch');
 
-  menuBtn.onclick = () => {
+  // Menu open/close
+  menuBtn?.addEventListener('click', () => {
     sidebar.classList.add('active');
     overlay.classList.add('active');
-  }
+  });
 
-  closeSidebar.onclick = () => {
+  closeSidebar?.addEventListener('click', () => {
     sidebar.classList.remove('active');
     overlay.classList.remove('active');
-  }
+  });
 
-  overlay.onclick = () => {
+  overlay?.addEventListener('click', () => {
     sidebar.classList.remove('active');
     overlay.classList.remove('active');
-  }
+  });
 
-  searchBtn.onclick = () => {
+  // Search open/close
+  searchBtn?.addEventListener('click', () => {
     searchBox.classList.toggle('active');
     if(searchBox.classList.contains('active')) {
       searchBox.querySelector('input').focus();
     }
-  }
-  
-  closeSearch.onclick = () => {
+  });
+  closeSearch?.addEventListener('click', () => {
     searchBox.classList.remove('active');
-  }
+  });
   </script>
 </body>
 </html>
