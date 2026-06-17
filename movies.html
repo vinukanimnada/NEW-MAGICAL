@@ -8,7 +8,9 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   
   <style>
-  /* Header - position relative add කරා */
+    * {margin:0; padding:0; box-sizing:border-box;}
+  
+  /* Header */
   header {
     position: relative;
     display: flex;
@@ -18,22 +20,11 @@
     padding: 15px 20px;
     z-index: 1000;
   }
-  .logo {
-    color: white;
-    font-size: 20px;
-    font-weight: bold;
-  }
-  .logo span {
-    color: #ff2d95;
-  }
-  .header-right i {
-    color: white;
-    font-size: 22px;
-    margin-left: 20px;
-    cursor: pointer;
-  }
+  .logo {color: white; font-size: 20px; font-weight: bold;}
+  .logo span {color: #ff2d95;}
+  .header-right i {color: white; font-size: 22px; margin-left: 20px; cursor: pointer;}
 
-  /* Sidebar + Overlay CSS */
+  /* Sidebar - padding-top අයින් කරා */
   .sidebar {
     position: fixed;
     top: 0;
@@ -42,16 +33,29 @@
     height: 100%;
     background: #1a1a1a;
     transition: right 0.3s ease;
-    z-index: 1001;
-    padding-top: 60px;
+    z-index: 9999; /* z-index වැඩි කරා */
   }
-  .sidebar.active {
-    right: 0;
+  .sidebar.active {right: 0;}
+  
+  /* Close button - උඩම corner එකටම */
+  .close-btn {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 35px;
+    color: white;
+    cursor: pointer;
+    z-index: 10000; /* z-index තව වැඩි කරා */
+    line-height: 1;
+    font-weight: bold;
   }
+  .close-btn:hover {color: #ff2d95;}
+
+  /* Menu items පහලට */
   .sidebar ul {
     list-style: none;
     padding: 0;
-    margin: 0;
+    margin-top: 60px; /* close button එකට ඉඩ */
   }
   .sidebar ul li a {
     display: block;
@@ -64,6 +68,8 @@
     background: #ff2d95;
     color: white;
   }
+
+  /* Overlay */
   .overlay {
     position: fixed;
     top: 0;
@@ -72,26 +78,11 @@
     height: 100%;
     background: rgba(0,0,0,0.7);
     display: none;
-    z-index: 1000;
+    z-index: 9998;
   }
-  .overlay.active {
-    display: block;
-  }
-  .close-btn {
-    position: absolute;
-    top: 15px;
-    right: 20px;
-    font-size: 30px;
-    color: white;
-    cursor: pointer;
-    z-index: 1002;
-    line-height: 1;
-  }
-  .close-btn:hover {
-    color: #ff2d95;
-  }
+  .overlay.active {display: block;}
 
-  /* Search Bar Design */
+  /* Search Bar */
   .search-box {
     position: absolute;
     top: 60px;
@@ -104,10 +95,7 @@
     border-bottom: 1px solid #222;
     box-sizing: border-box;
   }
-  .search-box.active {
-    display: flex;
-    align-items: center;
-  }
+  .search-box.active {display: flex; align-items: center;}
   .search-box input {
     flex: 1;
     height: 45px;
@@ -119,9 +107,6 @@
     font-size: 16px;
     outline: none;
   }
-  .search-box input::placeholder {
-    color: #666;
-  }
   #closeSearch {
     position: absolute;
     right: 30px;
@@ -129,12 +114,9 @@
     color: #888;
     cursor: pointer;
   }
-  #closeSearch:hover {
-    color: #ff2d95;
-  }
   </style>
 </head>
-<body style="margin:0; background:#111;">
+<body style="background:#111; color:white; font-family:Arial;">
 
   <!-- Header -->
   <header>
@@ -145,13 +127,13 @@
     </div>
   </header>
 
-  <!-- Search Bar - header එකෙන් එළියට දැම්මා -->
+  <!-- Search Bar -->
   <div class="search-box" id="searchBox">
     <input type="text" placeholder="Search cartoons or movies...">
     <i class="fa fa-times" id="closeSearch"></i>
   </div>
 
-  <!-- Sidebar Menu - close-btn එක ඇතුලට දැම්මා -->
+  <!-- Sidebar - close-btn උඩම -->
   <div class="sidebar" id="sidebar">
     <span class="close-btn" id="closeSidebar">×</span>
     <ul>
@@ -167,13 +149,12 @@
   
   <!-- Page Content -->
   <section style="padding: 50px 20px; text-align: center;">
-    <h1 style="font-size: 32px; margin-bottom: 20px; color: white;">Series</h1>
+    <h1 style="font-size: 32px; margin-bottom: 20px;">Series</h1>
     <p style="color: #aaa; font-size: 16px;">මෙතනට ඔයාගේ Series list එක දාන්න</p>
     <br><br>
     <a href="index.html" style="display: inline-block; padding: 12px 25px; background: #e50914; color: #fff; text-decoration: none; border-radius: 4px; font-weight: bold;">← Back to Home</a>
   </section>
 
-  <!-- Menu + Search JS -->
   <script>
   const menuBtn = document.getElementById('menuBtn');
   const sidebar = document.getElementById('sidebar');
@@ -183,32 +164,31 @@
   const searchBox = document.getElementById('searchBox');
   const closeSearch = document.getElementById('closeSearch');
 
-  // Menu open/close
-  menuBtn?.addEventListener('click', () => {
+  menuBtn.onclick = () => {
     sidebar.classList.add('active');
     overlay.classList.add('active');
-  });
+  }
 
-  closeSidebar?.addEventListener('click', () => {
+  closeSidebar.onclick = () => {
     sidebar.classList.remove('active');
     overlay.classList.remove('active');
-  });
+  }
 
-  overlay?.addEventListener('click', () => {
+  overlay.onclick = () => {
     sidebar.classList.remove('active');
     overlay.classList.remove('active');
-  });
+  }
 
-  // Search open/close
-  searchBtn?.addEventListener('click', () => {
+  searchBtn.onclick = () => {
     searchBox.classList.toggle('active');
     if(searchBox.classList.contains('active')) {
       searchBox.querySelector('input').focus();
     }
-  });
-  closeSearch?.addEventListener('click', () => {
+  }
+  
+  closeSearch.onclick = () => {
     searchBox.classList.remove('active');
-  });
+  }
   </script>
 </body>
 </html>
