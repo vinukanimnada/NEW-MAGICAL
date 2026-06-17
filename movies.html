@@ -3,10 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>All Movies - Magical Movie Land</title>
+  <title>Series - Magical Movie Land</title>
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <style>
+  
+  <style>
   /* Sidebar + Overlay CSS - නැත්තම් මේකත් දාපන් */
   .sidebar {
     position: fixed;
@@ -103,10 +104,9 @@
   </style>
 </head>
 <body>
-  
   <!-- Header -->
   <header>
-    <div class="logo">𝗠𝗔𝗚𝗜𝗖𝗔𝗟 <span>𝗠𝗢𝗩𝗜𝗘 𝗟𝗔𝗡𝗗</span></div>
+    <div class="logo">𝗠𝗔𝗚𝗜𝗖𝗔𝗟 <span>𝗠𝗢𝗩𝗜𝗘 𝗟𝗔𝗡𝗗</span></div> 
     <div class="header-right">
       <i class="fa fa-search" id="searchBtn"></i>
       <i class="fa fa-bars" id="menuBtn"></i>
@@ -123,8 +123,8 @@
   <div class="sidebar" id="sidebar">
     <ul>
       <li><a href="index.html">Home</a></li>
-      <li class="active><a href="movies.html">All Movies</a></li>
-      <li><a href="series.html">TV Shows</a></li>
+      <li><a href="movies.html">All Movies</a></li>
+      <li class="active"><a href="series.html">TV Shows</a></li>
       <li><a href="chanels.html">Join Chanels</a></li>
       <li><a href="about.html">About Us</a></li>
       <li><a href="contact.html">Contact Us</a></li>
@@ -134,275 +134,46 @@
   <div class="overlay" id="overlay"></div>
   
   <!-- Page Content -->
-  
-  <style>
-    body {
-      margin: 0;
-      background: #0a0a0a;
-      font-family: Arial, sans-serif;
-      color: white;
-      padding: 20px;
-    }
-    h2 {
-      margin-bottom: 20px;
-      font-size: 24px;
-      }
-      
-    .movies-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr); /* එක පේළියට 3යි */
-  gap: 8px; /* cards අතර space අඩු කරපන් */
-  padding: 10px;
-}
+  <section style="padding: 50px 20px; text-align: center;">
+    <h1 style="font-size: 32px; margin-bottom: 20px;">Series</h1>
+    <p style="color: #aaa; font-size: 16px;">මෙතනට ඔයාගේ Series list එක දාන්න</p>
+    <br><br>
+    <a href="index.html" style="display: inline-block; padding: 12px 25px; background: #e50914; color: #fff; text-decoration: none; border-radius: 4px; font-weight: bold;">← Back to Home</a>
+  </section>
 
-.movie-card {
-  position: relative;
-  border-radius: 6px;
-  overflow: hidden;
-  cursor: pointer;
-  transition: 0.3s;
-  aspect-ratio: 2/3; /* ← මේක තමයි හරියට උස දෙන්නේ. Cinesubz ratio එක */
-  width: 100%;
-}
+  <!-- Menu + Search JS - මේක තමයි magic එක -->
+  <script>
+  const menuBtn = document.getElementById('menuBtn');
+  const sidebar = document.getElementById('sidebar');
+  const closeSidebar = document.getElementById('closeSidebar');
+  const overlay = document.getElementById('overlay');
+  const searchBtn = document.getElementById('searchBtn');
+  const searchBox = document.getElementById('searchBox');
+  const closeSearch = document.getElementById('closeSearch');
 
-.movie-card img {
-  width: 100%;
-  height: 100%; /* aspect-ratio එකට ගැලපෙන විදියට */
-  object-fit: cover;
-  display: block;
-}
+  // Menu open/close
+  menuBtn?.addEventListener('click', () => {
+    sidebar.classList.add('active');
+    overlay.classList.add('active');
+  });
 
-/* Green quality/episode tag - උඩ වම් */
-.badge.webdl{
-  background: #e50914;
-}
+  closeSidebar?.addEventListener('click', () => {
+    sidebar.classList.remove('active');
+    overlay.classList.remove('active');
+  });
 
-.badge.hd{
-  background: #ff4500;
-}
+  overlay?.addEventListener('click', () => {
+    sidebar.classList.remove('active');
+    overlay.classList.remove('active');
+  });
 
-.badge.fhd{
-  background: #ff8c00;
-}
-
-/* Yellow rating tag - උඩ දකුණ */
-.rating-tag {
-  position: absolute;
-  top: 5px;
-  right: 5px;
-  background: #f5c518;
-  color: black;
-  padding: 3px 5px;
-  font-size: 10px;
-  font-weight: bold;
-  border-radius: 3px;
-}
-
-/* Movie title - යට */
-.movie-title {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: linear-gradient(transparent, rgba(0,0,0,0.85));
-  padding: 30px 4px 6px 4px;
-  font-size: 11px; /* Cinesubz වගේ පොඩි font */
-  font-weight: 600;
-  text-align: center;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis; /* "Raakh (2026) T..." වගේ ... දානවා */
-}
-  </style>
-</head>
-<body>
-
-  <h2>All Movies</h2>
-  
-  <div class="movies-grid">
-    
-    <!-- Movie Card 1 -->
-    <a href="raya.html" style="text-decoration:none; color:inherit;">
-    <div class="movie-card">
-      <img src="poster1.jpg" alt="Karuppu">
-      <span class="badge.webdl">WEB</span>
-      <span class="rating-tag">★ 7.2</span>
-      <div class="movie-title">Karuppu (2026)</div>
-    </div>
-    </a>
-
-    <!-- Movie Card 2 -->
-    <a href="raya.html" style="text-decoration:none; color:inherit;">
-    <div class="movie-card">
-      <img src="poster2.jpg" alt="Dridam">
-      <span class="badge.hd">WEB-DL</span>
-      <span class="rating-tag">★ 7.5</span>
-      <div class="movie-title">Dridam (2026)</div>
-    </div>
-    </a>
-
-    <!-- Movie Card 3 -->
-    <a href="raya.html" style="text-decoration:none; color:inherit;">
-    <div class="movie-card">
-      <img src="poster3.jpg" alt="Blades">
-      <span class="badge.fhd">BLURAY</span>
-      <span class="rating-tag">★ 7.3</span>
-      <div class="movie-title">Blades of the G...</div>
-    </div>
-    </a>
-
-    <!-- Movie Card 4 -->
-    <a href="raya.html" style="text-decoration:none; color:inherit;">
-    <div class="movie-card">
-      <img src="poster3.jpg" alt="Blades">
-      <span class="badge.fhd">BLURAY</span>
-      <span class="rating-tag">★ 7.3</span>
-      <div class="movie-title">Blades of the G...</div>
-    </div>
-    </a>
-    
-    <!-- Movie Card 5 -->
-    <a href="raya.html" style="text-decoration:none; color:inherit;">
-    <div class="movie-card">
-      <img src="poster3.jpg" alt="Blades">
-      <span class="badge.fhd">BLURAY</span>
-      <span class="rating-tag">★ 7.3</span>
-      <div class="movie-title">Blades of the G...</div>
-    </div>
-    </a>
-    
-    <!-- Movie Card 6 -->
-    <a href="raya.html" style="text-decoration:none; color:inherit;">
-    <div class="movie-card">
-      <img src="poster3.jpg" alt="Blades">
-      <span class="badge.fhd">BLURAY</span>
-      <span class="rating-tag">★ 7.3</span>
-      <div class="movie-title">Blades of the G...</div>
-    </div>
-    </a>
-    
-    <!-- Movie Card 7 -->
-    <a href="raya.html" style="text-decoration:none; color:inherit;">
-    <div class="movie-card">
-      <img src="poster3.jpg" alt="Blades">
-      <span class="badge.fhd">BLURAY</span>
-      <span class="rating-tag">★ 7.3</span>
-      <div class="movie-title">Blades of the G...</div>
-    </div>
-    </a>
-    
-    <!-- Movie Card 8 -->
-    <a href="raya.html" style="text-decoration:none; color:inherit;">
-    <div class="movie-card">
-      <img src="poster3.jpg" alt="Blades">
-      <span class="badge.fhd">BLURAY</span>
-      <span class="rating-tag">★ 7.3</span>
-      <div class="movie-title">Blades of the G...</div>
-    </div>
-    </a>
-    
-    <!-- Movie Card 9 -->
-    <a href="raya.html" style="text-decoration:none; color:inherit;">
-    <div class="movie-card">
-      <img src="poster3.jpg" alt="Blades">
-      <span class="badge.fhd">BLURAY</span>
-      <span class="rating-tag">★ 7.3</span>
-      <div class="movie-title">Blades of the G...</div>
-    </div>
-    </a>
-    
-    <!-- Movie Card 10 -->
-    <a href="raya.html" style="text-decoration:none; color:inherit;">
-    <div class="movie-card">
-      <img src="poster3.jpg" alt="Blades">
-      <span class="badge.fhd">BLURAY</span>
-      <span class="rating-tag">★ 7.3</span>
-      <div class="movie-title">Blades of the G...</div>
-    </div>
-    </a>
-    
-    <!-- Movie Card 11 -->
-    <a href="raya.html" style="text-decoration:none; color:inherit;">
-    <div class="movie-card">
-      <img src="poster3.jpg" alt="Blades">
-      <span class="badge.fhd">BLURAY</span>
-      <span class="rating-tag">★ 7.3</span>
-      <div class="movie-title">Blades of the G...</div>
-    </div>
-    </a>
-    
-    <!-- Movie Card 12 -->
-    <a href="raya.html" style="text-decoration:none; color:inherit;">
-    <div class="movie-card">
-      <img src="poster3.jpg" alt="Blades">
-      <span class="badge.fhd">BLURAY</span>
-      <span class="rating-tag">★ 7.3</span>
-      <div class="movie-title">Blades of the G...</div>
-    </div>
-    </a>
-    
-    <!-- Movie Card 13 -->
-    <a href="raya.html" style="text-decoration:none; color:inherit;">
-    <div class="movie-card">
-      <img src="poster3.jpg" alt="Blades">
-      <span class="badge.fhd">BLURAY</span>
-      <span class="rating-tag">★ 7.3</span>
-      <div class="movie-title">Blades of the G...</div>
-    </div>
-    </a>
-    
-    <!-- Movie Card 14 -->
-    <a href="raya.html" style="text-decoration:none; color:inherit;">
-    <div class="movie-card">
-      <img src="poster3.jpg" alt="Blades">
-      <span class="badge.fhd">BLURAY</span>
-      <span class="rating-tag">★ 7.3</span>
-      <div class="movie-title">Blades of the G...</div>
-    </div>
-    </a>
-    
-    <!-- Movie Card 15 -->
-    <a href="raya.html" style="text-decoration:none; color:inherit;">
-    <div class="movie-card">
-      <img src="poster3.jpg" alt="Blades">
-      <span class="badge.fhd">BLURAY</span>
-      <span class="rating-tag">★ 7.3</span>
-      <div class="movie-title">Blades of the G...</div>
-    </div>
-    </a>
-    
-    <!-- Movie Card 16 -->
-    <a href="raya.html" style="text-decoration:none; color:inherit;">
-    <div class="movie-card">
-      <img src="poster3.jpg" alt="Blades">
-      <span class="badge.fhd">BLURAY</span>
-      <span class="rating-tag">★ 7.3</span>
-      <div class="movie-title">Blades of the G...</div>
-    </div>
-    </a>
-    
-    <!-- Movie Card 17 -->
-    <a href="raya.html" style="text-decoration:none; color:inherit;">
-    <div class="movie-card">
-      <img src="poster3.jpg" alt="Blades">
-      <span class="badge.fhd">BLURAY</span>
-      <span class="rating-tag">★ 7.3</span>
-      <div class="movie-title">Blades of the G...</div>
-    </div>
-    </a>
-    
-    <!-- Movie Card 18 -->
-    <a href="raya.html" style="text-decoration:none; color:inherit;">
-    <div class="movie-card">
-      <img src="poster3.jpg" alt="Blades">
-      <span class="badge.fhd">BLURAY</span>
-      <span class="rating-tag">★ 7.3</span>
-      <div class="movie-title">Blades of the G...</div>
-    </div>
-    </a>
-    
-  </div>
-  
-<script src="script.js"></script>
+  // Search open/close
+  searchBtn?.addEventListener('click', () => {
+    searchBox.classList.toggle('active');
+  });
+  closeSearch?.addEventListener('click', () => {
+    searchBox.classList.remove('active');
+  });
+  </script>
 </body>
 </html>
