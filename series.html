@@ -215,6 +215,38 @@ header {
   closeSearch?.addEventListener('click', () => {
     searchBox.classList.remove('active');
   });
+  
+  
+  
+  // Menu open/close
+document.getElementById('menuBtn').onclick = () => {
+  document.getElementById('sidebar').classList.add('active');
+  document.getElementById('overlay').classList.add('active');
+}
+
+document.getElementById('closeSidebar').onclick = () => {
+  document.getElementById('sidebar').classList.remove('active');
+  document.getElementById('overlay').classList.remove('active');
+}
+
+document.getElementById('overlay').onclick = () => {
+  document.getElementById('sidebar').classList.remove('active');
+  document.getElementById('overlay').classList.remove('active');
+}
+
+// Search open/close
+document.getElementById('searchBtn').onclick = () => {
+  document.getElementById('searchBox').classList.toggle('active');
+  if(document.getElementById('searchBox').classList.contains('active')) {
+    document.getElementById('searchBox').querySelector('input').focus();
+  }
+}
+
+document.getElementById('closeSearch').onclick = () => {
+  document.getElementById('searchBox').classList.remove('active');
+}
+
+
   </script>
 </body>
 </html>
