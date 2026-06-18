@@ -14,36 +14,67 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   
   <style>
-
   #heroSlides {
       display: flex;
       height: 100%;
       transition: transform 0.6s ease;
       width: 100%;
-    }
-    .hero-slide {
-      min-width: 100vw;
+  }
+  .hero-slide {
+      min-width: 100%;
       height: 100%;
-    }
-    
-    .hero-banner {
-  width: 100%;
-  height: auto;
-  aspect-ratio: 16/7; /* Dialog එකේ වගේ පොඩි තීරුවක් */
-  max-height: 220px; /* Mobile වල උස වැඩි යන්න දෙන්නේ නෑ */
-  overflow: hidden;
-  border-radius: 12px; /* වටේට පොඩි curve */
-  margin: 15px auto;
-}
+      position: relative;
+  }
+  .hero-slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+  }
 
-.hero-banner img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover; /* Photo එක cut වෙන්නේ නෑ, fill වෙනවා */
-  display: block;
-}
+  /* ===== FIXED HERO BANNER ===== */
+  .hero {
+    width: 95%; /* Screen එකෙන් 95% - පැත්තෙන් ඉඩ */
+    height: 220px; /* Banner උස - Dialog වගේ */
+    border-radius: 20px; /* වටේට curve */
+    margin: 15px auto 0 auto; /* උඩින් 15px gap = පහලට බානවා */
+    overflow: hidden;
+    position: relative;
+    background: #000;
+  }
   
-  /* Sidebar + Overlay CSS - නැත්තම් මේකත් දාපන් */
+  /* Mobile වල තව පොඩි */
+  @media (max-width: 600px) {
+    .hero {
+      height: 180px;
+      width: 92%;
+      border-radius: 16px;
+    }
+  }
+
+  /* Slider dots */
+  .hero-dots {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 6px;
+    z-index: 2;
+  }
+  .hero-dots span {
+    width: 8px;
+    height: 8px;
+    background: rgba(255,255,255,0.4);
+    border-radius: 50%;
+    cursor: pointer;
+  }
+  .hero-dots span.active {
+    background: #ff2d95;
+    width: 20px;
+    border-radius: 10px;
+  }
+  
+  /* Sidebar + Overlay CSS */
   .sidebar {
     position: fixed;
     top: 0;
@@ -55,22 +86,6 @@
     z-index: 1001;
     padding-top: 60px;
   }
-  
-  .hero {
-  width: 100%;
-  height: auto !important; /* 100vh කියන එක අයින් වෙනවා */
-  aspect-ratio: 16/9; /* Movie poster වලට 16:9 perfect */
-  max-height: 300px; /* Mobile වල උස limit කරනවා */
-  position: relative;
-  overflow: hidden;
-  border-radius: 0 0 20px 20px; /* යටින් වටේට curve */
-}
-
-.hero img, .hero {
-  background-size: cover !important;
-  background-position: center !important;
-}
-
   .sidebar.active {
     right: 0;
   }
@@ -111,7 +126,8 @@
     cursor: pointer;
     z-index: 1002;
   }
-  /* ========== Search Bar Design - Screenshot එක වගේ ========== */
+  
+  /* Search Bar */
   .search-box {
     position: absolute;
     top: 60px;
@@ -164,30 +180,27 @@
     </div>
     
     <!-- Search Bar -->
-  <div class="search-box" id="searchBox">
-    <input type="text" placeholder="Search cartoons or movies...">
-    <i class="fa fa-times" id="closeSearch"></i>
-  </div>
-  
+    <div class="search-box" id="searchBox">
+      <input type="text" placeholder="Search cartoons or movies...">
+      <i class="fa fa-times" id="closeSearch"></i>
+    </div>
   </header>
 
-  
   <!-- Sidebar Menu -->
   <div class="sidebar" id="sidebar">
-  <span class="close-btn" id="closeSidebar">×</span>
-  <ul>
-    <li class="active"><a href="index.html"><i class="fa fa-home"></i> Home</a></li>
-    <li><a href="movies.html"><i class="fa fa-film"></i> All Movies</a></li>
-    <li><a href="series.html"><i class="fa fa-tv"></i> TV Shows</a></li>
-    <li><a href="chanels.html"><i class="fa-solid fa-users"></i> Join Channels</a></li>
-    <li><a href="about.html"><i class="fa fa-info-circle"></i> About</a></li>
-    <li><a href="contact.html"><i class="fa fa-envelope"></i> Contact Us</a></li>
-  </ul>
-</div>
-  <span class="close-btn" id="closeSidebar">×</span>
+    <span class="close-btn" id="closeSidebar">×</span>
+    <ul>
+      <li class="active"><a href="index.html"><i class="fa fa-home"></i> Home</a></li>
+      <li><a href="movies.html"><i class="fa fa-film"></i> All Movies</a></li>
+      <li><a href="series.html"><i class="fa fa-tv"></i> TV Shows</a></li>
+      <li><a href="chanels.html"><i class="fa-solid fa-users"></i> Join Channels</a></li>
+      <li><a href="about.html"><i class="fa fa-info-circle"></i> About</a></li>
+      <li><a href="contact.html"><i class="fa fa-envelope"></i> Contact Us</a></li>
+    </ul>
+  </div>
   <div class="overlay" id="overlay"></div>
 
-  <!-- ===== HERO SLIDER - Firebase එකෙන් Auto Load ===== -->
+  <!-- ===== HERO SLIDER ===== -->
   <section class="hero" id="heroSlider">
     <div id="heroSlides"></div>
     <div class="hero-dots" id="heroDots"></div>
