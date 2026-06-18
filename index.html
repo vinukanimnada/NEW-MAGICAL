@@ -1,248 +1,444 @@
-<!DOCTYPE html>
-<html lang="si">
-<head>
-  <meta charset="UTF-8">
-  <meta name="google-site-verification" content="9x-_hTOkmrjADkTX5qBPDI2QNIMCrp3LEuD5lxw-ZnI" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MAGICAL MOVIE LAND - Free HD Cartoon Movies Online</title>
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-  <meta name="description" content="Watch free HD cartoon movies online. Diary of a Wimpy Kid, Ne Zha, Elemental and more. No ads, fast streaming on MAGICAL MOVIE LAND.">
-  <meta name="keywords" content="cartoon movies, free movies online, HD movies, Magical Movie Land">
+body{
+  background: #0b0b0b;
+  color: #fff;
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+}
 
-  <link rel="icon" href="favicon.png" type="image/png">
-  <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  
-  <style>
-  #heroSlides {
-      display: flex;
-      height: 100%;
-      transition: transform 0.6s ease;
-      width: 100%;
-  }
-  .hero-slide {
-      min-width: 100%;
-      height: 100%;
-      position: relative;
-  }
-  .hero-slide img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-  }
+/* Header */ 
+header {
+  background: #111;
+  padding: 12px 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 999;
+}
 
-  /* ===== FIXED HERO BANNER ===== */
-  .hero {
-    width: 95%; /* Screen එකෙන් 95% - පැත්තෙන් ඉඩ */
-    height: 220px; /* Banner උස - Dialog වගේ */
-    border-radius: 20px; /* වටේට curve */
-    margin: 15px auto 0 auto; /* උඩින් 15px gap = පහලට බානවා */
-    overflow: hidden;
-    position: relative;
-    background: #000;
-  }
-  
-  /* Mobile වල තව පොඩි */
-  @media (max-width: 600px) {
-    .hero {
-      height: 180px;
-      width: 92%;
-      border-radius: 16px;
-    }
-  }
+.logo{
+  font-size: 22px;
+  font-weight: 700;
+  white-space: nowrap;
+}
 
-  /* Slider dots */
-  .hero-dots {
-    position: absolute;
-    bottom: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 6px;
-    z-index: 2;
-  }
-  .hero-dots span {
-    width: 8px;
-    height: 8px;
-    background: rgba(255,255,255,0.4);
-    border-radius: 50%;
-    cursor: pointer;
-  }
-  .hero-dots span.active {
-    background: #ff2d95;
-    width: 20px;
-    border-radius: 10px;
-  }
-  
-  /* Sidebar + Overlay CSS */
-  .sidebar {
-    position: fixed;
-    top: 0;
-    right: -300px;
-    width: 280px;
-    height: 100%;
-    background: #111;
-    transition: right 0.3s ease;
-    z-index: 1001;
-    padding-top: 60px;
-  }
-  .sidebar.active {
-    right: 0;
-  }
-  .sidebar ul {
-    list-style: none;
-    padding: 0;
-  }
-  .sidebar ul li a {
-    display: block;
-    padding: 15px 20px;
-    color: white;
-    text-decoration: none;
-    border-bottom: 1px solid #333;
-  }
-  .sidebar ul li.active a {
-    background: #ff2d95;
-    color: white;
-  }
-  .overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.7);
-    display: none;
-    z-index: 1000;
-  }
-  .overlay.active {
-    display: block;
-  }
-  .close-btn {
-    position: absolute;
-    top: 15px;
-    right: 20px;
-    font-size: 30px;
-    color: white;
-    cursor: pointer;
-    z-index: 1002;
-  }
-  
-  /* Search Bar */
-  .search-box {
-    position: absolute;
-    top: 60px;
-    left: 0;
-    width: 100%;
-    background: #0a0a0a;
-    padding: 12px 15px;
-    display: none;
-    z-index: 999;
-    border-bottom: 1px solid #222;
-    box-sizing: border-box;
-  }
-  .search-box.active {
-    display: flex;
-    align-items: center;
-  }
-  .search-box input {
-    flex: 1;
-    height: 45px;
-    background: #1a1a1a;
-    border: none;
-    border-radius: 25px;
-    padding: 0 45px 0 20px;
-    color: white;
-    font-size: 16px;
-    outline: none;
-  }
-  .search-box input::placeholder {
-    color: #666;
-  }
-  #closeSearch {
-    position: absolute;
-    right: 30px;
-    font-size: 20px;
-    color: #888;
-    cursor: pointer;
-  }
-  #closeSearch:hover {
-    color: #ff2d95;
-  }
-  </style>
-</head>
-<body>
-  <!-- Header -->
-  <header>
-    <div class="logo">𝗠𝗔𝗚𝗜𝗖𝗔𝗟 <span>𝗠𝗢𝗩𝗜𝗘 𝗟𝗔𝗡𝗗</span></div>
-    <div class="header-right">
-      <i class="fa fa-search" id="searchBtn"></i>
-      <i class="fa fa-bars" id="menuBtn"></i>
-    </div>
-    
-    <!-- Search Bar -->
-    <div class="search-box" id="searchBox">
-      <input type="text" placeholder="Search cartoons or movies...">
-      <i class="fa fa-times" id="closeSearch"></i>
-    </div>
-  </header>
+.logo span{
+  color: #FF10F0;
+}
 
-  <!-- Sidebar Menu -->
-  <div class="sidebar" id="sidebar">
-    <span class="close-btn" id="closeSidebar">×</span>
-    <ul>
-      <li class="active"><a href="index.html"><i class="fa fa-home"></i> Home</a></li>
-      <li><a href="movies.html"><i class="fa fa-film"></i> All Movies</a></li>
-      <li><a href="series.html"><i class="fa fa-tv"></i> TV Shows</a></li>
-      <li><a href="chanels.html"><i class="fa-solid fa-users"></i> Join Channels</a></li>
-      <li><a href="about.html"><i class="fa fa-info-circle"></i> About</a></li>
-      <li><a href="contact.html"><i class="fa fa-envelope"></i> Contact Us</a></li>
-    </ul>
-  </div>
-  <div class="overlay" id="overlay"></div>
+.header-right i{
+  font-size: 20px;
+  margin-left: 20px;
+  cursor: pointer;
+}
 
-  <!-- ===== HERO SLIDER ===== -->
-  <section class="hero" id="heroSlider">
-    <div id="heroSlides"></div>
-    <div class="hero-dots" id="heroDots"></div>
-  </section>
-  
-  <!-- Daily Trending -->
-  <section class="trending">
-    <div class="section-header">
-      <h2 style="position:relative; padding-left:12px;">
-        <span style="position:absolute; left:0; top:50%; transform:translateY(-50%); width:4px; height:28px; background:#ff2d95; border-radius:2px;"></span>
-       Daily Trending
-      </h2>
-      <a href="movies.html" class="view-all">VIEW ALL</a>
-    </div>
-    <div class="movie-grid" id="trendingMovies"></div>
-  </section>
-  
-  <!-- Latest Uploads -->
-  <section class="trending">
-    <div class="section-header">
-      <h2 style="position:relative; padding-left:12px;">
-        <span style="position:absolute; left:0; top:50%; transform:translateY(-50%); width:4px; height:28px; background:#ff2d95; border-radius:2px;"></span>
-        Latest Uploads
-      </h2>
-      <a href="movies.html" class="view-all">VIEW ALL</a>
-    </div>
-    <div class="movie-grid" id="latestMovies"></div>
-  </section>
+/* Search Box */ 
+.search-box{
+  background: #1a1a1a;
+  padding: 15px 20px;
+  display: none;
+  position: sticky;
+  top: 60px;
+  z-index: 998;
+}
 
-  <!-- TV Shows Section -->
-  <section class="trending">
-    <div class="section-header">
-      <h2 style="position:relative; padding-left:12px;">
-        <span style="position:absolute; left:0; top:50%; transform:translateY(-50%); width:4px; height:28px; background:#ff2d95; border-radius:2px;"></span>
-        TV Shows
-      </h2>
-      <a href="tvshows.html" class="view-all">VIEW ALL</a>
-    </div>
-    <div class="movie-grid" id="tvShowsMovies"></div>
-  </section>
+.search-box.active{
+  display: flex;
+}
 
-  <!-- Firebase + Site JS -->
-  <script type="module" src="script.js"></script>
-</body>
-</html>
+.search-box input{
+  flex: 1;
+  padding: 10px;
+  background: #2a2a2a;
+  border: none;
+  border-radius: 25px;
+  color: #fff;
+  outline: none;
+}
+
+.search-box i{
+  margin-left: 10px;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+/* Sidebar - Width 220px */
+.sidebar{
+  position: fixed;
+  top: 0;
+  right: -220px;
+  width: 220px;
+  max-width: 75vw;
+  height: 100%;
+  background: #222;
+  transition: 0.3s;
+  z-index: 1000;
+  padding-top: 70px;
+}
+
+.sidebar.active{
+  right: 0;
+}
+
+.sidebar ul{
+  list-style: none;
+}
+
+.sidebar li{
+  border-bottom: 1px solid #000;
+  padding: 0;
+}
+
+.sidebar li.active{
+  background: #e50914;
+}
+
+.sidebar li a{
+  display: block;
+  width: 100%;
+  padding: 12px 20px;
+  color: #fff;
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.sidebar li a:hover{
+  background: #2a2a2a;
+}
+
+/* Home එකට උඩ Border එක - #000 කලු */
+.sidebar li:first-child a{
+  border-top: 1px solid #000;
+  margin-top: 12px;
+  padding-top: 14px;
+}
+
+.sidebar li.active a{
+  background: #ff00ff;
+  color: #fff;
+}
+
+.close-btn{
+  position: fixed;
+  top: 15px;
+  right: 20px;
+  font-size: 32px;
+  color: #fff;
+  cursor: pointer;
+  z-index: 1001;
+  display: none;
+  line-height: 1;
+  transition: 0.2s;
+}
+
+.close-btn:hover{
+  color: #e50914;
+}
+
+.overlay{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.7);
+  display: none;
+  z-index: 999;
+}
+
+.overlay.active{
+  display: block;
+}
+
+/* ===== FIXED HERO BANNER ===== */
+.hero{
+  width: 95%; /* Full width නෙවෙයි - card වගේ */
+  height: 280px; /* 60vh අයින් කරලා fixed උස */
+  border-radius: 20px; /* වටේට curve */
+  margin: 15px auto 0 auto; /* උඩින් 15px gap */
+  position: relative;
+  overflow: hidden;
+  background: #000;
+}
+
+.hero-slide{
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: none;
+}
+
+.hero-slide.active{
+  display: block;
+}
+
+/* Image එක banner එකට හරියටම fit */
+.hero-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Crop වෙලා fill වෙනවා */
+  display: block;
+}
+
+/* Dark overlay එක අඩු කරා - Dialog වගේ clean */
+.hero-slide::after{
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to right, rgba(0,0,0,0.3) 0%, transparent 100%);
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* ===== Watch button + Description text HIDE ===== */
+.hero-slide p, 
+.hero-slide .desc,
+.hero-slide .watch-btn,
+.hero-slide button {
+  display: none !important;
+}
+
+/* Title + IMDb text එකත් ඕන නම් hide කරපන් */
+.hero-slide h1, 
+.hero-slide .imdb,
+.hero-slide .year {
+  display: none !important;
+}
+
+/* Hero Dots - Banner එකට ගැලපෙන්න */
+.hero-dots{
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 6px;
+  z-index: 10;
+}
+
+.hero-dots .dot{
+  width: 8px;
+  height: 8px;
+  background: rgba(255,255,255,0.5);
+  border-radius: 50%;
+  transition: 0.3s;
+  cursor: pointer;
+}
+
+.hero-dots .dot.active{
+  width: 20px;
+  background: #FF10F0;
+  border-radius: 10px;
+}
+
+/* Mobile එකට පොඩි */
+@media (max-width: 600px){
+  .hero{
+    height: 180px;
+    width: 92%;
+    border-radius: 16px;
+  }
+}
+
+/* Tablet */
+@media (min-width: 768px){
+  .movie-grid{
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+  }
+  .movie-card img{
+    height: 280px;
+  }
+}
+
+/* Desktop */
+@media (min-width: 1024px){
+  .movie-grid{
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+  }
+  .movie-card img{
+    height: 320px;
+  }
+}
+
+/* Trending Section */
+.trending{
+  padding: 30px 20px;
+}
+
+/* ===== Movie Grid - FIXED ===== */
+.movie-grid{
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  padding: 0;
+}
+
+.movie-card{
+  position: relative;
+  background: #1a1a1a;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  width: 100%;
+}
+
+.movie-card img{
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+  display: block;
+}
+
+/* Badge - HD, FHD, IMDb etc */
+.badge{
+  position: absolute;
+  top: 8px;
+  padding: 4px 8px;
+  font-size: 11px;
+  font-weight: bold;
+  border-radius: 5px;
+  z-index: 2;
+  color: white;
+}
+
+/* Quality Badge - වම් පැත්ත */
+.badge.fhd{
+  left: 8px;
+  background: #ff1493;
+}
+
+.badge.hd{
+  left: 8px;
+  background: #ff4500;
+}
+
+.badge.web-dl{
+  left: 8px;
+  background: #00bfff;
+}
+
+.badge.cam{
+  left: 8px;
+  background: #888;
+}
+
+.badge.webdl{
+  left: 8px;
+  background: #e50914;
+}
+
+/* IMDb Badge - දකුණු පැත්ත කහ පාට */
+.badge.imdb{
+  right: 8px;
+  left: auto;
+  background: #f5c518;
+  color: #000;
+  font-size: 11px;
+  padding: 4px 8px;
+  border-radius: 5px;
+}
+
+.rating{
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(0,0,0,0.7);
+  padding: 3px 6px;
+  font-size: 11px;
+  border-radius: 3px;
+  z-index: 2;
+  color: white;
+}
+
+.card-info{
+  padding: 10px;
+  background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}
+
+.card-info h3{
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 3px;
+  font-weight: 900;
+  line-height: 1.4;
+}
+
+.card-info p{
+  font-size: 11px;
+  color: #aaa;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ===== SECTION HEADER FIX ===== */
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 15px 12px 10px 20px;
+  position: relative;
+  margin-bottom: 15px;
+}
+
+.section-header h2 {
+  margin: 0;
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  line-height: 1.2;
+}
+
+.view-all {
+  background: #ff1493;
+  color: white;
+  padding: 5px 12px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: bold;
+  flex-shrink: 0;
+  transition: 0.2s;
+}
+
+.view-all:hover {
+  opacity: 0.8;
+}
+
+/* Movie card link එක ලස්සනට */
+a .movie-card {
+  cursor: pointer;
+  transition: transform 0.2s;
+  display: block;
+}
+
+a .movie-card:hover {
+  transform: scale(1.03);
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
