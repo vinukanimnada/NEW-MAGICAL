@@ -55,6 +55,22 @@
     z-index: 1001;
     padding-top: 60px;
   }
+  
+  .hero {
+  width: 100%;
+  height: auto !important; /* 100vh කියන එක අයින් වෙනවා */
+  aspect-ratio: 16/9; /* Movie poster වලට 16:9 perfect */
+  max-height: 300px; /* Mobile වල උස limit කරනවා */
+  position: relative;
+  overflow: hidden;
+  border-radius: 0 0 20px 20px; /* යටින් වටේට curve */
+}
+
+.hero img, .hero {
+  background-size: cover !important;
+  background-position: center !important;
+}
+
   .sidebar.active {
     right: 0;
   }
