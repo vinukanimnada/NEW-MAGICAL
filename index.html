@@ -25,6 +25,23 @@
       min-width: 100vw;
       height: 100%;
     }
+    
+    .hero-banner {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16/7; /* Dialog එකේ වගේ පොඩි තීරුවක් */
+  max-height: 220px; /* Mobile වල උස වැඩි යන්න දෙන්නේ නෑ */
+  overflow: hidden;
+  border-radius: 12px; /* වටේට පොඩි curve */
+  margin: 15px auto;
+}
+
+.hero-banner img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Photo එක cut වෙන්නේ නෑ, fill වෙනවා */
+  display: block;
+}
   
   /* Sidebar + Overlay CSS - නැත්තම් මේකත් දාපන් */
   .sidebar {
