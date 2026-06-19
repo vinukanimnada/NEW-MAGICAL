@@ -68,7 +68,7 @@ header {
   font-size: 18px;
 }
 
-/* ===== SIDEBAR - TIGHT VERSION ===== */
+/* ===== SIDEBAR - TIGHT VERSION - FULL WIDTH BAR ===== */
 .sidebar{
   position: fixed;
   top: 0;
@@ -88,7 +88,7 @@ header {
 
 .sidebar ul{
   list-style: none;
-  padding: 0 6px; /* ul එකට පැත්තෙන් 6px padding විතරක් */
+  padding: 0 4px; /* පැත්තෙන් 4px විතරක්. තදටම */
 }
 
 .sidebar li{
@@ -101,7 +101,7 @@ header {
   display: flex;
   align-items: center;
   width: 100%;
-  padding: 10px 10px; /* 12px 15px -> 10px 10px. උඩ යට + පැත්ත අඩු කරා */
+  padding: 9px 8px; /* උඩ යට + පැත්ත අඩු කරා */
   color: #fff;
   text-decoration: none;
   font-size: 14px;
@@ -109,7 +109,7 @@ header {
   letter-spacing: 0.3px;
   cursor: pointer;
   transition: 0.2s;
-  border-radius: 6px; /* hover එකටත් radius */
+  border-radius: 5px;
 }
 
 .sidebar li a:hover{
@@ -117,7 +117,7 @@ header {
 }
 
 .sidebar li a i{
-  margin-right: 8px; /* 10px -> 8px. Icon text gap අඩුයි */
+  margin-right: 6px; /* icon gap අඩුයි */
   font-size: 16px;
   width: 18px;
   min-width: 18px;
@@ -126,10 +126,10 @@ header {
 .sidebar li.active a{
   background: #ff2d95;
   color: #fff;
-  border-radius: 6px;
-  margin: 0; /* margin 0. Full width */
-  padding: 10px 10px; /* padding එක සාමාන්‍ය එක වගේම */
-  width: 100%; /* 100% full */
+  border-radius: 5px;
+  margin: 0; /* margin 0. full width */
+  padding: 9px 8px;
+  width: 100%;
 }
 
 /* Mobile */
@@ -140,15 +140,15 @@ header {
     padding-top: 45px;
   }
   .sidebar ul{
-    padding: 0 4px; /* mobile වල 4px */
+    padding: 0 3px; /* mobile වල 3px */
   }
   .sidebar li a{
-    padding: 9px 8px; /* තව අඩු කරා */
+    padding: 8px 6px; /* තව අඩුයි */
     font-size: 13px;
   }
   .sidebar li a i{
     font-size: 14px;
-    margin-right: 6px; /* icon gap තව අඩුයි */
+    margin-right: 5px;
   }
 }
 
@@ -160,6 +160,11 @@ header {
   color: #ccc;
   cursor: pointer;
   z-index: 1001;
+  transition: 0.2s;
+}
+
+.close-btn:hover{
+  color: #ff2d95;
 }
 
 .overlay{
@@ -177,7 +182,7 @@ header {
   display: block;
 }
 
-/* ===== HERO BANNER - 100% FILL FIX ===== */
+/* ===== HERO BANNER - BACKGROUND IMAGE 100% FILL ===== */
 .hero{
   width: 95%;
   height: 200px;
@@ -222,6 +227,7 @@ header {
   height: 100%;
   background: linear-gradient(to right, rgba(0,0,0,0.3) 0%, transparent 100%);
   z-index: 1;
+  pointer-events: none;
 }
 
 /* Hero content */
@@ -245,7 +251,7 @@ header {
   opacity: 0.9;
 }
 
-.hero-meta.imdb{
+.hero-meta .imdb{
   background: #f5c518;
   color: #000;
   padding: 2px 6px;
@@ -296,7 +302,7 @@ header {
   z-index: 10;
 }
 
-.hero-dots.dot{
+.hero-dots .dot{
   width: 8px;
   height: 8px;
   background: rgba(255,255,255,0.4);
@@ -305,7 +311,7 @@ header {
   transition: 0.3s;
 }
 
-.hero-dots.dot.active{
+.hero-dots .dot.active{
   background: #ff2d95;
   width: 20px;
   border-radius: 10px;
@@ -313,23 +319,23 @@ header {
 
 /* Mobile */
 @media (max-width: 600px){
-.hero{
+  .hero{
     height: 170px;
     width: 92%;
     border-radius: 16px;
   }
-.hero-content{
+  .hero-content{
     bottom: 30px;
     left: 15px;
     max-width: 75%;
   }
-.hero-content h1{
+  .hero-content h1{
     font-size: 18px;
   }
-.desc{
+  .desc{
     font-size: 11px;
   }
-.watch-btn{
+  .watch-btn{
     padding: 6px 12px;
     font-size: 11px;
   }
@@ -337,22 +343,22 @@ header {
 
 /* Tablet */
 @media (min-width: 768px){
-.movie-grid{
+  .movie-grid{
     grid-template-columns: repeat(3, 1fr);
     gap: 15px;
   }
-.movie-card img{
+  .movie-card img{
     height: 280px;
   }
 }
 
 /* Desktop */
 @media (min-width: 1024px){
-.movie-grid{
+  .movie-grid{
     grid-template-columns: repeat(4, 1fr);
     gap: 20px;
   }
-.movie-card img{
+  .movie-card img{
     height: 320px;
   }
 }
@@ -472,6 +478,11 @@ header {
   text-decoration: none;
   font-size: 12px;
   font-weight: bold;
+  transition: 0.2s;
+}
+
+.view-all:hover {
+  opacity: 0.8;
 }
 
 a.movie-card {
