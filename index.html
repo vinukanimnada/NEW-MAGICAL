@@ -2,41 +2,54 @@
 <html lang="si">
 <head>
   <meta charset="UTF-8">
+  <meta name="google-site-verification" content="9x-_hTOkmrjADkTX5qBPDI2QNIMCrp3LEuD5lxw-ZnI" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Magical Movie Land - Home</title>
+  <title>MAGICAL MOVIE LAND - Free HD Cartoon Movies Online</title>
+
+  <meta name="description" content="Watch free HD cartoon movies online. Diary of a Wimpy Kid, Ne Zha, Elemental and more. No ads, fast streaming on MAGICAL MOVIE LAND.">
+  <meta name="keywords" content="cartoon movies, free movies online, HD movies, Magical Movie Land">
+
+  <link rel="icon" href="favicon.png" type="image/png">
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   
   <style>
-  /* Header */ 
-  header {
-    background: #111;
-    padding: 12px 15px;
+  /* ===== WATCH BUTTON + TEXT HIDE ===== */
+  .hero-slide p, 
+  .hero-slide .desc,
+  .hero-slide .watch-btn,
+  .hero-slide button,
+  .hero-slide h1,
+  .hero-slide .imdb,
+  .hero-slide .year {
+    display: none !important;
+  }
+
+  /* Slider dots */
+  .hero-dots {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: sticky;
-    top: 0;
-    z-index: 999;
+    gap: 6px;
+    z-index: 2;
   }
-
-  .logo{
-    font-size: 22px;
-    font-weight: 700;
-    white-space: nowrap;
-  }
-
-  .logo span{
-    color: #ff2d95;
-  }
-
-  .header-right i{
-    font-size: 20px;
-    margin-left: 20px;
+  .hero-dots .dot {
+    width: 8px;
+    height: 8px;
+    background: rgba(255,255,255,0.4);
+    border-radius: 50%;
     cursor: pointer;
+    transition: 0.3s;
   }
-
-  /* Search Bar Design - Sidebar CSS අයින් කරලා මේක විතරක් */
+  .hero-dots .dot.active {
+    background: #ff2d95;
+    width: 20px;
+    border-radius: 10px;
+  }
+  
+  /* Search Bar - Sidebar CSS අයින් කරලා මේක විතරක් තියපන් */
   .search-box {
     position: absolute;
     top: 60px;
@@ -79,11 +92,10 @@
   }
   </style>
 </head>
-<body style="margin:0; background:#000;">
-
+<body>
   <!-- Header -->
   <header>
-    <div class="logo">𝗠𝗔𝗚𝗜𝗖𝗔𝗟 <span>𝗠𝗢𝗩𝗜𝗘 𝗟𝗔𝗡𝗗</span></div> 
+    <div class="logo">𝗠𝗔𝗚𝗜𝗖𝗔𝗟 <span>𝗠𝗢𝗩𝗜𝗘 𝗟𝗔𝗡𝗗</span></div>
     <div class="header-right">
       <i class="fa fa-search" id="searchBtn"></i>
       <i class="fa fa-bars" id="menuBtn"></i>
@@ -104,20 +116,57 @@
       <li><a href="movies.html"><i class="fa fa-film"></i> All Movies</a></li>
       <li><a href="series.html"><i class="fa fa-tv"></i> TV Shows</a></li>
       <li><a href="channels.html"><i class="fa-solid fa-users"></i> Join Channels</a></li>
-      <li><a href="about.html"><i class="fa fa-info-circle"></i> About Us</a></li>
+      <li><a href="about.html"><i class="fa fa-info-circle"></i> About</a></li>
       <li><a href="contact.html"><i class="fa fa-envelope"></i> Contact Us</a></li>
     </ul>
   </div>
   <div class="overlay" id="overlay"></div>
+
+  <!-- ===== HERO SLIDER ===== -->
+  <section class="hero" id="heroSlider">
+    <div id="heroSlides"></div>
+    <div class="hero-dots" id="heroDots"></div>
+  </section>
   
-  <!-- Page Content -->
-  <section style="padding: 50px 20px; text-align: center;">
-    <h1 style="font-size: 32px; margin-bottom: 20px; color: white;">Welcome to Magical Movie Land</h1>
-    <p style="color: #aaa; font-size: 16px;">මෙතනට ඔයාගේ Home page content එක දාන්න</p>
-    <br><br>
-    <a href="movies.html" style="display: inline-block; padding: 12px 25px; background: #ff2d95; color: #fff; text-decoration: none; border-radius: 4px; font-weight: bold;">Browse Movies →</a>
+  <!-- Daily Trending -->
+  <section class="trending">
+    <div class="section-header">
+      <h2 style="position:relative; padding-left:12px;">
+        <span style="position:absolute; left:0; top:50%; transform:translateY(-50%); width:4px; height:28px; background:#ff2d95; border-radius:2px;"></span>
+       Daily Trending
+      </h2>
+      <a href="movies.html" class="view-all">VIEW ALL</a>
+    </div>
+    <div class="movie-grid" id="trendingMovies"></div>
+  </section>
+  
+  <!-- Latest Uploads -->
+  <section class="trending">
+    <div class="section-header">
+      <h2 style="position:relative; padding-left:12px;">
+        <span style="position:absolute; left:0; top:50%; transform:translateY(-50%); width:4px; height:28px; background:#ff2d95; border-radius:2px;"></span>
+        Latest Uploads
+      </h2>
+      <a href="movies.html" class="view-all">VIEW ALL</a>
+    </div>
+    <div class="movie-grid" id="latestMovies"></div>
   </section>
 
+  <!-- TV Shows Section -->
+  <section class="trending">
+    <div class="section-header">
+      <h2 style="position:relative; padding-left:12px;">
+        <span style="position:absolute; left:0; top:50%; transform:translateY(-50%); width:4px; height:28px; background:#ff2d95; border-radius:2px;"></span>
+        TV Shows
+      </h2>
+      <a href="tvshows.html" class="view-all">VIEW ALL</a>
+    </div>
+    <div class="movie-grid" id="tvShowsMovies"></div>
+  </section>
+
+  <!-- Firebase + Site JS -->
+  <script type="module" src="script.js"></script>
+  
   <!-- Menu + Search JS -->
   <script>
   const menuBtn = document.getElementById('menuBtn');
