@@ -3,43 +3,215 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Page Name - Magical Movie Land</title>
+  <title>Series - Magical Movie Land</title>
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  
+  <style>
+  /* Header */ 
+  header {
+    background: #111;
+    padding: 12px 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 999;
+  }
+
+  .logo{
+    font-size: 22px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  .logo span{
+    color: #ff2d95;
+  }
+
+  .header-right i{
+    font-size: 20px;
+    margin-left: 20px;
+    cursor: pointer;
+  }
+
+  /* Sidebar + Overlay CSS */
+  .sidebar {
+    position: fixed;
+    top: 0;
+    right: -300px;
+    width: 280px;
+    height: 100%;
+    background: #1a1a1a;
+    transition: right 0.3s ease;
+    z-index: 1001;
+    padding-top: 60px;
+  }
+  .sidebar.active {
+    right: 0;
+  }
+  .sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .sidebar ul li a {
+    display: block;
+    padding: 15px 20px;
+    color: white;
+    text-decoration: none;
+    border-bottom: 1px solid #333;
+  }
+  .sidebar ul li.active a {
+    background: #ff2d95;
+    color: white;
+  }
+  .overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.7);
+    display: none;
+    z-index: 1000;
+  }
+  .overlay.active {
+    display: block;
+  }
+  .close-btn {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 30px;
+    color: white;
+    cursor: pointer;
+    z-index: 1002;
+    line-height: 1;
+  }
+  .close-btn:hover {
+    color: #ff2d95;
+  }
+
+  /* Search Bar Design */
+  .search-box {
+    position: absolute;
+    top: 60px;
+    left: 0;
+    width: 100%;
+    background: #0a0a0a;
+    padding: 12px 15px;
+    display: none;
+    z-index: 999;
+    border-bottom: 1px solid #222;
+    box-sizing: border-box;
+  }
+  .search-box.active {
+    display: flex;
+    align-items: center;
+  }
+  .search-box input {
+    flex: 1;
+    height: 45px;
+    background: #1a1a1a;
+    border: none;
+    border-radius: 25px;
+    padding: 0 45px 0 20px;
+    color: white;
+    font-size: 16px;
+    outline: none;
+  }
+  .search-box input::placeholder {
+    color: #666;
+  }
+  #closeSearch {
+    position: absolute;
+    right: 30px;
+    font-size: 20px;
+    color: #888;
+    cursor: pointer;
+  }
+  #closeSearch:hover {
+    color: #ff2d95;
+  }
+  </style>
 </head>
-<body>
+<body style="margin:0; background:#000;">
+
+  <!-- Header -->
   <header>
-     <div class="logo">MAGICAL <span>MOVIE LAND</span></div> 
+    <div class="logo">𝗠𝗔𝗚𝗜𝗖𝗔𝗟 <span>𝗠𝗢𝗩𝗜𝗘 𝗟𝗔𝗡𝗗</span></div> 
     <div class="header-right">
       <i class="fa fa-search" id="searchBtn"></i>
       <i class="fa fa-bars" id="menuBtn"></i>
     </div>
+    
+    <!-- Search Bar -->
+    <div class="search-box" id="searchBox">
+      <input type="text" placeholder="Search cartoons or movies...">
+      <i class="fa fa-times" id="closeSearch"></i>
+    </div>
+    
   </header>
 
+  <!-- Sidebar Menu - close-btn එක ඇතුලට දැම්මා -->
   <div class="sidebar" id="sidebar">
   <span class="close-btn" id="closeSidebar">×</span>
   <ul>
     <li><a href="index.html"><i class="fa fa-home"></i> Home</a></li>
     <li><a href="movies.html"><i class="fa fa-film"></i> All Movies</a></li>
-    <li><a href="series.html"><i class="fa fa-tv"></i> TV Shows</a></li>
-    <li><a href="chanels.html"><i class="fa-solid fa-users"></i> Join Channels</a></li>
-    <li class="active"><a href="about.html"><i class="fa fa-info-circle"></i> About Us</a></li>
+    <li class="active"><a href="series.html"><i class="fa fa-tv"></i> TV Shows</a></li>
+    <li><a href="channels.html"><i class="fa-solid fa-users"></i> Join Channels</a></li>
+    <li><a href="about.html"><i class="fa fa-info-circle"></i> About Us</a></li>
     <li><a href="contact.html"><i class="fa fa-envelope"></i> Contact Us</a></li>
   </ul>
 </div>
-  <span class="close-btn" id="closeSidebar">×</span>
   <div class="overlay" id="overlay"></div>
   
-  <!-- මේකේ විතරක් content එක මාරු කරපන් -->
-  <section class="trending">
-    <div class="section-head">
-      <h2 class="red-line">Page Title එක මෙතන</h2>
-    </div>
-    <div style="padding: 50px 20px;">
-      උඹේ content එක මෙතන ලියපන්
-    </div>
+  <!-- Page Content -->
+  <section style="padding: 50px 20px; text-align: center;">
+    <h1 style="font-size: 32px; margin-bottom: 20px; color: white;">Series</h1>
+    <p style="color: #aaa; font-size: 16px;">මෙතනට ඔයාගේ Series ලිස්ට් එක දාන්න</p>
+    <br><br>
+    <a href="index.html" style="display: inline-block; padding: 12px 25px; background: #e50914; color: #fff; text-decoration: none; border-radius: 4px; font-weight: bold;">← Back to Home</a>
   </section>
 
-  <script src="script.js"></script>
+  <!-- Menu + Search JS - එක පාරක් විතරක් -->
+  <script>
+  const menuBtn = document.getElementById('menuBtn');
+  const sidebar = document.getElementById('sidebar');
+  const closeSidebar = document.getElementById('closeSidebar');
+  const overlay = document.getElementById('overlay');
+  const searchBtn = document.getElementById('searchBtn');
+  const searchBox = document.getElementById('searchBox');
+  const closeSearch = document.getElementById('closeSearch');
+
+  // Menu open/close
+  menuBtn?.addEventListener('click', () => {
+    sidebar.classList.add('active');
+    overlay.classList.add('active');
+  });
+
+  closeSidebar?.addEventListener('click', () => {
+    sidebar.classList.remove('active');
+    overlay.classList.remove('active');
+  });
+
+  overlay?.addEventListener('click', () => {
+    sidebar.classList.remove('active');
+    overlay.classList.remove('active');
+  });
+
+  // Search open/close
+  searchBtn?.addEventListener('click', () => {
+    searchBox.classList.toggle('active');
+    if(searchBox.classList.contains('active')) {
+      searchBox.querySelector('input').focus();
+    }
+  });
+  closeSearch?.addEventListener('click', () => {
+    searchBox.classList.remove('active');
+  });
+  </script>
 </body>
-</html>
