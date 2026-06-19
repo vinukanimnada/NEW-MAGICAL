@@ -36,65 +36,7 @@
     cursor: pointer;
   }
 
-  /* Sidebar + Overlay CSS */
-  .sidebar {
-    position: fixed;
-    top: 0;
-    right: -300px;
-    width: 280px;
-    height: 100%;
-    background: #1a1a1a;
-    transition: right 0.3s ease;
-    z-index: 1001;
-    padding-top: 60px;
-  }
-  .sidebar.active {
-    right: 0;
-  }
-  .sidebar ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-  .sidebar ul li a {
-    display: block;
-    padding: 15px 20px;
-    color: white;
-    text-decoration: none;
-    border-bottom: 1px solid #333;
-  }
-  .sidebar ul li.active a {
-    background: #ff2d95;
-    color: white;
-  }
-  .overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.7);
-    display: none;
-    z-index: 1000;
-  }
-  .overlay.active {
-    display: block;
-  }
-  .close-btn {
-    position: absolute;
-    top: 15px;
-    right: 20px;
-    font-size: 30px;
-    color: white;
-    cursor: pointer;
-    z-index: 1002;
-    line-height: 1;
-  }
-  .close-btn:hover {
-    color: #ff2d95;
-  }
-
-  /* Search Bar Design */
+  /* Search Bar Design - මේක විතරක් තියපන් */
   .search-box {
     position: absolute;
     top: 60px;
@@ -152,21 +94,20 @@
       <input type="text" placeholder="Search cartoons or movies...">
       <i class="fa fa-times" id="closeSearch"></i>
     </div>
-    
   </header>
 
-  <!-- Sidebar Menu - close-btn එක ඇතුලට දැම්මා -->
+  <!-- Sidebar Menu - CSS එක style.css එකෙන් -->
   <div class="sidebar" id="sidebar">
-  <span class="close-btn" id="closeSidebar">×</span>
-  <ul>
-    <li><a href="index.html"><i class="fa fa-home"></i> Home</a></li>
-    <li><a href="movies.html"><i class="fa fa-film"></i> All Movies</a></li>
-    <li class="active"><a href="series.html"><i class="fa fa-tv"></i> TV Shows</a></li>
-    <li><a href="channels.html"><i class="fa-solid fa-users"></i> Join Channels</a></li>
-    <li><a href="about.html"><i class="fa fa-info-circle"></i> About Us</a></li>
-    <li><a href="contact.html"><i class="fa fa-envelope"></i> Contact Us</a></li>
-  </ul>
-</div>
+    <span class="close-btn" id="closeSidebar">×</span>
+    <ul>
+      <li><a href="index.html"><i class="fa fa-home"></i> Home</a></li>
+      <li><a href="movies.html"><i class="fa fa-film"></i> All Movies</a></li>
+      <li class="active"><a href="series.html"><i class="fa fa-tv"></i> TV Shows</a></li>
+      <li><a href="channels.html"><i class="fa-solid fa-users"></i> Join Channels</a></li>
+      <li><a href="about.html"><i class="fa fa-info-circle"></i> About Us</a></li>
+      <li><a href="contact.html"><i class="fa fa-envelope"></i> Contact Us</a></li>
+    </ul>
+  </div>
   <div class="overlay" id="overlay"></div>
   
   <!-- Page Content -->
@@ -187,7 +128,6 @@
   const searchBox = document.getElementById('searchBox');
   const closeSearch = document.getElementById('closeSearch');
 
-  // Menu open/close
   menuBtn?.addEventListener('click', () => {
     sidebar.classList.add('active');
     overlay.classList.add('active');
@@ -203,7 +143,6 @@
     overlay.classList.remove('active');
   });
 
-  // Search open/close
   searchBtn?.addEventListener('click', () => {
     searchBox.classList.toggle('active');
     if(searchBox.classList.contains('active')) {
