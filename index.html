@@ -2,34 +2,88 @@
 <html lang="si">
 <head>
   <meta charset="UTF-8">
-  <meta name="google-site-verification" content="9x-_hTOkmrjADkTX5qBPDI2QNIMCrp3LEuD5lxw-ZnI" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MAGICAL MOVIE LAND - Free HD Cartoon Movies Online</title>
-
-  <meta name="description" content="Watch free HD cartoon movies online. Diary of a Wimpy Kid, Ne Zha, Elemental and more. No ads, fast streaming on MAGICAL MOVIE LAND.">
-  <meta name="keywords" content="cartoon movies, free movies online, HD movies, Magical Movie Land">
-
-  <link rel="icon" href="favicon.png" type="image/png">
+  <title>Magical Movie Land</title>
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   
   <style>
-  /* ===== HERO BUTTON + TEXT HIDE ONLY ===== */
-  .hero-slide p, 
-  .hero-slide .desc,
-  .hero-slide .watch-btn,
-  .hero-slide button,
-  .hero-slide h1,
-  .hero-slide .imdb,
-  .hero-slide .year {
-    display: none !important;
+  /* Header */ 
+  header {
+    background: #111;
+    padding: 12px 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 999;
+  }
+
+  .logo{
+    font-size: 22px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  .logo span{
+    color: #ff2d95;
+  }
+
+  .header-right i{
+    font-size: 20px;
+    margin-left: 20px;
+    cursor: pointer;
+  }
+
+  /* Search Bar Design - Sidebar CSS අයින් කරලා මේක විතරක් තියපන් */
+  .search-box {
+    position: absolute;
+    top: 60px;
+    left: 0;
+    width: 100%;
+    background: #0a0a0a;
+    padding: 12px 15px;
+    display: none;
+    z-index: 999;
+    border-bottom: 1px solid #222;
+    box-sizing: border-box;
+  }
+  .search-box.active {
+    display: flex;
+    align-items: center;
+  }
+  .search-box input {
+    flex: 1;
+    height: 45px;
+    background: #1a1a1a;
+    border: none;
+    border-radius: 25px;
+    padding: 0 45px 0 20px;
+    color: white;
+    font-size: 16px;
+    outline: none;
+  }
+  .search-box input::placeholder {
+    color: #666;
+  }
+  #closeSearch {
+    position: absolute;
+    right: 30px;
+    font-size: 20px;
+    color: #888;
+    cursor: pointer;
+  }
+  #closeSearch:hover {
+    color: #ff2d95;
   }
   </style>
 </head>
-<body>
+<body style="margin:0; background:#000;">
+
   <!-- Header -->
   <header>
-    <div class="logo">𝗠𝗔𝗚𝗜𝗖𝗔𝗟 <span>𝗠𝗢𝗩𝗜𝗘 𝗟𝗔𝗡𝗗</span></div>
+    <div class="logo">𝗠𝗔𝗚𝗜𝗖𝗔𝗟 <span>𝗠𝗢𝗩𝗜𝗘 𝗟𝗔𝗡𝗗</span></div> 
     <div class="header-right">
       <i class="fa fa-search" id="searchBtn"></i>
       <i class="fa fa-bars" id="menuBtn"></i>
@@ -42,63 +96,59 @@
     </div>
   </header>
 
-  <!-- Sidebar Menu - CSS එක style.css එකෙන් -->
+  <!-- Sidebar Menu - CSS එක style.css එකෙන් විතරක් -->
   <div class="sidebar" id="sidebar">
     <span class="close-btn" id="closeSidebar">×</span>
     <ul>
       <li class="active"><a href="index.html"><i class="fa fa-home"></i> Home</a></li>
       <li><a href="movies.html"><i class="fa fa-film"></i> All Movies</a></li>
       <li><a href="series.html"><i class="fa fa-tv"></i> TV Shows</a></li>
-      <li><a href="chanels.html"><i class="fa-solid fa-users"></i> Join Channels</a></li>
-      <li><a href="about.html"><i class="fa fa-info-circle"></i> About</a></li>
+      <li><a href="channels.html"><i class="fa-solid fa-users"></i> Join Channels</a></li>
+      <li><a href="about.html"><i class="fa fa-info-circle"></i> About Us</a></li>
       <li><a href="contact.html"><i class="fa fa-envelope"></i> Contact Us</a></li>
     </ul>
   </div>
   <div class="overlay" id="overlay"></div>
-
-  <!-- ===== HERO SLIDER ===== -->
-  <section class="hero" id="heroSlider">
-    <div id="heroSlides"></div>
-    <div class="hero-dots" id="heroDots"></div>
-  </section>
   
-  <!-- Daily Trending -->
-  <section class="trending">
-    <div class="section-header">
-      <h2 style="position:relative; padding-left:12px;">
-        <span style="position:absolute; left:0; top:50%; transform:translateY(-50%); width:4px; height:28px; background:#ff2d95; border-radius:2px;"></span>
-       Daily Trending
-      </h2>
-      <a href="movies.html" class="view-all">VIEW ALL</a>
-    </div>
-    <div class="movie-grid" id="trendingMovies"></div>
-  </section>
-  
-  <!-- Latest Uploads -->
-  <section class="trending">
-    <div class="section-header">
-      <h2 style="position:relative; padding-left:12px;">
-        <span style="position:absolute; left:0; top:50%; transform:translateY(-50%); width:4px; height:28px; background:#ff2d95; border-radius:2px;"></span>
-        Latest Uploads
-      </h2>
-      <a href="movies.html" class="view-all">VIEW ALL</a>
-    </div>
-    <div class="movie-grid" id="latestMovies"></div>
-  </section>
+  <!-- Page Content - උඹේ hero + movie grid මෙතන දාගනින් -->
+  <main>
+    <!-- උඹේ content මෙතන -->
+  </main>
 
-  <!-- TV Shows Section -->
-  <section class="trending">
-    <div class="section-header">
-      <h2 style="position:relative; padding-left:12px;">
-        <span style="position:absolute; left:0; top:50%; transform:translateY(-50%); width:4px; height:28px; background:#ff2d95; border-radius:2px;"></span>
-        TV Shows
-      </h2>
-      <a href="tvshows.html" class="view-all">VIEW ALL</a>
-    </div>
-    <div class="movie-grid" id="tvShowsMovies"></div>
-  </section>
+  <!-- Menu + Search JS -->
+  <script>
+  const menuBtn = document.getElementById('menuBtn');
+  const sidebar = document.getElementById('sidebar');
+  const closeSidebar = document.getElementById('closeSidebar');
+  const overlay = document.getElementById('overlay');
+  const searchBtn = document.getElementById('searchBtn');
+  const searchBox = document.getElementById('searchBox');
+  const closeSearch = document.getElementById('closeSearch');
 
-  <!-- Firebase + Site JS -->
-  <script type="module" src="script.js"></script>
+  menuBtn?.addEventListener('click', () => {
+    sidebar.classList.add('active');
+    overlay.classList.add('active');
+  });
+
+  closeSidebar?.addEventListener('click', () => {
+    sidebar.classList.remove('active');
+    overlay.classList.remove('active');
+  });
+
+  overlay?.addEventListener('click', () => {
+    sidebar.classList.remove('active');
+    overlay.classList.remove('active');
+  });
+
+  searchBtn?.addEventListener('click', () => {
+    searchBox.classList.toggle('active');
+    if(searchBox.classList.contains('active')) {
+      searchBox.querySelector('input').focus();
+    }
+  });
+  closeSearch?.addEventListener('click', () => {
+    searchBox.classList.remove('active');
+  });
+  </script>
 </body>
 </html>
