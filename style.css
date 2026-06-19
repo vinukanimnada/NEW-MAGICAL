@@ -79,7 +79,7 @@ header {
   background: #1a1a1a !important;
   transition: 0.3s !important;
   z-index: 1000 !important;
-  padding-top: 80px !important;
+  padding-top: 80px !important; /* Menu items පහළට ගන්න */
   overflow-x: hidden !important;
 }
 
@@ -137,40 +137,18 @@ header {
   clip-path: inset(0 -100vmax) !important;
 }
 
-/* Mobile Sidebar - Zero Gap */
-@media (max-width: 480px){
-  .sidebar {
-    width: 180px !important;
-    right: -180px !important;
-    padding-top: 70px !important;
-  }
-  .sidebar ul{
-    padding: 0 !important;
-  }
-  .sidebar li a{
-    padding: 11px 12px !important;
-    font-size: 13px !important;
-  }
-  .sidebar li a i{
-    font-size: 14px !important;
-    margin-right: 8px !important;
-  }
-  .close-btn{
-    font-size: 24px !important;
-    top: 10px !important;
-    right: 10px !important;
-  }
-}
-
+/* ===== CLOSE BUTTON - LOKU KARA MENU BTN EKATA ALIGN ===== */
 .close-btn{
   position: absolute !important;
-  top: 12px !important;
+  top: 12px !important; /* Menu btn එකේ height එකටම */
   right: 12px !important;
-  font-size: 26px !important;
+  font-size: 26px !important; /* ලොකු කරපන් */
   color: #ccc !important;
   cursor: pointer !important;
-  z-index: 1001 !important;
+  z-index: 1002 !important;
   transition: 0.2s !important;
+  line-height: 1 !important;
+  padding: 5px !important; /* Click area ලොකු */
 }
 
 .close-btn:hover{
@@ -190,6 +168,32 @@ header {
 
 .overlay.active{
   display: block !important;
+}
+
+/* Mobile Sidebar - Zero Gap */
+@media (max-width: 480px){
+  .sidebar {
+    width: 180px !important;
+    right: -180px !important;
+    padding-top: 70px !important; /* Mobile එකේ ටිකක් අඩු */
+  }
+  .sidebar ul{
+    padding: 0 !important;
+  }
+  .sidebar li a{
+    padding: 11px 12px !important;
+    font-size: 13px !important;
+  }
+  .sidebar li a i{
+    font-size: 14px !important;
+    margin-right: 8px !important;
+  }
+  .close-btn{
+    font-size: 24px !important; /* Mobile එකේ 24px ඇති */
+    top: 10px !important;
+    right: 10px !important;
+    padding: 4px !important;
+  }
 }
 
 /* ===== HERO BANNER - 100% FILL ===== */
