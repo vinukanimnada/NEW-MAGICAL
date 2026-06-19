@@ -140,15 +140,20 @@ header {
 /* ===== CLOSE BUTTON - LOKU KARA MENU BTN EKATA ALIGN ===== */
 .close-btn{
   position: absolute !important;
-  top: 12px !important; /* Menu btn එකේ height එකටම */
-  right: 12px !important;
-  font-size: 26px !important; /* ලොකු කරපන් */
-  color: #ccc !important;
+  top: 8px !important; /* Header icon එකට සමාන - 12px → 8px */
+  right: 10px !important;
+  font-size: 28px !important; /* 26px → 28px ලොකු කරපන් */
+  color: #fff !important; /* #ccc → #fff සුදු කරපන් */
   cursor: pointer !important;
   z-index: 1002 !important;
   transition: 0.2s !important;
   line-height: 1 !important;
-  padding: 5px !important; /* Click area ලොකු */
+  padding: 8px !important; /* Click area තව ලොකු */
+  width: 40px !important;
+  height: 40px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
 }
 
 .close-btn:hover{
@@ -189,10 +194,12 @@ header {
     margin-right: 8px !important;
   }
   .close-btn{
-    font-size: 24px !important; /* Mobile එකේ 24px ඇති */
-    top: 10px !important;
-    right: 10px !important;
-    padding: 4px !important;
+    font-size: 26px !important; /* Mobile එකේ 26px */
+    top: 6px !important; /* 10px → 6px පහළට */
+    right: 8px !important;
+    padding: 6px !important;
+    width: 36px !important;
+    height: 36px !important;
   }
 }
 
