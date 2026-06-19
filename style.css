@@ -68,7 +68,7 @@ header {
   font-size: 18px;
 }
 
-/* ===== SIDEBAR - SINGLE SOURCE - FULL WIDTH ACTIVE BAR ===== */
+/* ===== SIDEBAR - ZERO GAP - FULL WIDTH BAR ===== */
 .sidebar{
   position: fixed;
   top: 0;
@@ -88,7 +88,8 @@ header {
 
 .sidebar ul{
   list-style: none;
-  padding: 0 4px;
+  padding: 0; /* gap 0 */
+  margin: 0;
 }
 
 .sidebar li{
@@ -101,13 +102,13 @@ header {
   display: flex;
   align-items: center;
   width: 100%;
-  padding: 9px 8px;
+  padding: 12px 14px; /* icon + text වලට විතරක් ඉඩ */
   color: #fff;
   text-decoration: none;
   font-size: 14px;
   font-weight: 500;
   transition: 0.2s;
-  border-radius: 5px;
+  border-radius: 0; /* radius 0 - straight bar */
 }
 
 .sidebar li a:hover{
@@ -115,7 +116,7 @@ header {
 }
 
 .sidebar li a i{
-  margin-right: 6px;
+  margin-right: 10px;
   font-size: 16px;
   width: 18px;
   min-width: 18px;
@@ -124,9 +125,9 @@ header {
 .sidebar li.active a{
   background: #ff2d95;
   color: #fff;
-  border-radius: 5px;
-  margin: 0;
-  padding: 9px 8px;
+  border-radius: 0; /* radius 0 */
+  margin: 0; /* margin 0 */
+  padding: 12px 14px;
   width: 100%;
   border-bottom: none;
 }
@@ -134,7 +135,7 @@ header {
 .close-btn{
   position: absolute;
   top: 12px;
-  right: 15px;
+  right: 12px; /* edge එකට ලං */
   font-size: 26px;
   color: #ccc;
   cursor: pointer;
@@ -161,7 +162,7 @@ header {
   display: block;
 }
 
-/* Mobile Sidebar */
+/* Mobile Sidebar - Zero Gap */
 @media (max-width: 480px){
   .sidebar {
     width: 180px;
@@ -169,20 +170,20 @@ header {
     padding-top: 45px;
   }
   .sidebar ul{
-    padding: 0 3px;
+    padding: 0;
   }
   .sidebar li a{
-    padding: 8px 6px;
+    padding: 11px 12px;
     font-size: 13px;
   }
   .sidebar li a i{
     font-size: 14px;
-    margin-right: 5px;
+    margin-right: 8px;
   }
   .close-btn{
     font-size: 24px;
     top: 10px;
-    right: 12px;
+    right: 10px;
   }
 }
 
