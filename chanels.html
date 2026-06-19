@@ -44,6 +44,47 @@
       <a href="https://chat.whatsapp.com/yourlink" target="_blank" style="display: inline-block; background: #25D366; color: #fff; padding: 15px 30px; border-radius: 8px; text-decoration: none; font-size: 16px; font-weight: 600; margin: 10px;">Join WhatsApp</a>
     </div>
   </section>
+  
+  
+  
+  <!-- Menu + Search JS - එක පාරක් විතරක් -->
+  <script>
+  const menuBtn = document.getElementById('menuBtn');
+  const sidebar = document.getElementById('sidebar');
+  const closeSidebar = document.getElementById('closeSidebar');
+  const overlay = document.getElementById('overlay');
+  const searchBtn = document.getElementById('searchBtn');
+  const searchBox = document.getElementById('searchBox');
+  const closeSearch = document.getElementById('closeSearch');
+
+  // Menu open/close
+  menuBtn?.addEventListener('click', () => {
+    sidebar.classList.add('active');
+    overlay.classList.add('active');
+  });
+
+  closeSidebar?.addEventListener('click', () => {
+    sidebar.classList.remove('active');
+    overlay.classList.remove('active');
+  });
+
+  overlay?.addEventListener('click', () => {
+    sidebar.classList.remove('active');
+    overlay.classList.remove('active');
+  });
+
+  // Search open/close
+  searchBtn?.addEventListener('click', () => {
+    searchBox.classList.toggle('active');
+    if(searchBox.classList.contains('active')) {
+      searchBox.querySelector('input').focus();
+    }
+  });
+  closeSearch?.addEventListener('click', () => {
+    searchBox.classList.remove('active');
+  });
+  </script>
+
 
   <script src="script.js"></script>
 </body>
