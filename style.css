@@ -79,7 +79,7 @@ header {
   background: #1a1a1a !important;
   transition: 0.3s !important;
   z-index: 1000 !important;
-  padding-top: 50px !important;
+  padding-top: 80px !important;
   overflow-x: hidden !important;
 }
 
@@ -142,7 +142,7 @@ header {
   .sidebar {
     width: 180px !important;
     right: -180px !important;
-    padding-top: 45px !important;
+    padding-top: 70px !important;
   }
   .sidebar ul{
     padding: 0 !important;
