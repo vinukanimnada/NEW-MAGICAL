@@ -196,24 +196,7 @@ async function loadMovie() {
 loadMovie();
 
 // Sidebar + Search toggle
-document.getElementById('menuBtn').onclick = () => {
-  document.getElementById('sidebar').classList.add('active');
-  document.getElementById('overlay').classList.add('active');
-}
-document.getElementById('closeSidebar').onclick = () => {
-  document.getElementById('sidebar').classList.remove('active');
-  document.getElementById('overlay').classList.remove('active');
-}
-document.getElementById('overlay').onclick = () => {
-  document.getElementById('sidebar').classList.remove('active');
-  document.getElementById('overlay').classList.remove('active');
-}
-document.getElementById('searchBtn').onclick = () => {
-  document.getElementById('searchBox').classList.toggle('active');
-}
-document.getElementById('closeSearch').onclick = () => {
-  document.getElementById('searchBox').classList.remove('active');
-}
+
 
 const menuBtn = document.getElementById('menuBtn');
   const sidebar = document.getElementById('sidebar');
