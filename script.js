@@ -96,7 +96,7 @@ async function loadHeroSlider() {
         setInterval(() => {
             currentSlide = (currentSlide + 1) % heroMovies.length;
             goToSlide(currentSlide);
-        }, 5000);
+        }, 2500);
         
     } catch(error) {
         console.error('Hero load error:', error);
