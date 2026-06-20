@@ -110,7 +110,7 @@ header {
   display: flex !important;
   align-items: center !important;
   width: 100% !important;
-  padding: 16px 14px !important; /* 12px → 16px gap වැඩි කළා */
+  padding: 16px 14px !important;
   color: #fff !important;
   text-decoration: none !important;
   font-size: 14px !important;
@@ -125,7 +125,7 @@ header {
 }
 
 .sidebar li a i{
-  margin-right: 14px !important; /* 10px → 14px icon gap වැඩි කළා */
+  margin-right: 14px !important;
   font-size: 16px !important;
   width: 18px !important;
   min-width: 18px !important;
@@ -136,14 +136,14 @@ header {
   color: #fff !important;
   border-radius: 0 !important;
   margin: 0 !important;
-  padding: 16px 14px !important; /* active එකෙත් 16px */
+  padding: 16px 14px !important;
   width: 100% !important;
   border-bottom: none !important;
   box-shadow: 0 0 0 100vmax #ff2d95 !important;
   clip-path: inset(0 -100vmax) !important;
 }
 
-/* ===== CLOSE BUTTON - LOKU KARA MENU BTN EKATA ALIGN ===== */
+/* ===== CLOSE BUTTON ===== */
 .close-btn{
   position: absolute !important;
   top: 8px !important;
@@ -181,7 +181,7 @@ header {
   display: block !important;
 }
 
-/* Mobile Sidebar - Zero Gap */
+/* Mobile Sidebar */
 @media (max-width: 480px){
   .sidebar {
     width: 180px !important;
@@ -192,12 +192,12 @@ header {
     padding: 0 !important;
   }
   .sidebar li a{
-    padding: 15px 12px !important; /* 11px → 15px mobile gap */
+    padding: 15px 12px !important;
     font-size: 13px !important;
   }
   .sidebar li a i{
     font-size: 14px !important;
-    margin-right: 12px !important; /* 8px → 12px mobile icon gap */
+    margin-right: 12px !important;
   }
   .close-btn{
     font-size: 26px !important;
@@ -209,7 +209,7 @@ header {
   }
 }
 
-/* ===== HERO BANNER - 100% FILL ===== */
+/* ===== HERO BANNER ===== */
 .hero{
   width: 95%;
   height: 200px;
@@ -358,26 +358,32 @@ header {
   }
 }
 
-/* Movie Grid */
+/* ===== MOVIE GRID - NETFLIX STYLE ===== */
 .movie-grid{
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
-  padding: 0;
+  gap: 8px !important; /* 12px → 8px */
+  padding: 0 10px !important; /* වම් දකුණ 10px */
 }
 
 .movie-card{
   position: relative;
   background: #1a1a1a;
-  border-radius: 8px;
+  border-radius: 6px !important; /* 8px → 6px Netflix */
   overflow: hidden;
   cursor: pointer;
   width: 100%;
+  transition: transform 0.2s ease !important;
+}
+
+.movie-card:hover{
+  transform: scale(1.05) !important; /* Netflix zoom */
+  z-index: 5;
 }
 
 .movie-card img{
   width: 100%;
-  height: 250px;
+  height: 260px !important; /* 250px → 260px */
   object-fit: cover;
   display: block;
 }
@@ -399,25 +405,26 @@ header {
 .badge.web-dl{ left: 8px; background: #00bfff; }
 .badge.imdb{ right: 8px; left: auto; background: #f5c518; color: #000; }
 
+/* Card Info - Netflix style */
 .card-info{
-  padding: 10px;
-  background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+  padding: 6px 8px !important; /* 10px → 6px */
+  background: linear-gradient(to top, rgba(0,0,0,0.95), transparent);
   position: absolute;
   bottom: 0;
   width: 100%;
 }
 
 .card-info h3{
-  font-size: 14px;
+  font-size: 13px !important; /* 14px → 13px */
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  margin-bottom: 3px;
-  font-weight: 900;
+  margin-bottom: 2px !important;
+  font-weight: 600 !important; /* 900 → 600 */
 }
 
 .card-info p{
-  font-size: 11px;
+  font-size: 10px !important; /* 11px → 10px */
   color: #aaa;
   white-space: nowrap;
   overflow: hidden;
@@ -457,7 +464,7 @@ a.movie-card {
 }
 
 a.movie-card:hover {
-  transform: scale(1.03);
+  transform: scale(1.05) !important; /* Netflix zoom */
 }
 
 a {
@@ -469,13 +476,26 @@ a {
 @media (min-width: 768px){
   .movie-grid{
     grid-template-columns: repeat(3, 1fr);
-    gap: 15px;
+    gap: 10px !important; /* 15px → 10px */
+    padding: 0 15px !important;
   }
 }
 
 @media (min-width: 1024px){
   .movie-grid{
     grid-template-columns: repeat(4, 1fr);
-    gap: 20px;
+    gap: 12px !important; /* 20px → 12px */
+    padding: 0 20px !important;
+  }
+}
+
+/* Mobile Grid - තව අඩු */
+@media (max-width: 480px){
+  .movie-grid{
+    gap: 6px !important; /* 8px → 6px */
+    padding: 0 8px !important;
+  }
+  .movie-card img{
+    height: 240px !important;
   }
 }
