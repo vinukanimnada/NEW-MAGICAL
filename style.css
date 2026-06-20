@@ -68,7 +68,7 @@ header {
   font-size: 18px;
 }
 
-/* ===== SIDEBAR - FORCE FULL WIDTH NO GAP ===== */
+/* ===== SIDEBAR ===== */
 .sidebar{
   position: fixed !important;
   top: 0 !important;
@@ -358,73 +358,77 @@ header {
   }
 }
 
-/* ===== MOVIE GRID - NETFLIX STYLE ===== */
+/* ===== MOVIE GRID - SCREENSHOT SIZE ===== */
 .movie-grid{
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 8px !important; /* 12px → 8px */
-  padding: 0 10px !important; /* වම් දකුණ 10px */
+  gap: 8px !important;
+  padding: 0 0 0 10px !important; /* වම් පැත්ත විතරක් 10px */
+  justify-items: start !important; /* වම් align */
 }
 
 .movie-card{
   position: relative;
   background: #1a1a1a;
-  border-radius: 6px !important; /* 8px → 6px Netflix */
+  border-radius: 8px !important; /* screenshot වගේ */
   overflow: hidden;
   cursor: pointer;
   width: 100%;
+  max-width: 170px !important; /* පළල fix */
   transition: transform 0.2s ease !important;
+  justify-self: start !important;
 }
 
 .movie-card:hover{
-  transform: scale(1.05) !important; /* Netflix zoom */
+  transform: scale(1.04) !important;
   z-index: 5;
 }
 
 .movie-card img{
   width: 100%;
-  height: 260px !important; /* 250px → 260px */
+  height: 255px !important; /* උස fix */
   object-fit: cover;
   display: block;
 }
 
-/* Badge */
+/* Badge - Screenshot position */
 .badge{
   position: absolute;
-  top: 8px;
-  padding: 4px 8px;
-  font-size: 11px;
+  top: 6px !important;
+  padding: 3px 7px !important;
+  font-size: 10px !important;
   font-weight: bold;
-  border-radius: 5px;
+  border-radius: 4px !important;
   z-index: 2;
   color: white;
 }
 
-.badge.fhd{ left: 8px; background: #ff1493; }
-.badge.hd{ left: 8px; background: #ff4500; }
-.badge.web-dl{ left: 8px; background: #00bfff; }
-.badge.imdb{ right: 8px; left: auto; background: #f5c518; color: #000; }
+.badge.fhd{ left: 6px !important; background: #ff1493; }
+.badge.hd{ left: 6px !important; background: #ff4500; }
+.badge.web-dl{ left: 6px !important; background: #00bfff; }
+.badge.imdb{ right: 6px !important; left: auto; background: #f5c518; color: #000; }
 
-/* Card Info - Netflix style */
+/* Card Info */
 .card-info{
-  padding: 6px 8px !important; /* 10px → 6px */
+  padding: 8px 8px !important;
   background: linear-gradient(to top, rgba(0,0,0,0.95), transparent);
   position: absolute;
   bottom: 0;
   width: 100%;
+  text-align: left !important;
 }
 
 .card-info h3{
-  font-size: 13px !important; /* 14px → 13px */
+  font-size: 13px !important;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   margin-bottom: 2px !important;
-  font-weight: 600 !important; /* 900 → 600 */
+  font-weight: 700 !important;
 }
 
 .card-info p{
-  font-size: 10px !important; /* 11px → 10px */
+  font-size: 11px !important;
   color: #aaa;
   white-space: nowrap;
   overflow: hidden;
@@ -464,7 +468,7 @@ a.movie-card {
 }
 
 a.movie-card:hover {
-  transform: scale(1.05) !important; /* Netflix zoom */
+  transform: scale(1.04) !important;
 }
 
 a {
@@ -476,26 +480,29 @@ a {
 @media (min-width: 768px){
   .movie-grid{
     grid-template-columns: repeat(3, 1fr);
-    gap: 10px !important; /* 15px → 10px */
-    padding: 0 15px !important;
+    gap: 10px !important;
+    padding: 0 0 0 15px !important;
   }
 }
 
 @media (min-width: 1024px){
   .movie-grid{
     grid-template-columns: repeat(4, 1fr);
-    gap: 12px !important; /* 20px → 12px */
-    padding: 0 20px !important;
+    gap: 12px !important;
+    padding: 0 0 0 20px !important;
   }
 }
 
-/* Mobile Grid - තව අඩු */
+/* Mobile Grid */
 @media (max-width: 480px){
   .movie-grid{
-    gap: 6px !important; /* 8px → 6px */
-    padding: 0 8px !important;
+    gap: 6px !important;
+    padding: 0 0 0 8px !important;
+  }
+  .movie-card{
+    max-width: 160px !important;
   }
   .movie-card img{
-    height: 240px !important;
+    height: 245px !important;
   }
 }
