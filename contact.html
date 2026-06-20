@@ -89,11 +89,63 @@
       text-decoration: none;
       border: 1px solid #3a3a3a;
       transition: 0.3s;
+      margin-bottom: 60px;
     }
 
     .website-btn:hover{
       background: #3a3a3a;
       border-color: #ff2d95;
+    }
+
+    /* ===== FOOTER SECTION ===== */
+    .footer{
+      background: #111;
+      padding: 40px 20px;
+      text-align: center;
+      border-top: 1px solid #222;
+    }
+
+    .footer-logo{
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 15px;
+    }
+
+    .footer-logo span{
+      color: #FF10F0;
+    }
+
+    .footer-text{
+      font-size: 14px;
+      color: #aaa;
+      line-height: 1.6;
+      max-width: 500px;
+      margin: 0 auto 25px auto;
+    }
+
+    .social-icons{
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+    }
+
+    .social-icons a{
+      width: 40px;
+      height: 40px;
+      background: #2a2a2a;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 18px;
+      transition: 0.3s;
+      text-decoration: none;
+    }
+
+    .social-icons a:hover{
+      background: #ff2d95;
+      transform: translateY(-3px);
     }
 
     @media (max-width: 600px){
@@ -109,6 +161,9 @@
         font-size: 15px;
         width: 100%;
         justify-content: center;
+      }
+      .footer{
+        padding: 30px 15px;
       }
     }
   </style>
@@ -152,7 +207,7 @@
       the best way to reach us is via WhatsApp. Click the button below to message us directly.
     </p>
 
-    <!-- WhatsApp Button - උඹේ number එක දාලා තියෙන්නේ -->
+    <!-- WhatsApp Button -->
     <a href="https://wa.me/94777865724" target="_blank" class="whatsapp-btn">
       <i class="fa-brands fa-whatsapp"></i>
       Contact via WhatsApp
@@ -165,6 +220,22 @@
       magicalmovieland.com
     </a>
   </div>
+
+  <!-- ===== FOOTER SECTION ===== -->
+  <footer class="footer">
+    <div class="footer-logo">𝗠𝗔𝗚𝗜𝗖𝗔𝗟 <span>𝗠𝗢𝗩𝗜𝗘 𝗟𝗔𝗡𝗗</span></div>
+    
+    <p class="footer-text">
+      The best platform to stream latest Movies and Cartoons with high-quality subtitles. 
+      Enjoy your favorite content for free on Magical Movie Land.
+    </p>
+
+    <div class="social-icons">
+      <a href="https://facebook.com" target="_blank"><i class="fa-brands fa-facebook-f"></i></a>
+      <a href="https://t.me/YourUsername" target="_blank"><i class="fa-brands fa-telegram"></i></a>
+      <a href="https://tiktok.com" target="_blank"><i class="fa-brands fa-tiktok"></i></a>
+    </div>
+  </footer>
 
 <script src="script.js"></script>
 </body>
