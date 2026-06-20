@@ -358,12 +358,12 @@ header {
   }
 }
 
-/* ===== MOVIE GRID - දෙපැත්තෙන්ම SPACE ===== */
+/* ===== MOVIE GRID - CARD PALALA ADU KALA ===== */
 .movie-grid{
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 8px !important;
-  padding: 0 10px !important; /* වම් දකුණ දෙකේම 10px */
+  padding: 0 10px !important;
   justify-items: center !important;
 }
 
@@ -374,6 +374,7 @@ header {
   overflow: hidden;
   cursor: pointer;
   width: 100% !important;
+  max-width: 145px !important; /* 155px → 145px. පළල අඩු කරා */
   transition: transform 0.2s ease !important;
   justify-self: stretch !important;
 }
@@ -385,7 +386,7 @@ header {
 
 .movie-card img{
   width: 100%;
-  height: 255px !important;
+  height: 225px !important; /* 235px → 225px. උසත් අඩු කරා */
   object-fit: cover;
   display: block;
 }
@@ -409,7 +410,7 @@ header {
 
 /* Card Info */
 .card-info{
-  padding: 8px 8px !important;
+  padding: 6px 6px !important; /* 8px → 6px. ටිකක් compact */
   background: linear-gradient(to top, rgba(0,0,0,0.95), transparent);
   position: absolute;
   bottom: 0;
@@ -418,7 +419,7 @@ header {
 }
 
 .card-info h3{
-  font-size: 13px !important;
+  font-size: 12px !important; /* 13px → 12px */
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -427,7 +428,7 @@ header {
 }
 
 .card-info p{
-  font-size: 11px !important;
+  font-size: 10px !important; /* 11px → 10px */
   color: #aaa;
   white-space: nowrap;
   overflow: hidden;
@@ -475,12 +476,18 @@ a {
   color: inherit;
 }
 
-/* Tablet + Desktop - දෙපැත්තෙන්ම space */
+/* Tablet + Desktop */
 @media (min-width: 768px){
   .movie-grid{
     grid-template-columns: repeat(3, 1fr);
     gap: 10px !important;
-    padding: 0 15px !important; /* වම් දකුණ 15px */
+    padding: 0 15px !important;
+  }
+  .movie-card{
+    max-width: 165px !important; /* Desktop එකේ ටිකක් ලොකු */
+  }
+  .movie-card img{
+    height: 250px !important;
   }
 }
 
@@ -488,17 +495,20 @@ a {
   .movie-grid{
     grid-template-columns: repeat(4, 1fr);
     gap: 12px !important;
-    padding: 0 20px !important; /* වම් දකුණ 20px */
+    padding: 0 20px !important;
   }
 }
 
-/* Mobile Grid - දෙපැත්තෙන්ම 8px */
+/* Mobile Grid */
 @media (max-width: 480px){
   .movie-grid{
     gap: 6px !important;
-    padding: 0 8px !important; /* වම් දකුණ 8px */
+    padding: 0 8px !important;
+  }
+  .movie-card{
+    max-width: 135px !important; /* Mobile එකේ තව පොඩි */
   }
   .movie-card img{
-    height: 245px !important;
+    height: 215px !important;
   }
 }
