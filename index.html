@@ -10,7 +10,7 @@
   <meta name="keywords" content="cartoon movies, free movies online, HD movies, Magical Movie Land">
 
   <link rel="icon" href="favicon.png" type="image/png">
-  <link rel="stylesheet" href="style.css?v=20">
+  <link rel="stylesheet" href="style.css?v=17">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
   /* ===== WATCH BUTTON + TEXT HIDE ===== */
@@ -24,52 +24,6 @@
     display: none !important;
   }
 
-  /* Hero swipe - inline CSS */
-  .hero{
-    width: 95%;
-    height: 200px;
-    border-radius: 20px;
-    margin: 15px auto 0 auto;
-    position: relative;
-    overflow: hidden;
-    background: #000;
-    touch-action: pan-y;
-    cursor: grab;
-  }
-
-  .hero:active{
-    cursor: grabbing;
-  }
-
-  #heroSlides{
-    width: 100%;
-    height: 100%;
-    display: flex;
-    transition: transform 0.4s ease-out;
-  }
-
-  .hero-slide{
-    min-width: 100%;
-    height: 100%;
-    flex-shrink: 0;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    position: relative;
-  }
-
-  .hero-slide::after{
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(to right, rgba(0,0,0,0.3) 0%, transparent 100%);
-    z-index: 1;
-    pointer-events: none;
-  }
-
   /* Slider dots */
   .hero-dots {
     position: absolute;
@@ -78,7 +32,7 @@
     transform: translateX(-50%);
     display: flex;
     gap: 6px;
-    z-index: 10;
+    z-index: 2;
   }
   .hero-dots .dot {
     width: 8px;
@@ -94,7 +48,7 @@
     border-radius: 10px;
   }
   
-  /* Search Bar */
+  /* Search Bar - Sidebar CSS අයින් කරලා මේක විතරක් තියපන් */
   .search-box {
     position: absolute;
     top: 60px;
@@ -135,14 +89,6 @@
   #closeSearch:hover {
     color: #ff2d95;
   }
-
-  @media (max-width: 600px){
-    .hero{
-      height: 170px;
-      width: 92%;
-      border-radius: 16px;
-    }
-  }
   </style>
 </head>
 <body>
@@ -161,7 +107,7 @@
     </div>
   </header>
 
-  <!-- Sidebar Menu -->
+  <!-- Sidebar Menu - CSS එක style.css එකෙන් විතරක් -->
   <div class="sidebar" id="sidebar">
     <span class="close-btn" id="closeSidebar">×</span>
     <ul>
@@ -220,9 +166,8 @@
   <!-- Firebase + Site JS -->
   <script type="module" src="script.js"></script>
   
-  <!-- Menu + Search + Hero Swipe JS -->
+  <!-- Menu + Search JS -->
   <script>
-  // Menu + Search
   const menuBtn = document.getElementById('menuBtn');
   const sidebar = document.getElementById('sidebar');
   const closeSidebar = document.getElementById('closeSidebar');
@@ -255,142 +200,8 @@
   closeSearch?.addEventListener('click', () => {
     searchBox.classList.remove('active');
   });
-
-  // ===== HERO SWIPE CODE =====
-  let currentSlide = 0;
-  let slides = [];
-  let dots = [];
-  const heroSlides = document.getElementById('heroSlides');
-  const heroDots = document.getElementById('heroDots');
-  let totalSlides = 0;
-  let startX = 0;
-  let currentX = 0;
-  let isDragging = false;
-  let autoSlideInterval;
-
-  // Hero slides load වෙනකන් wait කරලා dots + swipe enable කරනවා
-  function initHeroSlider() {
-    slides = document.querySelectorAll('.hero-slide');
-    totalSlides = slides.length;
-    
-    if(totalSlides === 0) {
-      setTimeout(initHeroSlider, 500); // script.js load වෙනකන් wait
-      return;
-    }
-
-    // Dots create කරනවා
-    heroDots.innerHTML = '';
-    for(let i = 0; i < totalSlides; i++) {
-      const dot = document.createElement('span');
-      dot.classList.add('dot');
-      if(i === 0) dot.classList.add('active');
-      dot.addEventListener('click', () => updateSlide(i));
-      heroDots.appendChild(dot);
-    }
-    dots = document.querySelectorAll('.hero-dots .dot');
-
-    updateSlide(0);
-    startAutoSlide();
-    enableSwipe();
-  }
-
-  function updateSlide(index) {
-    if(index < 0) index = totalSlides - 1;
-    if(index >= totalSlides) index = 0;
-    currentSlide = index;
-    
-    heroSlides.style.transform = `translateX(-${currentSlide * 100}%)`;
-    
-    dots.forEach((dot, i) => {
-      dot.classList.toggle('active', i === currentSlide);
-    });
-  }
-
-  function startAutoSlide() {
-    stopAutoSlide();
-    autoSlideInterval = setInterval(() => {
-      if(!isDragging) updateSlide(currentSlide + 1);
-    }, 5000);
-  }
-
-  function stopAutoSlide() {
-    clearInterval(autoSlideInterval);
-  }
-
-  function enableSwipe() {
-    // Touch events - Mobile
-    heroSlides.addEventListener('touchstart', (e) => {
-      startX = e.touches[0].clientX;
-      isDragging = true;
-      stopAutoSlide();
-      heroSlides.style.transition = 'none';
-    });
-
-    heroSlides.addEventListener('touchmove', (e) => {
-      if(!isDragging) return;
-      currentX = e.touches[0].clientX;
-      const diff = currentX - startX;
-      heroSlides.style.transform = `translateX(calc(-${currentSlide * 100}% + ${diff}px))`;
-    });
-
-    heroSlides.addEventListener('touchend', () => {
-      if(!isDragging) return;
-      isDragging = false;
-      heroSlides.style.transition = 'transform 0.4s ease-out';
-      
-      const diff = currentX - startX;
-      if(Math.abs(diff) > 50) {
-        if(diff > 0) updateSlide(currentSlide - 1);
-        else updateSlide(currentSlide + 1);
-      } else {
-        updateSlide(currentSlide);
-      }
-      startAutoSlide();
-    });
-
-    // Mouse drag - PC
-    heroSlides.addEventListener('mousedown', (e) => {
-      startX = e.clientX;
-      isDragging = true;
-      stopAutoSlide();
-      heroSlides.style.transition = 'none';
-      e.preventDefault();
-    });
-
-    heroSlides.addEventListener('mousemove', (e) => {
-      if(!isDragging) return;
-      currentX = e.clientX;
-      const diff = currentX - startX;
-      heroSlides.style.transform = `translateX(calc(-${currentSlide * 100}% + ${diff}px))`;
-    });
-
-    heroSlides.addEventListener('mouseup', () => {
-      if(!isDragging) return;
-      isDragging = false;
-      heroSlides.style.transition = 'transform 0.4s ease-out';
-      
-      const diff = currentX - startX;
-      if(Math.abs(diff) > 50) {
-        if(diff > 0) updateSlide(currentSlide - 1);
-        else updateSlide(currentSlide + 1);
-      } else {
-        updateSlide(currentSlide);
-      }
-      startAutoSlide();
-    });
-
-    heroSlides.addEventListener('mouseleave', () => {
-      if(isDragging) {
-        isDragging = false;
-        heroSlides.style.transition = 'transform 0.4s ease-out';
-        updateSlide(currentSlide);
-        startAutoSlide();
-      }
-    });
-  }
-
-  // Page load වෙනකොට hero slider init
-  document.addEventListener('DOMContentLoaded', initHeroSlider);
   </script>
 </body>
 </html>
+
+
