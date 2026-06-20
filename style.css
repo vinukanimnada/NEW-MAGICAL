@@ -79,7 +79,7 @@ header {
   background: #1a1a1a !important;
   transition: 0.3s !important;
   z-index: 1000 !important;
-  padding-top: 80px !important; /* Menu items පහළට ගන්න */
+  padding-top: 80px !important;
   overflow-x: hidden !important;
 }
 
@@ -96,12 +96,12 @@ header {
 
 .sidebar li{
   border-bottom: 1px solid #2a2a2a !important;
-  border-top: none !important; /* Default top border නෑ */
+  border-top: none !important;
   padding: 0 !important;
   margin: 0 !important;
 }
 
-/* Home එක උඩ border එක - මේක අලුතෙන් */
+/* Home එක උඩ border එක */
 .sidebar li:first-child{
   border-top: 1px solid #2a2a2a !important;
 }
@@ -110,7 +110,7 @@ header {
   display: flex !important;
   align-items: center !important;
   width: 100% !important;
-  padding: 12px 14px !important;
+  padding: 16px 14px !important; /* 12px → 16px gap වැඩි කළා */
   color: #fff !important;
   text-decoration: none !important;
   font-size: 14px !important;
@@ -125,7 +125,7 @@ header {
 }
 
 .sidebar li a i{
-  margin-right: 10px !important;
+  margin-right: 14px !important; /* 10px → 14px icon gap වැඩි කළා */
   font-size: 16px !important;
   width: 18px !important;
   min-width: 18px !important;
@@ -136,7 +136,7 @@ header {
   color: #fff !important;
   border-radius: 0 !important;
   margin: 0 !important;
-  padding: 12px 14px !important;
+  padding: 16px 14px !important; /* active එකෙත් 16px */
   width: 100% !important;
   border-bottom: none !important;
   box-shadow: 0 0 0 100vmax #ff2d95 !important;
@@ -192,12 +192,12 @@ header {
     padding: 0 !important;
   }
   .sidebar li a{
-    padding: 11px 12px !important;
+    padding: 15px 12px !important; /* 11px → 15px mobile gap */
     font-size: 13px !important;
   }
   .sidebar li a i{
     font-size: 14px !important;
-    margin-right: 8px !important;
+    margin-right: 12px !important; /* 8px → 12px mobile icon gap */
   }
   .close-btn{
     font-size: 26px !important;
