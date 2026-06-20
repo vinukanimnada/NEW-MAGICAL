@@ -358,25 +358,24 @@ header {
   }
 }
 
-/* ===== MOVIE GRID - SCREENSHOT SIZE ===== */
+/* ===== MOVIE GRID - දෙපැත්තෙන්ම SPACE ===== */
 .movie-grid{
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 8px !important;
-  padding: 0 0 0 10px !important; /* වම් පැත්ත විතරක් 10px */
-  justify-items: start !important; /* වම් align */
+  padding: 0 10px !important; /* වම් දකුණ දෙකේම 10px */
+  justify-items: center !important;
 }
 
 .movie-card{
   position: relative;
   background: #1a1a1a;
-  border-radius: 8px !important; /* screenshot වගේ */
+  border-radius: 8px !important;
   overflow: hidden;
   cursor: pointer;
-  width: 100%;
-  max-width: 170px !important; /* පළල fix */
+  width: 100% !important;
   transition: transform 0.2s ease !important;
-  justify-self: start !important;
+  justify-self: stretch !important;
 }
 
 .movie-card:hover{
@@ -386,12 +385,12 @@ header {
 
 .movie-card img{
   width: 100%;
-  height: 255px !important; /* උස fix */
+  height: 255px !important;
   object-fit: cover;
   display: block;
 }
 
-/* Badge - Screenshot position */
+/* Badge */
 .badge{
   position: absolute;
   top: 6px !important;
@@ -476,12 +475,12 @@ a {
   color: inherit;
 }
 
-/* Tablet + Desktop */
+/* Tablet + Desktop - දෙපැත්තෙන්ම space */
 @media (min-width: 768px){
   .movie-grid{
     grid-template-columns: repeat(3, 1fr);
     gap: 10px !important;
-    padding: 0 0 0 15px !important;
+    padding: 0 15px !important; /* වම් දකුණ 15px */
   }
 }
 
@@ -489,18 +488,15 @@ a {
   .movie-grid{
     grid-template-columns: repeat(4, 1fr);
     gap: 12px !important;
-    padding: 0 0 0 20px !important;
+    padding: 0 20px !important; /* වම් දකුණ 20px */
   }
 }
 
-/* Mobile Grid */
+/* Mobile Grid - දෙපැත්තෙන්ම 8px */
 @media (max-width: 480px){
   .movie-grid{
     gap: 6px !important;
-    padding: 0 0 0 8px !important;
-  }
-  .movie-card{
-    max-width: 160px !important;
+    padding: 0 8px !important; /* වම් දකුණ 8px */
   }
   .movie-card img{
     height: 245px !important;
