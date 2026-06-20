@@ -32,6 +32,14 @@ header {
   color: #FF10F0;
 }
 
+/* ===== LOGO CIRCLE ICONS - O දෙකට ===== */
+.logo i.fa-circle{
+  font-size: 10px; /* O එකේ size එක */
+  vertical-align: -2px; /* Screenshot එකේ වගේ උඩට */
+  margin: 0 1px;
+  color: #FF10F0; /* pink color එක */
+}
+
 .header-right i{
   font-size: 20px;
   margin-left: 20px;
@@ -213,7 +221,7 @@ header {
   width: 95%;
   height: 200px;
   border-radius: 20px;
-  margin: 15px auto 25px auto; /* ← මෙන්න 0 → 25px කරා. gap එක */
+  margin: 15px auto 25px auto;
   position: relative;
   overflow: hidden;
   background: #000;
