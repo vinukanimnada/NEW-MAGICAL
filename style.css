@@ -146,6 +146,8 @@ header {
   padding: 16px 14px !important;
   width: 100% !important;
   border-bottom: none !important;
+  border-top-left-radius: 8px;    /* වම් උඩ corner */
+    border-bottom-left-radius: 8px;
   box-shadow: 0 0 0 100vmax #ff2d95 !important;
   clip-path: inset(0 -100vmax) !important;
 }
