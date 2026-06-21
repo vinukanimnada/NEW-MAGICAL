@@ -204,5 +204,42 @@ window.openMovie = function(id) {
 
 loadMovies();
 </script>
+
+<!-- Menu + Search JS -->
+  <script>
+  const menuBtn = document.getElementById('menuBtn');
+  const sidebar = document.getElementById('sidebar');
+  const closeSidebar = document.getElementById('closeSidebar');
+  const overlay = document.getElementById('overlay');
+  const searchBtn = document.getElementById('searchBtn');
+  const searchBox = document.getElementById('searchBox');
+  const closeSearch = document.getElementById('closeSearch');
+
+  menuBtn?.addEventListener('click', () => {
+    sidebar.classList.add('active');
+    overlay.classList.add('active');
+  });
+
+  closeSidebar?.addEventListener('click', () => {
+    sidebar.classList.remove('active');
+    overlay.classList.remove('active');
+  });
+
+  overlay?.addEventListener('click', () => {
+    sidebar.classList.remove('active');
+    overlay.classList.remove('active');
+  });
+
+  searchBtn?.addEventListener('click', () => {
+    searchBox.classList.toggle('active');
+    if(searchBox.classList.contains('active')) {
+      searchBox.querySelector('input').focus();
+    }
+  });
+  closeSearch?.addEventListener('click', () => {
+    searchBox.classList.remove('active');
+  });
+  </script>
+
 </body>
 </html>
