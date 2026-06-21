@@ -76,17 +76,16 @@
         .badge-hero{background:#ff2d95;color:white;padding:3px 8px;border-radius:4px;font-size:11px;margin-left:8px}
         
         textarea#descInput{
-  width: 100%;
-  padding: 10px;
-  background: #2a2a2a;
-  border: 1px solid #3a3a3a;
-  border-radius: 8px;
-  color: #fff;
-  font-family: inherit;
-  font-size: 14px;
-  resize: vertical;
-}
-
+          width: 100%;
+          padding: 10px;
+          background: #2a2a2a;
+          border: 1px solid #3a3a3a;
+          border-radius: 8px;
+          color: #fff;
+          font-family: inherit;
+          font-size: 14px;
+          resize: vertical;
+        }
     </style>
 </head>
 <body>
@@ -139,7 +138,7 @@
         <input type="text" id="imdbVotes" placeholder="ex: 250K">
             
         <label>Description</label>
-<textarea id="descInput" placeholder="Movie description..." rows="5"></textarea>
+        <textarea id="descInput" placeholder="Movie description..." rows="5"></textarea>
 
         <select id="category">
             <option value="latest">Latest Uploads - Home</option>
@@ -150,13 +149,13 @@
         </select>
     </div>
 
-    <!-- Hero Poster Fields - FIX: script.js එකේ field names එක්කම -->
+    <!-- Hero Poster Fields -->
     <div id="heroFields" style="display: none;">
         <input type="text" id="heroTitle" placeholder="Movie / Series Name">
         <input type="text" id="heroBanner" placeholder="Hero Poster/Banner URL 16:9">
-        <input type="text" id="heroImdbRating" placeholder="IMDb Rate - ex: 7.0"> <!-- FIX: imdbRating -->
+        <input type="text" id="heroImdbRating" placeholder="IMDb Rate - ex: 7.0">
         <input type="text" id="heroYear" placeholder="Released year">
-        <textarea id="heroDescription" placeholder="Movie short description"></textarea> <!-- FIX: description -->
+        <textarea id="heroDescription" placeholder="Movie short description"></textarea>
     </div>
 
     <button onclick="addMovie()" id="saveBtn">Save</button>
@@ -185,12 +184,10 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Page load වෙද්දි default එකට Movie Card show කරමු
         window.onload = function() {
             toggleFields();
         }
 
-        // Select box එක මාරු වෙනකොට field hide/show
         window.toggleFields = function() {
             const type = document.getElementById('contentType').value;
             const movieFields = document.getElementById('movieCardFields');
@@ -205,7 +202,7 @@
             }
         }
 
-        // Save / Update 100%
+        // Save / Update 100% - FIX: description add කරා
         window.addMovie = async function() {
             const editId = document.getElementById('editId').value;
             const type = document.getElementById('contentType').value;
@@ -215,19 +212,18 @@
 
             try {
                 if(type === 'heroPoster') {
-                    // FIX: script.js එකේ expect කරන field names එක්කම
                     data = {
                         title: document.getElementById('heroTitle').value.trim() || null,
                         banner: document.getElementById('heroBanner').value.trim() || null,
-                        imdbRating: document.getElementById('heroImdbRating').value.trim() || null, // FIX
+                        imdbRating: document.getElementById('heroImdbRating').value.trim() || null,
                         year: document.getElementById('heroYear').value.trim() || null,
-                        description: document.getElementById('heroDescription').value.trim() || null, // FIX
+                        description: document.getElementById('heroDescription').value.trim() || null,
                         featured: true,
                         type: 'hero',
                         createdAt: serverTimestamp()
                     };
                 } else {
-                    // Movie Card save
+                    // Movie Card save - මෙතනට description add කළා
                     data = {
                         title: document.getElementById('title').value.trim() || null,
                         poster: document.getElementById('poster').value.trim() || null,
@@ -241,6 +237,7 @@
                         country: document.getElementById('country').value.trim() || null,
                         imdbRating: document.getElementById('imdbRating').value.trim() || null,
                         imdbVotes: document.getElementById('imdbVotes').value.trim() || null,
+                        description: document.getElementById('descInput').value.trim() || null, // FIX: මේක අලුතෙන්
                         category: document.getElementById('category').value,
                         featured: false,
                         type: 'movie',
@@ -270,7 +267,6 @@
             }
         }
 
-        // Edit button click
         window.editMovie = async function(id) {
             const docRef = doc(db, "movies", id);
             const docSnap = await getDoc(docRef);
@@ -284,9 +280,9 @@
                     toggleFields();
                     document.getElementById('heroTitle').value = m.title || '';
                     document.getElementById('heroBanner').value = m.banner || '';
-                    document.getElementById('heroImdbRating').value = m.imdbRating || ''; // FIX
+                    document.getElementById('heroImdbRating').value = m.imdbRating || '';
                     document.getElementById('heroYear').value = m.year || '';
-                    document.getElementById('heroDescription').value = m.description || ''; // FIX
+                    document.getElementById('heroDescription').value = m.description || '';
                 } else {
                     document.getElementById('contentType').value = 'movieCard';
                     toggleFields();
@@ -302,6 +298,7 @@
                     document.getElementById('country').value = m.country || '';
                     document.getElementById('imdbRating').value = m.imdbRating || '';
                     document.getElementById('imdbVotes').value = m.imdbVotes || '';
+                    document.getElementById('descInput').value = m.description || ''; // FIX: Edit කරනකොට description load වෙනවා
                     document.getElementById('category').value = m.category || 'latest';
                 }
                 
@@ -311,7 +308,6 @@
             }
         }
 
-        // Cancel edit
         window.cancelEdit = function() {
             document.getElementById('editId').value = '';
             document.getElementById('saveBtn').innerText = 'Save';
@@ -325,6 +321,7 @@
             document.querySelectorAll('#movieCardFields input[type="text"]').forEach(input => input.value = '');
             document.getElementById('year').value = '2024';
             document.getElementById('quality').value = 'FHD';
+            document.getElementById('descInput').value = ''; // FIX: clear කරා
             document.querySelectorAll('#heroFields input, #heroFields textarea').forEach(input => input.value = '');
         }
 
