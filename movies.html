@@ -141,7 +141,7 @@ h1 {
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, collection, getDocs, orderBy, query, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getFirestore, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCx0TEmgr3GCyvfeok9Y42yR1PTM4_8y9M",
@@ -156,14 +156,13 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const grid = document.getElementById('movieGrid');
 
-// FIX: category filter + poster/imdbRating fields + createdAt order
+// FIX: orderBy අයින් කළා - Index ඕන නෑ දැන්
 async function loadMovies() {
   try {
     const q = query(
       collection(db, "movies"),
-      where("category", "==", "allmovies"), // FIX 1: All Movies Page filter
-      where("type", "==", "movie"), // Movie cards විතරක්
-      orderBy("createdAt", "desc") // FIX 3: අලුත්ම එක උඩට
+      where("category", "==", "allmovies"),
+      where("type", "==", "movie")
     );
     const snapshot = await getDocs(q);
 
@@ -176,13 +175,11 @@ async function loadMovies() {
 
     snapshot.forEach(doc => {
       const m = doc.data();
-
-      // FIX 2: admin එකේ poster + imdbRating fields use කළා
       const poster = m.poster || 'https://via.placeholder.com/300x450/222/fff?text=No+Image';
 
       let rating = '0.0';
       if(m.imdbRating) {
-        rating = m.imdbRating.toString().split('/')[0]; // 8.2/10 → 8.2
+        rating = m.imdbRating.toString().split('/')[0];
       }
 
       const card = `
@@ -197,12 +194,7 @@ async function loadMovies() {
     });
   } catch(err) {
     console.error(err);
-    // Index error එක ආවොත් error message එක දාන්න
-    if(err.message.includes('index')) {
-      grid.innerHTML = '<div class="no-movies">Firestore Index හදන්න ඕන. Console error එකේ link එක click කරපන්.</div>';
-    } else {
-      grid.innerHTML = `<div class="no-movies">Error: ${err.message}</div>`;
-    }
+    grid.innerHTML = `<div class="no-movies">Error: ${err.message}</div>`;
   }
 }
 
