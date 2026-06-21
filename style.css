@@ -530,3 +530,34 @@ a {
     font-size: 11px !important;
   }
 }
+
+/* ===== DESCRIPTION SECTION ===== */
+.description-section{
+  padding: 20px 12px;
+  margin-top: 20px;
+  border-top: 1px solid #222;
+}
+
+.desc-title{
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.desc-title::before{
+  content: '';
+  width: 3px;
+  height: 20px;
+  background: #ff2d95;
+  border-radius: 2px;
+}
+
+.desc-text{
+  font-size: 14px;
+  line-height: 1.7;
+  color: #ccc;
+  text-align: justify;
+}
