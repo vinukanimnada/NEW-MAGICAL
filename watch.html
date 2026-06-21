@@ -42,6 +42,41 @@ body{background:#000;color:white;font-family:Arial;margin:0;padding:0}
 .imdb-box{color:#f5c518;font-weight:bold;font-size:15px}
 .imdb-box small{color:#aaa;font-size:13px}
 
+/* ===== DESCRIPTION SECTION ===== */
+.description-section{
+  padding: 20px 12px;
+  margin-top: 20px;
+  border-top: 1px solid #222;
+  max-width: 1000px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.desc-title{
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #fff;
+}
+
+.desc-title::before{
+  content: '';
+  width: 3px;
+  height: 20px;
+  background: #ff2d95;
+  border-radius: 2px;
+}
+
+.desc-text{
+  font-size: 14px;
+  line-height: 1.7;
+  color: #ccc;
+  text-align: justify;
+}
+
 @media (max-width: 768px){
     .player{height:45vh}
     .movie-detail{gap:15px;padding:15px}
@@ -50,15 +85,16 @@ body{background:#000;color:white;font-family:Arial;margin:0;padding:0}
     .details-list p{font-size:13px;margin:6px 0}
     .details-list p strong{min-width:100px;font-size:13px}
     .badge{font-size:11px;padding:3px 8px}
-    
- 
+    .description-section{padding: 15px 12px;}
+    .desc-text{font-size: 13px;}
+}
 </style>
 </head>
 <body>
   
   <!-- Header -->
   <header>
-    <div class="logo">𝗠𝗔𝗚𝗜𝗖𝗔𝗟 <span>𝗠🍩𝗩𝗜𝗘 𝗟🌲𝗡𝗗</span></div> 
+    <div class="logo">𝗠𝗔𝗚𝗜𝗖𝗔𝗟 <span>M<i class="fa-solid fa-circle"></i>V<i class="fa-solid fa-circle"></i> LAND</span></div> 
     <div class="header-right">
       <i class="fa fa-search" id="searchBtn"></i>
       <i class="fa fa-bars" id="menuBtn"></i>
@@ -72,7 +108,7 @@ body{background:#000;color:white;font-family:Arial;margin:0;padding:0}
     
   </header>
 
-  <!-- Sidebar Menu - close-btn එක ඇතුලට දැම්මා -->
+  <!-- Sidebar Menu -->
   <div class="sidebar" id="sidebar">
   <span class="close-btn" id="closeSidebar">×</span>
   <ul>
@@ -86,7 +122,7 @@ body{background:#000;color:white;font-family:Arial;margin:0;padding:0}
 </div>
   <div class="overlay" id="overlay"></div>
   
-<!-- Video Player - playsinline add කරා -->
+<!-- Video Player -->
 <div class="player" id="playerBox">
   <video 
     id="videoPlayer" 
@@ -121,7 +157,6 @@ body{background:#000;color:white;font-family:Arial;margin:0;padding:0}
   </div>
 </div>
 
-
 <!-- Description Section -->
 <div class="description-section">
   <h2 class="desc-title">Description</h2>
@@ -129,7 +164,6 @@ body{background:#000;color:white;font-family:Arial;margin:0;padding:0}
     Loading description...
   </p>
 </div>
-
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -154,6 +188,7 @@ const movieId = params.get('id');
 async function loadMovie() {
   if(!movieId) {
     document.getElementById('movieTitle').innerText = 'Movie හම්බුනේ නෑ';
+    document.getElementById('movieDesc').innerText = 'Movie ID එකක් නෑ';
     return;
   }
   
@@ -182,10 +217,19 @@ async function loadMovie() {
     document.getElementById('imdb').innerText = m.imdbRating || 'N/A';
     document.getElementById('imdbVotes').innerText = m.imdbVotes ? '(' + m.imdbVotes + ' votes)' : '';
     
-    // Poster එක යට card එකේ විතරක්
+    // Poster
     document.getElementById('poster').src = m.poster || 'https://via.placeholder.com/200x300/222/fff?text=No+Image';
     
-    // Video Player - Direct controls
+    // ===== DESCRIPTION LOAD =====
+    const descElement = document.getElementById('movieDesc');
+    if(m.description && m.description.trim() !== '') {
+        // Admin එකේ Enter ගැහුවොත් <br> වලට convert වෙනවා
+        descElement.innerHTML = m.description.replace(/\n/g, '<br>');
+    } else {
+        descElement.innerText = 'Description එකක් add කරලා නෑ.';
+    }
+    
+    // Video Player
     const videoPlayer = document.getElementById('videoPlayer');
     const videoSource = document.getElementById('videoSource');
     
@@ -199,6 +243,7 @@ async function loadMovie() {
     
   } else {
     document.getElementById('movieTitle').innerText = 'Movie හොයාගන්න බැරි උනා';
+    document.getElementById('movieDesc').innerText = 'Database එකේ මේ movie එක නෑ';
     document.getElementById('playerBox').innerHTML = '<div style="text-align:center; padding:100px; color:#ff4444;">Movie එක හොයාගන්න බැරි වුනා</div>';
   }
 }
@@ -206,41 +251,39 @@ async function loadMovie() {
 loadMovie();
 
 // Sidebar + Search toggle
-
-
 const menuBtn = document.getElementById('menuBtn');
-  const sidebar = document.getElementById('sidebar');
-  const closeSidebar = document.getElementById('closeSidebar');
-  const overlay = document.getElementById('overlay');
-  const searchBtn = document.getElementById('searchBtn');
-  const searchBox = document.getElementById('searchBox');
-  const closeSearch = document.getElementById('closeSearch');
+const sidebar = document.getElementById('sidebar');
+const closeSidebar = document.getElementById('closeSidebar');
+const overlay = document.getElementById('overlay');
+const searchBtn = document.getElementById('searchBtn');
+const searchBox = document.getElementById('searchBox');
+const closeSearch = document.getElementById('closeSearch');
 
-  menuBtn?.addEventListener('click', () => {
-    sidebar.classList.add('active');
-    overlay.classList.add('active');
-  });
+menuBtn?.addEventListener('click', () => {
+  sidebar.classList.add('active');
+  overlay.classList.add('active');
+});
 
-  closeSidebar?.addEventListener('click', () => {
-    sidebar.classList.remove('active');
-    overlay.classList.remove('active');
-  });
+closeSidebar?.addEventListener('click', () => {
+  sidebar.classList.remove('active');
+  overlay.classList.remove('active');
+});
 
-  overlay?.addEventListener('click', () => {
-    sidebar.classList.remove('active');
-    overlay.classList.remove('active');
-  });
+overlay?.addEventListener('click', () => {
+  sidebar.classList.remove('active');
+  overlay.classList.remove('active');
+});
 
-  searchBtn?.addEventListener('click', () => {
-    searchBox.classList.toggle('active');
-    if(searchBox.classList.contains('active')) {
-      searchBox.querySelector('input').focus();
-    }
-  });
-  closeSearch?.addEventListener('click', () => {
-    searchBox.classList.remove('active');
-  });
+searchBtn?.addEventListener('click', () => {
+  searchBox.classList.toggle('active');
+  if(searchBox.classList.contains('active')) {
+    searchBox.querySelector('input').focus();
+  }
+});
 
+closeSearch?.addEventListener('click', () => {
+  searchBox.classList.remove('active');
+});
 </script>
 </body>
 </html>
