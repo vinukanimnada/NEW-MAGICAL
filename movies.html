@@ -1,16 +1,15 @@
 <!DOCTYPE html>
-<html>
+<html lang="si">
 <head>
-  
-  <title>MAGICAL MOVIE LAND - Free HD Cartoon Movies Online</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MAGICAL MOVIE LAND - All Movies</title>
 
-  <meta name="description" content="Watch free HD cartoon movies online. Diary of a Wimpy Kid, Ne Zha, Elemental and more. No ads, fast streaming on MAGICAL MOVIE LAND.">
-  <meta name="keywords" content="cartoon movies, free movies online, HD movies, Magical Movie Land">
+<meta name="description" content="Watch free HD cartoon movies online. Diary of a Wimpy Kid, Ne Zha, Elemental and more. No ads, fast streaming on MAGICAL MOVIE LAND.">
+<link rel="icon" href="favicon.png" type="image/png">
+<link rel="stylesheet" href="style.css?v=19">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-  <link rel="icon" href="favicon.png" type="image/png">
-  <link rel="stylesheet" href="style.css?v=19">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  
 <style>
 body {
   background: #0e0e0e;
@@ -18,6 +17,12 @@ body {
   font-family: Arial;
   margin: 0;
   padding: 20px;
+}
+
+h1 {
+  text-align: center;
+  color: #ff2d95;
+  margin: 20px 0 30px;
 }
 
 .movie-grid {
@@ -32,6 +37,7 @@ body {
   overflow: hidden;
   background: #1a1a1a;
   transition: transform 0.2s;
+  cursor: pointer;
 }
 
 .movie-card:hover {
@@ -42,17 +48,19 @@ body {
   width: 100%;
   height: 240px;
   object-fit: cover;
+  background: #222;
 }
 
 .quality-badge {
   position: absolute;
   top: 5px;
   left: 5px;
-  background: red;
+  background: #ff4444;
   padding: 3px 6px;
   font-size: 11px;
   font-weight: bold;
   border-radius: 4px;
+  color: white;
 }
 
 .rating-badge {
@@ -75,80 +83,130 @@ body {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+.no-movies {
+  text-align: center;
+  color: #666;
+  padding: 50px 0;
+  grid-column: 1/-1;
+}
+
+/* Mobile 3x3 grid */
+@media (max-width: 600px) {
+.movie-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+.movie-card img {
+    height: 200px;
+  }
+}
 </style>
 </head>
 <body>
 
 <!-- Header -->
-  <header>
-    <div class="logo">𝗠𝗔𝗚𝗜𝗖𝗔𝗟 <span>𝗠🍩𝗩𝗜𝗘 𝗟🌲𝗡𝗗</span></div>
-    <div class="header-right">
-      <i class="fa fa-search" id="searchBtn"></i>
-      <i class="fa fa-bars" id="menuBtn"></i>
-    </div>
-    
-    <!-- Search Bar -->
-    <div class="search-box" id="searchBox">
-      <input type="text" placeholder="Search cartoons or movies...">
-      <i class="fa fa-times" id="closeSearch"></i>
-    </div>
-  </header>
-
-  <!-- Sidebar Menu - CSS එක style.css එකෙන් විතරක් -->
-  <div class="sidebar" id="sidebar">
-    <span class="close-btn" id="closeSidebar">×</span>
-    <ul>
-      <li class="active"><a href="index.html"><i class="fa fa-home"></i> Home</a></li>
-      <li><a href="movies.html"><i class="fa fa-film"></i> All Movies</a></li>
-      <li><a href="series.html"><i class="fa fa-tv"></i> TV Shows</a></li>
-      <li><a href="chanels.html"><i class="fa-solid fa-users"></i> Join Channels</a></li>
-      <li><a href="about.html"><i class="fa fa-info-circle"></i> About</a></li>
-      <li><a href="contact.html"><i class="fa fa-envelope"></i> Contact Us</a></li>
-    </ul>
+<header>
+  <div class="logo">𝗠𝗔𝗚𝗜𝗖𝗔𝗟 <span>𝗠🍩𝗩𝗜𝗘 𝗟🌲𝗡𝗗</span></div>
+  <div class="header-right">
+    <i class="fa fa-search" id="searchBtn"></i>
+    <i class="fa fa-bars" id="menuBtn"></i>
   </div>
-  <div class="overlay" id="overlay"></div>
 
+  <div class="search-box" id="searchBox">
+    <input type="text" placeholder="Search cartoons or movies...">
+    <i class="fa fa-times" id="closeSearch"></i>
+  </div>
+</header>
+
+<!-- Sidebar Menu -->
+<div class="sidebar" id="sidebar">
+  <span class="close-btn" id="closeSidebar">×</span>
+  <ul>
+    <li><a href="index.html"><i class="fa fa-home"></i> Home</a></li>
+    <li class="active"><a href="movies.html"><i class="fa fa-film"></i> All Movies</a></li>
+    <li><a href="series.html"><i class="fa fa-tv"></i> TV Shows</a></li>
+    <li><a href="chanels.html"><i class="fa-solid fa-users"></i> Join Channels</a></li>
+    <li><a href="about.html"><i class="fa fa-info-circle"></i> About</a></li>
+    <li><a href="contact.html"><i class="fa fa-envelope"></i> Contact Us</a></li>
+  </ul>
+</div>
+<div class="overlay" id="overlay"></div>
+
+<h1>🎬 All Movies</h1>
 
 <div class="movie-grid" id="movieGrid">
-  <!-- Firebase එකෙන් movies load වෙයි -->
+  <div class="no-movies">Loading movies...</div>
 </div>
-
-
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, collection, getDocs, orderBy, query } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getFirestore, collection, getDocs, orderBy, query, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 const firebaseConfig = {
-  // උඹේ Firebase config එක දාපන්
+  apiKey: "AIzaSyCx0TEmgr3GCyvfeok9Y42yR1PTM4_8y9M",
+  authDomain: "magical-movie-land.firebaseapp.com",
+  projectId: "magical-movie-land",
+  storageBucket: "magical-movie-land.firebasestorage.app",
+  messagingSenderId: "27757424288",
+  appId: "1:27757424288:web:d650e2659f09f0b9c823c5"
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const grid = document.getElementById('movieGrid');
 
-// Movies load කරන function එක
+// FIX: category filter + poster/imdbRating fields + createdAt order
 async function loadMovies() {
-  const q = query(collection(db, "movies"), orderBy("year", "desc"));
-  const snapshot = await getDocs(q);
-  
-  grid.innerHTML = "";
-  
-  snapshot.forEach(doc => {
-    const m = doc.data();
-    const card = `
-      <div class="movie-card" onclick="openMovie('${doc.id}')">
-        <span class="quality-badge">${m.quality || 'WEB-DL'}</span>
-        <span class="rating-badge">★ ${m.rating || '0.0'}</span>
-        <img src="${m.image}" alt="${m.title}">
-        <div class="movie-title">${m.title}</div>
-      </div>
-    `;
-    grid.innerHTML += card;
-  });
+  try {
+    const q = query(
+      collection(db, "movies"),
+      where("category", "==", "allmovies"), // FIX 1: All Movies Page filter
+      where("type", "==", "movie"), // Movie cards විතරක්
+      orderBy("createdAt", "desc") // FIX 3: අලුත්ම එක උඩට
+    );
+    const snapshot = await getDocs(q);
+
+    if(snapshot.empty) {
+      grid.innerHTML = '<div class="no-movies">Movies නැත. Admin එකෙන් "All Movies Page" select කරලා add කරපන්.</div>';
+      return;
+    }
+
+    grid.innerHTML = "";
+
+    snapshot.forEach(doc => {
+      const m = doc.data();
+
+      // FIX 2: admin එකේ poster + imdbRating fields use කළා
+      const poster = m.poster || 'https://via.placeholder.com/300x450/222/fff?text=No+Image';
+
+      let rating = '0.0';
+      if(m.imdbRating) {
+        rating = m.imdbRating.toString().split('/')[0]; // 8.2/10 → 8.2
+      }
+
+      const card = `
+        <div class="movie-card" onclick="openMovie('${doc.id}')">
+          <span class="quality-badge">${m.quality || 'WEB-DL'}</span>
+          <span class="rating-badge">★ ${rating}</span>
+          <img src="${poster}" alt="${m.title}" loading="lazy">
+          <div class="movie-title">${m.title || 'Untitled'}</div>
+        </div>
+      `;
+      grid.innerHTML += card;
+    });
+  } catch(err) {
+    console.error(err);
+    // Index error එක ආවොත් error message එක දාන්න
+    if(err.message.includes('index')) {
+      grid.innerHTML = '<div class="no-movies">Firestore Index හදන්න ඕන. Console error එකේ link එක click කරපන්.</div>';
+    } else {
+      grid.innerHTML = `<div class="no-movies">Error: ${err.message}</div>`;
+    }
+  }
 }
 
-function openMovie(id) {
+window.openMovie = function(id) {
   window.location.href = `watch.html?id=${id}`;
 }
 
