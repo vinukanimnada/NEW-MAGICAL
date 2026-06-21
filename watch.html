@@ -9,8 +9,13 @@
 <style>
 body{background:#000;color:white;font-family:Arial;margin:0;padding:0}
 
-.player{width:100%;height:55vh;background:#000;position:relative;overflow:hidden;margin-bottom:0}
+.player{width:100%;height:40vh;background:#000;position:relative;overflow:hidden;margin-bottom:0}
 .player video{width:100%;height:100%;object-fit:contain;background:#000;display:block}
+
+@media (max-width: 768px){
+    .player{
+        height:28vh; /* 45vh → 28vh කරා. Mobile */
+    }
 
 .info{padding:0 15px 20px;max-width:1000px;margin:auto}
 
