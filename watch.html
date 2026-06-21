@@ -9,12 +9,12 @@
 <style>
 body{background:#000;color:white;font-family:Arial;margin:0;padding:0}
 
-/* ===== PLAYER HEIGHT REDUCED ===== */
-.player{width:100%;height:35vh;background:#000;position:relative;overflow:hidden;margin-bottom:0}
+/* ===== PLAYER HEIGHT - BALANCED ===== */
+.player{width:100%;height:38vh;background:#000;position:relative;overflow:hidden;margin-bottom:0}
 .player video{width:100%;height:100%;object-fit:contain;background:#000;display:block}
 
 @media (max-width: 768px){
-    .player{height:25vh} /* Mobile එකේ තව අඩු කරා */
+    .player{height:34vh} /* Screenshot එකේ උස */
 }
 
 .info{padding:0 15px 20px;max-width:1000px;margin:auto}
@@ -22,7 +22,7 @@ body{background:#000;color:white;font-family:Arial;margin:0;padding:0}
 .movie-detail{
     display:flex;
     gap:20px;
-    margin-top:15px; /* 20px → 15px පොඩි කරා */
+    margin-top:15px;
     align-items:flex-start;
     background:#1a1a1a;
     padding:20px;
@@ -106,8 +106,8 @@ body{background:#000;color:white;font-family:Arial;margin:0;padding:0}
     background: #ff2d95;
     color: #fff;
     border-left: 3px solid #ff2d95;
-    border-top-left-radius: 10px;    /* වම් උඩ වටකුරු */
-    border-bottom-left-radius: 10px; /* වම් යට වටකුරු */
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
     font-weight: 600;
 }
 
@@ -322,7 +322,7 @@ closeSearch?.addEventListener('click', () => {
   searchBox.classList.remove('active');
 });
 
-// Sidebar active link highlight - watch.html නිසා "watch.html" active වෙන්නේ නෑ. ඕන නම් මේක comment කරපන්
+// Sidebar active link highlight
 const currentPage = window.location.pathname.split('/').pop() || 'index.html';
 const sidebarLinks = document.querySelectorAll('.sidebar ul li a');
 sidebarLinks.forEach(link => {
