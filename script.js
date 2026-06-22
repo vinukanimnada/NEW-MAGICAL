@@ -207,3 +207,137 @@ document.addEventListener('DOMContentLoaded', function() {
   if(searchBtn) searchBtn.onclick = () => searchBox.classList.add("active");
   if(closeSearch) closeSearch.onclick = () => searchBox.classList.remove("active");
 });
+
+
+
+
+
+let allMovies = []; // Search කරන්න cache කරගන්න
+
+// Movies load කරපු ගමන් array එකේ save කරගන්න
+async function loadMovies() {
+  try {
+    const q = query(
+      collection(db, "movies"),
+      where("category", "==", "allmovies"),
+      where("type", "==", "movie")
+    );
+    const snapshot = await getDocs(q);
+
+    if(snapshot.empty) {
+      grid.innerHTML = '<div class="no-movies">Movies නැත.</div>';
+      return;
+    }
+
+    grid.innerHTML = "";
+    allMovies = []; // Clear
+
+    snapshot.forEach(doc => {
+      const m = doc.data();
+      m.id = doc.id; // ID save කරගන්න
+      allMovies.push(m);
+
+      // පරණ card display code එක
+      const poster = m.poster || 'https://via.placeholder.com/300x450/222/fff?text=No+Image';
+      let rating = m.imdbRating? m.imdbRating.toString().split('/')[0] : '0.0';
+      if(!rating.includes('.')) rating += '.0';
+      const quality = (m.quality || 'WEB-DL').toUpperCase();
+      let title = m.title || 'Untitled';
+      if(title.length > 20) title = title.substring(0, 20) + '...';
+
+      const card = `
+        <div class="movie-card" onclick="openMovie('${doc.id}')">
+          <span class="quality-badge">${quality}</span>
+          <span class="rating-badge">★ ${rating}</span>
+          <img src="${poster}" alt="${m.title}" loading="lazy">
+          <div class="movie-title">${title}</div>
+        </div>
+      `;
+      grid.innerHTML += card;
+    });
+  } catch(err) {
+    console.error(err);
+    grid.innerHTML = `<div class="no-movies">Error: ${err.message}</div>`;
+  }
+}
+
+// Search function
+function searchMovies(query) {
+  const resultsDiv = document.getElementById('searchResults');
+  const gridDiv = document.getElementById('movieGrid');
+
+  if(!query.trim()) {
+    resultsDiv.classList.remove('active');
+    gridDiv.style.display = 'grid';
+    return;
+  }
+
+  gridDiv.style.display = 'none';
+  resultsDiv.classList.add('active');
+
+  const filtered = allMovies.filter(m =>
+    m.title && m.title.toLowerCase().includes(query.toLowerCase())
+  );
+
+  if(filtered.length === 0) {
+    resultsDiv.innerHTML = '<div class="search-no-result">🔍 Results හමු නොවීය</div>';
+    return;
+  }
+
+  resultsDiv.innerHTML = filtered.map(m => {
+    const poster = m.poster || 'https://via.placeholder.com/60x90/222/fff';
+    const year = m.year || 'N/A';
+    const duration = m.duration || 'N/A';
+    const genre = m.genre || m.language || 'Movie';
+
+    let title = m.title;
+    if(title.length > 40) title = title.substring(0, 40) + '...';
+
+    return `
+      <div class="search-result-item" onclick="openMovie('${m.id}')">
+        <img src="${poster}" class="search-result-poster" loading="lazy">
+        <div class="search-result-info">
+          <div class="search-result-title">${title}</div>
+          <div class="search-result-meta">
+            ${year} • ${duration} min<br>
+            ${genre}
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+window.openMovie = function(id) {
+  window.location.href = `watch.html?id=${id}`;
+}
+
+// Search bar events
+searchBtn?.addEventListener('click', () => {
+  searchBox.classList.toggle('active');
+  if(searchBox.classList.contains('active')) {
+    searchBox.querySelector('input').focus();
+  } else {
+    searchMovies(''); // Close කරපු ගමන් grid පෙන්නන්න
+  }
+});
+
+const searchInput = document.querySelector('.search-box input');
+const searchBtnIcon = document.querySelector('.search-box button');
+
+// Type කරද්දි search
+searchInput?.addEventListener('input', (e) => {
+  searchMovies(e.target.value);
+});
+
+// Enter ගැහුවම search
+searchInput?.addEventListener('keypress', (e) => {
+  if(e.key === 'Enter') {
+    searchMovies(e.target.value);
+  }
+});
+
+// Search button click
+searchBtnIcon?.addEventListener('click', () => {
+  searchMovies(searchInput.value);
+});
