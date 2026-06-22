@@ -1,40 +1,54 @@
 <!DOCTYPE html>
 <html lang="si">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Series - Magical Movie Land</title>
-  <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  
-  <style>
-  body {
-  background: #0e0e0e;
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>All Movies - Magical Movie Land</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+body {
+  background: #000;
   color: #fff;
-  font-family: Arial;
+  font-family: Arial, sans-serif;
   margin: 0;
-  padding: 20px;
+  padding: 0;
 }
 
 h1 {
   text-align: center;
   color: #ff2d95;
   margin: 20px 0 30px;
+  font-size: 24px;
 }
 
+/* Cinesubz Grid - Mobile 3x3 */
 .movie-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  gap: 15px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  padding: 10px;
+  background: #000;
+}
+
+/* Desktop 5x grid */
+@media (min-width: 768px) {
+.movie-grid {
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+    padding: 20px;
+  }
 }
 
 .movie-card {
   position: relative;
-  border-radius: 8px;
+  border-radius: 6px;
   overflow: hidden;
-  background: #1a1a1a;
-  transition: transform 0.2s;
+  background: #111;
   cursor: pointer;
+  transition: transform 0.2s;
+  aspect-ratio: 2/3; /* Cinesubz poster ratio */
 }
 
 .movie-card:hover {
@@ -43,42 +57,60 @@ h1 {
 
 .movie-card img {
   width: 100%;
-  height: 240px;
+  height: 100%;
   object-fit: cover;
+  display: block;
   background: #222;
 }
 
+/* Top Left - WEB-DL RED Badge */
 .quality-badge {
   position: absolute;
   top: 5px;
   left: 5px;
-  background: #ff4444;
-  padding: 3px 6px;
-  font-size: 11px;
-  font-weight: bold;
-  border-radius: 4px;
+  background: #e50914;
+  padding: 2px 5px;
+  font-size: 10px;
+  font-weight: 700;
+  border-radius: 3px;
   color: white;
+  z-index: 3;
+  text-transform: uppercase;
+  line-height: 1;
 }
 
+/* Top Right - ★ Rating YELLOW Badge */
 .rating-badge {
   position: absolute;
   top: 5px;
   right: 5px;
   background: #ffc107;
   color: #000;
-  padding: 3px 6px;
-  font-size: 11px;
-  font-weight: bold;
-  border-radius: 4px;
+  padding: 2px 5px;
+  font-size: 10px;
+  font-weight: 700;
+  border-radius: 3px;
+  z-index: 3;
+  line-height: 1;
 }
 
+/* Bottom Title - Left align + Gradient overlay */
 .movie-title {
-  padding: 8px;
-  font-size: 13px;
-  text-align: center;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 20px 6px 6px;
+  font-size: 12px;
+  text-align: left;
+  font-weight: 500;
+  color: #fff;
+  background: linear-gradient(to top, rgba(0,0,0,0.95) 50%, transparent);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  z-index: 2;
+  line-height: 1.2;
 }
 
 .no-movies {
@@ -88,85 +120,74 @@ h1 {
   grid-column: 1/-1;
 }
 
-/* Mobile 3x3 grid */
-@media (max-width: 600px) {
-.movie-grid {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-  }
-.movie-card img {
-    height: 200px;
-  }
+header {
+  background: #111;
+  padding: 12px 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  border-bottom: 1px solid #222;
 }
 
-header {
-    background: #111;
-    padding: 12px 15px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: sticky;
-    top: 0;
-    z-index: 999;
-  }
+.logo {
+  font-size: 22px;
+  font-weight: 700;
+  white-space: nowrap;
+}
 
-  .logo{
-    font-size: 22px;
-    font-weight: 700;
-    white-space: nowrap;
-  }
+.logo span {
+  color: #ff2d95;
+}
 
-  .logo span{
-    color: #ff2d95;
-  }
-
-  .header-right i{
-    font-size: 20px;
-    margin-left: 20px;
-    cursor: pointer;
-  }
+.header-right i {
+  font-size: 20px;
+  margin-left: 20px;
+  cursor: pointer;
+}
 
 .search-box {
-    position: absolute;
-    top: 60px;
-    left: 0;
-    width: 100%;
-    background: #0a0a0a;
-    padding: 12px 15px;
-    display: none;
-    z-index: 999;
-    border-bottom: 1px solid #222;
-    box-sizing: border-box;
-  }
-  .search-box.active {
-    display: flex;
-    align-items: center;
-  }
-  .search-box input {
-    flex: 1;
-    height: 45px;
-    background: #1a1a1a;
-    border: none;
-    border-radius: 25px;
-    padding: 0 45px 0 20px;
-    color: white;
-    font-size: 16px;
-    outline: none;
-  }
-  .search-box input::placeholder {
-    color: #666;
-  }
-  #closeSearch {
-    position: absolute;
-    right: 30px;
-    font-size: 20px;
-    color: #888;
-    cursor: pointer;
-  }
-  #closeSearch:hover {
-    color: #ff2d95;
-  }
-  
+  position: absolute;
+  top: 60px;
+  left: 0;
+  width: 100%;
+  background: #0a0a0a;
+  padding: 12px 15px;
+  display: none;
+  z-index: 999;
+  border-bottom: 1px solid #222;
+  box-sizing: border-box;
+}
+.search-box.active {
+  display: flex;
+  align-items: center;
+}
+.search-box input {
+  flex: 1;
+  height: 45px;
+  background: #1a1a1a;
+  border: none;
+  border-radius: 25px;
+  padding: 0 45px 0 20px;
+  color: white;
+  font-size: 16px;
+  outline: none;
+}
+.search-box input::placeholder {
+  color: #666;
+}
+#closeSearch {
+  position: absolute;
+  right: 30px;
+  font-size: 20px;
+  color: #888;
+  cursor: pointer;
+}
+#closeSearch:hover {
+  color: #ff2d95;
+}
 </style>
 </head>
 <body>
@@ -180,7 +201,7 @@ header {
   </div>
 
   <div class="search-box" id="searchBox">
-    <input type="text" placeholder="Search cartoons or movies...">
+    <input type="text" placeholder="Search movies...">
     <i class="fa fa-times" id="closeSearch"></i>
   </div>
 </header>
@@ -222,7 +243,7 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const grid = document.getElementById('movieGrid');
 
-// FIX: orderBy අයින් කළා - Index ඕන නෑ දැන්
+// Movies load කරනවා - Index නැතුව
 async function loadMovies() {
   try {
     const q = query(
@@ -243,17 +264,20 @@ async function loadMovies() {
       const m = doc.data();
       const poster = m.poster || 'https://via.placeholder.com/300x450/222/fff?text=No+Image';
 
-      let rating = '0.0';
-      if(m.imdbRating) {
-        rating = m.imdbRating.toString().split('/')[0];
-      }
+      let rating = m.imdbRating? m.imdbRating.toString().split('/')[0] : '0.0';
+      if(!rating.includes('.')) rating += '.0'; // 7 → 7.0 format
+      const quality = (m.quality || 'WEB-DL').toUpperCase();
+
+      // Title 20 chars limit +...
+      let title = m.title || 'Untitled';
+      if(title.length > 20) title = title.substring(0, 20) + '...';
 
       const card = `
         <div class="movie-card" onclick="openMovie('${doc.id}')">
-          <span class="quality-badge">${m.quality || 'WEB-DL'}</span>
+          <span class="quality-badge">${quality}</span>
           <span class="rating-badge">★ ${rating}</span>
           <img src="${poster}" alt="${m.title}" loading="lazy">
-          <div class="movie-title">${m.title || 'Untitled'}</div>
+          <div class="movie-title">${title}</div>
         </div>
       `;
       grid.innerHTML += card;
@@ -272,40 +296,40 @@ loadMovies();
 </script>
 
 <!-- Menu + Search JS -->
-  <script>
-  const menuBtn = document.getElementById('menuBtn');
-  const sidebar = document.getElementById('sidebar');
-  const closeSidebar = document.getElementById('closeSidebar');
-  const overlay = document.getElementById('overlay');
-  const searchBtn = document.getElementById('searchBtn');
-  const searchBox = document.getElementById('searchBox');
-  const closeSearch = document.getElementById('closeSearch');
+<script>
+const menuBtn = document.getElementById('menuBtn');
+const sidebar = document.getElementById('sidebar');
+const closeSidebar = document.getElementById('closeSidebar');
+const overlay = document.getElementById('overlay');
+const searchBtn = document.getElementById('searchBtn');
+const searchBox = document.getElementById('searchBox');
+const closeSearch = document.getElementById('closeSearch');
 
-  menuBtn?.addEventListener('click', () => {
-    sidebar.classList.add('active');
-    overlay.classList.add('active');
-  });
+menuBtn?.addEventListener('click', () => {
+  sidebar.classList.add('active');
+  overlay.classList.add('active');
+});
 
-  closeSidebar?.addEventListener('click', () => {
-    sidebar.classList.remove('active');
-    overlay.classList.remove('active');
-  });
+closeSidebar?.addEventListener('click', () => {
+  sidebar.classList.remove('active');
+  overlay.classList.remove('active');
+});
 
-  overlay?.addEventListener('click', () => {
-    sidebar.classList.remove('active');
-    overlay.classList.remove('active');
-  });
+overlay?.addEventListener('click', () => {
+  sidebar.classList.remove('active');
+  overlay.classList.remove('active');
+});
 
-  searchBtn?.addEventListener('click', () => {
-    searchBox.classList.toggle('active');
-    if(searchBox.classList.contains('active')) {
-      searchBox.querySelector('input').focus();
-    }
-  });
-  closeSearch?.addEventListener('click', () => {
-    searchBox.classList.remove('active');
-  });
-  </script>
+searchBtn?.addEventListener('click', () => {
+  searchBox.classList.toggle('active');
+  if(searchBox.classList.contains('active')) {
+    searchBox.querySelector('input').focus();
+  }
+});
+closeSearch?.addEventListener('click', () => {
+  searchBox.classList.remove('active');
+});
+</script>
 
 </body>
 </html>
