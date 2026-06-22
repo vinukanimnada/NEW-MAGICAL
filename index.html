@@ -2,11 +2,53 @@
 <html lang="si">
 <head>
   <meta charset="UTF-8">
+  <meta name="google-site-verification" content="9x-_hTOkmrjADkTX5qBPDI2QNIMCrp3LEuD5lxw-ZnI" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MAGICAL MOVIE LAND</title>
+  <title>MAGICAL MOVIE LAND - Free HD Cartoon Movies Online</title>
+
+  <meta name="description" content="Watch free HD cartoon movies online. Diary of a Wimpy Kid, Ne Zha, Elemental and more. No ads, fast streaming on MAGICAL MOVIE LAND.">
+  <meta name="keywords" content="cartoon movies, free movies online, HD movies, Magical Movie Land">
+
+  <link rel="icon" href="favicon.png" type="image/png">
   <link rel="stylesheet" href="style.css?v=19">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
+  /* ===== WATCH BUTTON + TEXT HIDE ===== */
+  .hero-slide p, 
+  .hero-slide .desc,
+  .hero-slide .watch-btn,
+  .hero-slide button,
+  .hero-slide h1,
+  .hero-slide .imdb,
+  .hero-slide .year {
+    display: none !important;
+  }
+
+  /* Slider dots */
+  .hero-dots {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 6px;
+    z-index: 2;
+  }
+  .hero-dots .dot {
+    width: 8px;
+    height: 8px;
+    background: rgba(255,255,255,0.4);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  .hero-dots .dot.active {
+    background: #ff2d95;
+    width: 20px;
+    border-radius: 10px;
+  }
+  
+  /* Search Bar - Red button නැත */
   .search-box {
     position: absolute;
     top: 60px;
@@ -35,15 +77,20 @@
     font-size: 16px;
     outline: none;
   }
+  .search-box input::placeholder {
+    color: #666;
+  }
   #closeSearch {
     font-size: 22px;
     color: #888;
     cursor: pointer;
+    flex-shrink: 0;
   }
   #closeSearch:hover {
     color: #ff2d95;
   }
 
+  /* Home Search Results Dropdown */
   .home-search-results {
     position: absolute;
     top: 120px;
@@ -109,6 +156,7 @@
   </style>
 </head>
 <body>
+  <!-- Header -->
   <header>
     <div class="logo">𝗠𝗔𝗚𝗜𝗖𝗔𝗟 <span>𝗠🍩𝗩𝗜𝗘 𝗟🌲𝗡𝗗</span></div>
     <div class="header-right">
@@ -116,26 +164,76 @@
       <i class="fa fa-bars" id="menuBtn"></i>
     </div>
     
+    <!-- Search Bar - ID දැම්මා -->
     <div class="search-box" id="searchBox">
       <input type="text" id="searchInput" placeholder="Search movies & TV shows...">
       <i class="fa fa-times" id="closeSearch"></i>
     </div>
   </header>
 
+  <!-- Home Search Results Dropdown -->
   <div class="home-search-results" id="homeSearchResults"></div>
 
+  <!-- Sidebar Menu -->
   <div class="sidebar" id="sidebar">
     <span class="close-btn" id="closeSidebar">×</span>
     <ul>
       <li class="active"><a href="index.html"><i class="fa fa-home"></i> Home</a></li>
       <li><a href="movies.html"><i class="fa fa-film"></i> All Movies</a></li>
       <li><a href="series.html"><i class="fa fa-tv"></i> TV Shows</a></li>
+      <li><a href="chanels.html"><i class="fa-solid fa-users"></i> Join Channels</a></li>
+      <li><a href="about.html"><i class="fa fa-info-circle"></i> About</a></li>
+      <li><a href="contact.html"><i class="fa fa-envelope"></i> Contact Us</a></li>
     </ul>
   </div>
   <div class="overlay" id="overlay"></div>
 
-  <!-- උඹේ hero, trending sections මෙතන -->
+  <!-- ===== HERO SLIDER ===== -->
+  <section class="hero" id="heroSlider">
+    <div id="heroSlides"></div>
+    <div class="hero-dots" id="heroDots"></div>
+  </section>
+  
+  <!-- Daily Trending -->
+  <section class="trending">
+    <div class="section-header">
+      <h2 style="position:relative; padding-left:12px;">
+        <span style="position:absolute; left:0; top:50%; transform:translateY(-50%); width:4px; height:28px; background:#ff2d95; border-radius:2px;"></span>
+       Daily Trending
+      </h2>
+      <a href="movies.html" class="view-all">VIEW ALL</a>
+    </div>
+    <div class="movie-grid" id="trendingMovies"></div>
+  </section>
+  
+  <!-- Latest Uploads -->
+  <section class="trending">
+    <div class="section-header">
+      <h2 style="position:relative; padding-left:12px;">
+        <span style="position:absolute; left:0; top:50%; transform:translateY(-50%); width:4px; height:28px; background:#ff2d95; border-radius:2px;"></span>
+        Latest Uploads
+      </h2>
+      <a href="movies.html" class="view-all">VIEW ALL</a>
+    </div>
+    <div class="movie-grid" id="latestMovies"></div>
+  </section>
 
+  <!-- TV Shows Section -->
+  <section class="trending">
+    <div class="section-header">
+      <h2 style="position:relative; padding-left:12px;">
+        <span style="position:absolute; left:0; top:50%; transform:translateY(-50%); width:4px; height:28px; background:#ff2d95; border-radius:2px;"></span>
+        TV Shows
+      </h2>
+      <a href="tvshows.html" class="view-all">VIEW ALL</a>
+    </div>
+    <div class="movie-grid" id="tvShowsMovies"></div>
+  </section>
+
+  <!-- Firebase + Site JS -->
+  <script type="module" src="script.js"></script>
+  
+  <!-- Menu + Search JS - Firebase search add කළා -->
   <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
   import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
@@ -153,38 +251,54 @@
   const db = getFirestore(app);
   let allContent = [];
 
-  // Movies.html + Series.html දෙකේම data load කරනවා
+  // Movies + Series දෙකම load කරනවා
   async function loadAllContent() {
     try {
       const snapshot = await getDocs(collection(db, "movies"));
-      
       allContent = [];
+      
       snapshot.forEach(doc => {
         const m = doc.data();
         m.id = doc.id;
-        
-        // Category filter නෑ - හැම එකම ගන්නවා
-        // movies.html = allmovies, series.html = series/tvshows
-        // type field එකත් check කරනවා movie/series
         if(m.title && m.poster) {
           allContent.push(m);
         }
       });
       
-      console.log("✅ Loaded:", allContent.length, "items for search");
+      console.log("✅ Loaded for search:", allContent.length, "items");
     } catch(err) {
-      console.error("❌ Error:", err);
+      console.error("❌ Firebase Error:", err);
     }
   }
 
   loadAllContent();
 
+  const menuBtn = document.getElementById('menuBtn');
+  const sidebar = document.getElementById('sidebar');
+  const closeSidebar = document.getElementById('closeSidebar');
+  const overlay = document.getElementById('overlay');
   const searchBtn = document.getElementById('searchBtn');
   const searchBox = document.getElementById('searchBox');
   const closeSearch = document.getElementById('closeSearch');
   const searchInput = document.getElementById('searchInput');
   const homeSearchResults = document.getElementById('homeSearchResults');
 
+  menuBtn?.addEventListener('click', () => {
+    sidebar.classList.add('active');
+    overlay.classList.add('active');
+  });
+
+  closeSidebar?.addEventListener('click', () => {
+    sidebar.classList.remove('active');
+    overlay.classList.remove('active');
+  });
+
+  overlay?.addEventListener('click', () => {
+    sidebar.classList.remove('active');
+    overlay.classList.remove('active');
+  });
+
+  // Search bar toggle
   searchBtn?.addEventListener('click', () => {
     searchBox.classList.toggle('active');
     if(searchBox.classList.contains('active')) {
@@ -201,6 +315,7 @@
     searchInput.value = '';
   });
 
+  // Home search function
   function homeSearch(query) {
     if(!query.trim()) {
       homeSearchResults.classList.remove('active');
@@ -222,7 +337,6 @@
       const poster = m.poster || 'https://via.placeholder.com/50x75/222/fff';
       const year = m.year || 'N/A';
       
-      // Type detect කරනවා
       let type = "Movie";
       if(m.category == "series" || m.category == "tvshows" || m.type == "series") {
         type = "TV Show";
@@ -244,12 +358,20 @@
     }).join('');
   }
 
+  // Debounce 300ms
   let searchTimeout;
   searchInput?.addEventListener('input', (e) => {
     clearTimeout(searchTimeout);
     searchTimeout = setTimeout(() => {
       homeSearch(e.target.value);
     }, 300);
+  });
+
+  // Enter key
+  searchInput?.addEventListener('keypress', (e) => {
+    if(e.key === 'Enter') {
+      homeSearch(e.target.value);
+    }
   });
   </script>
 </body>
