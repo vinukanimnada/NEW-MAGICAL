@@ -48,7 +48,7 @@ h1 {
   background: #111;
   cursor: pointer;
   transition: transform 0.2s;
-  aspect-ratio: 2/3; /* Cinesubz poster ratio */
+  aspect-ratio: 2/3;
 }
 
 .movie-card:hover {
@@ -94,7 +94,7 @@ h1 {
   line-height: 1;
 }
 
-/* Bottom Title - Left align + Gradient overlay */
+/* Bottom Title - Left align + Gradient */
 .movie-title {
   position: absolute;
   bottom: 0;
@@ -119,8 +119,6 @@ h1 {
   padding: 50px 0;
   grid-column: 1/-1;
 }
-
-
 
 /* Search Results List View */
 .search-results {
@@ -181,7 +179,7 @@ h1 {
   font-size: 14px;
 }
 
-/* Search bar active state */
+/* Search bar */
 .search-box {
   position: absolute;
   top: 60px;
@@ -197,7 +195,7 @@ h1 {
 .search-box.active {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
 }
 .search-box input {
   flex: 1;
@@ -222,6 +220,44 @@ h1 {
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
+}
+#closeSearch {
+  font-size: 22px;
+  color: #888;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+#closeSearch:hover {
+  color: #ff2d95;
+}
+
+header {
+  background: #111;
+  padding: 12px 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  border-bottom: 1px solid #222;
+}
+
+.logo {
+  font-size: 22px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.logo span {
+  color: #ff2d95;
+}
+
+.header-right i {
+  font-size: 20px;
+  margin-left: 20px;
+  cursor: pointer;
 }
 </style>
 </head>
@@ -235,11 +271,12 @@ h1 {
     <i class="fa fa-bars" id="menuBtn"></i>
   </div>
 
-  <!-- Search Bar -->
-    <div class="search-box" id="searchBox">
-      <input type="text" placeholder="Search cartoons or movies...">
-      <i class="fa fa-times" id="closeSearch"></i>
-    </div>
+  <!-- Search Bar - ID + type="button" fix කළා -->
+  <div class="search-box" id="searchBox">
+    <input type="text" id="searchInput" placeholder="Search movies...">
+    <button id="searchBtnIcon" type="button"><i class="fa fa-search"></i></button>
+    <i class="fa fa-times" id="closeSearch"></i>
+  </div>
 </header>
 
 <!-- Sidebar Menu -->
@@ -258,10 +295,7 @@ h1 {
 
 <h1>🎬 All Movies</h1>
 
-<div class="movie-grid" id="movieGrid">
-  <div class="no-movies">Loading movies...</div>
-</div>
-
+<!-- Movie Grid -->
 <div class="movie-grid" id="movieGrid">
   <div class="no-movies">Loading movies...</div>
 </div>
@@ -285,8 +319,9 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const grid = document.getElementById('movieGrid');
+let allMovies = [];
 
-// Movies load කරනවා - Index නැතුව
+// Movies load + cache
 async function loadMovies() {
   try {
     const q = query(
@@ -302,105 +337,13 @@ async function loadMovies() {
     }
 
     grid.innerHTML = "";
+    allMovies = [];
 
     snapshot.forEach(doc => {
       const m = doc.data();
-      const poster = m.poster || 'https://via.placeholder.com/300x450/222/fff?text=No+Image';
-
-      let rating = m.imdbRating? m.imdbRating.toString().split('/')[0] : '0.0';
-      if(!rating.includes('.')) rating += '.0'; // 7 → 7.0 format
-      const quality = (m.quality || 'WEB-DL').toUpperCase();
-
-      // Title 20 chars limit +...
-      let title = m.title || 'Untitled';
-      if(title.length > 20) title = title.substring(0, 20) + '...';
-
-      const card = `
-        <div class="movie-card" onclick="openMovie('${doc.id}')">
-          <span class="quality-badge">${quality}</span>
-          <span class="rating-badge">★ ${rating}</span>
-          <img src="${poster}" alt="${m.title}" loading="lazy">
-          <div class="movie-title">${title}</div>
-        </div>
-      `;
-      grid.innerHTML += card;
-    });
-  } catch(err) {
-    console.error(err);
-    grid.innerHTML = `<div class="no-movies">Error: ${err.message}</div>`;
-  }
-}
-
-window.openMovie = function(id) {
-  window.location.href = `watch.html?id=${id}`;
-}
-
-loadMovies();
-</script>
-
-<!-- Menu + Search JS -->
-<script>
-const menuBtn = document.getElementById('menuBtn');
-const sidebar = document.getElementById('sidebar');
-const closeSidebar = document.getElementById('closeSidebar');
-const overlay = document.getElementById('overlay');
-const searchBtn = document.getElementById('searchBtn');
-const searchBox = document.getElementById('searchBox');
-const closeSearch = document.getElementById('closeSearch');
-
-menuBtn?.addEventListener('click', () => {
-  sidebar.classList.add('active');
-  overlay.classList.add('active');
-});
-
-closeSidebar?.addEventListener('click', () => {
-  sidebar.classList.remove('active');
-  overlay.classList.remove('active');
-});
-
-overlay?.addEventListener('click', () => {
-  sidebar.classList.remove('active');
-  overlay.classList.remove('active');
-});
-
-searchBtn?.addEventListener('click', () => {
-  searchBox.classList.toggle('active');
-  if(searchBox.classList.contains('active')) {
-    searchBox.querySelector('input').focus();
-  }
-});
-closeSearch?.addEventListener('click', () => {
-  searchBox.classList.remove('active');
-});
-
-
-
-let allMovies = []; // Search කරන්න cache කරගන්න
-
-// Movies load කරපු ගමන් array එකේ save කරගන්න
-async function loadMovies() {
-  try {
-    const q = query(
-      collection(db, "movies"),
-      where("category", "==", "allmovies"),
-      where("type", "==", "movie")
-    );
-    const snapshot = await getDocs(q);
-
-    if(snapshot.empty) {
-      grid.innerHTML = '<div class="no-movies">Movies නැත.</div>';
-      return;
-    }
-
-    grid.innerHTML = "";
-    allMovies = []; // Clear
-
-    snapshot.forEach(doc => {
-      const m = doc.data();
-      m.id = doc.id; // ID save කරගන්න
+      m.id = doc.id;
       allMovies.push(m);
 
-      // පරණ card display code එක
       const poster = m.poster || 'https://via.placeholder.com/300x450/222/fff?text=No+Image';
       let rating = m.imdbRating? m.imdbRating.toString().split('/')[0] : '0.0';
       if(!rating.includes('.')) rating += '.0';
@@ -422,6 +365,10 @@ async function loadMovies() {
     console.error(err);
     grid.innerHTML = `<div class="no-movies">Error: ${err.message}</div>`;
   }
+}
+
+window.openMovie = function(id) {
+  window.location.href = `watch.html?id=${id}`;
 }
 
 // Search function
@@ -471,26 +418,59 @@ function searchMovies(query) {
   }).join('');
 }
 
-window.openMovie = function(id) {
-  window.location.href = `watch.html?id=${id}`;
-}
+loadMovies();
 
-// Search bar events
+// Menu + Search JS - ID වලින්ම අල්ලගත්තා
+const menuBtn = document.getElementById('menuBtn');
+const sidebar = document.getElementById('sidebar');
+const closeSidebar = document.getElementById('closeSidebar');
+const overlay = document.getElementById('overlay');
+const searchBtn = document.getElementById('searchBtn');
+const searchBox = document.getElementById('searchBox');
+const closeSearch = document.getElementById('closeSearch');
+const searchInput = document.getElementById('searchInput'); // ID එකෙන්
+const searchBtnIcon = document.getElementById('searchBtnIcon'); // ID එකෙන්
+
+menuBtn?.addEventListener('click', () => {
+  sidebar.classList.add('active');
+  overlay.classList.add('active');
+});
+
+closeSidebar?.addEventListener('click', () => {
+  sidebar.classList.remove('active');
+  overlay.classList.remove('active');
+});
+
+overlay?.addEventListener('click', () => {
+  sidebar.classList.remove('active');
+  overlay.classList.remove('active');
+});
+
+// Header 🔍 click
 searchBtn?.addEventListener('click', () => {
   searchBox.classList.toggle('active');
   if(searchBox.classList.contains('active')) {
-    searchBox.querySelector('input').focus();
+    searchInput.focus();
   } else {
-    searchMovies(''); // Close කරපු ගමන් grid පෙන්නන්න
+    searchMovies('');
+    searchInput.value = '';
   }
 });
 
-const searchInput = document.querySelector('.search-box input');
-const searchBtnIcon = document.querySelector('.search-box button');
+// X click
+closeSearch?.addEventListener('click', () => {
+  searchBox.classList.remove('active');
+  searchMovies('');
+  searchInput.value = '';
+});
 
-// Type කරද්දි search
+// Type කරද්දි search - Debounce 300ms
+let searchTimeout;
 searchInput?.addEventListener('input', (e) => {
-  searchMovies(e.target.value);
+  clearTimeout(searchTimeout);
+  searchTimeout = setTimeout(() => {
+    searchMovies(e.target.value);
+  }, 300);
 });
 
 // Enter ගැහුවම search
@@ -500,8 +480,9 @@ searchInput?.addEventListener('keypress', (e) => {
   }
 });
 
-// Search button click
-searchBtnIcon?.addEventListener('click', () => {
+// Red button click - මේක fix
+searchBtnIcon?.addEventListener('click', (e) => {
+  e.preventDefault();
   searchMovies(searchInput.value);
 });
 </script>
