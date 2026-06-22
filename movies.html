@@ -158,6 +158,13 @@ h1 {
   <div class="no-movies">Loading movies...</div>
 </div>
 
+<div class="movie-grid" id="movieGrid">
+  <div class="no-movies">Loading movies...</div>
+</div>
+
+<!-- Search Results List -->
+<div class="search-results" id="searchResults"></div>
+
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getFirestore, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
