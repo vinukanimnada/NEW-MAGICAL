@@ -112,6 +112,38 @@
   </style>
 </head>
 <body>
+  
+  <header>
+    <div class="logo">𝗠𝗔𝗚𝗜𝗖𝗔𝗟 <span>𝗠🍩𝗩𝗜𝗘 𝗟🌲𝗡𝗗</span></div>
+    <div class="header-right">
+      <i class="fa fa-search" id="searchBtn"></i>
+      <i class="fa fa-bars" id="menuBtn"></i>
+    </div>
+    
+    <!-- Search Bar - ID දැම්මා -->
+    <div class="search-box" id="searchBox">
+      <input type="text" id="searchInput" placeholder="Search movies & TV shows...">
+      <i class="fa fa-times" id="closeSearch"></i>
+    </div>
+  </header>
+
+  <!-- Home Search Results Dropdown -->
+  <div class="home-search-results" id="homeSearchResults"></div>
+
+  <!-- Sidebar Menu -->
+  <div class="sidebar" id="sidebar">
+    <span class="close-btn" id="closeSidebar">×</span>
+    <ul>
+      <li class="active"><a href="index.html"><i class="fa fa-home"></i> Home</a></li>
+      <li><a href="movies.html"><i class="fa fa-film"></i> All Movies</a></li>
+      <li><a href="series.html"><i class="fa fa-tv"></i> TV Shows</a></li>
+      <li><a href="chanels.html"><i class="fa-solid fa-users"></i> Join Channels</a></li>
+      <li><a href="about.html"><i class="fa fa-info-circle"></i> About</a></li>
+      <li><a href="contact.html"><i class="fa fa-envelope"></i> Contact Us</a></li>
+    </ul>
+  </div>
+  <div class="overlay" id="overlay"></div>
+  
   <h1>TV Shows</h1>
   <div class="movie-grid" id="tvShowsGrid"></div>
 
