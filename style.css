@@ -563,3 +563,53 @@ a {
   color: #ccc;
   text-align: justify;
 }
+
+.footer{
+      background: #111;
+      padding: 40px 20px;
+      text-align: center;
+      border-top: 1px solid #222;
+    }
+
+    .footer-logo{
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 15px;
+    }
+
+    .footer-logo span{
+      color: #FF10F0;
+    }
+
+    .footer-text{
+      font-size: 14px;
+      color: #aaa;
+      line-height: 1.6;
+      max-width: 500px;
+      margin: 0 auto 25px auto;
+    }
+
+    .social-icons{
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+    }
+
+    .social-icons a{
+      width: 40px;
+      height: 40px;
+      background: #2a2a2a;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 18px;
+      transition: 0.3s;
+      text-decoration: none;
+    }
+
+    .social-icons a:hover{
+      background: #ff2d95;
+      transform: translateY(-3px);
+    }
