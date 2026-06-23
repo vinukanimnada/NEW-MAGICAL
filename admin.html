@@ -244,7 +244,7 @@
             }
         }
 
-        // Save / Update
+        // Save / Update - Firebase එකට overwrite වෙන්නේ නෑ. අලුත් doc එකක් add වෙනවා
         window.addMovie = async function() {
             const editId = document.getElementById('editId').value;
             const type = document.getElementById('contentType').value;
@@ -280,7 +280,6 @@
                         imdbVotes: document.getElementById('imdbVotes').value.trim() || null,
                         description: document.getElementById('descInput').value.trim() || null,
                         category: document.getElementById('category').value,
-                        // NEW FIELDS
                         season: document.getElementById('season').value.trim() || null,
                         rating: parseFloat(document.getElementById('rating').value) || null,
                         featured: false,
@@ -344,7 +343,6 @@
                     document.getElementById('imdbVotes').value = m.imdbVotes || '';
                     document.getElementById('descInput').value = m.description || '';
                     document.getElementById('category').value = m.category || 'latest';
-                    // NEW FIELDS load
                     document.getElementById('season').value = m.season || '';
                     document.getElementById('rating').value = m.rating || '';
                     toggleSeasonRating();
