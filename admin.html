@@ -86,6 +86,18 @@
           font-size: 14px;
           resize: vertical;
         }
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        small {
+            color: #888;
+            font-size: 11px;
+            margin-top: -10px;
+            display: block;
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 <body>
@@ -94,7 +106,6 @@
 
     <input type="hidden" id="editId" value="">
     
-    <!-- Select Box -->
     <label>📍 Whera Adding Place ?</label>
     <select id="contentType" onchange="toggleFields()">
         <option value="movieCard">Movie Cards</option>
@@ -104,7 +115,7 @@
     <!-- Movie Card Fields -->
     <div id="movieCardFields">
         
-        <select id="category">
+        <select id="category" onchange="toggleSeasonRating()">
             <option value="latest">Latest Uploads - Home</option>
             <option value="trending">Daily Trending - Home</option>
             <option value="tvshows">TV Shows - Home</option>
@@ -116,6 +127,22 @@
         <input type="text" id="poster" placeholder="Poster Image URL">
         <input type="text" id="video" placeholder="Video URL - Doodstream Link">
         <input type="text" id="year" placeholder="Year - 2024" value="2024">
+
+        <!-- Season + Rating - TV Shows වලට විතරක් පෙන්නවා -->
+        <div id="seasonRatingFields" style="display:none;">
+            <div class="row">
+                <div>
+                    <label>📺 Season Badge</label>
+                    <input type="text" id="season" placeholder="S01 COMPLETE / S01 EP01-04">
+                    <small>TV Show නම් විතරක්</small>
+                </div>
+                <div>
+                    <label>⭐ Rating</label>
+                    <input type="number" step="0.1" min="0" max="10" id="rating" placeholder="8.3">
+                    <small>0-10 අතර</small>
+                </div>
+            </div>
+        </div>
 
         <label>📺 Quality</label>
         <select id="quality">
@@ -148,14 +175,6 @@
             
         <label>Description</label>
         <textarea id="descInput" placeholder="Movie description..." rows="5"></textarea>
-
-        <select id="category">
-            <option value="latest">Latest Uploads - Home</option>
-            <option value="trending">Daily Trending - Home</option>
-            <option value="tvshows">TV Shows - Home</option>
-            <option value="allmovies">All Movies Page</option>
-            <option value="alltvshows">All TV Shows Page</option>
-        </select>
     </div>
 
     <!-- Hero Poster Fields -->
@@ -195,6 +214,7 @@
 
         window.onload = function() {
             toggleFields();
+            toggleSeasonRating();
         }
 
         window.toggleFields = function() {
@@ -208,10 +228,23 @@
             } else {
                 movieFields.style.display = 'block';
                 heroFields.style.display = 'none';
+                toggleSeasonRating();
             }
         }
 
-        // Save / Update 100% - FIX: description add කරා
+        // Season + Rating fields show/hide
+        window.toggleSeasonRating = function() {
+            const cat = document.getElementById('category').value;
+            const seasonDiv = document.getElementById('seasonRatingFields');
+            
+            if(cat === 'tvshows' || cat === 'alltvshows') {
+                seasonDiv.style.display = 'block';
+            } else {
+                seasonDiv.style.display = 'none';
+            }
+        }
+
+        // Save / Update
         window.addMovie = async function() {
             const editId = document.getElementById('editId').value;
             const type = document.getElementById('contentType').value;
@@ -232,7 +265,6 @@
                         createdAt: serverTimestamp()
                     };
                 } else {
-                    // Movie Card save - මෙතනට description add කළා
                     data = {
                         title: document.getElementById('title').value.trim() || null,
                         poster: document.getElementById('poster').value.trim() || null,
@@ -246,8 +278,11 @@
                         country: document.getElementById('country').value.trim() || null,
                         imdbRating: document.getElementById('imdbRating').value.trim() || null,
                         imdbVotes: document.getElementById('imdbVotes').value.trim() || null,
-                        description: document.getElementById('descInput').value.trim() || null, // FIX: මේක අලුතෙන්
+                        description: document.getElementById('descInput').value.trim() || null,
                         category: document.getElementById('category').value,
+                        // NEW FIELDS
+                        season: document.getElementById('season').value.trim() || null,
+                        rating: parseFloat(document.getElementById('rating').value) || null,
                         featured: false,
                         type: 'movie',
                         createdAt: serverTimestamp()
@@ -307,8 +342,12 @@
                     document.getElementById('country').value = m.country || '';
                     document.getElementById('imdbRating').value = m.imdbRating || '';
                     document.getElementById('imdbVotes').value = m.imdbVotes || '';
-                    document.getElementById('descInput').value = m.description || ''; // FIX: Edit කරනකොට description load වෙනවා
+                    document.getElementById('descInput').value = m.description || '';
                     document.getElementById('category').value = m.category || 'latest';
+                    // NEW FIELDS load
+                    document.getElementById('season').value = m.season || '';
+                    document.getElementById('rating').value = m.rating || '';
+                    toggleSeasonRating();
                 }
                 
                 document.getElementById('saveBtn').innerText = 'Update Movie';
@@ -330,7 +369,9 @@
             document.querySelectorAll('#movieCardFields input[type="text"]').forEach(input => input.value = '');
             document.getElementById('year').value = '2024';
             document.getElementById('quality').value = 'FHD';
-            document.getElementById('descInput').value = ''; // FIX: clear කරා
+            document.getElementById('descInput').value = '';
+            document.getElementById('season').value = '';
+            document.getElementById('rating').value = '';
             document.querySelectorAll('#heroFields input, #heroFields textarea').forEach(input => input.value = '');
         }
 
@@ -348,11 +389,14 @@
             snapshot.forEach(docSnap => {
                 const m = docSnap.data();
                 const isHero = m.featured === true || m.type === 'hero';
+                const badgeInfo = m.season ? ` | ${m.season}` : '';
+                const ratingInfo = m.rating ? ` | ★${m.rating}` : '';
+                
                 html += `
                     <div class="movie-item">
                         <div class="movie-info">
                             <h4>${m.title || 'Untitled'} ${isHero ? '<span class="badge-hero">HERO</span>' : ''}</h4>
-                            <p>${isHero ? 'Hero Banner' : 'Quality: ' + (m.quality || 'N/A')} | Year: ${m.year || 'N/A'} | IMDb: ${m.imdbRating || 'N/A'}</p>
+                            <p>${isHero ? 'Hero Banner' : 'Quality: ' + (m.quality || 'N/A') + badgeInfo + ratingInfo} | Year: ${m.year || 'N/A'}</p>
                         </div>
                         <div class="btn-group">
                             <button class="edit-btn" onclick="editMovie('${docSnap.id}')">Edit</button>
