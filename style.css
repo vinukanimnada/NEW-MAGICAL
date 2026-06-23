@@ -1,193 +1,565 @@
-<!DOCTYPE html>
-<html lang="si">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TV Shows - MAGICAL MOVIE LAND</title>
-  <link rel="stylesheet" href="style.css?v=19">
-  <style>
-  body {
-    background: #000;
-    color: #fff;
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 15px;
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body{
+  background: #0b0b0b;
+  color: #fff;
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+}
+
+/* Header */
+header {
+  background: #111;
+  padding: 12px 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 999;
+}
+
+.logo{
+  font-size: 22px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.logo span{
+  color: #FF10F0;
+}
+
+/* ===== LOGO CIRCLE ICONS - O දෙකට ===== */
+.logo i.fa-circle{
+  font-size: 10px; /* O එකේ size එක */
+  vertical-align: -2px; /* Screenshot එකේ වගේ උඩට */
+  margin: 0 1px;
+  color: #FF10F0; /* pink color එක */
+}
+
+.header-right i{
+  font-size: 20px;
+  margin-left: 20px;
+  cursor: pointer;
+}
+
+/* Search Box */
+.search-box{
+  background: #1a1a1a;
+  padding: 15px 20px;
+  display: none;
+  position: sticky;
+  top: 60px;
+  z-index: 998;
+}
+
+.search-box.active{
+  display: flex;
+}
+
+.search-box input{
+  flex: 1;
+  padding: 10px;
+  background: #2a2a2a;
+  border: none;
+  border-radius: 25px;
+  color: #fff;
+  outline: none;
+}
+
+.search-box i{
+  margin-left: 10px;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+/* ===== SIDEBAR ===== */
+.sidebar{
+  position: fixed !important;
+  top: 0 !important;
+  right: -200px !important;
+  width: 200px !important;
+  max-width: 75vw !important;
+  height: 100% !important;
+  background: #1a1a1a !important;
+  transition: 0.3s !important;
+  z-index: 1000 !important;
+  padding-top: 80px !important;
+  overflow-x: hidden !important;
+}
+
+.sidebar.active{
+  right: 0 !important;
+}
+
+.sidebar ul{
+  list-style: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  width: 100% !important;
+}
+
+.sidebar li{
+  border-bottom: 1px solid #2a2a2a !important;
+  border-top: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.sidebar li:first-child{
+  border-top: 1px solid #2a2a2a !important;
+}
+
+.sidebar li a{
+  display: flex !important;
+  align-items: center !important;
+  width: 100% !important;
+  padding: 16px 14px !important;
+  color: #fff !important;
+  text-decoration: none !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  transition: 0.2s !important;
+  border-radius: 0 !important;
+  box-sizing: border-box !important;
+}
+
+.sidebar li a:hover{
+  background: #2a2a2a !important;
+}
+
+.sidebar li a i{
+  margin-right: 14px !important;
+  font-size: 16px !important;
+  width: 18px !important;
+  min-width: 18px !important;
+}
+
+.sidebar li.active a{
+  background: #ff2d95 !important;
+  color: #fff !important;
+  border-radius: 0 !important;
+  margin: 0 !important;
+  padding: 16px 14px !important;
+  width: 100% !important;
+  border-bottom: none !important;
+  border-top-left-radius: 8px;    /* වම් උඩ corner */
+    border-bottom-left-radius: 8px;
+  box-shadow: 0 0 0 100vmax #ff2d95 !important;
+  clip-path: inset(0 -100vmax) !important;
+}
+
+/* ===== CLOSE BUTTON ===== */
+.close-btn{
+  position: absolute !important;
+  top: 8px !important;
+  right: 10px !important;
+  font-size: 28px !important;
+  color: #fff !important;
+  cursor: pointer !important;
+  z-index: 1002 !important;
+  transition: 0.2s !important;
+  line-height: 1 !important;
+  padding: 8px !important;
+  width: 40px !important;
+  height: 40px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.close-btn:hover{
+  color: #ff2d95 !important;
+}
+
+.overlay{
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  background: rgba(0,0,0,0.7) !important;
+  display: none !important;
+  z-index: 999 !important;
+}
+
+.overlay.active{
+  display: block !important;
+}
+
+/* Mobile Sidebar */
+@media (max-width: 480px){
+  .sidebar {
+    width: 180px !important;
+    right: -180px !important;
+    padding-top: 70px !important;
   }
-  
-  h1 {
-    font-size: 20px;
-    margin-bottom: 15px;
-    padding-left: 12px;
-    border-left: 4px solid #ff2d95;
+  .sidebar ul{
+    padding: 0 !important;
   }
-  
-  .movie-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
+  .sidebar li a{
+    padding: 15px 12px !important;
+    font-size: 13px !important;
   }
-  
-  @media(max-width: 768px) {
-    .movie-grid {
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-    }
+  .sidebar li a i{
+    font-size: 14px !important;
+    margin-right: 12px !important;
   }
-  
-  .movie-card {
-    position: relative;
-    border-radius: 6px;
-    overflow: hidden;
-    background: #111;
-    cursor: pointer;
+  .close-btn{
+    font-size: 26px !important;
+    top: 6px !important;
+    right: 8px !important;
+    padding: 6px !important;
+    width: 36px !important;
+    height: 36px !important;
   }
-  
-  .movie-card img {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-    display: block;
+}
+
+/* ===== HERO BANNER ===== */
+.hero{
+  width: 95%;
+  height: 200px;
+  border-radius: 20px;
+  margin: 15px auto 25px auto;
+  position: relative;
+  overflow: hidden;
+  background: #000;
+}
+
+#heroSlides{
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.hero-slide{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 1.5s ease;
+  background-size: cover!important;
+  background-position: center!important;
+  background-repeat: no-repeat!important;
+}
+
+.hero-slide.active{
+  opacity: 1;
+  z-index: 2;
+}
+
+.hero-slide::after{
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to right, rgba(0,0,0,0.3) 0%, transparent 100%);
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Hero content */
+.hero-content{
+  position: absolute;
+  bottom: 40px;
+  left: 20px;
+  z-index: 3;
+  max-width: 70%;
+}
+
+.hero-content h1{
+  font-size: 22px;
+  margin-bottom: 6px;
+  text-shadow: 2px 2px 6px rgba(0,0,0,0.8);
+}
+
+.hero-meta{
+  font-size: 12px;
+  margin-bottom: 8px;
+  opacity: 0.9;
+}
+
+.hero-meta .imdb{
+  background: #f5c518;
+  color: #000;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-weight: bold;
+  margin-right: 8px;
+}
+
+.desc{
+  font-size: 13px;
+  line-height: 1.4;
+  opacity: 0.85;
+  margin-bottom: 12px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.watch-btn{
+  display: inline-block;
+  background: #ff2d95;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.watch-btn:hover{
+  background: #e02585;
+}
+
+/* Hero Dots */
+.hero-dots{
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 6px;
+  z-index: 10;
+}
+
+.hero-dots .dot{
+  width: 8px;
+  height: 8px;
+  background: rgba(255,255,255,0.4);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.hero-dots .dot.active{
+  background: #ff2d95;
+  width: 20px;
+  border-radius: 10px;
+}
+
+/* Mobile Hero */
+@media (max-width: 600px){
+  .hero{
+    height: 170px;
+    width: 92%;
+    border-radius: 16px;
   }
-  
-  .season-badge {
-    position: absolute;
-    top: 6px;
-    left: 6px;
-    background: #ff2d95;
-    color: #fff;
-    font-size: 10px;
-    font-weight: 700;
-    padding: 3px 6px;
-    border-radius: 4px;
-    z-index: 2;
-    white-space: nowrap;
+  .hero-content{
+    bottom: 30px;
+    left: 15px;
+    max-width: 75%;
   }
-  .season-badge.green {
-    background: #22c55e;
-  }
-  
-  .rating-badge {
-    position: absolute;
-    top: 6px;
-    right: 6px;
-    background: #fbbf24;
-    color: #000;
-    font-size: 10px;
-    font-weight: 700;
-    padding: 3px 6px;
-    border-radius: 4px;
-    z-index: 2;
-  }
-  
-  .movie-title {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 100%);
-    padding: 25px 6px 6px 6px;
-    font-size: 12px;
-    font-weight: 600;
-    color: #fff;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  
-  .play-overlay {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 40px;
-    height: 40px;
-    background: rgba(0,0,0,0.7);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  .hero-content h1{
     font-size: 18px;
-    color: #fff;
   }
-  </style>
-</head>
-<body>
-  <h1>TV Shows</h1>
-  <div class="movie-grid" id="tvShowsGrid"></div>
-
-  <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-  import { getFirestore, collection, getDocs, orderBy, query } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyCx0TEmgr3GCyvfeok9Y42yR1PTM4_8y9M",
-    authDomain: "magical-movie-land.firebaseapp.com",
-    projectId: "magical-movie-land",
-    storageBucket: "magical-movie-land.firebasestorage.app",
-    messagingSenderId: "27757424288",
-    appId: "1:27757424288:web:d650e2659f09f0b9c823c5"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
-
-  async function loadTVShows() {
-    const grid = document.getElementById('tvShowsGrid');
-    
-    try {
-      // FIX: where("in") අයින් කරලා timestamp විතරක් order කළා
-      const q = query(
-        collection(db, "movies"), 
-        orderBy("createdAt", "desc")  // createdAt use කරපන්, timestamp නෙවෙයි
-      );
-      const snapshot = await getDocs(q);
-      
-      if(snapshot.empty) {
-        grid.innerHTML = '<p style="text-align:center;color:#666;">TV Shows නැත</p>';
-        return;
-      }
-      
-      grid.innerHTML = '';
-      snapshot.forEach(doc => {
-        const m = doc.data();
-        
-        // FIX: Client side filter - tvshows or alltvshows විතරක් ගන්නවා
-        if(m.category !== 'tvshows' && m.category !== 'alltvshows') return;
-        
-        const poster = m.poster || 'https://via.placeholder.com/300x400/222/fff';
-        const title = m.title || 'No Title';
-        const year = m.year || '';
-        const season = m.season || '';
-        const rating = m.rating || '';
-        
-        let displayTitle = title;
-        if(year) displayTitle += ` (${year})`;
-        if(displayTitle.length > 25) displayTitle = displayTitle.substring(0, 25) + '...';
-        
-        let badgeClass = '';
-        if(season && season.includes('EP')) badgeClass = 'green';
-        
-        grid.innerHTML += `
-          <div class="movie-card" onclick="window.location.href='watch.html?id=${doc.id}'">
-            <img src="${poster}" loading="lazy">
-            
-            ${season ? `<div class="season-badge ${badgeClass}">${season}</div>` : ''}
-            ${rating ? `<div class="rating-badge">★ ${rating}</div>` : ''}
-            
-            <div class="movie-title">${displayTitle}</div>
-            
-            <div class="play-overlay">▶</div>
-          </div>
-        `;
-      });
-      
-    } catch(err) {
-      console.error("❌ Error:", err);
-      grid.innerHTML = '<p style="color:red;">Error: ' + err.message + '</p>';
-    }
+  .desc{
+    font-size: 11px;
   }
-  
-  loadTVShows();
-  </script>
-</body>
-</html>
+}
+
+/* ===== MOVIE GRID - SCREENSHOT SIZE EKATA ===== */
+.movie-grid{
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px !important;
+  padding: 0 12px !important;
+  justify-items: center !important;
+}
+
+.movie-card{
+  position: relative;
+  background: #1a1a1a;
+  border-radius: 8px !important;
+  overflow: hidden;
+  cursor: pointer;
+  width: 100% !important;
+  max-width: 165px !important;
+  transition: transform 0.2s ease !important;
+  justify-self: stretch !important;
+}
+
+.movie-card:hover{
+  transform: scale(1.04) !important;
+  z-index: 5;
+}
+
+.movie-card img{
+  width: 100%;
+  height: 255px !important;
+  object-fit: cover;
+  display: block;
+}
+
+/* Badge */
+.badge{
+  position: absolute;
+  top: 8px !important;
+  padding: 4px 8px !important;
+  font-size: 11px !important;
+  font-weight: bold;
+  border-radius: 5px !important;
+  z-index: 2;
+  color: white;
+}
+
+.badge.fhd{ left: 8px !important; background: #ff1493; }
+.badge.hd{ left: 8px !important; background: #ff4500; }
+.badge.web-dl{ left: 8px !important; background: #00bfff; }
+.badge.imdb{ right: 8px !important; left: auto; background: #f5c518; color: #000; }
+
+/* Card Info */
+.card-info{
+  padding: 8px 8px !important;
+  background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  text-align: left !important;
+}
+
+.card-info h3{
+  font-size: 13px !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 3px !important;
+  font-weight: 700 !important;
+}
+
+.card-info p{
+  font-size: 11px !important;
+  color: #aaa;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Section Header */
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 15px 12px 10px 20px;
+  margin-bottom: 15px;
+}
+
+.section-header h2 {
+  margin: 0;
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.view-all {
+  background: #ff1493;
+  color: white;
+  padding: 5px 12px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+a.movie-card {
+  cursor: pointer;
+  transition: transform 0.2s;
+  display: block;
+}
+
+a.movie-card:hover {
+  transform: scale(1.04) !important;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Tablet + Desktop */
+@media (min-width: 768px){
+  .movie-grid{
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px !important;
+    padding: 0 15px !important;
+  }
+  .movie-card{
+    max-width: 170px !important;
+  }
+  .movie-card img{
+    height: 260px !important;
+  }
+}
+
+@media (min-width: 1024px){
+  .movie-grid{
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px !important;
+    padding: 0 20px !important;
+  }
+}
+
+/* Mobile Grid - SCREENSHOT EKATA 100% MATCH */
+@media (max-width: 480px){
+  .movie-grid{
+    gap: 10px !important;
+    padding: 0 12px !important;
+  }
+  .movie-card{
+    max-width: 160px !important;
+  }
+  .movie-card img{
+    height: 245px !important;
+  }
+  .card-info h3{
+    font-size: 13px !important;
+  }
+  .card-info p{
+    font-size: 11px !important;
+  }
+  .badge{
+    top: 8px !important;
+    padding: 4px 8px !important;
+    font-size: 11px !important;
+  }
+}
+
+/* ===== DESCRIPTION SECTION ===== */
+.description-section{
+  padding: 20px 12px;
+  margin-top: 20px;
+  border-top: 1px solid #222;
+}
+
+.desc-title{
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.desc-title::before{
+  content: '';
+  width: 3px;
+  height: 20px;
+  background: #ff2d95;
+  border-radius: 2px;
+}
+
+.desc-text{
+  font-size: 14px;
+  line-height: 1.7;
+  color: #ccc;
+  text-align: justify;
+}
