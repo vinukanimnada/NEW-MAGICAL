@@ -1,490 +1,157 @@
 <!DOCTYPE html>
 <html lang="si">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>All Movies - Magical Movie Land</title>
-<link rel="stylesheet" href="style.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
-<style>
-body {
-  background: #000;
-  color: #fff;
-  font-family: Arial, sans-serif;
-  margin: 0;
-  padding: 0;
-}
-
-h1 {
-  text-align: center;
-  color: #ff2d95;
-  margin: 20px 0 30px;
-  font-size: 24px;
-}
-
-/* Cinesubz Grid - Mobile 3x3 */
-.movie-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
-  padding: 10px;
-  background: #000;
-}
-
-/* Desktop 5x grid */
-@media (min-width: 768px) {
-.movie-grid {
-    grid-template-columns: repeat(5, 1fr);
-    gap: 12px;
-    padding: 20px;
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Series - Magical Movie Land</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  
+  <style>
+  /* Header */ 
+  header {
+    background: #111;
+    padding: 12px 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 999;
   }
-}
 
-.movie-card {
-  position: relative;
-  border-radius: 6px;
-  overflow: hidden;
-  background: #111;
-  cursor: pointer;
-  transition: transform 0.2s;
-  aspect-ratio: 2/3;
-}
+  .logo{
+    font-size: 22px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
 
-.movie-card:hover {
-  transform: scale(1.05);
-}
+  .logo span{
+    color: #ff2d95;
+  }
 
-.movie-card img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-  background: #222;
-}
+  .header-right i{
+    font-size: 20px;
+    margin-left: 20px;
+    cursor: pointer;
+  }
 
-/* Top Left - WEB-DL RED Badge */
-.quality-badge {
-  position: absolute;
-  top: 5px;
-  left: 5px;
-  background: #e50914;
-  padding: 2px 5px;
-  font-size: 10px;
-  font-weight: 700;
-  border-radius: 3px;
-  color: white;
-  z-index: 3;
-  text-transform: uppercase;
-  line-height: 1;
-}
-
-/* Top Right - ★ Rating YELLOW Badge */
-.rating-badge {
-  position: absolute;
-  top: 5px;
-  right: 5px;
-  background: #ffc107;
-  color: #000;
-  padding: 2px 5px;
-  font-size: 10px;
-  font-weight: 700;
-  border-radius: 3px;
-  z-index: 3;
-  line-height: 1;
-}
-
-/* Bottom Title - Left align + Gradient */
-.movie-title {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  padding: 20px 6px 6px;
-  font-size: 12px;
-  text-align: left;
-  font-weight: 500;
-  color: #fff;
-  background: linear-gradient(to top, rgba(0,0,0,0.95) 50%, transparent);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  z-index: 2;
-  line-height: 1.2;
-}
-
-.no-movies {
-  text-align: center;
-  color: #666;
-  padding: 50px 0;
-  grid-column: 1/-1;
-}
-
-/* Search Results List View */
-.search-results {
-  display: none;
-  padding: 10px;
-}
-
-.search-results.active {
-  display: block;
-}
-
-.search-result-item {
-  display: flex;
-  gap: 12px;
-  padding: 10px 0;
-  border-bottom: 1px solid #222;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.search-result-item:hover {
-  background: #1a1a1a;
-}
-
-.search-result-poster {
-  width: 60px;
-  height: 90px;
-  border-radius: 4px;
-  object-fit: cover;
-  flex-shrink: 0;
-}
-
-.search-result-info {
-  flex: 1;
-  overflow: hidden;
-}
-
-.search-result-title {
-  font-size: 15px;
-  font-weight: 600;
-  color: #fff;
-  margin-bottom: 4px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.search-result-meta {
-  font-size: 13px;
-  color: #aaa;
-  line-height: 1.5;
-}
-
-.search-no-result {
-  text-align: center;
-  color: #666;
-  padding: 50px 20px;
-  font-size: 14px;
-}
-
-/* Search bar */
-.search-box {
-  position: absolute;
-  top: 60px;
-  left: 0;
-  width: 100%;
-  background: #0a0a0a;
-  padding: 12px 15px;
-  display: none;
-  z-index: 999;
-  border-bottom: 1px solid #222;
-  box-sizing: border-box;
-}
-.search-box.active {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.search-box input {
-  flex: 1;
-  height: 45px;
-  background: #1a1a1a;
-  border: none;
-  border-radius: 25px;
-  padding: 0 20px;
-  color: white;
-  font-size: 16px;
-  outline: none;
-}
-.search-box button {
-  width: 45px;
-  height: 45px;
-  background: #e50914;
-  border: none;
-  border-radius: 50%;
-  color: white;
-  font-size: 18px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-#closeSearch {
-  font-size: 22px;
-  color: #888;
-  cursor: pointer;
-  flex-shrink: 0;
-}
-#closeSearch:hover {
-  color: #ff2d95;
-}
-
-header {
-  background: #111;
-  padding: 12px 15px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  position: sticky;
-  top: 0;
-  z-index: 999;
-  border-bottom: 1px solid #222;
-}
-
-.logo {
-  font-size: 22px;
-  font-weight: 700;
-  white-space: nowrap;
-}
-
-.logo span {
-  color: #ff2d95;
-}
-
-.header-right i {
-  font-size: 20px;
-  margin-left: 20px;
-  cursor: pointer;
-}
-</style>
+  /* Search Bar Design - මේක විතරක් තියපන් */
+  .search-box {
+    position: absolute;
+    top: 60px;
+    left: 0;
+    width: 100%;
+    background: #0a0a0a;
+    padding: 12px 15px;
+    display: none;
+    z-index: 999;
+    border-bottom: 1px solid #222;
+    box-sizing: border-box;
+  }
+  .search-box.active {
+    display: flex;
+    align-items: center;
+  }
+  .search-box input {
+    flex: 1;
+    height: 45px;
+    background: #1a1a1a;
+    border: none;
+    border-radius: 25px;
+    padding: 0 45px 0 20px;
+    color: white;
+    font-size: 16px;
+    outline: none;
+  }
+  .search-box input::placeholder {
+    color: #666;
+  }
+  #closeSearch {
+    position: absolute;
+    right: 30px;
+    font-size: 20px;
+    color: #888;
+    cursor: pointer;
+  }
+  #closeSearch:hover {
+    color: #ff2d95;
+  }
+  </style>
 </head>
-<body>
+<body style="margin:0; background:#000;">
 
-<!-- Header -->
-<header>
-  <div class="logo">𝗠𝗔𝗚𝗜𝗖𝗔𝗟 <span>𝗠🍩𝗩𝗜𝗘 𝗟🌲𝗡𝗗</span></div>
-  <div class="header-right">
-    <i class="fa fa-search" id="searchBtn"></i>
-    <i class="fa fa-bars" id="menuBtn"></i>
+  <!-- Header -->
+  <header>
+    <div class="logo">𝗠𝗔𝗚𝗜𝗖𝗔𝗟 <span>𝗠🍩𝗩𝗜𝗘 𝗟🌲𝗡𝗗</span></div> 
+    <div class="header-right">
+      <i class="fa fa-search" id="searchBtn"></i>
+      <i class="fa fa-bars" id="menuBtn"></i>
+    </div>
+    
+    <!-- Search Bar -->
+    <div class="search-box" id="searchBox">
+      <input type="text" placeholder="Search cartoons or movies...">
+      <i class="fa fa-times" id="closeSearch"></i>
+    </div>
+  </header>
+
+  <!-- Sidebar Menu - CSS එක style.css එකෙන් -->
+  <div class="sidebar" id="sidebar">
+    <span class="close-btn" id="closeSidebar">×</span>
+    <ul>
+      <li><a href="index.html"><i class="fa fa-home"></i> Home</a></li>
+      <li><a href="movies.html"><i class="fa fa-film"></i> All Movies</a></li>
+      <li class="active"><a href="series.html"><i class="fa fa-tv"></i> TV Shows</a></li>
+      <li><a href="chanels.html"><i class="fa-solid fa-users"></i> Join Channels</a></li>
+      <li><a href="about.html"><i class="fa fa-info-circle"></i> About Us</a></li>
+      <li><a href="contact.html"><i class="fa fa-envelope"></i> Contact Us</a></li>
+    </ul>
   </div>
+  <div class="overlay" id="overlay"></div>
+  
+  <!-- Page Content -->
+  <section style="padding: 50px 20px; text-align: center;">
+    <h1 style="font-size: 32px; margin-bottom: 20px; color: white;">Series</h1>
+    <p style="color: #aaa; font-size: 16px;">මෙතනට ඔයාගේ Series ලිස්ට් එක දාන්න</p>
+    <br><br>
+    <a href="index.html" style="display: inline-block; padding: 12px 25px; background: #e50914; color: #fff; text-decoration: none; border-radius: 4px; font-weight: bold;">← Back to Home</a>
+  </section>
 
-  <!-- Search Bar - ID + type="button" fix කළා -->
-  <div class="search-box" id="searchBox">
-    <input type="text" id="searchInput" placeholder="Search movies...">
-    <i class="fa fa-times" id="closeSearch"></i>
-  </div>
-</header>
+  <!-- Menu + Search JS - එක පාරක් විතරක් -->
+  <script>
+  const menuBtn = document.getElementById('menuBtn');
+  const sidebar = document.getElementById('sidebar');
+  const closeSidebar = document.getElementById('closeSidebar');
+  const overlay = document.getElementById('overlay');
+  const searchBtn = document.getElementById('searchBtn');
+  const searchBox = document.getElementById('searchBox');
+  const closeSearch = document.getElementById('closeSearch');
 
-<!-- Sidebar Menu -->
-<div class="sidebar" id="sidebar">
-  <span class="close-btn" id="closeSidebar">×</span>
-  <ul>
-    <li><a href="index.html"><i class="fa fa-home"></i> Home</a></li>
-    <li><a href="movies.html"><i class="fa fa-film"></i> All Movies</a></li>
-    <li class="active"><a href="series.html"><i class="fa fa-tv"></i> TV Shows</a></li>
-    <li><a href="chanels.html"><i class="fa-solid fa-users"></i> Join Channels</a></li>
-    <li><a href="about.html"><i class="fa fa-info-circle"></i> About</a></li>
-    <li><a href="contact.html"><i class="fa fa-envelope"></i> Contact Us</a></li>
-  </ul>
-</div>
-<div class="overlay" id="overlay"></div>
+  menuBtn?.addEventListener('click', () => {
+    sidebar.classList.add('active');
+    overlay.classList.add('active');
+  });
 
-<h1> 📺 TV SHOWS</h1>
+  closeSidebar?.addEventListener('click', () => {
+    sidebar.classList.remove('active');
+    overlay.classList.remove('active');
+  });
 
-<!-- Movie Grid -->
-<div class="movie-grid" id="movieGrid">
-  <div class="no-movies">Loading movies...</div>
-</div>
+  overlay?.addEventListener('click', () => {
+    sidebar.classList.remove('active');
+    overlay.classList.remove('active');
+  });
 
-<!-- Search Results List -->
-<div class="search-results" id="searchResults"></div>
-
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyCx0TEmgr3GCyvfeok9Y42yR1PTM4_8y9M",
-  authDomain: "magical-movie-land.firebaseapp.com",
-  projectId: "magical-movie-land",
-  storageBucket: "magical-movie-land.firebasestorage.app",
-  messagingSenderId: "27757424288",
-  appId: "1:27757424288:web:d650e2659f09f0b9c823c5"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const grid = document.getElementById('movieGrid');
-let allMovies = [];
-
-// Movies load + cache
-async function loadMovies() {
-  try {
-    const q = query(
-      collection(db, "movies"),
-      where("category", "==", "allmovies"),
-      where("type", "==", "movie")
-    );
-    const snapshot = await getDocs(q);
-
-    if(snapshot.empty) {
-      grid.innerHTML = '<div class="no-movies">Movies නැත. Admin එකෙන් "All Movies Page" select කරලා add කරපන්.</div>';
-      return;
+  searchBtn?.addEventListener('click', () => {
+    searchBox.classList.toggle('active');
+    if(searchBox.classList.contains('active')) {
+      searchBox.querySelector('input').focus();
     }
-
-    grid.innerHTML = "";
-    allMovies = [];
-
-    snapshot.forEach(doc => {
-      const m = doc.data();
-      m.id = doc.id;
-      allMovies.push(m);
-
-      const poster = m.poster || 'https://via.placeholder.com/300x450/222/fff?text=No+Image';
-      let rating = m.imdbRating? m.imdbRating.toString().split('/')[0] : '0.0';
-      if(!rating.includes('.')) rating += '.0';
-      const quality = (m.quality || 'WEB-DL').toUpperCase();
-      let title = m.title || 'Untitled';
-      if(title.length > 20) title = title.substring(0, 20) + '...';
-
-      const card = `
-        <div class="movie-card" onclick="openMovie('${doc.id}')">
-          <span class="quality-badge">${quality}</span>
-          <span class="rating-badge">★ ${rating}</span>
-          <img src="${poster}" alt="${m.title}" loading="lazy">
-          <div class="movie-title">${title}</div>
-        </div>
-      `;
-      grid.innerHTML += card;
-    });
-  } catch(err) {
-    console.error(err);
-    grid.innerHTML = `<div class="no-movies">Error: ${err.message}</div>`;
-  }
-}
-
-window.openMovie = function(id) {
-  window.location.href = `watch.html?id=${id}`;
-}
-
-// Search function
-function searchMovies(query) {
-  const resultsDiv = document.getElementById('searchResults');
-  const gridDiv = document.getElementById('movieGrid');
-
-  if(!query.trim()) {
-    resultsDiv.classList.remove('active');
-    gridDiv.style.display = 'grid';
-    return;
-  }
-
-  gridDiv.style.display = 'none';
-  resultsDiv.classList.add('active');
-
-  const filtered = allMovies.filter(m =>
-    m.title && m.title.toLowerCase().includes(query.toLowerCase())
-  );
-
-  if(filtered.length === 0) {
-    resultsDiv.innerHTML = '<div class="search-no-result">🔍 Results හමු නොවීය</div>';
-    return;
-  }
-
-  resultsDiv.innerHTML = filtered.map(m => {
-    const poster = m.poster || 'https://via.placeholder.com/60x90/222/fff';
-    const year = m.year || 'N/A';
-    const duration = m.duration || 'N/A';
-    const genre = m.genre || m.language || 'Movie';
-
-    let title = m.title;
-    if(title.length > 40) title = title.substring(0, 40) + '...';
-
-    return `
-      <div class="search-result-item" onclick="openMovie('${m.id}')">
-        <img src="${poster}" class="search-result-poster" loading="lazy">
-        <div class="search-result-info">
-          <div class="search-result-title">${title}</div>
-          <div class="search-result-meta">
-            ${year} • ${duration} min<br>
-            ${genre}
-          </div>
-        </div>
-      </div>
-    `;
-  }).join('');
-}
-
-loadMovies();
-
-// Menu + Search JS - ID වලින්ම අල්ලගත්තා
-const menuBtn = document.getElementById('menuBtn');
-const sidebar = document.getElementById('sidebar');
-const closeSidebar = document.getElementById('closeSidebar');
-const overlay = document.getElementById('overlay');
-const searchBtn = document.getElementById('searchBtn');
-const searchBox = document.getElementById('searchBox');
-const closeSearch = document.getElementById('closeSearch');
-const searchInput = document.getElementById('searchInput'); // ID එකෙන්
-const searchBtnIcon = document.getElementById('searchBtnIcon'); // ID එකෙන්
-
-menuBtn?.addEventListener('click', () => {
-  sidebar.classList.add('active');
-  overlay.classList.add('active');
-});
-
-closeSidebar?.addEventListener('click', () => {
-  sidebar.classList.remove('active');
-  overlay.classList.remove('active');
-});
-
-overlay?.addEventListener('click', () => {
-  sidebar.classList.remove('active');
-  overlay.classList.remove('active');
-});
-
-// Header 🔍 click
-searchBtn?.addEventListener('click', () => {
-  searchBox.classList.toggle('active');
-  if(searchBox.classList.contains('active')) {
-    searchInput.focus();
-  } else {
-    searchMovies('');
-    searchInput.value = '';
-  }
-});
-
-// X click
-closeSearch?.addEventListener('click', () => {
-  searchBox.classList.remove('active');
-  searchMovies('');
-  searchInput.value = '';
-});
-
-// Type කරද්දි search - Debounce 300ms
-let searchTimeout;
-searchInput?.addEventListener('input', (e) => {
-  clearTimeout(searchTimeout);
-  searchTimeout = setTimeout(() => {
-    searchMovies(e.target.value);
-  }, 300);
-});
-
-// Enter ගැහුවම search
-searchInput?.addEventListener('keypress', (e) => {
-  if(e.key === 'Enter') {
-    searchMovies(e.target.value);
-  }
-});
-
-// Red button click - මේක fix
-searchBtnIcon?.addEventListener('click', (e) => {
-  e.preventDefault();
-  searchMovies(searchInput.value);
-});
-</script>
-
+  });
+  closeSearch?.addEventListener('click', () => {
+    searchBox.classList.remove('active');
+  });
+  </script>
 </body>
 </html>
