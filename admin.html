@@ -38,14 +38,14 @@
             margin-bottom: 10px;
         }
         button.secondary{background:#00bfff}
-        .cancel-btn{background:#555;margin-top:5px}
+       .cancel-btn{background:#555;margin-top:5px}
         #msg { text-align: center; margin-top: 15px; color: #00ff88; min-height: 20px; }
-        .movie-list {
+       .movie-list {
             margin-top: 40px;
             border-top: 2px solid #333;
             padding-top: 20px;
         }
-        .movie-item {
+       .movie-item {
             background: #1a1a1a;
             padding: 15px;
             border-radius: 8px;
@@ -54,18 +54,18 @@
             justify-content: space-between;
             align-items: center;
         }
-        .movie-info { flex: 1; }
-        .movie-info h4 { margin: 0 0 5px 0; }
-        .movie-info p { margin: 0; font-size: 12px; color: #aaa; }
-        .btn-group{display:flex;gap:8px}
-        .delete-btn {
+       .movie-info { flex: 1; }
+       .movie-info h4 { margin: 0 0 5px 0; }
+       .movie-info p { margin: 0; font-size: 12px; color: #aaa; }
+       .btn-group{display:flex;gap:8px}
+       .delete-btn {
             background: #ff4444;
             padding: 8px 15px;
             width: auto;
             font-size: 14px;
             margin: 0;
         }
-        .edit-btn {
+       .edit-btn {
             background: #ffa500;
             padding: 8px 15px;
             width: auto;
@@ -73,8 +73,8 @@
             margin: 0;
         }
         select#contentType{border:2px solid #ff2d95;margin-bottom:20px;font-weight:bold}
-        .badge-hero{background:#ff2d95;color:white;padding:3px 8px;border-radius:4px;font-size:11px;margin-left:8px}
-        
+       .badge-hero{background:#ff2d95;color:white;padding:3px 8px;border-radius:4px;font-size:11px;margin-left:8px}
+
         textarea#descInput{
           width: 100%;
           padding: 10px;
@@ -86,7 +86,7 @@
           font-size: 14px;
           resize: vertical;
         }
-        .row {
+       .row {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 10px;
@@ -98,6 +98,13 @@
             display: block;
             margin-bottom: 10px;
         }
+        /* NEW: Filter dropdown style */
+        #filterCategory {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            color: #fff;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -105,8 +112,8 @@
     <h2>🎬 Add / Edit Movie / TV Show</h2>
 
     <input type="hidden" id="editId" value="">
-    
-    <label>📍 Whera Adding Place ?</label>
+
+    <label>📍 Whera Adding Place?</label>
     <select id="contentType" onchange="toggleFields()">
         <option value="movieCard">Movie Cards</option>
         <option value="heroPoster">Hero Poster</option>
@@ -114,7 +121,7 @@
 
     <!-- Movie Card Fields -->
     <div id="movieCardFields">
-        
+
         <select id="category" onchange="toggleSeasonRating()">
             <option value="latest">Latest Uploads - Home</option>
             <option value="trending">Daily Trending - Home</option>
@@ -122,7 +129,7 @@
             <option value="allmovies">All Movies Page</option>
             <option value="alltvshows">All TV Shows Page</option>
         </select>
-        
+
         <input type="text" id="title" placeholder="Movie / Series Name">
         <input type="text" id="poster" placeholder="Poster Image URL">
         <input type="text" id="video" placeholder="Video URL - Doodstream Link">
@@ -154,25 +161,25 @@
 
         <label>🎭 Genres</label>
         <input type="text" id="genres" placeholder="ex: Action, Adventure, Fantasy">
-        
+
         <label>👨‍🎬 Director</label>
         <input type="text" id="director" placeholder="ex: David Yates">
-        
+
         <label>⏱️ Duration</label>
         <input type="text" id="duration" placeholder="ex: 2h 10m">
-        
+
         <label>🗣️ Language</label>
         <input type="text" id="language" placeholder="ex: English, Sinhala Dub">
-        
+
         <label>🌍 Country</label>
         <input type="text" id="country" placeholder="ex: USA, UK">
 
         <label>⭐ IMDb Rating</label>
         <input type="text" id="imdbRating" placeholder="ex: 8.2/10">
-        
+
         <label>📊 IMDb Votes</label>
         <input type="text" id="imdbVotes" placeholder="ex: 250K">
-            
+
         <label>Description</label>
         <textarea id="descInput" placeholder="Movie description..." rows="5"></textarea>
     </div>
@@ -192,6 +199,18 @@
 
     <div class="movie-list">
         <h2>📋 All Content - Edit / Delete Here</h2>
+
+        <!-- NEW: Filter Dropdown -->
+        <select id="filterCategory" onchange="loadMovies()" style="margin-bottom:15px;">
+            <option value="all">සියල්ල පෙන්නන්න</option>
+            <option value="latest">Latest Uploads - Home</option>
+            <option value="trending">Daily Trending - Home</option>
+            <option value="tvshows">TV Shows - Home</option>
+            <option value="allmovies">All Movies Page</option>
+            <option value="alltvshows">All TV Shows Page</option>
+            <option value="hero">Hero Posters Only</option>
+        </select>
+
         <div id="movieList">Loading...</div>
     </div>
 
@@ -215,20 +234,34 @@
         window.onload = function() {
             toggleFields();
             toggleSeasonRating();
+            loadMovies();
         }
 
         window.toggleFields = function() {
             const type = document.getElementById('contentType').value;
             const movieFields = document.getElementById('movieCardFields');
             const heroFields = document.getElementById('heroFields');
-            
+            const filterDropdown = document.getElementById('filterCategory');
+
             if(type === 'heroPoster') {
                 movieFields.style.display = 'none';
                 heroFields.style.display = 'block';
+
+                // Hero select කරද්දී filter එක auto "Hero Posters Only" වලට
+                if(filterDropdown) {
+                    filterDropdown.value = 'hero';
+                    loadMovies();
+                }
             } else {
                 movieFields.style.display = 'block';
                 heroFields.style.display = 'none';
                 toggleSeasonRating();
+
+                // Movie Cards select කරද්දී filter එක "සියල්ල" වලට
+                if(filterDropdown) {
+                    filterDropdown.value = 'all';
+                    loadMovies();
+                }
             }
         }
 
@@ -236,7 +269,7 @@
         window.toggleSeasonRating = function() {
             const cat = document.getElementById('category').value;
             const seasonDiv = document.getElementById('seasonRatingFields');
-            
+
             if(cat === 'tvshows' || cat === 'alltvshows') {
                 seasonDiv.style.display = 'block';
             } else {
@@ -244,7 +277,7 @@
             }
         }
 
-        // Save / Update - Firebase එකට overwrite වෙන්නේ නෑ. අලුත් doc එකක් add වෙනවා
+        // Save / Update
         window.addMovie = async function() {
             const editId = document.getElementById('editId').value;
             const type = document.getElementById('contentType').value;
@@ -254,8 +287,16 @@
 
             try {
                 if(type === 'heroPoster') {
+                    const heroTitle = document.getElementById('heroTitle').value.trim();
+                    if(!heroTitle) {
+                        msg.style.color = 'red';
+                        msg.innerText = '⚠️ Hero Title එක දාපන්!';
+                        setTimeout(()=> msg.innerText = '', 2000);
+                        return;
+                    }
+
                     data = {
-                        title: document.getElementById('heroTitle').value.trim() || null,
+                        title: heroTitle,
                         banner: document.getElementById('heroBanner').value.trim() || null,
                         imdbRating: document.getElementById('heroImdbRating').value.trim() || null,
                         year: document.getElementById('heroYear').value.trim() || null,
@@ -296,9 +337,9 @@
                 } else {
                     await addDoc(collection(db, "movies"), data);
                     msg.style.color = '#00ff88';
-                    msg.innerText = type === 'heroPoster' ? '✅ Hero Poster Saved!' : '✅ Movie Saved!';
+                    msg.innerText = type === 'heroPoster'? '✅ Hero Poster Saved!' : '✅ Movie Saved!';
                 }
-                
+
                 clearForm();
                 setTimeout(()=> msg.innerText = '', 2000);
                 loadMovies();
@@ -313,11 +354,11 @@
         window.editMovie = async function(id) {
             const docRef = doc(db, "movies", id);
             const docSnap = await getDoc(docRef);
-            
+
             if(docSnap.exists()) {
                 const m = docSnap.data();
                 document.getElementById('editId').value = id;
-                
+
                 if(m.type === 'hero' || m.featured === true) {
                     document.getElementById('contentType').value = 'heroPoster';
                     toggleFields();
@@ -347,7 +388,7 @@
                     document.getElementById('rating').value = m.rating || '';
                     toggleSeasonRating();
                 }
-                
+
                 document.getElementById('saveBtn').innerText = 'Update Movie';
                 document.getElementById('cancelBtn').style.display = 'block';
                 window.scrollTo({top: 0, behavior: 'smooth'});
@@ -373,8 +414,11 @@
             document.querySelectorAll('#heroFields input, #heroFields textarea').forEach(input => input.value = '');
         }
 
+        // UPDATED: Filter logic add කරා
         async function loadMovies() {
             const movieList = document.getElementById('movieList');
+            const filterValue = document.getElementById('filterCategory')?.value || 'all';
+
             const q = query(collection(db, "movies"), orderBy("createdAt", "desc"));
             const snapshot = await getDocs(q);
 
@@ -387,23 +431,42 @@
             snapshot.forEach(docSnap => {
                 const m = docSnap.data();
                 const isHero = m.featured === true || m.type === 'hero';
-                const badgeInfo = m.season ? ` | ${m.season}` : '';
-                const ratingInfo = m.rating ? ` | ★${m.rating}` : '';
-                
-                html += `
-                    <div class="movie-item">
-                        <div class="movie-info">
-                            <h4>${m.title || 'Untitled'} ${isHero ? '<span class="badge-hero">HERO</span>' : ''}</h4>
-                            <p>${isHero ? 'Hero Banner' : 'Quality: ' + (m.quality || 'N/A') + badgeInfo + ratingInfo} | Year: ${m.year || 'N/A'}</p>
+                const badgeInfo = m.season? ` | ${m.season}` : '';
+                const ratingInfo = m.rating? ` | ★${m.rating}` : '';
+
+                // FILTER LOGIC
+                let showItem = false;
+
+                if(filterValue === 'all') {
+                    showItem = true;
+                } else if(filterValue === 'hero') {
+                    showItem = isHero;
+                } else {
+                    showItem = m.category === filterValue;
+                }
+
+                if(showItem) {
+                    html += `
+                        <div class="movie-item">
+                            <div class="movie-info">
+                                <h4>${m.title || '⚠️ No Title'} ${isHero? '<span class="badge-hero">HERO</span>' : ''}</h4>
+                                <p>${isHero? 'Hero Banner' : 'Quality: ' + (m.quality || 'N/A') + badgeInfo + ratingInfo} | Year: ${m.year || 'N/A'} | Cat: ${m.category || 'N/A'}</p>
+                            </div>
+                            <div class="btn-group">
+                                <button class="edit-btn" onclick="editMovie('${docSnap.id}')">Edit</button>
+                                <button class="delete-btn" onclick="deleteMovie('${docSnap.id}', '${m.title || 'Movie'}')">Delete</button>
+                            </div>
                         </div>
-                        <div class="btn-group">
-                            <button class="edit-btn" onclick="editMovie('${docSnap.id}')">Edit</button>
-                            <button class="delete-btn" onclick="deleteMovie('${docSnap.id}', '${m.title || 'Movie'}')">Delete</button>
-                        </div>
-                    </div>
-                `;
+                    `;
+                }
             });
-            movieList.innerHTML = html;
+
+            if(html === '') {
+                const filterText = document.getElementById('filterCategory').selectedOptions[0].text;
+                movieList.innerHTML = `<p style="text-align:center; color:#666;">"${filterText}" category එකේ items නැත</p>`;
+            } else {
+                movieList.innerHTML = html;
+            }
         }
 
         window.deleteMovie = async function(id, title) {
@@ -413,8 +476,6 @@
                 loadMovies();
             }
         }
-
-        loadMovies();
     </script>
 </body>
 </html>
