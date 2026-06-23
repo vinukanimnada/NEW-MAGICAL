@@ -14,18 +14,18 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
   /* ===== WATCH BUTTON + TEXT HIDE ===== */
- .hero-slide p,
- .hero-slide.desc,
- .hero-slide.watch-btn,
- .hero-slide button,
- .hero-slide h1,
- .hero-slide.imdb,
- .hero-slide.year {
-    display: none!important;
+  .hero-slide p, 
+  .hero-slide .desc,
+  .hero-slide .watch-btn,
+  .hero-slide button,
+  .hero-slide h1,
+  .hero-slide .imdb,
+  .hero-slide .year {
+    display: none !important;
   }
 
   /* Slider dots */
- .hero-dots {
+  .hero-dots {
     position: absolute;
     bottom: 10px;
     left: 50%;
@@ -34,7 +34,7 @@
     gap: 6px;
     z-index: 2;
   }
- .hero-dots.dot {
+  .hero-dots .dot {
     width: 8px;
     height: 8px;
     background: rgba(255,255,255,0.4);
@@ -42,14 +42,14 @@
     cursor: pointer;
     transition: 0.3s;
   }
- .hero-dots.dot.active {
+  .hero-dots .dot.active {
     background: #ff2d95;
     width: 20px;
     border-radius: 10px;
   }
-
+  
   /* Search Bar - Red button නැත */
- .search-box {
+  .search-box {
     position: absolute;
     top: 60px;
     left: 0;
@@ -61,12 +61,12 @@
     border-bottom: 1px solid #222;
     box-sizing: border-box;
   }
- .search-box.active {
+  .search-box.active {
     display: flex;
     align-items: center;
     gap: 8px;
   }
- .search-box input {
+  .search-box input {
     flex: 1;
     height: 45px;
     background: #1a1a1a;
@@ -77,7 +77,7 @@
     font-size: 16px;
     outline: none;
   }
- .search-box input::placeholder {
+  .search-box input::placeholder {
     color: #666;
   }
   #closeSearch {
@@ -91,7 +91,7 @@
   }
 
   /* Home Search Results Dropdown */
- .home-search-results {
+  .home-search-results {
     position: absolute;
     top: 120px;
     left: 0;
@@ -103,10 +103,10 @@
     z-index: 998;
     border-bottom: 1px solid #222;
   }
- .home-search-results.active {
+  .home-search-results.active {
     display: block;
   }
- .home-result-item {
+  .home-result-item {
     display: flex;
     gap: 12px;
     padding: 12px 15px;
@@ -114,21 +114,21 @@
     cursor: pointer;
     transition: background 0.2s;
   }
- .home-result-item:hover {
+  .home-result-item:hover {
     background: #1a1a1a;
   }
- .home-result-poster {
+  .home-result-poster {
     width: 50px;
     height: 75px;
     border-radius: 4px;
     object-fit: cover;
     flex-shrink: 0;
   }
- .home-result-info {
+  .home-result-info {
     flex: 1;
     overflow: hidden;
   }
- .home-result-title {
+  .home-result-title {
     font-size: 15px;
     font-weight: 600;
     color: #fff;
@@ -137,17 +137,17 @@
     overflow: hidden;
     text-overflow: ellipsis;
   }
- .home-result-meta {
+  .home-result-meta {
     font-size: 13px;
     color: #aaa;
   }
- .home-result-type {
+  .home-result-type {
     font-size: 11px;
     color: #ff2d95;
     margin-top: 2px;
     font-weight: 600;
   }
- .home-no-result {
+  .home-no-result {
     text-align: center;
     color: #666;
     padding: 30px 20px;
@@ -163,7 +163,7 @@
       <i class="fa fa-search" id="searchBtn"></i>
       <i class="fa fa-bars" id="menuBtn"></i>
     </div>
-
+    
     <!-- Search Bar - ID දැම්මා -->
     <div class="search-box" id="searchBox">
       <input type="text" id="searchInput" placeholder="Search movies & TV shows...">
@@ -193,7 +193,7 @@
     <div id="heroSlides"></div>
     <div class="hero-dots" id="heroDots"></div>
   </section>
-
+  
   <!-- Daily Trending -->
   <section class="trending">
     <div class="section-header">
@@ -205,7 +205,7 @@
     </div>
     <div class="movie-grid" id="trendingMovies"></div>
   </section>
-
+  
   <!-- Latest Uploads -->
   <section class="trending">
     <div class="section-header">
@@ -230,10 +230,13 @@
     <div class="movie-grid" id="tvShowsMovies"></div>
   </section>
 
-  <!-- Firebase + All JS -->
+  <!-- Firebase + Site JS -->
+  <script type="module" src="script.js"></script>
+  
+  <!-- Menu + Search JS - Firebase search add කළා -->
   <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-  import { getFirestore, collection, getDocs, query, where, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+  import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyCx0TEmgr3GCyvfeok9Y42yR1PTM4_8y9M",
@@ -247,99 +250,13 @@
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
   let allContent = [];
-  let currentSlide = 0;
-  let slideInterval;
 
-  // ===== HERO SLIDER LOAD =====
-  async function loadHeroSlides() {
-    const heroSlides = document.getElementById('heroSlides');
-    const heroDots = document.getElementById('heroDots');
-
-    if(!heroSlides) return;
-
-    try {
-      // type: 'hero' විතරක් ගන්නවා + අලුත්ම එක පලවෙනිට
-      const q = query(collection(db, "movies"), where("type", "==", "hero"), orderBy("createdAt", "desc"));
-      const snapshot = await getDocs(q);
-
-      heroSlides.innerHTML = '';
-      heroDots.innerHTML = '';
-
-      if(snapshot.empty) {
-        heroSlides.innerHTML = '<div style="color:#666;text-align:center;padding:50px;">Hero slides නැත - Admin එකෙන් add කරපන්</div>';
-        return;
-      }
-
-      let html = '';
-      let dotsHTML = '';
-      let index = 0;
-
-      snapshot.forEach(doc => {
-        const h = doc.data();
-
-        html += `
-          <div class="hero-slide ${index === 0? 'active' : ''}"
-               style="background-image: url(${h.banner})">
-            <div class="hero-content">
-              <h1>${h.title || ''}</h1>
-              <div class="hero-meta">
-                <span class="imdb">★ ${h.imdbRating || 'N/A'}</span>
-                <span>${h.year || ''}</span>
-              </div>
-              <p class="desc">${h.description || ''}</p>
-              <a href="#" class="watch-btn">Watch Now</a>
-            </div>
-          </div>
-        `;
-
-        dotsHTML += `<span class="dot ${index === 0? 'active' : ''}" onclick="goToSlide(${index})"></span>`;
-        index++;
-      });
-
-      heroSlides.innerHTML = html;
-      heroDots.innerHTML = dotsHTML;
-
-      // Auto slide start
-      startAutoSlide();
-
-    } catch(err) {
-      console.error("Hero Load Error:", err);
-      heroSlides.innerHTML = '<div style="color:red;text-align:center;padding:50px;">Hero load වෙන්නේ නෑ</div>';
-    }
-  }
-
-  // Auto slide function
-  function startAutoSlide() {
-    clearInterval(slideInterval);
-    slideInterval = setInterval(() => {
-      const slides = document.querySelectorAll('.hero-slide');
-      if(slides.length > 0) {
-        currentSlide = (currentSlide + 1) % slides.length;
-        goToSlide(currentSlide);
-      }
-    }, 5000);
-  }
-
-  // Dots click function
-  window.goToSlide = function(n) {
-    const slides = document.querySelectorAll('.hero-slide');
-    const dots = document.querySelectorAll('.dot');
-    slides.forEach(s => s.classList.remove('active'));
-    dots.forEach(d => d.classList.remove('active'));
-    if(slides[n]) {
-      slides[n].classList.add('active');
-      dots[n].classList.add('active');
-      currentSlide = n;
-    }
-    startAutoSlide(); // reset timer
-  }
-
-  // Movies + Series දෙකම load කරනවා - Search වලට
+  // Movies + Series දෙකම load කරනවා
   async function loadAllContent() {
     try {
       const snapshot = await getDocs(collection(db, "movies"));
       allContent = [];
-
+      
       snapshot.forEach(doc => {
         const m = doc.data();
         m.id = doc.id;
@@ -347,18 +264,14 @@
           allContent.push(m);
         }
       });
-
+      
       console.log("✅ Loaded for search:", allContent.length, "items");
     } catch(err) {
       console.error("❌ Firebase Error:", err);
     }
   }
 
-  // Page load වෙද්දී hero + movies load
-  window.onload = function() {
-    loadHeroSlides();
-    loadAllContent();
-  }
+  loadAllContent();
 
   const menuBtn = document.getElementById('menuBtn');
   const sidebar = document.getElementById('sidebar');
@@ -423,12 +336,12 @@
     homeSearchResults.innerHTML = filtered.slice(0, 12).map(m => {
       const poster = m.poster || 'https://via.placeholder.com/50x75/222/fff';
       const year = m.year || 'N/A';
-
+      
       let type = "Movie";
-      if(m.category == "series" || m.category == "tvshows" || m.category == "alltvshows") {
+      if(m.category == "series" || m.category == "tvshows" || m.type == "series") {
         type = "TV Show";
       }
-
+      
       let title = m.title;
       if(title.length > 35) title = title.substring(0, 35) + '...';
 
