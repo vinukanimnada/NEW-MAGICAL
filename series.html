@@ -3,155 +3,190 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Series - Magical Movie Land</title>
-  <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  
+  <title>TV Shows - MAGICAL MOVIE LAND</title>
+  <link rel="stylesheet" href="style.css?v=19">
   <style>
-  /* Header */ 
-  header {
-    background: #111;
-    padding: 12px 15px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: sticky;
-    top: 0;
-    z-index: 999;
+  body {
+    background: #000;
+    color: #fff;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 15px;
   }
-
-  .logo{
-    font-size: 22px;
+  
+  h1 {
+    font-size: 20px;
+    margin-bottom: 15px;
+    padding-left: 12px;
+    border-left: 4px solid #ff2d95;
+  }
+  
+  .movie-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+  
+  @media(max-width: 768px) {
+    .movie-grid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+  }
+  
+  .movie-card {
+    position: relative;
+    border-radius: 6px;
+    overflow: hidden;
+    background: #111;
+    cursor: pointer;
+  }
+  
+  .movie-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    display: block;
+  }
+  
+  .season-badge {
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    background: #ff2d95;
+    color: #fff;
+    font-size: 10px;
     font-weight: 700;
+    padding: 3px 6px;
+    border-radius: 4px;
+    z-index: 2;
     white-space: nowrap;
   }
-
-  .logo span{
-    color: #ff2d95;
+  .season-badge.green {
+    background: #22c55e;
   }
-
-  .header-right i{
-    font-size: 20px;
-    margin-left: 20px;
-    cursor: pointer;
-  }
-
-  /* Search Bar Design - මේක විතරක් තියපන් */
-  .search-box {
+  
+  .rating-badge {
     position: absolute;
-    top: 60px;
-    left: 0;
-    width: 100%;
-    background: #0a0a0a;
-    padding: 12px 15px;
-    display: none;
-    z-index: 999;
-    border-bottom: 1px solid #222;
-    box-sizing: border-box;
+    top: 6px;
+    right: 6px;
+    background: #fbbf24;
+    color: #000;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 3px 6px;
+    border-radius: 4px;
+    z-index: 2;
   }
-  .search-box.active {
+  
+  .movie-title {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 100%);
+    padding: 25px 6px 6px 6px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #fff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .play-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
+    background: rgba(0,0,0,0.7);
+    border-radius: 50%;
     display: flex;
     align-items: center;
-  }
-  .search-box input {
-    flex: 1;
-    height: 45px;
-    background: #1a1a1a;
-    border: none;
-    border-radius: 25px;
-    padding: 0 45px 0 20px;
-    color: white;
-    font-size: 16px;
-    outline: none;
-  }
-  .search-box input::placeholder {
-    color: #666;
-  }
-  #closeSearch {
-    position: absolute;
-    right: 30px;
-    font-size: 20px;
-    color: #888;
-    cursor: pointer;
-  }
-  #closeSearch:hover {
-    color: #ff2d95;
+    justify-content: center;
+    font-size: 18px;
+    color: #fff;
   }
   </style>
 </head>
-<body style="margin:0; background:#000;">
+<body>
+  <h1>TV Shows</h1>
+  <div class="movie-grid" id="tvShowsGrid"></div>
 
-  <!-- Header -->
-  <header>
-    <div class="logo">𝗠𝗔𝗚𝗜𝗖𝗔𝗟 <span>𝗠🍩𝗩𝗜𝗘 𝗟🌲𝗡𝗗</span></div> 
-    <div class="header-right">
-      <i class="fa fa-search" id="searchBtn"></i>
-      <i class="fa fa-bars" id="menuBtn"></i>
-    </div>
+  <script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getFirestore, collection, getDocs, orderBy, query } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCx0TEmgr3GCyvfeok9Y42yR1PTM4_8y9M",
+    authDomain: "magical-movie-land.firebaseapp.com",
+    projectId: "magical-movie-land",
+    storageBucket: "magical-movie-land.firebasestorage.app",
+    messagingSenderId: "27757424288",
+    appId: "1:27757424288:web:d650e2659f09f0b9c823c5"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  async function loadTVShows() {
+    const grid = document.getElementById('tvShowsGrid');
     
-    <!-- Search Bar -->
-    <div class="search-box" id="searchBox">
-      <input type="text" placeholder="Search cartoons or movies...">
-      <i class="fa fa-times" id="closeSearch"></i>
-    </div>
-  </header>
-
-  <!-- Sidebar Menu - CSS එක style.css එකෙන් -->
-  <div class="sidebar" id="sidebar">
-    <span class="close-btn" id="closeSidebar">×</span>
-    <ul>
-      <li><a href="index.html"><i class="fa fa-home"></i> Home</a></li>
-      <li><a href="movies.html"><i class="fa fa-film"></i> All Movies</a></li>
-      <li class="active"><a href="series.html"><i class="fa fa-tv"></i> TV Shows</a></li>
-      <li><a href="chanels.html"><i class="fa-solid fa-users"></i> Join Channels</a></li>
-      <li><a href="about.html"><i class="fa fa-info-circle"></i> About Us</a></li>
-      <li><a href="contact.html"><i class="fa fa-envelope"></i> Contact Us</a></li>
-    </ul>
-  </div>
-  <div class="overlay" id="overlay"></div>
-  
-  <!-- Page Content -->
-  <section style="padding: 50px 20px; text-align: center;">
-    <h1 style="font-size: 32px; margin-bottom: 20px; color: white;">Series</h1>
-    <p style="color: #aaa; font-size: 16px;">මෙතනට ඔයාගේ Series ලිස්ට් එක දාන්න</p>
-    <br><br>
-    <a href="index.html" style="display: inline-block; padding: 12px 25px; background: #e50914; color: #fff; text-decoration: none; border-radius: 4px; font-weight: bold;">← Back to Home</a>
-  </section>
-
-  <!-- Menu + Search JS - එක පාරක් විතරක් -->
-  <script>
-  const menuBtn = document.getElementById('menuBtn');
-  const sidebar = document.getElementById('sidebar');
-  const closeSidebar = document.getElementById('closeSidebar');
-  const overlay = document.getElementById('overlay');
-  const searchBtn = document.getElementById('searchBtn');
-  const searchBox = document.getElementById('searchBox');
-  const closeSearch = document.getElementById('closeSearch');
-
-  menuBtn?.addEventListener('click', () => {
-    sidebar.classList.add('active');
-    overlay.classList.add('active');
-  });
-
-  closeSidebar?.addEventListener('click', () => {
-    sidebar.classList.remove('active');
-    overlay.classList.remove('active');
-  });
-
-  overlay?.addEventListener('click', () => {
-    sidebar.classList.remove('active');
-    overlay.classList.remove('active');
-  });
-
-  searchBtn?.addEventListener('click', () => {
-    searchBox.classList.toggle('active');
-    if(searchBox.classList.contains('active')) {
-      searchBox.querySelector('input').focus();
+    try {
+      // FIX: where("in") අයින් කරලා timestamp විතරක් order කළා
+      const q = query(
+        collection(db, "movies"), 
+        orderBy("createdAt", "desc")  // createdAt use කරපන්, timestamp නෙවෙයි
+      );
+      const snapshot = await getDocs(q);
+      
+      if(snapshot.empty) {
+        grid.innerHTML = '<p style="text-align:center;color:#666;">TV Shows නැත</p>';
+        return;
+      }
+      
+      grid.innerHTML = '';
+      snapshot.forEach(doc => {
+        const m = doc.data();
+        
+        // FIX: Client side filter - tvshows or alltvshows විතරක් ගන්නවා
+        if(m.category !== 'tvshows' && m.category !== 'alltvshows') return;
+        
+        const poster = m.poster || 'https://via.placeholder.com/300x400/222/fff';
+        const title = m.title || 'No Title';
+        const year = m.year || '';
+        const season = m.season || '';
+        const rating = m.rating || '';
+        
+        let displayTitle = title;
+        if(year) displayTitle += ` (${year})`;
+        if(displayTitle.length > 25) displayTitle = displayTitle.substring(0, 25) + '...';
+        
+        let badgeClass = '';
+        if(season && season.includes('EP')) badgeClass = 'green';
+        
+        grid.innerHTML += `
+          <div class="movie-card" onclick="window.location.href='watch.html?id=${doc.id}'">
+            <img src="${poster}" loading="lazy">
+            
+            ${season ? `<div class="season-badge ${badgeClass}">${season}</div>` : ''}
+            ${rating ? `<div class="rating-badge">★ ${rating}</div>` : ''}
+            
+            <div class="movie-title">${displayTitle}</div>
+            
+            <div class="play-overlay">▶</div>
+          </div>
+        `;
+      });
+      
+    } catch(err) {
+      console.error("❌ Error:", err);
+      grid.innerHTML = '<p style="color:red;">Error: ' + err.message + '</p>';
     }
-  });
-  closeSearch?.addEventListener('click', () => {
-    searchBox.classList.remove('active');
-  });
+  }
+  
+  loadTVShows();
   </script>
 </body>
-</html>
