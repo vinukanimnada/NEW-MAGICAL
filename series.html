@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>TV Shows - MAGICAL MOVIE LAND</title>
   <link rel="stylesheet" href="style.css?v=19">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
   body {
     background: #000;
@@ -22,56 +22,63 @@
     border-left: 4px solid #ff2d95;
   }
   
+  /* UPDATED: Admin panel style grid */
   .movie-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
+    gap: 8px;
+    padding: 0;
   }
   
   @media(max-width: 768px) {
     .movie-grid {
       grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
+      gap: 6px;
     }
   }
   
+  /* UPDATED: Card style - admin panel එක වගේ */
   .movie-card {
     position: relative;
-    border-radius: 6px;
+    aspect-ratio: 2/3; /* 2:3 ratio - admin එක වගේ */
+    border-radius: 8px;
     overflow: hidden;
-    background: #111;
+    background: #1a1a1a;
     cursor: pointer;
+    transition: transform 0.2s;
+  }
+  
+  .movie-card:active {
+    transform: scale(0.97);
   }
   
   .movie-card img {
     width: 100%;
-    height: 200px;
+    height: 100%;
     object-fit: cover;
     display: block;
   }
   
-  .season-badge {
+  /* UPDATED: FHD badge - රතු */
+  .badge-quality {
     position: absolute;
-    top: 6px;
-    left: 6px;
-    background: #ff2d95;
-    color: #fff;
+    top: 5px;
+    left: 5px;
+    background: #ff0000;
+    color: white;
     font-size: 10px;
     font-weight: 700;
     padding: 3px 6px;
     border-radius: 4px;
     z-index: 2;
-    white-space: nowrap;
-  }
-  .season-badge.green {
-    background: #22c55e;
   }
   
-  .rating-badge {
+  /* UPDATED: Rating badge - කහ */
+  .badge-rating {
     position: absolute;
-    top: 6px;
-    right: 6px;
-    background: #fbbf24;
+    top: 5px;
+    right: 5px;
+    background: #ffcc00;
     color: #000;
     font-size: 10px;
     font-weight: 700;
@@ -80,16 +87,46 @@
     z-index: 2;
   }
   
-  .movie-title {
+  /* Season badge - TV Shows වලට */
+  .season-badge {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    background: #ff2d95;
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 3px 6px;
+    border-radius: 4px;
+    z-index: 2;
+    white-space: nowrap;
+    max-width: 70%;
+  }
+  .season-badge.green {
+    background: #22c55e;
+  }
+  
+  /* Quality badge එකත් එක්ක season එක overlap වෙන්නේ නෑ */
+  .has-quality .season-badge {
+    top: 25px;
+  }
+  
+  /* UPDATED: Bottom gradient + title */
+  .movie-info-bottom {
     position: absolute;
     bottom: 0;
     left: 0;
     right: 0;
+    padding: 30px 6px 6px 6px;
     background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 100%);
-    padding: 25px 6px 6px 6px;
+    z-index: 2;
+  }
+  
+  .movie-title {
     font-size: 12px;
     font-weight: 600;
     color: #fff;
+    margin: 0;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -102,13 +139,32 @@
     transform: translate(-50%, -50%);
     width: 40px;
     height: 40px;
-    background: rgba(0,0,0,0.7);
+    background: rgba(0,0,0,0.6);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 18px;
+    font-size: 16px;
     color: #fff;
+    opacity: 0;
+    transition: opacity 0.2s;
+    z-index: 3;
+  }
+  
+  .movie-card:active .play-overlay {
+    opacity: 1;
+  }
+  
+  /* Image load වෙනකන් placeholder */
+  .img-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+    color: #333;
+    background: #1a1a1a;
   }
   </style>
 </head>
@@ -121,23 +177,20 @@
       <i class="fa fa-bars" id="menuBtn"></i>
     </div>
     
-    <!-- Search Bar - ID දැම්මා -->
     <div class="search-box" id="searchBox">
       <input type="text" id="searchInput" placeholder="Search movies & TV shows...">
       <i class="fa fa-times" id="closeSearch"></i>
     </div>
   </header>
 
-  <!-- Home Search Results Dropdown -->
   <div class="home-search-results" id="homeSearchResults"></div>
 
-  <!-- Sidebar Menu -->
   <div class="sidebar" id="sidebar">
     <span class="close-btn" id="closeSidebar">×</span>
     <ul>
-      <li class="active"><a href="index.html"><i class="fa fa-home"></i> Home</a></li>
+      <li><a href="index.html"><i class="fa fa-home"></i> Home</a></li>
       <li><a href="movies.html"><i class="fa fa-film"></i> All Movies</a></li>
-      <li><a href="series.html"><i class="fa fa-tv"></i> TV Shows</a></li>
+      <li class="active"><a href="series.html"><i class="fa fa-tv"></i> TV Shows</a></li>
       <li><a href="chanels.html"><i class="fa-solid fa-users"></i> Join Channels</a></li>
       <li><a href="about.html"><i class="fa fa-info-circle"></i> About</a></li>
       <li><a href="contact.html"><i class="fa fa-envelope"></i> Contact Us</a></li>
@@ -168,11 +221,7 @@
     const grid = document.getElementById('tvShowsGrid');
     
     try {
-      // FIX: where("in") අයින් කරලා timestamp විතරක් order කළා
-      const q = query(
-        collection(db, "movies"), 
-        orderBy("createdAt", "desc")  // createdAt use කරපන්, timestamp නෙවෙයි
-      );
+      const q = query(collection(db, "movies"), orderBy("createdAt", "desc"));
       const snapshot = await getDocs(q);
       
       if(snapshot.empty) {
@@ -180,39 +229,51 @@
         return;
       }
       
-      grid.innerHTML = '';
+      let html = '';
       snapshot.forEach(doc => {
         const m = doc.data();
         
-        // FIX: Client side filter - tvshows or alltvshows විතරක් ගන්නවා
+        // tvshows or alltvshows විතරක්
         if(m.category !== 'tvshows' && m.category !== 'alltvshows') return;
         
-        const poster = m.poster || 'https://via.placeholder.com/300x400/222/fff';
-        const title = m.title || 'No Title';
+        const poster = m.poster || '';
+        const title = m.title || 'Untitled';
         const year = m.year || '';
         const season = m.season || '';
-        const rating = m.rating || '';
+        const rating = m.rating || '0.0';
+        const quality = m.quality || 'FHD';
         
         let displayTitle = title;
         if(year) displayTitle += ` (${year})`;
-        if(displayTitle.length > 25) displayTitle = displayTitle.substring(0, 25) + '...';
         
         let badgeClass = '';
         if(season && season.includes('EP')) badgeClass = 'green';
         
-        grid.innerHTML += `
-          <div class="movie-card" onclick="window.location.href='watch.html?id=${doc.id}'">
-            <img src="${poster}" loading="lazy">
+        const hasQuality = quality ? 'has-quality' : '';
+        
+        html += `
+          <div class="movie-card ${hasQuality}" onclick="window.location.href='watch.html?id=${doc.id}'">
+            ${quality ? `<span class="badge-quality">${quality}</span>` : ''}
             
             ${season ? `<div class="season-badge ${badgeClass}">${season}</div>` : ''}
-            ${rating ? `<div class="rating-badge">★ ${rating}</div>` : ''}
             
-            <div class="movie-title">${displayTitle}</div>
+            ${rating ? `<span class="badge-rating">★ ${rating}</span>` : ''}
+            
+            ${poster ? 
+              `<img src="${poster}" loading="lazy" onerror="this.outerHTML='<div class=img-placeholder>?</div>'">` 
+              : `<div class="img-placeholder">?</div>`
+            }
+            
+            <div class="movie-info-bottom">
+              <p class="movie-title">${displayTitle}</p>
+            </div>
             
             <div class="play-overlay">▶</div>
           </div>
         `;
       });
+      
+      grid.innerHTML = html;
       
     } catch(err) {
       console.error("❌ Error:", err);
@@ -222,4 +283,6 @@
   
   loadTVShows();
   </script>
+
 </body>
+</html>
