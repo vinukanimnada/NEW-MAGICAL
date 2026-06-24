@@ -613,3 +613,163 @@ a {
       background: #ff2d95;
       transform: translateY(-3px);
     }
+    
+    /* ===== THEME CLASSES - Light Mode ===== */
+html.light {
+  background: #f5f5f5;
+  color: #111;
+}
+
+html.light body {
+  background: #f5f5f5;
+  color: #111;
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+}
+
+/* Header */
+html.light header {
+  background: #fff;
+  border-bottom: 1px solid #ddd;
+}
+
+html.light .logo {
+  color: #111;
+}
+
+html.light .logo span {
+  color: #ff2d95;
+}
+
+html.light .header-right i {
+  color: #111;
+}
+
+/* Search Box */
+html.light .search-box {
+  background: #f0f0f0;
+}
+
+html.light .search-box input {
+  background: #fff;
+  color: #111;
+  border: 1px solid #ccc;
+}
+
+/* Sidebar */
+html.light .sidebar {
+  background: #fff !important;
+}
+
+html.light .sidebar li {
+  border-color: #eee !important;
+}
+
+html.light .sidebar li:first-child {
+  border-color: #eee !important;
+}
+
+html.light .sidebar li a {
+  color: #111 !important;
+}
+
+html.light .sidebar li a:hover {
+  background: #f5f5f5 !important;
+}
+
+html.light .sidebar li.active a {
+  background: #ff2d95 !important;
+  color: #fff !important;
+  box-shadow: 0 0 0 100vmax #ff2d95 !important;
+}
+
+html.light .close-btn {
+  color: #111 !important;
+}
+
+html.light .close-btn:hover {
+  color: #ff2d95 !important;
+}
+
+/* Movie Cards */
+html.light .movie-card {
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+html.light .card-info {
+  background: linear-gradient(to top, rgba(255,255,255,0.95), transparent);
+}
+
+html.light .card-info h3 {
+  color: #111;
+}
+
+html.light .card-info p {
+  color: #666;
+}
+
+/* Section Header */
+html.light .section-header h2 {
+  color: #111;
+}
+
+html.light .view-all {
+  background: #ff2d95;
+}
+
+/* Description Section */
+html.light .description-section {
+  border-top: 1px solid #ddd;
+}
+
+html.light .desc-text {
+  color: #333;
+}
+
+/* Footer */
+html.light .footer {
+  background: #fff;
+  border-top: 1px solid #ddd;
+}
+
+html.light .footer-logo {
+  color: #111;
+}
+
+html.light .footer-text {
+  color: #555;
+}
+
+html.light .social-icons a {
+  background: #e0e0e0;
+  color: #111;
+}
+
+html.light .social-icons a:hover {
+  background: #ff2d95;
+  color: #fff;
+}
+
+/* Hero */
+html.light .hero-content h1 {
+  text-shadow: 1px 1px 3px rgba(255,255,255,0.8);
+}
+
+/* Form inputs for request/settings pages */
+html.light .request-box,
+html.light .setting-box {
+  background: #fff;
+  border: 1px solid #ddd;
+}
+
+html.light .form-group label {
+  color: #333;
+}
+
+html.light .form-group input,
+html.light .form-group select,
+html.light .form-group textarea {
+  background: #f9f9f9;
+  color: #111;
+  border: 1px solid #ccc;
+}
