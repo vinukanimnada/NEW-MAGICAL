@@ -247,14 +247,14 @@
     
     <form id="requestForm">
       <div class="form-group">
-        <label>Your Name *</label>
+        <label>Your Name</label>
         <input type="text" id="name" placeholder="Ex: Jhon" required>
       </div>
       
       <div class="form-group">
-        <label>Type එක *</label>
+        <label>Type</label>
         <select id="type" required>
-          <option value="">Select Item</option>
+          <option value="">Select Type</option>
           <option value="movie">Movie</option>
           <option value="tvshow">TV Series</option>
           <option value="anime">Anime</option>
@@ -262,7 +262,7 @@
       </div>
       
       <div class="form-group">
-        <label>Movie/Series නම *</label>
+        <label>Movie/Series Name</label>
         <input type="text" id="title" placeholder="Ex: Widow's Bay S01" required>
       </div>
       
@@ -348,7 +348,7 @@
     }
     
     submitBtn.disabled = false;
-    submitBtn.innerHTML = '<i class="fa fa-paper-plane"></i> Request Submit කරන්න';
+    submitBtn.innerHTML = '<i class="fa fa-paper-plane"></i> Request Submit';
   });
   </script>
 
