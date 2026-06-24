@@ -13,6 +13,7 @@
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
+    transition: background 0.3s, color 0.3s;
   }
   
   header {
@@ -42,7 +43,7 @@
     cursor: pointer;
   }
 
-  /* Sidebar CSS - උඩ දීපු එකම */
+  /* Sidebar CSS */
   .sidebar {
     position: fixed;
     top: 0;
@@ -128,7 +129,23 @@
     color: #ff2d95;
   }
 
-  /* Toggle switch */
+  /* Select box */
+  select {
+    background:#1a1a1a;
+    border:1px solid #333;
+    border-radius:6px;
+    color:#fff;
+    padding:8px 12px;
+    font-size:13px;
+    cursor:pointer;
+    min-width:100px;
+  }
+  select:focus {
+    outline: none;
+    border-color: #ff2d95;
+  }
+
+  /* Toggle switch for notifications */
   .switch {
     position: relative;
     display: inline-block;
@@ -220,15 +237,17 @@
   
   <div class="container">
     <div class="setting-box">
+      <!-- Theme Select Box - Toggle එක අයින් කරා -->
       <div class="setting-item">
         <div>
-          <div class="setting-label"><i class="fa fa-moon"></i> Dark Mode</div>
-          <div class="info-text">Always dark theme</div>
+          <div class="setting-label"><i class="fa fa-palette"></i> Theme</div>
+          <div class="info-text">App theme select කරගනින්</div>
         </div>
-        <label class="switch">
-          <input type="checkbox" checked disabled>
-          <span class="slider"></span>
-        </label>
+        <select id="themeSelect">
+          <option value="dark">Dark</option>
+          <option value="light">Light</option>
+          <option value="auto">Auto</option>
+        </select>
       </div>
 
       <div class="setting-item">
@@ -296,6 +315,40 @@
   notifToggle.checked = localStorage.getItem('notifications') === 'true';
   notifToggle.addEventListener('change', () => {
     localStorage.setItem('notifications', notifToggle.checked);
+  });
+
+  // Theme select save/load
+  const themeSelect = document.getElementById('themeSelect');
+  themeSelect.value = localStorage.getItem('theme') || 'dark';
+
+  function applyTheme(theme){
+    if(theme === 'light'){
+      document.body.style.background = '#f5f5f5';
+      document.body.style.color = '#111';
+    } else if(theme === 'dark'){
+      document.body.style.background = '#0a0a0a';
+      document.body.style.color = '#fff';
+    } else {
+      // Auto - system theme එක follow කරනවා
+      if(window.matchMedia('(prefers-color-scheme: dark)').matches){
+        document.body.style.background = '#0a0a0a';
+        document.body.style.color = '#fff';
+      } else {
+        document.body.style.background = '#f5f5f5';
+        document.body.style.color = '#111';
+      }
+    }
+  }
+
+  themeSelect.addEventListener('change', () => {
+    const theme = themeSelect.value;
+    localStorage.setItem('theme', theme);
+    applyTheme(theme);
+  });
+
+  // Page load වෙද්දී theme apply කරනවා
+  window.addEventListener('DOMContentLoaded', () => {
+    applyTheme(themeSelect.value);
   });
   </script>
 
