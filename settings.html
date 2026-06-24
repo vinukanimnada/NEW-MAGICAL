@@ -4,12 +4,19 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Settings - MAGICAL MOVIE LAND</title>
-  <link rel="stylesheet" href="style.css?v=19">
+  
+  <!-- Theme load script - CSS එකට කලින්ම දාන්න ඕන -->
+  <script>
+  (function(){
+    const theme = localStorage.getItem('theme') || 'dark';
+    document.documentElement.className = theme;
+  })();
+  </script>
+  
+  <link rel="stylesheet" href="style.css?v=20">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
   body {
-    background: #0a0a0a;
-    color: #fff;
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
@@ -17,7 +24,6 @@
   }
   
   header {
-    background: #111;
     padding: 12px 15px;
     display: flex;
     justify-content: space-between;
@@ -25,7 +31,7 @@
     position: sticky;
     top: 0;
     z-index: 999;
-    border-bottom: 1px solid #222;
+    border-bottom: 1px solid;
   }
 
   .logo{
@@ -50,7 +56,6 @@
     right: -300px;
     width: 280px;
     height: 100%;
-    background: #1a1a1a;
     transition: right 0.3s ease;
     z-index: 1001;
     padding-top: 60px;
@@ -60,9 +65,8 @@
   .sidebar ul li a {
     display: block;
     padding: 15px 20px;
-    color: white;
     text-decoration: none;
-    border-bottom: 1px solid #333;
+    border-bottom: 1px solid;
   }
   .sidebar ul li.active a {
     background: #ff2d95;
@@ -84,7 +88,6 @@
     top: 15px;
     right: 20px;
     font-size: 30px;
-    color: white;
     cursor: pointer;
     z-index: 1002;
   }
@@ -103,7 +106,6 @@
   }
 
   .setting-box {
-    background: #111;
     border-radius: 10px;
     padding: 20px;
     margin-bottom: 15px;
@@ -114,7 +116,7 @@
     justify-content: space-between;
     align-items: center;
     padding: 15px 0;
-    border-bottom: 1px solid #222;
+    border-bottom: 1px solid;
   }
   .setting-item:last-child {
     border-bottom: none;
@@ -122,7 +124,6 @@
 
   .setting-label {
     font-size: 14px;
-    color: #ccc;
   }
   .setting-label i {
     margin-right: 8px;
@@ -131,21 +132,21 @@
 
   /* Select box */
   select {
-    background:#1a1a1a;
-    border:1px solid #333;
+    border:1px solid;
     border-radius:6px;
-    color:#fff;
     padding:8px 12px;
     font-size:13px;
     cursor:pointer;
     min-width:100px;
+    background: inherit;
+    color: inherit;
   }
   select:focus {
     outline: none;
     border-color: #ff2d95;
   }
 
-  /* Toggle switch for notifications */
+  /* Toggle switch */
   .switch {
     position: relative;
     display: inline-block;
@@ -204,8 +205,8 @@
 
   .info-text {
     font-size: 12px;
-    color: #666;
     margin-top: 5px;
+    opacity: 0.6;
   }
   </style>
 </head>
@@ -237,7 +238,7 @@
   
   <div class="container">
     <div class="setting-box">
-      <!-- Theme Select Box - Toggle එක අයින් කරා -->
+      <!-- Theme Select Box -->
       <div class="setting-item">
         <div>
           <div class="setting-label"><i class="fa fa-palette"></i> Theme</div>
@@ -300,7 +301,7 @@
     overlay.classList.remove('active');
   });
 
-  // Clear cache function
+  // Clear cache
   function clearCache(){
     if(confirm('Cache clear කරන්නද?')){
       localStorage.clear();
@@ -310,34 +311,19 @@
     }
   }
 
-  // Notification toggle save
+  // Notification toggle
   const notifToggle = document.getElementById('notifToggle');
   notifToggle.checked = localStorage.getItem('notifications') === 'true';
   notifToggle.addEventListener('change', () => {
     localStorage.setItem('notifications', notifToggle.checked);
   });
 
-  // Theme select save/load
+  // Theme select - class දානවා විතරයි
   const themeSelect = document.getElementById('themeSelect');
   themeSelect.value = localStorage.getItem('theme') || 'dark';
 
   function applyTheme(theme){
-    if(theme === 'light'){
-      document.body.style.background = '#f5f5f5';
-      document.body.style.color = '#111';
-    } else if(theme === 'dark'){
-      document.body.style.background = '#0a0a0a';
-      document.body.style.color = '#fff';
-    } else {
-      // Auto - system theme එක follow කරනවා
-      if(window.matchMedia('(prefers-color-scheme: dark)').matches){
-        document.body.style.background = '#0a0a0a';
-        document.body.style.color = '#fff';
-      } else {
-        document.body.style.background = '#f5f5f5';
-        document.body.style.color = '#111';
-      }
-    }
+    document.documentElement.className = theme;
   }
 
   themeSelect.addEventListener('change', () => {
@@ -346,7 +332,6 @@
     applyTheme(theme);
   });
 
-  // Page load වෙද්දී theme apply කරනවා
   window.addEventListener('DOMContentLoaded', () => {
     applyTheme(themeSelect.value);
   });
