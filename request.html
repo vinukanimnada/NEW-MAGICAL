@@ -12,17 +12,17 @@
     color: #fff;
     font-family: Arial, sans-serif;
     margin: 0;
-    padding: 15px;
+    padding: 0;
   }
   
   h1 {
     font-size: 20px;
-    margin-bottom: 20px;
+    margin: 20px 15px;
     padding-left: 12px;
     border-left: 4px solid #ff2d95;
   }
   
-  /* Header */ 
+  /* Header - Search icon අයින් කරා */
   header {
     background: #111;
     padding: 12px 15px;
@@ -32,6 +32,7 @@
     position: sticky;
     top: 0;
     z-index: 999;
+    border-bottom: 1px solid #222;
   }
 
   .logo{
@@ -46,7 +47,6 @@
 
   .header-right i{
     font-size: 20px;
-    margin-left: 20px;
     cursor: pointer;
   }
 
@@ -109,6 +109,9 @@
   }
   
   /* Request form box */
+  .container {
+    padding: 15px;
+  }
   .request-box {
     background: #111;
     border-radius: 10px;
@@ -215,7 +218,7 @@
   <header>
     <div class="logo">𝗠𝗔𝗚𝗜𝗖𝗔𝗟 <span>𝗠🍩𝗩𝗜𝗘 𝗟🌲𝗡𝗗</span></div>
     <div class="header-right">
-      <i class="fa fa-search" id="searchBtn"></i>
+      <!-- Search icon එක අයින් කරා - Menu icon විතරයි -->
       <i class="fa fa-bars" id="menuBtn"></i>
     </div>
   </header>
@@ -233,63 +236,65 @@
     </ul>
   </div>
   <div class="overlay" id="overlay"></div>
-  <br><br>
+
   <h1>🎬 Movie/Series Request</h1>
   
-  <div class="request-box">
-    <div class="alert success" id="successMsg">
-      <i class="fa fa-check-circle"></i> Request submitted! Will add soon 💪
+  <div class="container">
+    <div class="request-box">
+      <div class="alert success" id="successMsg">
+        <i class="fa fa-check-circle"></i> Request submitted! Will add soon 💪
+      </div>
+      
+      <div class="alert error" id="errorMsg">
+        <i class="fa fa-exclamation-circle"></i> <span id="errorText">Error!</span>
+      </div>
+      
+      <form id="requestForm">
+        <div class="form-group">
+          <label>Your Name</label>
+          <input type="text" id="name" placeholder="Ex: Jhon" required>
+        </div>
+        
+        <div class="form-group">
+          <label>Type</label>
+          <select id="type" required>
+            <option value="">Select Type</option>
+            <option value="movie">Movie</option>
+            <option value="tvshow">TV Series</option>
+            <option value="anime">Anime</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label>Movie/Series Name</label>
+          <input type="text" id="title" placeholder="Ex: Widow's Bay S01" required>
+        </div>
+        
+        <div class="form-group">
+          <label>Year</label>
+          <input type="number" id="year" placeholder="Ex: 2024" min="1900" max="2030">
+        </div>
+        
+        <div class="form-group">
+          <label>IMDB / TMDB Link </label>
+          <input type="url" id="link" placeholder="https://www.imdb.com/title/tt...">
+        </div>
+        
+        <div class="form-group">
+          <label>Note</label>
+          <textarea id="note" placeholder="Ex: Sinhala subtitles or dubbed, 1080p"></textarea>
+        </div>
+        
+        <button type="submit" class="btn-submit" id="submitBtn">
+          <i class="fa fa-paper-plane"></i> Request Submit කරන්න
+        </button>
+      </form>
+      
+      <p class="info-text">
+        ⚡ The request will go to the admin. Once added, it will be displayed on the site.<br>
+        Spam requests are rejected.
+      </p>
     </div>
-    
-    <div class="alert error" id="errorMsg">
-      <i class="fa fa-exclamation-circle"></i> <span id="errorText">Error!</span>
-    </div>
-    
-    <form id="requestForm">
-      <div class="form-group">
-        <label>Your Name</label>
-        <input type="text" id="name" placeholder="Ex: Jhon" required>
-      </div>
-      
-      <div class="form-group">
-        <label>Type</label>
-        <select id="type" required>
-          <option value="">Select Type</option>
-          <option value="movie">Movie</option>
-          <option value="tvshow">TV Series</option>
-          <option value="anime">Anime</option>
-        </select>
-      </div>
-      
-      <div class="form-group">
-        <label>Movie/Series Name</label>
-        <input type="text" id="title" placeholder="Ex: Widow's Bay S01" required>
-      </div>
-      
-      <div class="form-group">
-        <label>Year</label>
-        <input type="number" id="year" placeholder="Ex: 2024" min="1900" max="2030">
-      </div>
-      
-      <div class="form-group">
-        <label>IMDB / TMDB Link </label>
-        <input type="url" id="link" placeholder="https://www.imdb.com/title/tt...">
-      </div>
-      
-      <div class="form-group">
-        <label>Note</label>
-        <textarea id="note" placeholder="Ex: Sinhala subtitles or dubbed, 1080p"></textarea>
-      </div>
-      
-      <button type="submit" class="btn-submit" id="submitBtn">
-        <i class="fa fa-paper-plane"></i> Request Submit කරන්න
-      </button>
-    </form>
-    
-    <p class="info-text">
-      ⚡ The request will go to the admin. Once added, it will be displayed on the site.<br>
-      Spam requests are rejected.
-    </p>
   </div>
 
   <script type="module">
@@ -330,13 +335,12 @@
         year: document.getElementById('year').value || '',
         link: document.getElementById('link').value.trim(),
         note: document.getElementById('note').value.trim(),
-        status: 'pending', // pending, completed, rejected
+        status: 'pending',
         createdAt: serverTimestamp()
       };
       
       await addDoc(collection(db, "requests"), requestData);
       
-      // Success
       successMsg.style.display = 'block';
       form.reset();
       window.scrollTo(0, 0);
@@ -351,14 +355,10 @@
     submitBtn.innerHTML = '<i class="fa fa-paper-plane"></i> Request Submit';
   });
   
-    
   const menuBtn = document.getElementById('menuBtn');
   const sidebar = document.getElementById('sidebar');
   const closeSidebar = document.getElementById('closeSidebar');
   const overlay = document.getElementById('overlay');
-  const searchBtn = document.getElementById('searchBtn');
-  const searchBox = document.getElementById('searchBox');
-  const closeSearch = document.getElementById('closeSearch');
 
   // Menu open/close
   menuBtn?.addEventListener('click', () => {
@@ -376,17 +376,6 @@
     overlay.classList.remove('active');
   });
 
-  // Search open/close
-  searchBtn?.addEventListener('click', () => {
-    searchBox.classList.toggle('active');
-    if(searchBox.classList.contains('active')) {
-      searchBox.querySelector('input').focus();
-    }
-  });
-  closeSearch?.addEventListener('click', () => {
-    searchBox.classList.remove('active');
-  });
-  
   </script>
 
 </body>
