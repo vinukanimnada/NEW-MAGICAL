@@ -178,7 +178,7 @@ window.deleteSelected = async function(){
     return;
   }
   
-  if(!confirm(`${selected.length} request(s) permanently delete කරන්නද? මේක undo කරන්න බෑ!`)){
+  if(!confirm(`${selected.length} request(s) permanently delete ? This can't undo!`)){
     return;
   }
   
@@ -189,7 +189,7 @@ window.deleteSelected = async function(){
     for(let cb of selected){
       await deleteDoc(doc(db,"requests", cb.dataset.id));
     }
-    alert('✅ Delete කරා!');
+    alert('✅ Deleted!');
     loadRequests();
   } catch(e){
     alert('Error: ' + e.message);
