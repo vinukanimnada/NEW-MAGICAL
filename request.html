@@ -152,23 +152,23 @@
   
   <div class="request-box">
     <div class="alert success" id="successMsg">
-      <i class="fa fa-check-circle"></i> Request එක submit උනා! ඉක්මනට add කරනවා 💪
+      <i class="fa fa-check-circle"></i> Request submitted! Will add soon 💪
     </div>
     
     <div class="alert error" id="errorMsg">
-      <i class="fa fa-exclamation-circle"></i> <span id="errorText">Error එකක් ආවා</span>
+      <i class="fa fa-exclamation-circle"></i> <span id="errorText">Error!</span>
     </div>
     
     <form id="requestForm">
       <div class="form-group">
-        <label>උඹේ නම / Name *</label>
-        <input type="text" id="name" placeholder="Ex: Kasun" required>
+        <label>Your Name *</label>
+        <input type="text" id="name" placeholder="Ex: Jhon" required>
       </div>
       
       <div class="form-group">
         <label>Type එක *</label>
         <select id="type" required>
-          <option value="">Select කරපන්</option>
+          <option value="">Select Item</option>
           <option value="movie">Movie</option>
           <option value="tvshow">TV Series</option>
           <option value="anime">Anime</option>
@@ -181,18 +181,18 @@
       </div>
       
       <div class="form-group">
-        <label>Year එක</label>
+        <label>Year</label>
         <input type="number" id="year" placeholder="Ex: 2024" min="1900" max="2030">
       </div>
       
       <div class="form-group">
-        <label>IMDB / TMDB Link එක</label>
+        <label>IMDB / TMDB Link </label>
         <input type="url" id="link" placeholder="https://www.imdb.com/title/tt...">
       </div>
       
       <div class="form-group">
-        <label>Note එකක් තියෙනවනම්</label>
-        <textarea id="note" placeholder="Ex: Sinhala subs එක්ක ඕන, 1080p"></textarea>
+        <label>Note</label>
+        <textarea id="note" placeholder="Ex: Sinhala subtitles or dubbed, 1080p"></textarea>
       </div>
       
       <button type="submit" class="btn-submit" id="submitBtn">
@@ -201,8 +201,8 @@
     </form>
     
     <p class="info-text">
-      ⚡ Request එක admin ට යනවා. Add කරාම site එකේ පෙන්නවා.<br>
-      Spam requests reject වෙනවා.
+      ⚡ The request will go to the admin. Once added, it will be displayed on the site.<br>
+      Spam requests are rejected.
     </p>
   </div>
 
