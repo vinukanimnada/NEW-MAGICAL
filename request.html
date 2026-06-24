@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Request Movie/Series - MAGICAL MOVIE LAND</title>
+  <link rel="stylesheet" href="style.css?v=19">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+  body {
+    background: #0a0a0a;
+    color: #fff;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 15px;
+  }
+  
+  h1 {
+    font-size: 20px;
+    margin-bottom: 20px;
+    padding-left: 12px;
+    border-left: 4px solid #ff2d95;
+  }
+  
+  /* Request form box */
+  .request-box {
+    background: #111;
+    border-radius: 10px;
+    padding: 20px;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+  
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  .form-group label {
+    display: block;
+    font-size: 13px;
+    margin-bottom: 6px;
+    color: #ccc;
+    font-weight: 600;
+  }
+  
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    width: 100%;
+    padding: 12px;
+    background: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 6px;
+    color: #fff;
+    font-size: 14px;
+    font-family: Arial, sans-serif;
+    box-sizing: border-box;
+  }
+  
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
+    outline: none;
+    border-color: #ff2d95;
+  }
+  
+  .form-group textarea {
+    resize: vertical;
+    min-height: 80px;
+  }
+  
+  /* Submit button - Cinesubz style */
+  .btn-submit {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, #ff2d95 0%, #ff6b9d 100%);
+    border: none;
+    border-radius: 6px;
+    color: white;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: transform 0.2s;
+  }
+  
+  .btn-submit:active {
+    transform: scale(0.97);
+  }
+  
+  .btn-submit:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
+  /* Success/Error message */
+  .alert {
+    padding: 12px;
+    border-radius: 6px;
+    margin-bottom: 15px;
+    font-size: 13px;
+    display: none;
+  }
+  
+  .alert.success {
+    background: #1a3a1a;
+    border: 1px solid #22c55e;
+    color: #4ade80;
+  }
+  
+  .alert.error {
+    background: #3a1a1a;
+    border: 1px solid #dc2626;
+    color: #f87171;
+  }
+  
+  /* Info text */
+  .info-text {
+    font-size: 12px;
+    color: #888;
+    text-align: center;
+    margin-top: 15px;
+    line-height: 1.5;
+  }
+  </style>
+</head>
+<body>
+  
+  <header>
+    <div class="logo">𝗠𝗔𝗚𝗜𝗖𝗔𝗟 <span>𝗠🍩𝗩𝗜𝗘 𝗟🌲𝗡𝗗</span></div>
+    <div class="header-right">
+      <i class="fa fa-search" id="searchBtn"></i>
+      <i class="fa fa-bars" id="menuBtn"></i>
+    </div>
+  </header>
+
+  <div class="sidebar" id="sidebar">
+    <span class="close-btn" id="closeSidebar">×</span>
+    <ul>
+      <li><a href="index.html"><i class="fa fa-home"></i> Home</a></li>
+      <li><a href="movies.html"><i class="fa fa-film"></i> All Movies</a></li>
+      <li><a href="series.html"><i class="fa fa-tv"></i> TV Shows</a></li>
+      <li class="active"><a href="request.html"><i class="fa fa-plus-circle"></i> Request</a></li>
+      <li><a href="chanels.html"><i class="fa-solid fa-users"></i> Join Channels</a></li>
+      <li><a href="about.html"><i class="fa fa-info-circle"></i> About</a></li>
+      <li><a href="contact.html"><i class="fa fa-envelope"></i> Contact Us</a></li>
+    </ul>
+  </div>
+  <div class="overlay" id="overlay"></div>
+  
+  <h1>🎬 Movie/Series Request</h1>
+  
+  <div class="request-box">
+    <div class="alert success" id="successMsg">
+      <i class="fa fa-check-circle"></i> Request එක submit උනා! ඉක්මනට add කරනවා 💪
+    </div>
+    
+    <div class="alert error" id="errorMsg">
+      <i class="fa fa-exclamation-circle"></i> <span id="errorText">Error එකක් ආවා</span>
+    </div>
+    
+    <form id="requestForm">
+      <div class="form-group">
+        <label>උඹේ නම / Name *</label>
+        <input type="text" id="name" placeholder="Ex: Kasun" required>
+      </div>
+      
+      <div class="form-group">
+        <label>Type එක *</label>
+        <select id="type" required>
+          <option value="">Select කරපන්</option>
+          <option value="movie">Movie</option>
+          <option value="tvshow">TV Series</option>
+          <option value="anime">Anime</option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label>Movie/Series නම *</label>
+        <input type="text" id="title" placeholder="Ex: Widow's Bay S01" required>
+      </div>
+      
+      <div class="form-group">
+        <label>Year එක</label>
+        <input type="number" id="year" placeholder="Ex: 2024" min="1900" max="2030">
+      </div>
+      
+      <div class="form-group">
+        <label>IMDB / TMDB Link එක</label>
+        <input type="url" id="link" placeholder="https://www.imdb.com/title/tt...">
+      </div>
+      
+      <div class="form-group">
+        <label>Note එකක් තියෙනවනම්</label>
+        <textarea id="note" placeholder="Ex: Sinhala subs එක්ක ඕන, 1080p"></textarea>
+      </div>
+      
+      <button type="submit" class="btn-submit" id="submitBtn">
+        <i class="fa fa-paper-plane"></i> Request Submit කරන්න
+      </button>
+    </form>
+    
+    <p class="info-text">
+      ⚡ Request එක admin ට යනවා. Add කරාම site එකේ පෙන්නවා.<br>
+      Spam requests reject වෙනවා.
+    </p>
+  </div>
+
+  <script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCx0TEmgr3GCyvfeok9Y42yR1PTM4_8y9M",
+    authDomain: "magical-movie-land.firebaseapp.com",
+    projectId: "magical-movie-land",
+    storageBucket: "magical-movie-land.firebasestorage.app",
+    messagingSenderId: "27757424288",
+    appId: "1:27757424288:web:d650e2659f09f0b9c823c5"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  const form = document.getElementById('requestForm');
+  const successMsg = document.getElementById('successMsg');
+  const errorMsg = document.getElementById('errorMsg');
+  const errorText = document.getElementById('errorText');
+  const submitBtn = document.getElementById('submitBtn');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Sending...';
+    successMsg.style.display = 'none';
+    errorMsg.style.display = 'none';
+    
+    try {
+      const requestData = {
+        name: document.getElementById('name').value.trim(),
+        type: document.getElementById('type').value,
+        title: document.getElementById('title').value.trim(),
+        year: document.getElementById('year').value || '',
+        link: document.getElementById('link').value.trim(),
+        note: document.getElementById('note').value.trim(),
+        status: 'pending', // pending, completed, rejected
+        createdAt: serverTimestamp()
+      };
+      
+      await addDoc(collection(db, "requests"), requestData);
+      
+      // Success
+      successMsg.style.display = 'block';
+      form.reset();
+      window.scrollTo(0, 0);
+      
+    } catch(err) {
+      console.error("Error:", err);
+      errorText.textContent = err.message;
+      errorMsg.style.display = 'block';
+    }
+    
+    submitBtn.disabled = false;
+    submitBtn.innerHTML = '<i class="fa fa-paper-plane"></i> Request Submit කරන්න';
+  });
+  </script>
+
+</body>
+</html>
