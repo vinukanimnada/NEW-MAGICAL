@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings - MAGICAL MOVIE LAND</title>
+  <link rel="stylesheet" href="style.css?v=19">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+  body {
+    background: #0a0a0a;
+    color: #fff;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+  
+  header {
+    background: #111;
+    padding: 12px 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    border-bottom: 1px solid #222;
+  }
+
+  .logo{
+    font-size: 22px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  .logo span{
+    color: #ff2d95;
+  }
+
+  .header-right i{
+    font-size: 20px;
+    cursor: pointer;
+  }
+
+  /* Sidebar CSS - උඩ දීපු එකම */
+  .sidebar {
+    position: fixed;
+    top: 0;
+    right: -300px;
+    width: 280px;
+    height: 100%;
+    background: #1a1a1a;
+    transition: right 0.3s ease;
+    z-index: 1001;
+    padding-top: 60px;
+  }
+  .sidebar.active {right: 0;}
+  .sidebar ul {list-style: none;padding: 0;margin: 0;}
+  .sidebar ul li a {
+    display: block;
+    padding: 15px 20px;
+    color: white;
+    text-decoration: none;
+    border-bottom: 1px solid #333;
+  }
+  .sidebar ul li.active a {
+    background: #ff2d95;
+    color: white;
+  }
+  .overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.7);
+    display: none;
+    z-index: 1000;
+  }
+  .overlay.active {display: block;}
+  .close-btn {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 30px;
+    color: white;
+    cursor: pointer;
+    z-index: 1002;
+  }
+
+  h1 {
+    font-size: 20px;
+    margin: 20px 15px;
+    padding-left: 12px;
+    border-left: 4px solid #ff2d95;
+  }
+
+  .container {
+    padding: 15px;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .setting-box {
+    background: #111;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 15px;
+  }
+
+  .setting-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+    border-bottom: 1px solid #222;
+  }
+  .setting-item:last-child {
+    border-bottom: none;
+  }
+
+  .setting-label {
+    font-size: 14px;
+    color: #ccc;
+  }
+  .setting-label i {
+    margin-right: 8px;
+    color: #ff2d95;
+  }
+
+  /* Toggle switch */
+  .switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 24px;
+  }
+  .switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #333;
+    transition: .4s;
+    border-radius: 24px;
+  }
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+  }
+  input:checked + .slider {
+    background-color: #ff2d95;
+  }
+  input:checked + .slider:before {
+    transform: translateX(26px);
+  }
+
+  /* Button */
+  .btn-clear {
+    width: 100%;
+    padding: 12px;
+    background: #dc2626;
+    border: none;
+    border-radius: 6px;
+    color: white;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+  .btn-clear:active {
+    transform: scale(0.97);
+  }
+
+  .info-text {
+    font-size: 12px;
+    color: #666;
+    margin-top: 5px;
+  }
+  </style>
+</head>
+<body>
+  
+  <header>
+    <div class="logo">𝗠𝗔𝗚𝗜𝗖𝗔𝗟 <span>𝗠🍩𝗩𝗜𝗘 𝗟🌲𝗡𝗗</span></div>
+    <div class="header-right">
+      <i class="fa fa-bars" id="menuBtn"></i>
+    </div>
+  </header>
+
+  <div class="sidebar" id="sidebar">
+    <span class="close-btn" id="closeSidebar">×</span>
+    <ul>
+      <li><a href="index.html"><i class="fa fa-home"></i> Home</a></li>
+      <li><a href="movies.html"><i class="fa fa-film"></i> All Movies</a></li>
+      <li><a href="series.html"><i class="fa fa-tv"></i> TV Shows</a></li>
+      <li><a href="request.html"><i class="fa fa-plus-circle"></i> Requests</a></li>
+      <li class="active"><a href="settings.html"><i class="fa fa-cog"></i> Settings</a></li>
+      <li><a href="chanels.html"><i class="fa-solid fa-users"></i> Join Channels</a></li>
+      <li><a href="about.html"><i class="fa fa-info-circle"></i> About</a></li>
+      <li><a href="contact.html"><i class="fa fa-envelope"></i> Contact Us</a></li>
+    </ul>
+  </div>
+  <div class="overlay" id="overlay"></div>
+
+  <h1>⚙️ Settings</h1>
+  
+  <div class="container">
+    <div class="setting-box">
+      <div class="setting-item">
+        <div>
+          <div class="setting-label"><i class="fa fa-moon"></i> Dark Mode</div>
+          <div class="info-text">Always dark theme</div>
+        </div>
+        <label class="switch">
+          <input type="checkbox" checked disabled>
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <div class="setting-item">
+        <div>
+          <div class="setting-label"><i class="fa fa-bell"></i> Notifications</div>
+          <div class="info-text">New movie alerts</div>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="notifToggle">
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <div class="setting-item">
+        <div>
+          <div class="setting-label"><i class="fa fa-trash"></i> Clear Cache</div>
+          <div class="info-text">Clear saved data</div>
+        </div>
+        <button class="btn-clear" onclick="clearCache()">Clear</button>
+      </div>
+
+      <div class="setting-item">
+        <div>
+          <div class="setting-label"><i class="fa fa-info-circle"></i> Version</div>
+          <div class="info-text">MAGICAL MOVIE LAND v2.0</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  // Menu open/close
+  const menuBtn = document.getElementById('menuBtn');
+  const sidebar = document.getElementById('sidebar');
+  const closeSidebar = document.getElementById('closeSidebar');
+  const overlay = document.getElementById('overlay');
+
+  menuBtn?.addEventListener('click', () => {
+    sidebar.classList.add('active');
+    overlay.classList.add('active');
+  });
+
+  closeSidebar?.addEventListener('click', () => {
+    sidebar.classList.remove('active');
+    overlay.classList.remove('active');
+  });
+
+  overlay?.addEventListener('click', () => {
+    sidebar.classList.remove('active');
+    overlay.classList.remove('active');
+  });
+
+  // Clear cache function
+  function clearCache(){
+    if(confirm('Cache clear කරන්නද?')){
+      localStorage.clear();
+      sessionStorage.clear();
+      alert('✅ Cache clear කරා!');
+      location.reload();
+    }
+  }
+
+  // Notification toggle save
+  const notifToggle = document.getElementById('notifToggle');
+  notifToggle.checked = localStorage.getItem('notifications') === 'true';
+  notifToggle.addEventListener('change', () => {
+    localStorage.setItem('notifications', notifToggle.checked);
+  });
+  </script>
+
+</body>
+</html>
