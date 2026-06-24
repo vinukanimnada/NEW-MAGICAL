@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
   body {
-    background: #000;
+    background: #0a0a0a;
     color: #fff;
     font-family: Arial, sans-serif;
     margin: 0;
@@ -22,12 +22,11 @@
     border-left: 4px solid #ff2d95;
   }
   
-  /* UPDATED: Admin panel style grid */
+  /* Cinesubz style grid */
   .movie-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 8px;
-    padding: 0;
   }
   
   @media(max-width: 768px) {
@@ -37,19 +36,14 @@
     }
   }
   
-  /* UPDATED: Card style - admin panel එක වගේ */
+  /* Card style - Cinesubz වගේ */
   .movie-card {
     position: relative;
-    aspect-ratio: 2/3; /* 2:3 ratio - admin එක වගේ */
-    border-radius: 8px;
+    aspect-ratio: 2/3;
+    border-radius: 6px;
     overflow: hidden;
-    background: #1a1a1a;
+    background: #111;
     cursor: pointer;
-    transition: transform 0.2s;
-  }
-  
-  .movie-card:active {
-    transform: scale(0.97);
   }
   
   .movie-card img {
@@ -59,110 +53,71 @@
     display: block;
   }
   
-  /* UPDATED: FHD badge - රතු */
-  .badge-quality {
-    position: absolute;
-    top: 5px;
-    left: 5px;
-    background: #ff0000;
-    color: white;
-    font-size: 10px;
-    font-weight: 700;
-    padding: 3px 6px;
-    border-radius: 4px;
-    z-index: 2;
-  }
-  
-  /* UPDATED: Rating badge - කහ */
-  .badge-rating {
-    position: absolute;
-    top: 5px;
-    right: 5px;
-    background: #ffcc00;
-    color: #000;
-    font-size: 10px;
-    font-weight: 700;
-    padding: 3px 6px;
-    border-radius: 4px;
-    z-index: 2;
-  }
-  
-  /* Season badge - TV Shows වලට */
+  /* Season badge - කොළ/රතු */
   .season-badge {
     position: absolute;
-    top: 5px;
-    left: 5px;
-    background: #ff2d95;
+    top: 6px;
+    left: 6px;
+    background: #22c55e; /* කොළ - ongoing */
     color: #fff;
-    font-size: 10px;
+    font-size: 9px;
     font-weight: 700;
-    padding: 3px 6px;
+    padding: 3px 5px;
     border-radius: 4px;
     z-index: 2;
     white-space: nowrap;
-    max-width: 70%;
-  }
-  .season-badge.green {
-    background: #22c55e;
-  }
-  
-  /* Quality badge එකත් එක්ක season එක overlap වෙන්නේ නෑ */
-  .has-quality .season-badge {
-    top: 25px;
+    max-width: 65%;
+    text-overflow: ellipsis;
+    overflow: hidden;
   }
   
-  /* UPDATED: Bottom gradient + title */
+  .season-badge.complete {
+    background: #dc2626; /* රතු - complete */
+  }
+  
+  /* Rating badge - කහ */
+  .rating-badge {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    background: #fbbf24;
+    color: #000;
+    font-size: 9px;
+    font-weight: 700;
+    padding: 3px 5px;
+    border-radius: 4px;
+    z-index: 2;
+  }
+  
+  /* Bottom title - gradient */
   .movie-info-bottom {
     position: absolute;
     bottom: 0;
     left: 0;
     right: 0;
-    padding: 30px 6px 6px 6px;
-    background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 100%);
+    padding: 35px 6px 6px 6px;
+    background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, transparent 100%);
     z-index: 2;
   }
   
   .movie-title {
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 600;
     color: #fff;
     margin: 0;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    line-height: 1.3;
   }
   
-  .play-overlay {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 40px;
-    height: 40px;
-    background: rgba(0,0,0,0.6);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 16px;
-    color: #fff;
-    opacity: 0;
-    transition: opacity 0.2s;
-    z-index: 3;
-  }
-  
-  .movie-card:active .play-overlay {
-    opacity: 1;
-  }
-  
-  /* Image load වෙනකන් placeholder */
   .img-placeholder {
     width: 100%;
     height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 40px;
+    font-size: 35px;
     color: #333;
     background: #1a1a1a;
   }
@@ -241,23 +196,22 @@
         const year = m.year || '';
         const season = m.season || '';
         const rating = m.rating || '0.0';
-        const quality = m.quality || 'FHD';
         
+        // Title + year
         let displayTitle = title;
         if(year) displayTitle += ` (${year})`;
         
+        // Season badge color - COMPLETE නම් රතු, EP නම් කොළ
         let badgeClass = '';
-        if(season && season.includes('EP')) badgeClass = 'green';
-        
-        const hasQuality = quality ? 'has-quality' : '';
+        if(season && season.toUpperCase().includes('COMPLETE')) {
+          badgeClass = 'complete';
+        }
         
         html += `
-          <div class="movie-card ${hasQuality}" onclick="window.location.href='watch.html?id=${doc.id}'">
-            ${quality ? `<span class="badge-quality">${quality}</span>` : ''}
-            
+          <div class="movie-card" onclick="window.location.href='watch.html?id=${doc.id}'">
             ${season ? `<div class="season-badge ${badgeClass}">${season}</div>` : ''}
             
-            ${rating ? `<span class="badge-rating">★ ${rating}</span>` : ''}
+            ${rating ? `<div class="rating-badge">★ ${rating}</div>` : ''}
             
             ${poster ? 
               `<img src="${poster}" loading="lazy" onerror="this.outerHTML='<div class=img-placeholder>?</div>'">` 
@@ -267,8 +221,6 @@
             <div class="movie-info-bottom">
               <p class="movie-title">${displayTitle}</p>
             </div>
-            
-            <div class="play-overlay">▶</div>
           </div>
         `;
       });
