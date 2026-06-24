@@ -10,16 +10,22 @@ body{background:#0a0a0a;color:#fff;font-family:Arial;margin:0;padding:15px}
 .login-box input{width:100%;padding:12px;background:#1a1a1a;border:1px solid #333;border-radius:6px;color:#fff;margin-bottom:10px;box-sizing:border-box}
 .btn{width:100%;padding:12px;background:#ff2d95;border:none;border-radius:6px;color:#fff;font-weight:700;cursor:pointer}
 .hidden{display:none}
-.request-card{background:#111;border-radius:8px;padding:12px;margin-bottom:10px;border-left:3px solid #ff2d95}
+.request-card{background:#111;border-radius:8px;padding:12px;margin-bottom:10px;border-left:3px solid #ff2d95;display:flex;gap:10px;align-items:flex-start}
 .request-card.pending{border-left-color:#fbbf24}
 .request-card.completed{border-left-color:#22c55e}
 .request-card.rejected{border-left-color:#dc2626}
 .btn-small{padding:6px 10px;border:none;border-radius:4px;cursor:pointer;margin-right:5px;font-size:12px}
 .btn-green{background:#22c55e;color:#fff}
 .btn-red{background:#dc2626;color:#fff}
+.btn-delete{background:#991b1b;color:#fff;padding:10px 15px;border:none;border-radius:6px;cursor:pointer;font-weight:700}
+.btn-delete:disabled{background:#333;cursor:not-allowed;opacity:0.5}
 .header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
 .header h1{margin:0;font-size:18px}
 .btn-logout{padding:6px 12px;background:#333;border:none;border-radius:4px;color:#fff;cursor:pointer}
+.checkbox{width:18px;height:18px;cursor:pointer;accent-color:#ff2d95;margin-top:3px}
+.card-content{flex:1}
+.select-all-box{margin-bottom:10px;padding:10px;background:#111;border-radius:6px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:10}
+.select-count{margin-left:auto;font-size:12px;color:#aaa}
 </style>
 </head>
 <body>
@@ -40,12 +46,21 @@ body{background:#0a0a0a;color:#fff;font-family:Arial;margin:0;padding:15px}
   </div>
   
   <div id="stats" style="margin-bottom:15px;font-size:13px;color:#aaa"></div>
+  
+  <!-- Select All + Delete Button -->
+  <div class="select-all-box">
+    <input type="checkbox" class="checkbox" id="selectAll" onchange="toggleSelectAll()">
+    <label for="selectAll" style="cursor:pointer">Select All</label>
+    <span class="select-count" id="selectCount">0 selected</span>
+    <button class="btn-delete" onclick="deleteSelected()" id="deleteBtn" style="margin-left:auto" disabled>🗑️ Delete Selected</button>
+  </div>
+  
   <div id="requestsList">Loading...</div>
 </div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, collection, getDocs, updateDoc, doc, orderBy, query } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getFirestore, collection, getDocs, updateDoc, doc, orderBy, query, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 const app = initializeApp({
   apiKey:"AIzaSyCx0TEmgr3GCyvfeok9Y42yR1PTM4_8y9M",
@@ -103,34 +118,83 @@ async function loadRequests(){
     
     html += `
       <div class="request-card ${r.status}">
-        <div style="display:flex;justify-content:space-between;margin-bottom:5px">
-          <b>${r.title}</b>
-          <span style="font-size:11px;color:#888">${date}</span>
+        <input type="checkbox" class="checkbox request-checkbox" data-id="${d.id}" onchange="updateSelectCount()">
+        <div class="card-content">
+          <div style="display:flex;justify-content:space-between;margin-bottom:5px">
+            <b>${r.title}</b>
+            <span style="font-size:11px;color:#888">${date}</span>
+          </div>
+          <small>Type: ${r.type?.toUpperCase()} | Name: ${r.name} | Year: ${r.year || 'N/A'}</small><br>
+          ${r.link ? `<small>Link: <a href="${r.link}" target="_blank" style="color:#4ade80">IMDB</a></small><br>` : ''}
+          ${r.note ? `<small>Note: ${r.note}</small><br>` : ''}
+          <small>Status: <b style="color:${r.status==='pending'?'#fbbf24':r.status==='completed'?'#22c55e':'#dc2626'}">${r.status.toUpperCase()}</b></small><br>
+          
+          ${r.status === 'pending' ? `
+          <div style="margin-top:8px">
+            <button class="btn-small btn-green" onclick="updateStatus('${d.id}','completed')">✅ Complete</button>
+            <button class="btn-small btn-red" onclick="updateStatus('${d.id}','rejected')">❌ Reject</button>
+          </div>
+          ` : ''}
         </div>
-        <small>Type: ${r.type?.toUpperCase()} | Name: ${r.name} | Year: ${r.year || 'N/A'}</small><br>
-        ${r.link ? `<small>Link: <a href="${r.link}" target="_blank" style="color:#4ade80">IMDB</a></small><br>` : ''}
-        ${r.note ? `<small>Note: ${r.note}</small><br>` : ''}
-        <small>Status: <b style="color:${r.status==='pending'?'#fbbf24':r.status==='completed'?'#22c55e':'#dc2626'}">${r.status.toUpperCase()}</b></small><br>
-        
-        ${r.status === 'pending' ? `
-        <div style="margin-top:8px">
-          <button class="btn-small btn-green" onclick="updateStatus('${d.id}','completed')">✅ Complete</button>
-          <button class="btn-small btn-red" onclick="updateStatus('${d.id}','rejected')">❌ Reject</button>
-        </div>
-        ` : ''}
       </div>
     `;
   });
   
   document.getElementById('stats').innerHTML = 
     `Total: ${snap.size} | Pending: ${pending} | Completed: ${completed} | Rejected: ${rejected}`;
-  document.getElementById('requestsList').innerHTML = html || 'No requests yet';
+  document.getElementById('requestsList').innerHTML = html || '<p style="text-align:center;color:#666">No requests yet</p>';
+  
+  updateSelectCount();
 }
 
 window.updateStatus = async function(id, status){
   if(confirm('Status එක update කරන්නද?')){
     await updateDoc(doc(db,"requests",id), {status: status});
     loadRequests();
+  }
+}
+
+window.toggleSelectAll = function(){
+  const selectAll = document.getElementById('selectAll');
+  const checkboxes = document.querySelectorAll('.request-checkbox');
+  checkboxes.forEach(cb => cb.checked = selectAll.checked);
+  updateSelectCount();
+}
+
+window.updateSelectCount = function(){
+  const selected = document.querySelectorAll('.request-checkbox:checked').length;
+  document.getElementById('selectCount').textContent = selected + ' selected';
+  document.getElementById('deleteBtn').disabled = selected === 0;
+  
+  // Select All checkbox update
+  const total = document.querySelectorAll('.request-checkbox').length;
+  document.getElementById('selectAll').checked = selected === total && total > 0;
+}
+
+window.deleteSelected = async function(){
+  const selected = document.querySelectorAll('.request-checkbox:checked');
+  if(selected.length === 0){
+    alert('Card එකක් select කරගනින් මචං');
+    return;
+  }
+  
+  if(!confirm(`${selected.length} request(s) permanently delete කරන්නද? මේක undo කරන්න බෑ!`)){
+    return;
+  }
+  
+  document.getElementById('deleteBtn').disabled = true;
+  document.getElementById('deleteBtn').textContent = 'Deleting...';
+  
+  try {
+    for(let cb of selected){
+      await deleteDoc(doc(db,"requests", cb.dataset.id));
+    }
+    alert('✅ Delete කරා!');
+    loadRequests();
+  } catch(e){
+    alert('Error: ' + e.message);
+    document.getElementById('deleteBtn').disabled = false;
+    document.getElementById('deleteBtn').textContent = '🗑️ Delete Selected';
   }
 }
 
