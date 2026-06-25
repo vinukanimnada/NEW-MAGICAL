@@ -13,7 +13,7 @@
   <link rel="icon" href="https://files.catbox.moe/nstkne.png" type="image/png">
   <link rel="apple-touch-icon" href="https://files.catbox.moe/nstkne.png">
   
-  <link rel="stylesheet" href="style.css?v=24">
+  <link rel="stylesheet" href="style.css?v=25">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   
   <script>
@@ -165,7 +165,7 @@
     font-size: 14px;
   }
 
-  /* Movie Grid + Skeleton */
+  /* Movie Grid */
   .movie-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
@@ -206,20 +206,6 @@
   }
   html.light .movie-card h3 {
     color: #111;
-  }
-
-  /* Loading skeleton */
-  .skeleton {
-    background: linear-gradient(90deg, #2a2a2a 25%, #333 50%, #2a2a2a 75%);
-    background-size: 200% 100%;
-    animation: loading 1.5s infinite;
-    border-radius: 8px;
-    height: 280px;
-  }
-
-  @keyframes loading {
-    0% { background-position: 200% 0; }
-    100% { background-position: -200% 0; }
   }
   </style>
 </head>
@@ -271,7 +257,9 @@
       </h2>
       <a href="movies.html" class="view-all">VIEW ALL</a>
     </div>
-    <div class="movie-grid" id="trendingMovies"></div>
+    <div class="movie-grid" id="trendingMovies">
+      <div class="home-no-result">Loading movies...</div>
+    </div>
   </section>
   
   <!-- Latest Uploads -->
@@ -283,7 +271,9 @@
       </h2>
       <a href="movies.html" class="view-all">VIEW ALL</a>
     </div>
-    <div class="movie-grid" id="latestMovies"></div>
+    <div class="movie-grid" id="latestMovies">
+      <div class="home-no-result">Loading movies...</div>
+    </div>
   </section>
 
   <!-- TV Shows -->
@@ -295,7 +285,9 @@
       </h2>
       <a href="tvshows.html" class="view-all">VIEW ALL</a>
     </div>
-    <div class="movie-grid" id="tvShowsMovies"></div>
+    <div class="movie-grid" id="tvShowsMovies">
+      <div class="home-no-result">Loading movies...</div>
+    </div>
   </section>
 
   <br><br><br>
@@ -336,15 +328,6 @@
   const db = getFirestore(app);
   let allContent = [];
 
-  function showSkeleton(containerId, count = 6) {
-    const container = document.getElementById(containerId);
-    if(!container) return;
-    container.innerHTML = '';
-    for(let i = 0; i < count; i++) {
-      container.innerHTML += `<div class="skeleton"></div>`;
-    }
-  }
-
   function createMovieCard(movie) {
     const poster = movie.poster || 'https://via.placeholder.com/150x220/222/fff';
     const title = movie.title || 'No Title';
@@ -376,33 +359,40 @@
       
     } catch(err) {
       console.error("❌ Firebase Error:", err);
-      document.getElementById('trendingMovies').innerHTML = '';
-      document.getElementById('latestMovies').innerHTML = '';
-      document.getElementById('tvShowsMovies').innerHTML = '';
+      
+      // Signal/Internet නෑ නම්
+      if(!navigator.onLine) {
+        const msg = '<div class="home-no-result">📶 Internet connection එක නෑ. Data on කරලා refresh කරන්න.</div>';
+        document.getElementById('trendingMovies').innerHTML = msg;
+        document.getElementById('latestMovies').innerHTML = msg;
+        document.getElementById('tvShowsMovies').innerHTML = msg;
+      } else {
+        document.getElementById('trendingMovies').innerHTML = '<div class="home-no-result">Movies හමු නොවීය</div>';
+        document.getElementById('latestMovies').innerHTML = '<div class="home-no-result">Movies හමු නොවීය</div>';
+        document.getElementById('tvShowsMovies').innerHTML = '<div class="home-no-result">TV Shows හමු නොවීය</div>';
+      }
     }
   }
 
+  // Skeleton නෑ - කෙලින්ම cards
   function loadTrending() {
-    showSkeleton('trendingMovies');
     const trending = allContent.filter(m => m.trending === true || m.trending === "true").slice(0, 8);
     const container = document.getElementById('trendingMovies');
-    container.innerHTML = trending.length > 0 ? trending.map(createMovieCard).join('') : '';
+    container.innerHTML = trending.length > 0 ? trending.map(createMovieCard).join('') : '<div class="home-no-result">Trending movies නෑ</div>';
   }
 
   function loadLatest() {
-    showSkeleton('latestMovies');
     const latest = allContent.sort((a,b) => new Date(b.date || 0) - new Date(a.date || 0)).slice(0, 8);
     const container = document.getElementById('latestMovies');
-    container.innerHTML = latest.length > 0 ? latest.map(createMovieCard).join('') : '';
+    container.innerHTML = latest.length > 0 ? latest.map(createMovieCard).join('') : '<div class="home-no-result">Latest movies නෑ</div>';
   }
 
   function loadTVShows() {
-    showSkeleton('tvShowsMovies');
     const shows = allContent.filter(m => 
       m.category == "series" || m.category == "tvshows" || m.type == "series" || m.type == "tv"
     ).slice(0, 8);
     const container = document.getElementById('tvShowsMovies');
-    container.innerHTML = shows.length > 0 ? shows.map(createMovieCard).join('') : '';
+    container.innerHTML = shows.length > 0 ? shows.map(createMovieCard).join('') : '<div class="home-no-result">TV Shows නෑ</div>';
   }
 
   loadAllContent();
