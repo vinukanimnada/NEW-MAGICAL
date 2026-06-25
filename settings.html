@@ -13,7 +13,7 @@
   })();
   </script>
   
-  <link rel="stylesheet" href="style.css?v=20">
+  <link rel="stylesheet" href="style.css?v=21">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
   body {
@@ -49,7 +49,7 @@
     cursor: pointer;
   }
 
-  /* Sidebar CSS */
+  /* Sidebar CSS - Border fix කළා */
   .sidebar {
     position: fixed;
     top: 0;
@@ -61,17 +61,40 @@
     padding-top: 60px;
   }
   .sidebar.active {right: 0;}
-  .sidebar ul {list-style: none;padding: 0;margin: 0;}
+  
+  .sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    border-top: none;
+  }
+  
+  .sidebar ul li {
+    border-bottom: 1px solid #2a2a2a; /* Dark border */
+    border-top: none;
+  }
+  
+  .sidebar ul li:first-child {
+    border-top: 3px solid #ff2d95; /* Home උඩ pink border */
+  }
+  
+  /* Light theme sidebar borders */
+  html.light .sidebar ul li {
+    border-bottom: 1px solid #ddd;
+  }
+  
   .sidebar ul li a {
     display: block;
     padding: 15px 20px;
     text-decoration: none;
-    border-bottom: 1px solid;
+    border-bottom: none;
   }
+  
   .sidebar ul li.active a {
     background: #ff2d95;
     color: white;
   }
+  
   .overlay {
     position: fixed;
     top: 0;
@@ -83,6 +106,7 @@
     z-index: 1000;
   }
   .overlay.active {display: block;}
+  
   .close-btn {
     position: absolute;
     top: 15px;
@@ -318,7 +342,7 @@
     localStorage.setItem('notifications', notifToggle.checked);
   });
 
-  // Theme select - class දානවා විතරයි
+  // Theme select
   const themeSelect = document.getElementById('themeSelect');
   themeSelect.value = localStorage.getItem('theme') || 'dark';
 
