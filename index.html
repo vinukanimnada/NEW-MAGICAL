@@ -10,15 +10,15 @@
   <meta name="keywords" content="cartoon movies, free movies online, HD movies, Magical Movie Land">
     
   <link rel="icon" href="favicon.png" type="image/png">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=23">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   
   <script>
-(function(){
-  const theme = localStorage.getItem('theme') || 'dark';
-  document.documentElement.className = theme;
-})();
-</script>
+  (function(){
+    const theme = localStorage.getItem('theme') || 'dark';
+    document.documentElement.className = theme;
+  })();
+  </script>
   
   <style>
   /* ===== WATCH BUTTON + TEXT HIDE ===== */
@@ -56,7 +56,7 @@
     border-radius: 10px;
   }
   
-  /* Search Bar - Red button නැත */
+  /* Search Bar */
   .search-box {
     position: absolute;
     top: 60px;
@@ -98,7 +98,7 @@
     color: #ff2d95;
   }
 
-  /* Home Search Results Dropdown */
+  /* Home Search Results */
   .home-search-results {
     position: absolute;
     top: 120px;
@@ -161,6 +161,63 @@
     padding: 30px 20px;
     font-size: 14px;
   }
+
+  /* Movie Grid + Skeleton */
+  .movie-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 15px;
+    padding: 15px;
+    min-height: 200px;
+  }
+
+  .movie-card {
+    background: #1a1a1a;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.2s;
+    cursor: pointer;
+  }
+  .movie-card:active {
+    transform: scale(0.95);
+  }
+
+  .movie-card img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+  }
+
+  .movie-card h3 {
+    font-size: 14px;
+    padding: 8px;
+    margin: 0;
+    color: white;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  html.light .movie-card {
+    background: #f5f5f5;
+  }
+  html.light .movie-card h3 {
+    color: #111;
+  }
+
+  /* Loading skeleton */
+  .skeleton {
+    background: linear-gradient(90deg, #2a2a2a 25%, #333 50%, #2a2a2a 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+    border-radius: 8px;
+    height: 280px;
+  }
+
+  @keyframes loading {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
   </style>
 </head>
 <body>
@@ -172,17 +229,15 @@
       <i class="fa fa-bars" id="menuBtn"></i>
     </div>
     
-    <!-- Search Bar - ID දැම්මා -->
     <div class="search-box" id="searchBox">
       <input type="text" id="searchInput" placeholder="Search movies & TV shows...">
       <i class="fa fa-times" id="closeSearch"></i>
     </div>
   </header>
 
-  <!-- Home Search Results Dropdown -->
   <div class="home-search-results" id="homeSearchResults"></div>
 
-  <!-- Sidebar Menu -->
+  <!-- Sidebar -->
   <div class="sidebar" id="sidebar">
     <span class="close-btn" id="closeSidebar">×</span>
     <ul>
@@ -198,7 +253,7 @@
   </div>
   <div class="overlay" id="overlay"></div>
 
-  <!-- ===== HERO SLIDER ===== -->
+  <!-- HERO SLIDER -->
   <section class="hero" id="heroSlider">
     <div id="heroSlides"></div>
     <div class="hero-dots" id="heroDots"></div>
@@ -209,7 +264,7 @@
     <div class="section-header">
       <h2 style="position:relative; padding-left:12px;">
         <span style="position:absolute; left:0; top:50%; transform:translateY(-50%); width:4px; height:28px; background:#ff2d95; border-radius:2px;"></span>
-       Daily Trending
+        Daily Trending
       </h2>
       <a href="movies.html" class="view-all">VIEW ALL</a>
     </div>
@@ -228,7 +283,7 @@
     <div class="movie-grid" id="latestMovies"></div>
   </section>
 
-  <!-- TV Shows Section -->
+  <!-- TV Shows -->
   <section class="trending">
     <div class="section-header">
       <h2 style="position:relative; padding-left:12px;">
@@ -240,8 +295,8 @@
     <div class="movie-grid" id="tvShowsMovies"></div>
   </section>
 
-<br><br><br>
-  <!-- ===== FOOTER SECTION ===== -->
+  <br><br><br>
+  <!-- FOOTER -->
   <footer class="footer">
     <div class="footer-logo">𝗠𝗔𝗚𝗜𝗖𝗔𝗟 <span>𝗠𝗢𝗩𝗜𝗘 𝗟𝗔𝗡𝗗</span></div>
     
@@ -257,11 +312,10 @@
     </div>
   </footer>
 
-
   <!-- Firebase + Site JS -->
   <script type="module" src="script.js"></script>
   
-  <!-- Menu + Search JS - Firebase search add කළා -->
+  <!-- Menu + Search + Auto Load Movies JS -->
   <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
   import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
@@ -279,7 +333,29 @@
   const db = getFirestore(app);
   let allContent = [];
 
-  // Movies + Series දෙකම load කරනවා
+  // Skeleton loader
+  function showSkeleton(containerId, count = 6) {
+    const container = document.getElementById(containerId);
+    if(!container) return;
+    container.innerHTML = '';
+    for(let i = 0; i < count; i++) {
+      container.innerHTML += `<div class="skeleton"></div>`;
+    }
+  }
+
+  // Movie card
+  function createMovieCard(movie) {
+    const poster = movie.poster || 'https://via.placeholder.com/150x220/222/fff';
+    const title = movie.title || 'No Title';
+    return `
+      <div class="movie-card" onclick="window.location.href='watch.html?id=${movie.id}'">
+        <img src="${poster}" alt="${title}" loading="lazy">
+        <h3>${title}</h3>
+      </div>
+    `;
+  }
+
+  // Load all content from Firebase
   async function loadAllContent() {
     try {
       const snapshot = await getDocs(collection(db, "movies"));
@@ -293,14 +369,50 @@
         }
       });
       
-      console.log("✅ Loaded for search:", allContent.length, "items");
+      console.log("✅ Loaded:", allContent.length, "items");
+      
+      // Load sections
+      loadTrending();
+      loadLatest();
+      loadTVShows();
+      
     } catch(err) {
       console.error("❌ Firebase Error:", err);
+      document.getElementById('trendingMovies').innerHTML = '';
+      document.getElementById('latestMovies').innerHTML = '';
+      document.getElementById('tvShowsMovies').innerHTML = '';
     }
+  }
+
+  // Trending
+  function loadTrending() {
+    showSkeleton('trendingMovies');
+    const trending = allContent.filter(m => m.trending === true || m.trending === "true").slice(0, 8);
+    const container = document.getElementById('trendingMovies');
+    container.innerHTML = trending.length > 0 ? trending.map(createMovieCard).join('') : '';
+  }
+
+  // Latest
+  function loadLatest() {
+    showSkeleton('latestMovies');
+    const latest = allContent.sort((a,b) => new Date(b.date || 0) - new Date(a.date || 0)).slice(0, 8);
+    const container = document.getElementById('latestMovies');
+    container.innerHTML = latest.length > 0 ? latest.map(createMovieCard).join('') : '';
+  }
+
+  // TV Shows
+  function loadTVShows() {
+    showSkeleton('tvShowsMovies');
+    const shows = allContent.filter(m => 
+      m.category == "series" || m.category == "tvshows" || m.type == "series" || m.type == "tv"
+    ).slice(0, 8);
+    const container = document.getElementById('tvShowsMovies');
+    container.innerHTML = shows.length > 0 ? shows.map(createMovieCard).join('') : '';
   }
 
   loadAllContent();
 
+  // Menu + Search code
   const menuBtn = document.getElementById('menuBtn');
   const sidebar = document.getElementById('sidebar');
   const closeSidebar = document.getElementById('closeSidebar');
@@ -326,7 +438,6 @@
     overlay.classList.remove('active');
   });
 
-  // Search bar toggle
   searchBtn?.addEventListener('click', () => {
     searchBox.classList.toggle('active');
     if(searchBox.classList.contains('active')) {
@@ -343,7 +454,7 @@
     searchInput.value = '';
   });
 
-  // Home search function
+  // Home search
   function homeSearch(query) {
     if(!query.trim()) {
       homeSearchResults.classList.remove('active');
@@ -386,7 +497,6 @@
     }).join('');
   }
 
-  // Debounce 300ms
   let searchTimeout;
   searchInput?.addEventListener('input', (e) => {
     clearTimeout(searchTimeout);
@@ -395,7 +505,6 @@
     }, 300);
   });
 
-  // Enter key
   searchInput?.addEventListener('keypress', (e) => {
     if(e.key === 'Enter') {
       homeSearch(e.target.value);
