@@ -13,7 +13,7 @@
   <link rel="icon" href="https://files.catbox.moe/nstkne.png" type="image/png">
   <link rel="apple-touch-icon" href="https://files.catbox.moe/nstkne.png">
   
-  <link rel="stylesheet" href="style.css?v=25">
+  <link rel="stylesheet" href="style.css?v=26">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   
   <script>
@@ -24,6 +24,91 @@
   </script>
   
   <style>
+  /* ===== SPLASH SCREEN ===== */
+  #splashScreen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: #0a0a0a;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    transition: opacity 0.5s;
+  }
+
+  .splash-logo img {
+    width: 220px;
+    filter: drop-shadow(0 0 25px #ff2d95);
+    margin-bottom: 10px;
+  }
+
+  .splash-logo h1 {
+    font-size: 32px;
+    color: white;
+    margin: 0;
+    text-align: center;
+    letter-spacing: 2px;
+    font-weight: 800;
+  }
+
+  .splash-logo h1 span {
+    color: #ff2d95;
+  }
+
+  .splash-logo p {
+    font-size: 14px;
+    color: #aaa;
+    text-align: center;
+    letter-spacing: 8px;
+    margin: 5px 0 0 0;
+  }
+
+  .loading-bar {
+    width: 220px;
+    height: 3px;
+    background: #222;
+    border-radius: 10px;
+    margin-top: 40px;
+    overflow: hidden;
+  }
+
+  .loading-progress {
+    height: 100%;
+    background: linear-gradient(90deg, #ff2d95, #00d4ff);
+    width: 0%;
+    animation: loadProgress 2s ease-in-out forwards;
+  }
+
+  @keyframes loadProgress {
+    0% { width: 0%; }
+    100% { width: 100%; }
+  }
+
+  .loading-text {
+    color: #00d4ff;
+    font-size: 12px;
+    letter-spacing: 3px;
+    margin-top: 15px;
+    animation: blink 1.5s infinite;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  /* Light mode */
+  html.light #splashScreen {
+    background: #f5f5f5;
+  }
+  html.light .splash-logo h1 {
+    color: #111;
+  }
+
   /* ===== WATCH BUTTON + TEXT HIDE ===== */
   .hero-slide p, 
   .hero-slide .desc,
@@ -210,6 +295,19 @@
   </style>
 </head>
 <body>
+  <!-- SPLASH SCREEN / LOADING SCREEN -->
+  <div id="splashScreen">
+    <div class="splash-logo">
+      <img src="https://files.catbox.moe/nstkne.png" alt="Logo">
+      <h1>MAGICAL <span>MOVIE</span> LAND</h1>
+      <p>MOVIES</p>
+    </div>
+    <div class="loading-bar">
+      <div class="loading-progress"></div>
+    </div>
+    <p class="loading-text">LOADING MAGICAL MOVIE LAND...</p>
+  </div>
+
   <!-- Header -->
   <header>
     <div class="logo">𝗠𝗔𝗚𝗜𝗖𝗔𝗟 <span>𝗠🍩𝗩𝗜𝗘 𝗟🌲𝗡𝗗</span></div>
@@ -339,6 +437,14 @@
     `;
   }
 
+  function hideSplash() {
+    const splash = document.getElementById('splashScreen');
+    splash.style.opacity = '0';
+    setTimeout(() => {
+      splash.style.display = 'none';
+    }, 500);
+  }
+
   async function loadAllContent() {
     try {
       const snapshot = await getDocs(collection(db, "movies"));
@@ -357,10 +463,13 @@
       loadLatest();
       loadTVShows();
       
+      // Data load වෙලා 1.5sකට පස්සේ splash එක මකනවා
+      setTimeout(hideSplash, 1500);
+      
     } catch(err) {
       console.error("❌ Firebase Error:", err);
+      hideSplash(); // Error උනත් splash එක මකනවා
       
-      // Signal/Internet නෑ නම්
       if(!navigator.onLine) {
         const msg = '<div class="home-no-result">📶 Internet connection එක නෑ. Data on කරලා refresh කරන්න.</div>';
         document.getElementById('trendingMovies').innerHTML = msg;
