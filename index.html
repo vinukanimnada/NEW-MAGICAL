@@ -15,7 +15,7 @@
   <link rel="icon" href="https://files.catbox.moe/nstkne.png" type="image/png">
   <link rel="apple-touch-icon" href="https://files.catbox.moe/nstkne.png">
   
-  <link rel="stylesheet" href="style.css?v=27">
+  <link rel="stylesheet" href="style.css?v=28">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   
   <script>
@@ -26,22 +26,27 @@
   </script>
   
   <style>
-  /* ===== SPLASH SCREEN - FULL SCREEN FIX ===== */
+  /* ===== SPLASH SCREEN - FINAL FIX ===== */
   #splashScreen {
     position: fixed !important;
     top: 0 !important;
     left: 0 !important;
     width: 100vw !important;
-    height: 100dvh !important; /* mobile browser bar එකට ගැලපෙනවා */
+    height: 100dvh !important;
     background: #0a0a0a;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start; /* උඩට ගන්න */
+    justify-content: flex-start;
     align-items: center;
-    padding-top: 15vh; /* උඩින් space */
+    padding-top: 15vh;
     z-index: 99999 !important;
-    transition: opacity 0.5s;
+    transition: opacity 0.5s ease;
     overflow: hidden;
+  }
+
+  #splashScreen.hidden {
+    opacity: 0 !important;
+    pointer-events: none !important;
   }
 
   .splash-logo img {
@@ -105,7 +110,6 @@
     50% { opacity: 0.3; }
   }
 
-  /* Light mode */
   html.light #splashScreen {
     background: #f5f5f5;
   }
@@ -429,6 +433,7 @@
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
   let allContent = [];
+  let splashHidden = false;
 
   function createMovieCard(movie) {
     const poster = movie.poster || 'https://via.placeholder.com/150x220/222/fff';
@@ -442,13 +447,18 @@
   }
 
   function hideSplash() {
+    if(splashHidden) return;
     const splash = document.getElementById('splashScreen');
     if(!splash) return;
     
-    document.body.style.overflow = 'auto'; // scroll on
-    splash.style.opacity = '0';
+    splashHidden = true;
+    document.body.style.overflow = 'auto';
+    splash.classList.add('hidden');
+    
     setTimeout(() => {
-      splash.remove(); // DOM එකෙන්ම අයින් කරනවා
+      if(splash.parentNode) {
+        splash.style.display = 'none';
+      }
     }, 500);
   }
 
@@ -470,12 +480,11 @@
       loadLatest();
       loadTVShows();
       
-      // Data load වෙලා 1sකට පස්සේ splash එක මකනවා
       setTimeout(hideSplash, 1000);
       
     } catch(err) {
       console.error("❌ Firebase Error:", err);
-      hideSplash(); // Error ආවත් splash එක මකනවා
+      hideSplash();
       
       if(!navigator.onLine) {
         const msg = '<div class="home-no-result">📶 Internet connection එක නෑ. Data on කරලා refresh කරන්න.</div>';
@@ -490,7 +499,6 @@
     }
   }
 
-  // Skeleton නෑ - කෙලින්ම cards
   function loadTrending() {
     const trending = allContent.filter(m => m.trending === true || m.trending === "true").slice(0, 8);
     const container = document.getElementById('trendingMovies');
@@ -511,18 +519,11 @@
     container.innerHTML = shows.length > 0 ? shows.map(createMovieCard).join('') : '<div class="home-no-result">TV Shows නෑ</div>';
   }
 
-  // Load වෙද්දි scroll off
   document.body.style.overflow = 'hidden';
   loadAllContent();
 
-  // SAFETY TIMER: තත්පර 5කට පස්සේ අනිවාර්යයෙන් splash එක මකනවා
-  setTimeout(() => {
-    const splash = document.getElementById('splashScreen');
-    if(splash && document.body.contains(splash)) {
-      console.log("⚠️ Force removing splash after 5s");
-      hideSplash();
-    }
-  }, 5000);
+  // SAFETY TIMER: 4s කට පස්සේ force hide - ආපහු එන්නේ නෑ
+  setTimeout(hideSplash, 4000);
 
   // Menu + Search code
   const menuBtn = document.getElementById('menuBtn');
