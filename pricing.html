@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="si">
+<head><title>Premium - MAGICAL MOVIE LAND</title>
+<link rel="stylesheet" href="style.css?v=30"></head>
+<body style="background:#0a0a0a; color:#fff; text-align:center; padding:50px;">
+  <h1>🔥 Premium 30 Days</h1>
+  <p>TV Series ඔක්කොම Ad නැතුව බලන්න</p>
+  <h2 style="color:#ff2d95;">LKR 299/=</h2>
+
+  <form method="post" action="https://sandbox.payhere.lk/pay/checkout">   
+    <input type="hidden" name="merchant_id" value="YOUR_MERCHANT_ID"> 
+    <input type="hidden" name="return_url" value="https://yourdomain.com/success.html"> 
+    <input type="hidden" name="cancel_url" value="https://yourdomain.com/pricing.html">
+    <input type="hidden" name="first_name" value="User">
+    <input type="hidden" name="last_name" value="Premium">
+    <input type="hidden" name="email" value=""> <!-- JS එකෙන් fill කරනවා -->
+    <input type="hidden" name="phone" value="">
+    <input type="hidden" name="address" value="Online">
+    <input type="hidden" name="city" value="Colombo">
+    <input type="hidden" name="country" value="Sri Lanka">
+    <input type="hidden" name="order_id" value=""> <!-- JS එකෙන් fill කරනවා -->
+    <input type="hidden" name="items" value="MAGICAL MOVIE LAND 30Days Premium">
+    <input type="hidden" name="currency" value="LKR">
+    <input type="hidden" name="amount" value="299.00"> 
+    <input type="submit" value="දැන්ම Premium ගන්න" style="background:#ff2d95; color:#fff; padding:15px 30px; border:none; border-radius:8px; font-size:18px; cursor:pointer;">
+  </form>
+<script type="module">
+import { getAuth } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+const auth = getAuth();
+document.querySelector('input[name="email"]').value = auth.currentUser?.email || "";
+document.querySelector('input[name="order_id"]').value = "MML_" + Date.now();
+</script>
+</body></html>
