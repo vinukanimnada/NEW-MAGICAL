@@ -77,6 +77,8 @@
   .login-text a { color: #FF00FF; font-weight: bold; cursor: pointer; text-shadow: 0 0 8px #FF00FF; text-decoration: none; }
   #error { color: #ff4d4d; margin-top: 10px; font-size: 13px; background: rgba(0,0,0,0.5); padding: 8px; border-radius: 8px; display: none; }
   #error.show { display: block; }
+  #success { color: #00ff88; margin-top: 10px; font-size: 13px; background: rgba(0,0,0,0.5); padding: 8px; border-radius: 8px; display: none; } /* Me add kare */
+  #success.show { display: block; }
 </style>
 </head>
 <body>
@@ -113,6 +115,7 @@
       <input id="phone" type="tel" placeholder="Phone Number">
       <button id="signupBtn">Create Account</button>
       <div id="error"></div>
+      <div id="success"></div> <!-- Success Msg eka penna -->
       <div class="login-text">Already have an account? <a href="login.html">Login</a></div>
     </div>
   </main>
@@ -120,7 +123,7 @@
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"; // Firestore add
+import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"; 
 
 const firebaseConfig = {
     apiKey: "AIzaSyBwlxahh7IrwSclQfl21Ybvy5eALnQM1hI",
@@ -133,11 +136,13 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-const db = getFirestore(app); // DB connect
+const db = getFirestore(app); 
 
 const errorDiv = document.getElementById('error');
+const successDiv = document.getElementById('success'); // Success div eka gatta
 const signupBtn = document.getElementById('signupBtn');
-const showError = (msg) => { errorDiv.innerText = msg; errorDiv.classList.add('show'); };
+const showError = (msg) => { errorDiv.innerText = msg; errorDiv.classList.add('show'); successDiv.classList.remove('show'); };
+const showSuccess = (msg) => { successDiv.innerText = msg; successDiv.classList.add('show'); errorDiv.classList.remove('show'); }; // Success function
 
 document.getElementById('signupBtn').onclick = async () => {
   errorDiv.classList.remove('show');
@@ -147,8 +152,8 @@ document.getElementById('signupBtn').onclick = async () => {
   const pass = document.getElementById('password').value;
   const phone = document.getElementById('phone').value.trim();
   
-  if(!fname || !lname || !email || !pass) return showError("First Name, Last Name, Email, Password must");
-  if(pass.length < 6) return showError("Password eka 6 letters wada loku wenna ona");
+  if(!fname || !lname || !email || !pass) return showError("First Name, Last Name, Email, Password අනිවාර්යයි");
+  if(pass.length < 6) return showError("Password එක 6 අකුරු වලට වඩා වැඩි වෙන්න ඕන");
 
   signupBtn.disabled = true;
   signupBtn.innerText = "Creating...";
@@ -158,7 +163,7 @@ document.getElementById('signupBtn').onclick = async () => {
     const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
     const user = userCredential.user;
 
-    // 2. Display Name eka set karanawa - Me thama fix kare
+    // 2. Display Name eka set karanawa
     await updateProfile(user, {
       displayName: `${fname} ${lname}` 
     });
@@ -173,8 +178,11 @@ document.getElementById('signupBtn').onclick = async () => {
       createdAt: new Date()
     });
 
-    // 4. Home page ekata yawana
-    window.location.href = 'index.html';
+    // 4. Home page newei, Login page ekata yawana - Me thama main wenas
+    showSuccess("Account එක හදලා ඉවරයි! දැන් Login වෙන්න.");
+    setTimeout(() => {
+      window.location.href = 'login.html'; // Index ain, Login damma
+    }, 1500); // 1.5 second delay
 
   } catch(e) {
     showError(e.message);
