@@ -7,158 +7,39 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-
-  body {
-    font-family: 'Arial', sans-serif;
-    background: #0D0D1A; /* Dark BG */
-    color: #fff;
-    min-height: 100vh;
-  }
-
-  /* Header */
-  header {
-    background: #111;
-    padding: 12px 15px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: sticky;
-    top: 0;
-    z-index: 999;
-    border-bottom: 1px solid #222;
-  }
+  body { font-family: 'Arial', sans-serif; background: #0D0D1A; color: #fff; min-height: 100vh; }
+  header { background: #111; padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 999; border-bottom: 1px solid #222; }
   .logo { font-size: 20px; font-weight: 700; white-space: nowrap; }
   .logo span { color: #ff2d95; }
   .header-right i { font-size: 20px; cursor: pointer; margin-left: 15px; }
-  .header-right i:hover { color: #ff2d95; }
-
-  /* Sidebar + Overlay */
-  .sidebar {
-    position: fixed;
-    top: 0;
-    right: -300px;
-    width: 280px;
-    height: 100%;
-    background: #1a1a1a;
-    transition: right 0.3s ease;
-    z-index: 1001;
-    padding-top: 60px;
-  }
+  .sidebar { position: fixed; top: 0; right: -300px; width: 280px; height: 100%; background: #1a1a1a; transition: right 0.3s ease; z-index: 1001; padding-top: 60px; }
   .sidebar.active { right: 0; }
   .sidebar ul { list-style: none; }
-  .sidebar ul li a {
-    display: block;
-    padding: 15px 20px;
-    color: white;
-    text-decoration: none;
-    border-bottom: 1px solid #333;
-  }
+  .sidebar ul li a { display: block; padding: 15px 20px; color: white; text-decoration: none; border-bottom: 1px solid #333; }
   .sidebar ul li a i { margin-right: 10px; width: 20px; }
-  .sidebar ul li.active a, .sidebar ul li a:hover {
-    background: #ff2d95;
-    color: white;
-  }
-  .overlay {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: rgba(0,0,0,0.7);
-    display: none;
-    z-index: 1000;
-  }
+  .sidebar ul li.active a, .sidebar ul li a:hover { background: #ff2d95; color: white; }
+  .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: none; z-index: 1000; }
   .overlay.active { display: block; }
-  .close-btn {
-    position: absolute;
-    top: 15px; right: 20px;
-    font-size: 30px;
-    color: white;
-    cursor: pointer;
-    z-index: 1002;
-  }
-  .close-btn:hover { color: #ff2d95; }
-
-  /* Login Box Container - Mehema meheda danne */
-  main {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 40px 15px;
-    min-height: calc(100vh - 60px); /* Header height adu karala */
-  }
-  
-  .box {
-    background: #1A1A2E;
-    border: 1px solid #FF00FF;
-    padding: 25px 20px;
-    border-radius: 16px;
-    width: 100%;
-    max-width: 280px; /* Podi */
-    text-align: center;
-    box-shadow: 0 0 5px #FF00FF, 0 0 15px #FF00FF, 0 0 30px #FF00FF;
-  }
-  
-  h2 {
-    color: #FF00FF;
-    margin-bottom: 20px;
-    font-size: 26px;
-    font-weight: 700;
-    text-shadow: 0 0 15px #FF00FF;
-  }
-  input {
-    width: 100%;
-    padding: 12px;
-    margin: 10px 0;
-    border: 1px solid #FF00FF;
-    border-radius: 10px;
-    background: #0D0D1A;
-    color: #fff;
-    font-size: 15px;
-    outline: none;
-  }
+  .close-btn { position: absolute; top: 15px; right: 20px; font-size: 30px; color: white; cursor: pointer; z-index: 1002; }
+  main { display: flex; justify-content: center; align-items: center; padding: 40px 15px; min-height: calc(100vh - 60px); }
+  .box { background: #1A1A2E; border: 1px solid #FF00FF; padding: 25px 20px; border-radius: 16px; width: 100%; max-width: 280px; text-align: center; box-shadow: 0 0 5px #FF00FF, 0 0 15px #FF00FF, 0 0 30px #FF00FF; }
+  h2 { color: #FF00FF; margin-bottom: 20px; font-size: 26px; font-weight: 700; text-shadow: 0 0 15px #FF00FF; }
+  input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #FF00FF; border-radius: 10px; background: #0D0D1A; color: #fff; font-size: 15px; outline: none; }
   input:focus { box-shadow: 0 0 10px #FF00FF; }
-  input::placeholder { color: #888; }
-  button {
-    width: 100%;
-    padding: 14px;
-    margin-top: 15px;
-    border: none;
-    border-radius: 10px;
-    background: #FF00FF;
-    color: #111;
-    font-weight: bold;
-    font-size: 16px;
-    cursor: pointer;
-    box-shadow: 0 0 15px #FF00FF;
-  }
-  button:hover { filter: brightness(1.2); }
+  button { width: 100%; padding: 14px; margin-top: 15px; border: none; border-radius: 10px; background: #FF00FF; color: #111; font-weight: bold; font-size: 16px; cursor: pointer; box-shadow: 0 0 15px #FF00FF; }
   .signup-text { color: #ccc; margin-top: 15px; font-size: 14px; }
-  .signup-text span { color: #FF00FF; font-weight: bold; cursor: pointer; text-shadow: 0 0 8px #FF00FF; }
-  #error { 
-    color: #ff4d4d; 
-    margin-top: 10px; 
-    font-size: 13px; 
-    background: rgba(0,0,0,0.5); 
-    padding: 8px; 
-    border-radius: 8px; 
-    display: none; /* Nathi nam hide */
-  }
+  .signup-text a { color: #FF00FF; font-weight: bold; cursor: pointer; text-shadow: 0 0 8px #FF00FF; text-decoration: none; } /* Me thama hari */
+  #error { color: #ff4d4d; margin-top: 10px; font-size: 13px; background: rgba(0,0,0,0.5); padding: 8px; border-radius: 8px; display: none; }
   #error.show { display: block; }
-
-  /* Search Box Hide karala thibbe */
-  .search-box, .home-search-results { display: none; }
 </style>
 </head>
 <body>
   
-  <!-- Header -->
   <header>
     <div class="logo">MAGICAL <span>M🍩VIE L🌲ND</span></div>
-    <div class="header-right">
-      <i class="fa fa-bars" id="menuBtn"></i>
-    </div>
+    <div class="header-right"><i class="fa fa-bars" id="menuBtn"></i></div>
   </header>
 
-  <!-- Sidebar -->
   <div class="sidebar" id="sidebar">
     <span class="close-btn" id="closeSidebar">×</span>
     <ul>
@@ -175,7 +56,6 @@
   </div>
   <div class="overlay" id="overlay"></div>
 
-  <!-- Login Box eka mehema main ekak athule danne -->
   <main>
     <div class="box">
       <h2>Login</h2>
@@ -183,13 +63,13 @@
       <input id="password" type="password" placeholder="Password">
       <button id="loginBtn">Login</button>
       <div id="error"></div>
-      <div class="signup-text">Don't have an account? <span id="signupBtn">Sign Up</span></div>
+      <div class="signup-text">Don't have an account? <a href="signup.html" id="signupBtn">Sign Up</a></div> <!-- Link ekak -->
     </div>
   </main>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
 const firebaseConfig = {
     apiKey: "AIzaSyBwlxahh7IrwSclQfl21Ybvy5eALnQM1hI",
@@ -216,28 +96,15 @@ document.getElementById('loginBtn').onclick = () => {
     .catch(e => showError(e.message));
 };
 
-document.getElementById('signupBtn').onclick = () => {
-  errorDiv.classList.remove('show');
-  const email = document.getElementById('email').value;
-  const pass = document.getElementById('password').value;
-  if(!email || !pass) return showError("Email & Password both required");
-  createUserWithEmailAndPassword(auth, email, pass)
-    .then(() => window.location.href = 'index.html')
-    .catch(e => showError(e.message));
-};
+// Signup onclick eka ain karala hari
 
-// Sidebar Toggle JS
 const menuBtn = document.getElementById('menuBtn');
 const sidebar = document.getElementById('sidebar');
 const overlay = document.getElementById('overlay');
 const closeSidebar = document.getElementById('closeSidebar');
-
-const openSidebar = () => { sidebar.classList.add('active'); overlay.classList.add('active'); };
-const closeSide = () => { sidebar.classList.remove('active'); overlay.classList.remove('active'); };
-
-menuBtn.onclick = openSidebar;
-closeSidebar.onclick = closeSide;
-overlay.onclick = closeSide;
+menuBtn.onclick = () => { sidebar.classList.add('active'); overlay.classList.add('active'); };
+closeSidebar.onclick = () => { sidebar.classList.remove('active'); overlay.classList.remove('active'); };
+overlay.onclick = () => { sidebar.classList.remove('active'); overlay.classList.remove('active'); };
 </script>
 </body>
 </html>
