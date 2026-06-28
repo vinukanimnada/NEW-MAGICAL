@@ -12,86 +12,77 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background: linear-gradient(135deg, #1A1A2E 0%, #16213E 100%); /* Dark BG for Neon Pop */
+    background: #0D0D1A; /* Screenshot වගේ Dark BG. Sudu nathi */
   }
   .box {
-    background: rgba(26, 26, 46, 0.7);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid #FF00FF; /* Neon Pink Border */
-    padding: 40px 30px;
-    border-radius: 20px;
-    width: 320px;
+    background: #1A1A2E; /* Dark Box */
+    border: 1px solid #FF00FF; /* Pink Border */
+    padding: 25px 20px; /* Podi karala */
+    border-radius: 16px;
+    width: 280px; /* Podi karala */
     text-align: center;
-    /* Neon Glow Effect */
+    /* Watenama Pink Glow */
     box-shadow: 
-      0 0 10px #FF00FF, 
-      0 0 20px #FF00FF, 
-      0 0 40px #FF00FF,
-      inset 0 0 20px rgba(255, 0, 255, 0.1);
-    animation: glow 2s ease-in-out infinite alternate;
+      0 0 5px #FF00FF, 
+      0 0 15px #FF00FF, 
+      0 0 30px #FF00FF;
   }
   
-  @keyframes glow {
-    from { box-shadow: 0 0 10px #FF00FF, 0 0 20px #FF00FF, 0 0 30px #FF00FF; }
-    to { box-shadow: 0 0 20px #FF00FF, 0 0 30px #FF00FF, 0 0 50px #FF00FF; }
-  }
-
   h2 {
-    color: #FF00FF; /* Neon Pink Text */
-    margin-bottom: 25px;
-    font-size: 28px;
-    font-weight: 600;
-    text-shadow: 0 0 10px #FF00FF;
+    color: #FF00FF; /* Pink Text */
+    margin-bottom: 20px;
+    font-size: 26px;
+    font-weight: 700;
+    text-shadow: 0 0 15px #FF00FF; /* Text Glow */
   }
   input {
     width: 100%;
-    padding: 14px;
+    padding: 12px;
     margin: 10px 0;
-    border: 1px solid #FF00FF;
-    border-radius: 12px;
-    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid #FF00FF; /* Pink Border */
+    border-radius: 10px;
+    background: #0D0D1A; /* Dark Input */
     color: #fff;
     font-size: 15px;
     outline: none;
     box-sizing: border-box;
-    transition: 0.3s;
   }
   input:focus {
     box-shadow: 0 0 10px #FF00FF;
-    border: 1px solid #fff;
   }
-  input::placeholder { color: #aaa; }
+  input::placeholder { color: #888; }
   button {
     width: 100%;
     padding: 14px;
     margin-top: 15px;
     border: none;
-    border-radius: 12px;
-    background: #FF00FF; /* Neon Pink Button */
+    border-radius: 10px;
+    background: #FF00FF; /* Solid Pink Button */
     color: #111;
     font-weight: bold;
     font-size: 16px;
     cursor: pointer;
-    transition: 0.3s;
-    box-shadow: 0 0 15px #FF00FF;
-  }
-  button:hover { 
-    transform: scale(1.02); 
-    box-shadow: 0 0 25px #FF00FF;
+    box-shadow: 0 0 15px #FF00FF; /* Button Glow */
   }
   .signup-text {
-    color: #fff;
-    margin-top: 20px;
+    color: #ccc;
+    margin-top: 15px;
     font-size: 14px;
   }
   .signup-text span {
-    color: #FF00FF;
+    color: #FF00FF; /* Pink Sign Up */
     font-weight: bold;
     cursor: pointer;
-    text-shadow: 0 0 5px #FF00FF;
+    text-shadow: 0 0 8px #FF00FF;
   }
-  #error { color: #ff4d4d; margin-top: 10px; font-size: 14px; background: rgba(0,0,0,0.3); padding: 8px; border-radius: 8px; }
+  #error { 
+    color: #ff4d4d; 
+    margin-top: 10px; 
+    font-size: 13px; 
+    background: rgba(0,0,0,0.5); 
+    padding: 8px; 
+    border-radius: 8px; 
+  }
 </style>
 </head>
 <body>
