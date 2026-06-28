@@ -28,10 +28,13 @@
   input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #FF00FF; border-radius: 10px; background: #0D0D1A; color: #fff; font-size: 15px; outline: none; }
   input:focus { box-shadow: 0 0 10px #FF00FF; }
   button { width: 100%; padding: 14px; margin-top: 15px; border: none; border-radius: 10px; background: #FF00FF; color: #111; font-weight: bold; font-size: 16px; cursor: pointer; box-shadow: 0 0 15px #FF00FF; }
+  button:disabled { background: #555; box-shadow: none; cursor: not-allowed; }
   .signup-text { color: #ccc; margin-top: 15px; font-size: 14px; }
-  .signup-text a { color: #FF00FF; font-weight: bold; cursor: pointer; text-shadow: 0 0 8px #FF00FF; text-decoration: none; } /* Me thama hari */
+  .signup-text a { color: #FF00FF; font-weight: bold; cursor: pointer; text-shadow: 0 0 8px #FF00FF; text-decoration: none; }
   #error { color: #ff4d4d; margin-top: 10px; font-size: 13px; background: rgba(0,0,0,0.5); padding: 8px; border-radius: 8px; display: none; }
   #error.show { display: block; }
+  #success { color: #00ff88; margin-top: 10px; font-size: 13px; background: rgba(0,0,0,0.5); padding: 8px; border-radius: 8px; display: none; } /* Me add kare */
+  #success.show { display: block; }
 </style>
 </head>
 <body>
@@ -60,11 +63,12 @@
   <main>
     <div class="box">
       <h2>Login</h2>
-      <input id="email" type="email" placeholder="Email">
-      <input id="password" type="password" placeholder="Password">
+      <input id="email" type="email" placeholder="Email" required>
+      <input id="password" type="password" placeholder="Password" required>
       <button id="loginBtn">Login</button>
       <div id="error"></div>
-      <div class="signup-text">Don't have an account? <a href="signup.html" id="signupBtn">Sign Up</a></div> <!-- Link ekak -->
+      <div id="success"></div> <!-- Login Success Msg -->
+      <div class="signup-text">Don't have an account? <a href="signup.html" id="signupBtn">Sign Up</a></div>
     </div>
   </main>
 
@@ -85,20 +89,47 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
 const errorDiv = document.getElementById('error');
-const showError = (msg) => { errorDiv.innerText = msg; errorDiv.classList.add('show'); };
+const successDiv = document.getElementById('success');
+const loginBtn = document.getElementById('loginBtn');
+const showError = (msg) => { errorDiv.innerText = msg; errorDiv.classList.add('show'); successDiv.classList.remove('show'); };
+const showSuccess = (msg) => { successDiv.innerText = msg; successDiv.classList.add('show'); errorDiv.classList.remove('show'); };
 
-document.getElementById('loginBtn').onclick = () => {
+document.getElementById('loginBtn').onclick = async () => {
   errorDiv.classList.remove('show');
-  const email = document.getElementById('email').value;
+  successDiv.classList.remove('show');
+  const email = document.getElementById('email').value.trim();
   const pass = document.getElementById('password').value;
-  if(!email || !pass) return showError("Email & Password both required");
-  signInWithEmailAndPassword(auth, email, pass)
-    .then(() => window.location.href = 'index.html')
-    .catch(e => showError(e.message));
+  
+  if(!email || !pass) return showError("Email & Password දෙකම අනිවාර්යයි");
+  
+  loginBtn.disabled = true;
+  loginBtn.innerText = "Logging in...";
+
+  try {
+    // 1. Firebase Auth Login
+    await signInWithEmailAndPassword(auth, email, pass);
+    
+    // 2. Login Completed Msg eka pennawa
+    showSuccess("Login Completed! ✅");
+
+    // 3. Thathpara 1.5 kin passe Home ekata yawana
+    setTimeout(() => {
+      window.location.href = 'index.html';
+    }, 1500);
+
+  } catch(e) {
+    // Password wena nam, user na nam me error eka enawa
+    if (e.code === 'auth/wrong-password' || e.code === 'auth/user-not-found') {
+        showError("Email or Password වැරදියි. ආයේ බලන්න.");
+    } else {
+        showError(e.message);
+    }
+    loginBtn.disabled = false;
+    loginBtn.innerText = "Login";
+  }
 };
 
-// Signup onclick eka ain karala hari
-
+// Sidebar Toggle
 const menuBtn = document.getElementById('menuBtn');
 const sidebar = document.getElementById('sidebar');
 const overlay = document.getElementById('overlay');
