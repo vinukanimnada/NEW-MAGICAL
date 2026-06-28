@@ -4,9 +4,18 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Login - Magical Movie Land</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
-/* Header - Search icon අයින් කරා */
+  body {
+    font-family: 'Arial', sans-serif;
+    background: #0D0D1A; /* Dark BG */
+    color: #fff;
+    min-height: 100vh;
+  }
+
+  /* Header */
   header {
     background: #111;
     padding: 12px 15px;
@@ -18,23 +27,12 @@
     z-index: 999;
     border-bottom: 1px solid #222;
   }
+  .logo { font-size: 20px; font-weight: 700; white-space: nowrap; }
+  .logo span { color: #ff2d95; }
+  .header-right i { font-size: 20px; cursor: pointer; margin-left: 15px; }
+  .header-right i:hover { color: #ff2d95; }
 
-  .logo{
-    font-size: 22px;
-    font-weight: 700;
-    white-space: nowrap;
-  }
-
-  .logo span{
-    color: #ff2d95;
-  }
-
-  .header-right i{
-    font-size: 20px;
-    cursor: pointer;
-  }
-
-  /* Sidebar + Overlay CSS */
+  /* Sidebar + Overlay */
   .sidebar {
     position: fixed;
     top: 0;
@@ -46,14 +44,8 @@
     z-index: 1001;
     padding-top: 60px;
   }
-  .sidebar.active {
-    right: 0;
-  }
-  .sidebar ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
+  .sidebar.active { right: 0; }
+  .sidebar ul { list-style: none; }
   .sidebar ul li a {
     display: block;
     padding: 15px 20px;
@@ -61,82 +53,69 @@
     text-decoration: none;
     border-bottom: 1px solid #333;
   }
-  .sidebar ul li.active a {
+  .sidebar ul li a i { margin-right: 10px; width: 20px; }
+  .sidebar ul li.active a, .sidebar ul li a:hover {
     background: #ff2d95;
     color: white;
   }
   .overlay {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
     background: rgba(0,0,0,0.7);
     display: none;
     z-index: 1000;
   }
-  .overlay.active {
-    display: block;
-  }
+  .overlay.active { display: block; }
   .close-btn {
     position: absolute;
-    top: 15px;
-    right: 20px;
+    top: 15px; right: 20px;
     font-size: 30px;
     color: white;
     cursor: pointer;
     z-index: 1002;
-    line-height: 1;
   }
-  .close-btn:hover {
-    color: #ff2d95;
-  }
+  .close-btn:hover { color: #ff2d95; }
 
-  body {
-    margin: 0;
-    font-family: 'Arial', sans-serif;
-    height: 100vh;
+  /* Login Box Container - Mehema meheda danne */
+  main {
     display: flex;
     justify-content: center;
     align-items: center;
-    background: #0D0D1A; /* Screenshot වගේ Dark BG. Sudu nathi */
+    padding: 40px 15px;
+    min-height: calc(100vh - 60px); /* Header height adu karala */
   }
+  
   .box {
-    background: #1A1A2E; /* Dark Box */
-    border: 1px solid #FF00FF; /* Pink Border */
-    padding: 25px 20px; /* Podi karala */
+    background: #1A1A2E;
+    border: 1px solid #FF00FF;
+    padding: 25px 20px;
     border-radius: 16px;
-    width: 280px; /* Podi karala */
+    width: 100%;
+    max-width: 280px; /* Podi */
     text-align: center;
-    /* Watenama Pink Glow */
-    box-shadow: 
-      0 0 5px #FF00FF, 
-      0 0 15px #FF00FF, 
-      0 0 30px #FF00FF;
+    box-shadow: 0 0 5px #FF00FF, 0 0 15px #FF00FF, 0 0 30px #FF00FF;
   }
   
   h2 {
-    color: #FF00FF; /* Pink Text */
+    color: #FF00FF;
     margin-bottom: 20px;
     font-size: 26px;
     font-weight: 700;
-    text-shadow: 0 0 15px #FF00FF; /* Text Glow */
+    text-shadow: 0 0 15px #FF00FF;
   }
   input {
     width: 100%;
     padding: 12px;
     margin: 10px 0;
-    border: 1px solid #FF00FF; /* Pink Border */
+    border: 1px solid #FF00FF;
     border-radius: 10px;
-    background: #0D0D1A; /* Dark Input */
+    background: #0D0D1A;
     color: #fff;
     font-size: 15px;
     outline: none;
-    box-sizing: border-box;
   }
-  input:focus {
-    box-shadow: 0 0 10px #FF00FF;
-  }
+  input:focus { box-shadow: 0 0 10px #FF00FF; }
   input::placeholder { color: #888; }
   button {
     width: 100%;
@@ -144,24 +123,16 @@
     margin-top: 15px;
     border: none;
     border-radius: 10px;
-    background: #FF00FF; /* Solid Pink Button */
+    background: #FF00FF;
     color: #111;
     font-weight: bold;
     font-size: 16px;
     cursor: pointer;
-    box-shadow: 0 0 15px #FF00FF; /* Button Glow */
+    box-shadow: 0 0 15px #FF00FF;
   }
-  .signup-text {
-    color: #ccc;
-    margin-top: 15px;
-    font-size: 14px;
-  }
-  .signup-text span {
-    color: #FF00FF; /* Pink Sign Up */
-    font-weight: bold;
-    cursor: pointer;
-    text-shadow: 0 0 8px #FF00FF;
-  }
+  button:hover { filter: brightness(1.2); }
+  .signup-text { color: #ccc; margin-top: 15px; font-size: 14px; }
+  .signup-text span { color: #FF00FF; font-weight: bold; cursor: pointer; text-shadow: 0 0 8px #FF00FF; }
   #error { 
     color: #ff4d4d; 
     margin-top: 10px; 
@@ -169,33 +140,30 @@
     background: rgba(0,0,0,0.5); 
     padding: 8px; 
     border-radius: 8px; 
+    display: none; /* Nathi nam hide */
   }
+  #error.show { display: block; }
+
+  /* Search Box Hide karala thibbe */
+  .search-box, .home-search-results { display: none; }
 </style>
 </head>
 <body>
   
   <!-- Header -->
   <header>
-    <div class="logo">𝗠𝗔𝗚𝗜𝗖𝗔𝗟 <span>𝗠🍩𝗩𝗜𝗘 𝗟🌲𝗡𝗗</span></div>
+    <div class="logo">MAGICAL <span>M🍩VIE L🌲ND</span></div>
     <div class="header-right">
-      <i class="fa fa-search" id="searchBtn"></i>
       <i class="fa fa-bars" id="menuBtn"></i>
     </div>
-    
-    <div class="search-box" id="searchBox">
-      <input type="text" id="searchInput" placeholder="Search movies & TV shows...">
-      <i class="fa fa-times" id="closeSearch"></i>
-    </div>
   </header>
-
-  <div class="home-search-results" id="homeSearchResults"></div>
 
   <!-- Sidebar -->
   <div class="sidebar" id="sidebar">
     <span class="close-btn" id="closeSidebar">×</span>
     <ul>
-      <li><a href="login.html"><i class="fa fa-home"></i> Login</a></li>
-      <li class="active"><a href="index.html"><i class="fa fa-home"></i> Home</a></li>
+      <li class="active"><a href="login.html"><i class="fa fa-right-to-bracket"></i> Login</a></li>
+      <li><a href="index.html"><i class="fa fa-home"></i> Home</a></li>
       <li><a href="movies.html"><i class="fa fa-film"></i> All Movies</a></li>
       <li><a href="series.html"><i class="fa fa-tv"></i> TV Shows</a></li>
       <li><a href="request.html"><i class="fa fa-plus-circle"></i> Requests</a></li>
@@ -207,16 +175,17 @@
   </div>
   <div class="overlay" id="overlay"></div>
 
- 
-  
-  <div class="box">
-    <h2>Login</h2>
-    <input id="email" type="email" placeholder="Email">
-    <input id="password" type="password" placeholder="Password">
-    <button id="loginBtn">Login</button>
-    <div id="error"></div>
-    <div class="signup-text">Don't have an account? <span id="signupBtn">Sign Up</span></div>
-  </div>
+  <!-- Login Box eka mehema main ekak athule danne -->
+  <main>
+    <div class="box">
+      <h2>Login</h2>
+      <input id="email" type="email" placeholder="Email">
+      <input id="password" type="password" placeholder="Password">
+      <button id="loginBtn">Login</button>
+      <div id="error"></div>
+      <div class="signup-text">Don't have an account? <span id="signupBtn">Sign Up</span></div>
+    </div>
+  </main>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -234,21 +203,41 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
+const errorDiv = document.getElementById('error');
+const showError = (msg) => { errorDiv.innerText = msg; errorDiv.classList.add('show'); };
+
 document.getElementById('loginBtn').onclick = () => {
+  errorDiv.classList.remove('show');
   const email = document.getElementById('email').value;
   const pass = document.getElementById('password').value;
+  if(!email || !pass) return showError("Email & Password both required");
   signInWithEmailAndPassword(auth, email, pass)
     .then(() => window.location.href = 'index.html')
-    .catch(e => document.getElementById('error').innerText = e.message);
+    .catch(e => showError(e.message));
 };
 
 document.getElementById('signupBtn').onclick = () => {
+  errorDiv.classList.remove('show');
   const email = document.getElementById('email').value;
   const pass = document.getElementById('password').value;
+  if(!email || !pass) return showError("Email & Password both required");
   createUserWithEmailAndPassword(auth, email, pass)
     .then(() => window.location.href = 'index.html')
-    .catch(e => document.getElementById('error').innerText = e.message);
+    .catch(e => showError(e.message));
 };
+
+// Sidebar Toggle JS
+const menuBtn = document.getElementById('menuBtn');
+const sidebar = document.getElementById('sidebar');
+const overlay = document.getElementById('overlay');
+const closeSidebar = document.getElementById('closeSidebar');
+
+const openSidebar = () => { sidebar.classList.add('active'); overlay.classList.add('active'); };
+const closeSide = () => { sidebar.classList.remove('active'); overlay.classList.remove('active'); };
+
+menuBtn.onclick = openSidebar;
+closeSidebar.onclick = closeSide;
+overlay.onclick = closeSide;
 </script>
 </body>
 </html>
