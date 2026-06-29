@@ -11,17 +11,28 @@ body{background:#000;color:white;font-family:Arial;margin:0;padding:0}
 
 /* ===== PLAYER HEIGHT - BALANCED ===== */
 .player{width:100%;height:42vh;background:#000;position:relative;overflow:hidden;margin-bottom:0}
-.player iframe{width:100%;height:100%;object-fit:contain;background:#000;display:block}
+.player iframe{width:100%;height:100%;object-fit:contain;background:#000;display:block} /* video -> iframe karala */
 
 @media (max-width: 768px){
-    .player{height:38vh}
+    .player{height:38vh} /* Screenshot එකේ උස */
 }
 
 .info{padding:0 15px 20px;max-width:1000px;margin:auto}
-.movie-detail{display:flex;gap:20px;margin-top:15px;align-items:flex-start;background:#1a1a1a;padding:20px;border-radius:12px}
+
+.movie-detail{
+    display:flex;
+    gap:20px;
+    margin-top:15px;
+    align-items:flex-start;
+    background:#1a1a1a;
+    padding:20px;
+    border-radius:12px;
+}
+
 .left-col{display:flex;flex-direction:column;align-items:center;flex-shrink:0}
 .left-col img{width:200px;border-radius:12px;box-shadow:0 4px 20px rgba(255,45,149,0.3);margin-bottom:12px}
 .left-col h1{margin:0;font-size:22px;color:#fff;text-align:center;font-weight:600;line-height:1.3;max-width:200px;word-wrap:break-word}
+
 .right-col{flex:1;min-width:0}
 .badges{display:flex;gap:8px;margin-bottom:15px;flex-wrap:wrap;justify-content:flex-start}
 .badge{padding:5px 12px;border-radius:6px;font-size:13px;font-weight:bold}
@@ -30,18 +41,81 @@ body{background:#000;color:white;font-family:Arial;margin:0;padding:0}
 .badge.web-dl{background:#00bfff;color:white}
 .badge.cam{background:#888;color:white}
 .badge.imdb{background:#f5c518;color:#000}
+
 .details-list p{margin:8px 0;font-size:15px;color:#ccc;text-align:left;display:flex;align-items:center}
 .details-list p strong{color:#fff;font-weight:600;margin-right:8px;min-width:130px;display:flex;align-items:center;gap:6px}
 .imdb-box{color:#f5c518;font-weight:bold;font-size:15px}
 .imdb-box small{color:#aaa;font-size:13px}
-.description-section{padding: 20px 12px;margin-top: 20px;border-top: 1px solid #222;max-width: 1000px;margin-left: auto;margin-right: auto}
-.desc-title{font-size: 18px;font-weight: 700;margin-bottom: 12px;display: flex;align-items: center;gap: 8px;color: #fff}
-.desc-title::before{content: '';width: 3px;height: 20px;background: #ff2d95;border-radius: 2px}
-.desc-text{font-size: 14px;line-height: 1.7;color: #ccc;text-align: justify}
-.sidebar ul li a{display: flex;align-items: center;gap: 12px;padding: 14px 20px;color: #ccc;text-decoration: none;font-size: 15px;transition: 0.3s;border-left: 3px solid transparent;border-radius: 0;margin: 2px 0}
-.sidebar ul li a:hover{background: #1a1a1a;color: #fff}
-.sidebar ul li a.active{background: #ff2d95;color: #fff;border-left: 3px solid #ff2d95;border-top-left-radius: 10px;border-bottom-left-radius: 10px;font-weight: 600}
-.sidebar ul li a i{width: 20px;text-align: center}
+
+/* ===== DESCRIPTION SECTION ===== */
+.description-section{
+  padding: 20px 12px;
+  margin-top: 20px;
+  border-top: 1px solid #222;
+  max-width: 1000px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.desc-title{
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #fff;
+}
+
+.desc-title::before{
+  content: '';
+  width: 3px;
+  height: 20px;
+  background: #ff2d95;
+  border-radius: 2px;
+}
+
+.desc-text{
+  font-size: 14px;
+  line-height: 1.7;
+  color: #ccc;
+  text-align: justify;
+}
+
+/* ===== SIDEBAR ACTIVE WITH ROUNDED LEFT BORDER ===== */
+.sidebar ul li a{
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 20px;
+    color: #ccc;
+    text-decoration: none;
+    font-size: 15px;
+    transition: 0.3s;
+    border-left: 3px solid transparent;
+    border-radius: 0;
+    margin: 2px 0;
+}
+
+.sidebar ul li a:hover{
+    background: #1a1a1a;
+    color: #fff;
+}
+
+.sidebar ul li a.active{
+    background: #ff2d95;
+    color: #fff;
+    border-left: 3px solid #ff2d95;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    font-weight: 600;
+}
+
+.sidebar ul li a i{
+    width: 20px;
+    text-align: center;
+}
+
 @media (max-width: 768px){
     .movie-detail{gap:15px;padding:15px;margin-top:12px}
     .left-col img{width:130px;border-radius:10px}
@@ -56,18 +130,23 @@ body{background:#000;color:white;font-family:Arial;margin:0;padding:0}
 </head>
 <body>
   
+  <!-- Header -->
   <header>
     <div class="logo">𝗠𝗔𝗚𝗜𝗖𝗔𝗟 <span>𝗠🍩𝗩𝗜𝗘 𝗟🌲𝗡𝗗</span></div>
     <div class="header-right">
       <i class="fa fa-search" id="searchBtn"></i>
       <i class="fa fa-bars" id="menuBtn"></i>
     </div>
+    
+    <!-- Search Bar -->
     <div class="search-box" id="searchBox">
       <input type="text" placeholder="Search cartoons or movies...">
       <i class="fa fa-times" id="closeSearch"></i>
     </div>
+    
   </header>
 
+  <!-- Sidebar Menu -->
   <div class="sidebar" id="sidebar">
   <span class="close-btn" id="closeSidebar">×</span>
   <ul>
@@ -81,10 +160,9 @@ body{background:#000;color:white;font-family:Arial;margin:0;padding:0}
 </div>
   <div class="overlay" id="overlay"></div>
   
-<!-- Video Player - IFRAME -->
+<!-- Video Player -->
 <div class="player" id="playerBox">
-  <!-- FIX 1: sandbox ain kara. allow ekata autoplay + fullscreen add -->
-  <iframe id="videoPlayer" src="" style="width:100%; height:100%; border:none; background:#000;" allow="autoplay; fullscreen; encrypted-media" allowfullscreen referrerpolicy="no-referrer"></iframe>
+  <iframe id="videoPlayer" src="" style="width:100%; height:100%; border:none; background:#000;" allow="autoplay; fullscreen; encrypted-media" allowfullscreen></iframe> <!-- video aragen iframe dala -->
 </div>
 
 <div class="info">
@@ -108,9 +186,12 @@ body{background:#000;color:white;font-family:Arial;margin:0;padding:0}
   </div>
 </div>
 
+<!-- Description Section -->
 <div class="description-section">
   <h2 class="desc-title">Description</h2>
-  <p class="desc-text" id="movieDesc">Loading description...</p>
+  <p class="desc-text" id="movieDesc">
+    Loading description...
+  </p>
 </div>
 
 <script type="module">
@@ -129,6 +210,7 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+
 const params = new URLSearchParams(window.location.search);
 const movieId = params.get('id');
 
@@ -147,12 +229,14 @@ async function loadMovie() {
     document.getElementById('pageTitle').innerText = (m.title || 'Movie') + ' - MAGICAL MOVIE LAND';
     document.getElementById('movieTitle').innerText = m.title || 'Untitled';
     
+    // Badges
     const quality = m.quality || 'HD';
     const qualityClass = quality.toLowerCase().replace('.', '-');
     let badgesHTML = `<span class="badge ${qualityClass}">${quality}</span>`;
     if(m.imdbRating) badgesHTML += `<span class="badge imdb">⭐ ${m.imdbRating}</span>`;
     document.getElementById('badges').innerHTML = badgesHTML;
     
+    // Details
     document.getElementById('genres').innerText = m.genres || 'N/A';
     document.getElementById('director').innerText = m.director || 'N/A';
     document.getElementById('duration').innerText = m.duration || 'N/A';
@@ -161,8 +245,11 @@ async function loadMovie() {
     document.getElementById('year').innerText = m.year || '2024';
     document.getElementById('imdb').innerText = m.imdbRating || 'N/A';
     document.getElementById('imdbVotes').innerText = m.imdbVotes ? '(' + m.imdbVotes + ' votes)' : '';
+    
+    // Poster
     document.getElementById('poster').src = m.poster || 'https://via.placeholder.com/200x300/222/fff?text=No+Image';
     
+    // ===== DESCRIPTION LOAD =====
     const descElement = document.getElementById('movieDesc');
     if(m.description && m.description.trim() !== '') {
         descElement.innerHTML = m.description.replace(/\n/g, '<br>');
@@ -170,13 +257,13 @@ async function loadMovie() {
         descElement.innerText = 'Description එකක් add කරලා නෑ.';
     }
     
-    // FIX 2: Streamtape /e/ link check
-    const videoPlayer = document.getElementById('videoPlayer');
-    if(m.video && m.video.includes('/e/')) {
-        videoPlayer.src = m.video; 
+    // Video Player - FIXED
+    const videoPlayer = document.getElementById('videoPlayer'); // videoSource arage
+    
+    if(m.video && m.video.trim() !== '' && m.video !== '#') {
+        videoPlayer.src = m.video; // iframe ekata direct src
     } else {
         videoPlayer.src = 'about:blank';
-        document.getElementById('playerBox').innerHTML = '<div style="text-align:center; padding:100px; color:#ffaa00;">Hari Streamtape /e/ link ekak nathi</div>';
     }
     
   } else {
@@ -185,8 +272,10 @@ async function loadMovie() {
     document.getElementById('playerBox').innerHTML = '<div style="text-align:center; padding:100px; color:#ff4444;">Movie එක හොයාගන්න බැරි වුනා</div>';
   }
 }
+
 loadMovie();
 
+// Sidebar + Search toggle
 const menuBtn = document.getElementById('menuBtn');
 const sidebar = document.getElementById('sidebar');
 const closeSidebar = document.getElementById('closeSidebar');
@@ -195,14 +284,41 @@ const searchBtn = document.getElementById('searchBtn');
 const searchBox = document.getElementById('searchBox');
 const closeSearch = document.getElementById('closeSearch');
 
-menuBtn?.addEventListener('click', () => {sidebar.classList.add('active'); overlay.classList.add('active');});
-closeSidebar?.addEventListener('click', () => {sidebar.classList.remove('active'); overlay.classList.remove('active');});
-overlay?.addEventListener('click', () => {sidebar.classList.remove('active'); overlay.classList.remove('active');});
-searchBtn?.addEventListener('click', () => {searchBox.classList.toggle('active'); if(searchBox.classList.contains('active')){searchBox.querySelector('input').focus();}});
-closeSearch?.addEventListener('click', () => {searchBox.classList.remove('active');});
+menuBtn?.addEventListener('click', () => {
+  sidebar.classList.add('active');
+  overlay.classList.add('active');
+});
 
+closeSidebar?.addEventListener('click', () => {
+  sidebar.classList.remove('active');
+  overlay.classList.remove('active');
+});
+
+overlay?.addEventListener('click', () => {
+  sidebar.classList.remove('active');
+  overlay.classList.remove('active');
+});
+
+searchBtn?.addEventListener('click', () => {
+  searchBox.classList.toggle('active');
+  if(searchBox.classList.contains('active')) {
+    searchBox.querySelector('input').focus();
+  }
+});
+
+closeSearch?.addEventListener('click', () => {
+  searchBox.classList.remove('active');
+});
+
+// Sidebar active link highlight
 const currentPage = window.location.pathname.split('/').pop() || 'index.html';
-document.querySelectorAll('.sidebar ul li a').forEach(link => {if(link.getAttribute('href') === currentPage){link.classList.add('active');}});
+const sidebarLinks = document.querySelectorAll('.sidebar ul li a');
+sidebarLinks.forEach(link => {
+    const href = link.getAttribute('href');
+    if(href === currentPage) {
+        link.classList.add('active');
+    }
+});
 </script>
 </body>
 </html>
