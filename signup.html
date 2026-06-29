@@ -9,75 +9,35 @@
 <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'Arial', sans-serif; background: #0D0D1A; color: #fff; min-height: 100vh; }
-  header { background: #111; padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 999; border-bottom: 1px solid #222; }
-  .logo { font-size: 20px; font-weight: 700; white-space: nowrap; }
+  header { background: #111; padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 999; }
+  .logo { font-size: 20px; font-weight: 700; }
   .logo span { color: #ff2d95; }
-  .header-right i { font-size: 20px; cursor: pointer; margin-left: 15px; }
-  .header-right i:hover { color: #ff2d95; }
+  .header-right i { font-size: 20px; cursor: pointer; }
   .sidebar { position: fixed; top: 0; right: -300px; width: 280px; height: 100%; background: #1a1a1a; transition: right 0.3s ease; z-index: 1001; padding-top: 60px; }
   .sidebar.active { right: 0; }
   .sidebar ul { list-style: none; }
   .sidebar ul li a { display: block; padding: 15px 20px; color: white; text-decoration: none; border-bottom: 1px solid #333; }
-  .sidebar ul li a i { margin-right: 10px; width: 20px; }
-  .sidebar ul li.active a, .sidebar ul li a:hover { background: #ff2d95; color: white; }
+  .sidebar ul li.active a, .sidebar ul li a:hover { background: #ff2d95; }
   .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: none; z-index: 1000; }
   .overlay.active { display: block; }
-  .close-btn { position: absolute; top: 15px; right: 20px; font-size: 30px; color: white; cursor: pointer; z-index: 1002; }
-  .close-btn:hover { color: #ff2d95; }
-  
+  .close-btn { position: absolute; top: 15px; right: 20px; font-size: 30px; color: white; cursor: pointer; }
   main { display: flex; justify-content: center; align-items: center; padding: 40px 15px; min-height: calc(100vh - 60px); }
-  
-  .box { 
-    background: #1A1A2E; 
-    border: 1px solid #FF00FF; 
-    padding: 25px 20px; 
-    border-radius: 16px; 
-    width: 100%; 
-    max-width: 320px; 
-    text-align: center; 
-    box-shadow: 0 0 5px #FF00FF, 0 0 15px #FF00FF, 0 0 30px #FF00FF; 
-  }
-  
-  h2 { 
-    color: #FF00FF; 
-    margin-bottom: 20px; 
-    font-size: 26px; 
-    font-weight: 700; 
-    text-shadow: 0 0 15px #FF00FF; 
-  }
-  input { 
-    width: 100%; 
-    padding: 12px; 
-    margin: 8px 0; 
-    border: 1px solid #FF00FF; 
-    border-radius: 10px; 
-    background: #0D0D1A; 
-    color: #fff; 
-    font-size: 15px; 
-    outline: none; 
-  }
+  .box { background: #1A1A2E; border: 1px solid #FF00FF; padding: 25px 20px; border-radius: 16px; width: 100%; max-width: 320px; text-align: center; box-shadow: 0 0 15px #FF00FF; }
+  h2 { color: #FF00FF; margin-bottom: 20px; font-size: 26px; text-shadow: 0 0 15px #FF00FF; }
+  input { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #FF00FF; border-radius: 10px; background: #0D0D1A; color: #fff; font-size: 15px; outline: none; }
   input:focus { box-shadow: 0 0 10px #FF00FF; }
-  input::placeholder { color: #888; }
-  button { 
-    width: 100%; 
-    padding: 14px; 
-    margin-top: 15px; 
-    border: none; 
-    border-radius: 10px; 
-    background: #FF00FF; 
-    color: #111; 
-    font-weight: bold; 
-    font-size: 16px; 
-    cursor: pointer; 
-    box-shadow: 0 0 15px #FF00FF; 
-  }
-  button:hover { filter: brightness(1.2); }
-  button:disabled { background: #555; box-shadow: none; cursor: not-allowed; }
+  input.valid { border-color: #00ff88; box-shadow: 0 0 10px #00ff88; } /* Green */
+  input.invalid { border-color: #ff4d4d; box-shadow: 0 0 10px #ff4d4d; } /* Red */
+  button { width: 100%; padding: 14px; margin-top: 15px; border: none; border-radius: 10px; background: #FF00FF; color: #111; font-weight: bold; font-size: 16px; cursor: pointer; }
+  button:disabled { background: #555; cursor: not-allowed; }
+  .otp-row { display: flex; gap: 10px; align-items: center; }
+  .otp-row button { width: 40%; margin-top: 8px; font-size: 14px; }
+  #recaptcha-container { margin-top: 10px; }
   .login-text { color: #ccc; margin-top: 15px; font-size: 14px; }
-  .login-text a { color: #FF00FF; font-weight: bold; cursor: pointer; text-shadow: 0 0 8px #FF00FF; text-decoration: none; }
-  #error { color: #ff4d4d; margin-top: 10px; font-size: 13px; background: rgba(0,0,0,0.5); padding: 8px; border-radius: 8px; display: none; }
+  .login-text a { color: #FF00FF; font-weight: bold; text-decoration: none; }
+  #error { color: #ff4d4d; margin-top: 10px; font-size: 13px; display: none; }
   #error.show { display: block; }
-  #success { color: #00ff88; margin-top: 10px; font-size: 13px; background: rgba(0,0,0,0.5); padding: 8px; border-radius: 8px; display: none; } /* Me add kare */
+  #success { color: #00ff88; margin-top: 10px; font-size: 13px; display: none; }
   #success.show { display: block; }
 </style>
 </head>
@@ -94,13 +54,6 @@
       <li><a href="login.html"><i class="fa fa-right-to-bracket"></i> Login</a></li>
       <li class="active"><a href="signup.html"><i class="fa fa-user-plus"></i> Sign Up</a></li>
       <li><a href="index.html"><i class="fa fa-home"></i> Home</a></li>
-      <li><a href="movies.html"><i class="fa fa-film"></i> All Movies</a></li>
-      <li><a href="series.html"><i class="fa fa-tv"></i> TV Shows</a></li>
-      <li><a href="request.html"><i class="fa fa-plus-circle"></i> Requests</a></li>
-      <li><a href="chanels.html"><i class="fa-solid fa-users"></i> Join Channels</a></li>
-      <li><a href="about.html"><i class="fa fa-info-circle"></i> About</a></li>
-      <li><a href="contact.html"><i class="fa fa-envelope"></i> Contact Us</a></li>
-      <li><a href="settings.html"><i class="fa fa-cog"></i> Settings</a></li>
     </ul>
   </div>
   <div class="overlay" id="overlay"></div>
@@ -110,19 +63,32 @@
       <h2>Sign Up</h2>
       <input id="fname" type="text" placeholder="First Name" required>
       <input id="lname" type="text" placeholder="Last Name" required>
-      <input id="email" type="email" placeholder="Email" required>
+      <input id="username" type="text" placeholder="Username" required> <!-- Login ekata -->
+      
+      <div class="otp-row">
+        <input id="phone" type="tel" placeholder="+94777853950" required> <!-- +94 ekka -->
+        <button id="sendOtpBtn">Send OTP</button>
+      </div>
+
+      <div id="otpVerifySection" style="display:none;">
+        <input id="otpInput" type="text" placeholder="Enter 6-digit OTP" maxlength="6">
+        <button id="verifyOtpBtn">Verify OTP</button>
+      </div>
+
       <input id="password" type="password" placeholder="Password - 6+ letters" required>
-      <input id="phone" type="tel" placeholder="Phone Number">
-      <button id="signupBtn">Create Account</button>
+      
+      <div id="recaptcha-container"></div>
+
+      <button id="signupBtn" disabled>Create Account</button>
       <div id="error"></div>
-      <div id="success"></div> <!-- Success Msg eka penna -->
+      <div id="success"></div>
       <div class="login-text">Already have an account? <a href="login.html">Login</a></div>
     </div>
   </main>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { getAuth, RecaptchaVerifier, signInWithPhoneNumber, createUserWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"; 
 
 const firebaseConfig = {
@@ -139,50 +105,90 @@ const auth = getAuth(app);
 const db = getFirestore(app); 
 
 const errorDiv = document.getElementById('error');
-const successDiv = document.getElementById('success'); // Success div eka gatta
+const successDiv = document.getElementById('success');
+const phoneInput = document.getElementById('phone');
+const otpInput = document.getElementById('otpInput');
 const signupBtn = document.getElementById('signupBtn');
-const showError = (msg) => { errorDiv.innerText = msg; errorDiv.classList.add('show'); successDiv.classList.remove('show'); };
-const showSuccess = (msg) => { successDiv.innerText = msg; successDiv.classList.add('show'); errorDiv.classList.remove('show'); }; // Success function
+let confirmationResult; 
+let isPhoneVerified = false; // Green/Red check
 
-document.getElementById('signupBtn').onclick = async () => {
-  errorDiv.classList.remove('show');
+const showError = (msg) => { errorDiv.innerText = msg; errorDiv.classList.add('show'); successDiv.classList.remove('show'); };
+const showSuccess = (msg) => { successDiv.innerText = msg; successDiv.classList.add('show'); errorDiv.classList.remove('show'); };
+
+// 1. reCAPTCHA Invisible Setup
+window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', { 'size': 'invisible' });
+
+// 2. Send OTP Click
+document.getElementById('sendOtpBtn').onclick = async () => {
+  const phoneNumber = phoneInput.value.trim();
+  if(!phoneNumber.startsWith('+94')) return showError("+94 walin patawanna. Ex: +9477...");
+
+  document.getElementById('sendOtpBtn').disabled = true;
+  try {
+    confirmationResult = await signInWithPhoneNumber(auth, phoneNumber, window.recaptchaVerifier);
+    document.getElementById('otpVerifySection').style.display = 'block';
+    showSuccess("OTP eka SMS karala thiyenawa.");
+    phoneInput.classList.remove('invalid');
+  } catch(e) {
+    showError(e.message);
+    phoneInput.classList.add('invalid');
+    document.getElementById('sendOtpBtn').disabled = false;
+  }
+};
+
+// 3. Verify OTP Click
+document.getElementById('verifyOtpBtn').onclick = async () => {
+  const code = otpInput.value.trim();
+  if(code.length !== 6) return showError("6 digit code eka damma");
+  
+  try {
+    await confirmationResult.confirm(code);
+    showSuccess("Phone Number Verified ✅");
+    otpInput.classList.add('valid'); // Green
+    isPhoneVerified = true;
+    signupBtn.disabled = false; // Eeta passe witharai Create enable
+  } catch(e) {
+    showError("OTP Code eka waradi ❌");
+    otpInput.classList.add('invalid'); // Red
+    isPhoneVerified = false;
+  }
+};
+
+// 4. Final Create Account
+signupBtn.onclick = async () => {
+  if(!isPhoneVerified) return showError("Pehala Phone eka Verify karapan. Green border eka balapan.");
+
   const fname = document.getElementById('fname').value.trim();
   const lname = document.getElementById('lname').value.trim();
-  const email = document.getElementById('email').value.trim();
+  const username = document.getElementById('username').value.trim();
+  const phone = phoneInput.value.trim();
   const pass = document.getElementById('password').value;
-  const phone = document.getElementById('phone').value.trim();
   
-  if(!fname || !lname || !email || !pass) return showError("First Name, Last Name, Email, Password අනිවාර්යයි");
-  if(pass.length < 6) return showError("Password එක 6 අකුරු වලට වඩා වැඩි වෙන්න ඕන");
+  if(!fname || !lname || !username || !pass) return showError("Hama field ekakma fill karapan");
+  if(pass.length < 6) return showError("Password 6+ letters wenna ona");
 
   signupBtn.disabled = true;
   signupBtn.innerText = "Creating...";
 
   try {
-    // 1. Firebase Auth Account eka hadanawa
-    const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
+    // Firebase ekata Email ona, e nisa Phone eken fake email ekak hadanawa
+    const fakeEmail = phone.replace('+','') + '@phone.user'; 
+    const userCredential = await createUserWithEmailAndPassword(auth, fakeEmail, pass);
     const user = userCredential.user;
-
-    // 2. Display Name eka set karanawa
-    await updateProfile(user, {
-      displayName: `${fname} ${lname}` 
+    
+    await updateProfile(user, { displayName: `${fname} ${lname}`, phoneNumber: phone });
+    await setDoc(doc(db, "users", user.uid), { 
+      uid: user.uid, 
+      firstName: fname, 
+      lastName: lname, 
+      username: username, // Login ekata ona
+      phone: phone, 
+      email: fakeEmail, // Fake email eka save
+      createdAt: new Date() 
     });
 
-    // 3. Phone + Details Firestore ekata save karanawa
-    await setDoc(doc(db, "users", user.uid), {
-      uid: user.uid,
-      firstName: fname,
-      lastName: lname,
-      email: email,
-      phone: phone || "",
-      createdAt: new Date()
-    });
-
-    // 4. Home page newei, Login page ekata yawana - Me thama main wenas
-    showSuccess("Account එක හදලා ඉවරයි! දැන් Login වෙන්න.");
-    setTimeout(() => {
-      window.location.href = 'login.html'; // Index ain, Login damma
-    }, 1500); // 1.5 second delay
+    showSuccess("Account හරි! Login වෙන්න.");
+    setTimeout(() => { window.location.href = 'login.html'; }, 1500);
 
   } catch(e) {
     showError(e.message);
@@ -191,16 +197,14 @@ document.getElementById('signupBtn').onclick = async () => {
   }
 };
 
-// Sidebar Toggle JS
+// Sidebar Toggle
 const menuBtn = document.getElementById('menuBtn');
 const sidebar = document.getElementById('sidebar');
 const overlay = document.getElementById('overlay');
 const closeSidebar = document.getElementById('closeSidebar');
-const openSidebar = () => { sidebar.classList.add('active'); overlay.classList.add('active'); };
-const closeSide = () => { sidebar.classList.remove('active'); overlay.classList.remove('active'); };
-menuBtn.onclick = openSidebar;
-closeSidebar.onclick = closeSide;
-overlay.onclick = closeSide;
+menuBtn.onclick = () => { sidebar.classList.add('active'); overlay.classList.add('active'); };
+closeSidebar.onclick = () => { sidebar.classList.remove('active'); overlay.classList.remove('active'); };
+overlay.onclick = () => { sidebar.classList.remove('active'); overlay.classList.remove('active'); };
 </script>
 </body>
-</html>
+</html></html>
