@@ -8,31 +8,14 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
 body{background:#000;color:white;font-family:Arial;margin:0;padding:0}
-
-/* ===== PLAYER HEIGHT - BALANCED ===== */
 .player{width:100%;height:42vh;background:#000;position:relative;overflow:hidden;margin-bottom:0}
-.player video{width:100%;height:100%;object-fit:contain;background:#000;display:block}
-
-@media (max-width: 768px){
-    .player{height:38vh} /* Screenshot එකේ උස */
-}
-
+.player iframe{width:100%;height:100%;display:block} /* video neme iframe */
+@media (max-width: 768px){.player{height:38vh}}
 .info{padding:0 15px 20px;max-width:1000px;margin:auto}
-
-.movie-detail{
-    display:flex;
-    gap:20px;
-    margin-top:15px;
-    align-items:flex-start;
-    background:#1a1a1a;
-    padding:20px;
-    border-radius:12px;
-}
-
+.movie-detail{display:flex;gap:20px;margin-top:15px;align-items:flex-start;background:#1a1a1a;padding:20px;border-radius:12px}
 .left-col{display:flex;flex-direction:column;align-items:center;flex-shrink:0}
 .left-col img{width:200px;border-radius:12px;box-shadow:0 4px 20px rgba(255,45,149,0.3);margin-bottom:12px}
 .left-col h1{margin:0;font-size:22px;color:#fff;text-align:center;font-weight:600;line-height:1.3;max-width:200px;word-wrap:break-word}
-
 .right-col{flex:1;min-width:0}
 .badges{display:flex;gap:8px;margin-bottom:15px;flex-wrap:wrap;justify-content:flex-start}
 .badge{padding:5px 12px;border-radius:6px;font-size:13px;font-weight:bold}
@@ -41,211 +24,54 @@ body{background:#000;color:white;font-family:Arial;margin:0;padding:0}
 .badge.web-dl{background:#00bfff;color:white}
 .badge.cam{background:#888;color:white}
 .badge.imdb{background:#f5c518;color:#000}
-
 .details-list p{margin:8px 0;font-size:15px;color:#ccc;text-align:left;display:flex;align-items:center}
 .details-list p strong{color:#fff;font-weight:600;margin-right:8px;min-width:130px;display:flex;align-items:center;gap:6px}
 .imdb-box{color:#f5c518;font-weight:bold;font-size:15px}
 .imdb-box small{color:#aaa;font-size:13px}
-
-/* ===== DESCRIPTION SECTION ===== */
-.description-section{
-  padding: 20px 12px;
-  margin-top: 20px;
-  border-top: 1px solid #222;
-  max-width: 1000px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.desc-title{
-  font-size: 18px;
-  font-weight: 700;
-  margin-bottom: 12px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: #fff;
-}
-
-.desc-title::before{
-  content: '';
-  width: 3px;
-  height: 20px;
-  background: #ff2d95;
-  border-radius: 2px;
-}
-
-.desc-text{
-  font-size: 14px;
-  line-height: 1.7;
-  color: #ccc;
-  text-align: justify;
-}
-
-/* ===== SIDEBAR ACTIVE WITH ROUNDED LEFT BORDER ===== */
-.sidebar ul li a{
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 14px 20px;
-    color: #ccc;
-    text-decoration: none;
-    font-size: 15px;
-    transition: 0.3s;
-    border-left: 3px solid transparent;
-    border-radius: 0;
-    margin: 2px 0;
-}
-
-.sidebar ul li a:hover{
-    background: #1a1a1a;
-    color: #fff;
-}
-
-.sidebar ul li a.active{
-    background: #ff2d95;
-    color: #fff;
-    border-left: 3px solid #ff2d95;
-    border-top-left-radius: 10px;
-    border-bottom-left-radius: 10px;
-    font-weight: 600;
-}
-
-.sidebar ul li a i{
-    width: 20px;
-    text-align: center;
-}
-
-@media (max-width: 768px){
-    .movie-detail{gap:15px;padding:15px;margin-top:12px}
-    .left-col img{width:130px;border-radius:10px}
-    .left-col h1{font-size:16px;max-width:130px}
-    .details-list p{font-size:13px;margin:6px 0}
-    .details-list p strong{min-width:100px;font-size:13px}
-    .badge{font-size:11px;padding:3px 8px}
-    .description-section{padding: 15px 12px;}
-    .desc-text{font-size: 13px;}
-}
+.description-section{padding: 20px 12px;margin-top: 20px;border-top: 1px solid #222;max-width: 1000px;margin-left: auto;margin-right: auto}
+.desc-title{font-size: 18px;font-weight: 700;margin-bottom: 12px;display: flex;align-items: center;gap: 8px;color: #fff}
+.desc-title::before{content: '';width: 3px;height: 20px;background: #ff2d95;border-radius: 2px}
+.desc-text{font-size: 14px;line-height: 1.7;color: #ccc;text-align: justify}
+.sidebar ul li a{display: flex;align-items: center;gap: 12px;padding: 14px 20px;color: #ccc;text-decoration: none;font-size: 15px;transition: 0.3s;border-left: 3px solid transparent;border-radius: 0;margin: 2px 0}
+.sidebar ul li a:hover{background: #1a1a1a;color: #fff}
+.sidebar ul li a.active{background: #ff2d95;color: #fff;border-left: 3px solid #ff2d95;border-top-left-radius: 10px;border-bottom-left-radius: 10px;font-weight: 600}
+.sidebar ul li a i{width: 20px;text-align: center}
+@media (max-width: 768px){.movie-detail{gap:15px;padding:15px;margin-top:12px}.left-col img{width:130px;border-radius:10px}.left-col h1{font-size:16px;max-width:130px}.details-list p{font-size:13px;margin:6px 0}.details-list p strong{min-width:100px;font-size:13px}.badge{font-size:11px;padding:3px 8px}.description-section{padding: 15px 12px;}.desc-text{font-size: 13px;}}
 </style>
 </head>
 <body>
+<header><div class="logo">𝗠𝗔𝗚𝗜𝗖𝗔𝗟 <span>𝗠🍩𝗩𝗜𝗘 𝗟🌲𝗡𝗗</span></div><div class="header-right"><i class="fa fa-search" id="searchBtn"></i><i class="fa fa-bars" id="menuBtn"></i></div><div class="search-box" id="searchBox"><input type="text" placeholder="Search cartoons or movies..."><i class="fa fa-times" id="closeSearch"></i></div></header>
+<div class="sidebar" id="sidebar"><span class="close-btn" id="closeSidebar">×</span><ul><li><a href="index.html"><i class="fa fa-home"></i> Home</a></li><li><a href="movies.html"><i class="fa fa-film"></i> All Movies</a></li><li><a href="series.html"><i class="fa fa-tv"></i> TV Shows</a></li><li><a href="channels.html"><i class="fa-solid fa-users"></i> Join Channels</a></li><li><a href="about.html"><i class="fa fa-info-circle"></i> About Us</a></li><li><a href="contact.html"><i class="fa fa-envelope"></i> Contact Us</a></li></ul></div><div class="overlay" id="overlay"></div>
   
-  <!-- Header -->
-  <header>
-    <div class="logo">𝗠𝗔𝗚𝗜𝗖𝗔𝗟 <span>𝗠🍩𝗩𝗜𝗘 𝗟🌲𝗡𝗗</span></div>
-    <div class="header-right">
-      <i class="fa fa-search" id="searchBtn"></i>
-      <i class="fa fa-bars" id="menuBtn"></i>
-    </div>
-    
-    <!-- Search Bar -->
-    <div class="search-box" id="searchBox">
-      <input type="text" placeholder="Search cartoons or movies...">
-      <i class="fa fa-times" id="closeSearch"></i>
-    </div>
-    
-  </header>
-
-  <!-- Sidebar Menu -->
-  <div class="sidebar" id="sidebar">
-  <span class="close-btn" id="closeSidebar">×</span>
-  <ul>
-    <li><a href="index.html"><i class="fa fa-home"></i> Home</a></li>
-    <li><a href="movies.html"><i class="fa fa-film"></i> All Movies</a></li>
-    <li><a href="series.html"><i class="fa fa-tv"></i> TV Shows</a></li>
-    <li><a href="channels.html"><i class="fa-solid fa-users"></i> Join Channels</a></li>
-    <li><a href="about.html"><i class="fa fa-info-circle"></i> About Us</a></li>
-    <li><a href="contact.html"><i class="fa fa-envelope"></i> Contact Us</a></li>
-  </ul>
-</div>
-  <div class="overlay" id="overlay"></div>
-  
-<!-- Video Player -->
+<!-- Video Player - Iframe -->
 <div class="player" id="playerBox">
-  <video 
-    id="videoPlayer" 
-    controls 
-    preload="metadata"
-    playsinline
-    webkit-playsinline
-    poster=""
-    style="width:100%; height:100%; background:#000;">
-    <source id="videoSource" src="" type="video/mp4">
-  </video>
+  <iframe id="videoPlayer" src="" style="width:100%; height:100%; border:none; background:#000;" allow="autoplay; fullscreen; encrypted-media" allowfullscreen></iframe>
 </div>
 
-<div class="info">
-  <div class="movie-detail">
-    <div class="left-col">
-      <img id="poster" src="" alt="">
-      <h1 id="movieTitle"></h1>
-    </div>
-    <div class="right-col">
-      <div class="badges" id="badges"></div>
-      <div class="details-list">
-        <p><strong>🎭 Genres:</strong> <span id="genres"></span></p>
-        <p><strong>👨‍💼 Director:</strong> <span id="director"></span></p>
-        <p><strong>⏱️ Duration:</strong> <span id="duration"></span></p>
-        <p><strong>🗣️ Language:</strong> <span id="language"></span></p>
-        <p><strong>🌍 Country:</strong> <span id="country"></span></p>
-        <p><strong>📅 Release Year:</strong> <span id="year"></span></p>
-        <p><strong>⭐ IMDb Rating:</strong> <span class="imdb-box">⭐ <span id="imdb"></span> <small id="imdbVotes"></small></span></p>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Description Section -->
-<div class="description-section">
-  <h2 class="desc-title">Description</h2>
-  <p class="desc-text" id="movieDesc">
-    Loading description...
-  </p>
-</div>
+<div class="info"><div class="movie-detail"><div class="left-col"><img id="poster" src="" alt=""><h1 id="movieTitle"></h1></div><div class="right-col"><div class="badges" id="badges"></div><div class="details-list"><p><strong>🎭 Genres:</strong> <span id="genres"></span></p><p><strong>👨‍💼 Director:</strong> <span id="director"></span></p><p><strong>⏱️ Duration:</strong> <span id="duration"></span></p><p><strong>🗣️ Language:</strong> <span id="language"></span></p><p><strong>🌍 Country:</strong> <span id="country"></span></p><p><strong>📅 Release Year:</strong> <span id="year"></span></p><p><strong>⭐ IMDb Rating:</strong> <span class="imdb-box">⭐ <span id="imdb"></span> <small id="imdbVotes"></small></span></p></div></div></div></div>
+<div class="description-section"><h2 class="desc-title">Description</h2><p class="desc-text" id="movieDesc">Loading description...</p></div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyCx0TEmgr3GCyvfeok9Y42yR1PTM4_8y9M",
-  authDomain: "magical-movie-land.firebaseapp.com",
-  projectId: "magical-movie-land",
-  storageBucket: "magical-movie-land.firebasestorage.app",
-  messagingSenderId: "27757424288",
-  appId: "1:27757424288:web:d650e2659f09f0b9c823c5",
-  measurementId: "G-KK84DYV9EP"
-};
-
+const firebaseConfig = {apiKey: "AIzaSyCx0TEmgr3GCyvfeok9Y42yR1PTM4_8y9M",authDomain: "magical-movie-land.firebaseapp.com",projectId: "magical-movie-land",storageBucket: "magical-movie-land.firebasestorage.app",messagingSenderId: "27757424288",appId: "1:27757424288:web:d650e2659f09f0b9c823c5",measurementId: "G-KK84DYV9EP"};
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-
 const params = new URLSearchParams(window.location.search);
 const movieId = params.get('id');
-
 async function loadMovie() {
-  if(!movieId) {
-    document.getElementById('movieTitle').innerText = 'Movie හම්බුනේ නෑ';
-    document.getElementById('movieDesc').innerText = 'Movie ID එකක් නෑ';
-    return;
-  }
-  
+  if(!movieId) {document.getElementById('movieTitle').innerText = 'Movie හම්බුනේ නෑ';document.getElementById('movieDesc').innerText = 'Movie ID එකක් නෑ';return;}
   const docRef = doc(db, "movies", movieId);
   const docSnap = await getDoc(docRef);
-  
   if(docSnap.exists()) {
     const m = docSnap.data();
     document.getElementById('pageTitle').innerText = (m.title || 'Movie') + ' - MAGICAL MOVIE LAND';
     document.getElementById('movieTitle').innerText = m.title || 'Untitled';
-    
-    // Badges
     const quality = m.quality || 'HD';
     const qualityClass = quality.toLowerCase().replace('.', '-');
     let badgesHTML = `<span class="badge ${qualityClass}">${quality}</span>`;
     if(m.imdbRating) badgesHTML += `<span class="badge imdb">⭐ ${m.imdbRating}</span>`;
     document.getElementById('badges').innerHTML = badgesHTML;
-    
-    // Details
     document.getElementById('genres').innerText = m.genres || 'N/A';
     document.getElementById('director').innerText = m.director || 'N/A';
     document.getElementById('duration').innerText = m.duration || 'N/A';
@@ -254,83 +80,23 @@ async function loadMovie() {
     document.getElementById('year').innerText = m.year || '2024';
     document.getElementById('imdb').innerText = m.imdbRating || 'N/A';
     document.getElementById('imdbVotes').innerText = m.imdbVotes ? '(' + m.imdbVotes + ' votes)' : '';
-    
-    // Poster
     document.getElementById('poster').src = m.poster || 'https://via.placeholder.com/200x300/222/fff?text=No+Image';
-    
-    // ===== DESCRIPTION LOAD =====
     const descElement = document.getElementById('movieDesc');
-    if(m.description && m.description.trim() !== '') {
-        descElement.innerHTML = m.description.replace(/\n/g, '<br>');
-    } else {
-        descElement.innerText = 'Description එකක් add කරලා නෑ.';
-    }
+    if(m.description && m.description.trim() !== '') {descElement.innerHTML = m.description.replace(/\n/g, '<br>');} else {descElement.innerText = 'Description එකක් add කරලා නෑ.';}
     
-    // Video Player
+    // Video Player - Iframe
     const videoPlayer = document.getElementById('videoPlayer');
-    const videoSource = document.getElementById('videoSource');
+    if(m.video && m.video.trim() !== '' && m.video !== '#') {videoPlayer.src = m.video;} else {videoPlayer.src = 'about:blank';}
     
-    if(m.video && m.video.trim() !== '' && m.video !== '#') {
-        videoSource.src = m.video;
-    } else {
-        videoSource.src = '';
-    }
-    
-    videoPlayer.load();
-    
-  } else {
-    document.getElementById('movieTitle').innerText = 'Movie හොයාගන්න බැරි උනා';
-    document.getElementById('movieDesc').innerText = 'Database එකේ මේ movie එක නෑ';
-    document.getElementById('playerBox').innerHTML = '<div style="text-align:center; padding:100px; color:#ff4444;">Movie එක හොයාගන්න බැරි වුනා</div>';
-  }
-}
-
+  } else {document.getElementById('movieTitle').innerText = 'Movie හොයාගන්න බැරි උනා';document.getElementById('movieDesc').innerText = 'Database එකේ මේ movie එක නෑ';document.getElementById('playerBox').innerHTML = '<div style="text-align:center; padding:100px; color:#ff4444;">Movie එක හොයාගන්න බැරි වුනා</div>';}
 loadMovie();
-
-// Sidebar + Search toggle
-const menuBtn = document.getElementById('menuBtn');
-const sidebar = document.getElementById('sidebar');
-const closeSidebar = document.getElementById('closeSidebar');
-const overlay = document.getElementById('overlay');
-const searchBtn = document.getElementById('searchBtn');
-const searchBox = document.getElementById('searchBox');
-const closeSearch = document.getElementById('closeSearch');
-
-menuBtn?.addEventListener('click', () => {
-  sidebar.classList.add('active');
-  overlay.classList.add('active');
-});
-
-closeSidebar?.addEventListener('click', () => {
-  sidebar.classList.remove('active');
-  overlay.classList.remove('active');
-});
-
-overlay?.addEventListener('click', () => {
-  sidebar.classList.remove('active');
-  overlay.classList.remove('active');
-});
-
-searchBtn?.addEventListener('click', () => {
-  searchBox.classList.toggle('active');
-  if(searchBox.classList.contains('active')) {
-    searchBox.querySelector('input').focus();
-  }
-});
-
-closeSearch?.addEventListener('click', () => {
-  searchBox.classList.remove('active');
-});
-
-// Sidebar active link highlight
-const currentPage = window.location.pathname.split('/').pop() || 'index.html';
-const sidebarLinks = document.querySelectorAll('.sidebar ul li a');
-sidebarLinks.forEach(link => {
-    const href = link.getAttribute('href');
-    if(href === currentPage) {
-        link.classList.add('active');
-    }
-});
+const menuBtn = document.getElementById('menuBtn');const sidebar = document.getElementById('sidebar');const closeSidebar = document.getElementById('closeSidebar');const overlay = document.getElementById('overlay');const searchBtn = document.getElementById('searchBtn');const searchBox = document.getElementById('searchBox');const closeSearch = document.getElementById('closeSearch');
+menuBtn?.addEventListener('click', () => {sidebar.classList.add('active');overlay.classList.add('active');});
+closeSidebar?.addEventListener('click', () => {sidebar.classList.remove('active');overlay.classList.remove('active');});
+overlay?.addEventListener('click', () => {sidebar.classList.remove('active');overlay.classList.remove('active');});
+searchBtn?.addEventListener('click', () => {searchBox.classList.toggle('active');if(searchBox.classList.contains('active')) {searchBox.querySelector('input').focus();}});
+closeSearch?.addEventListener('click', () => {searchBox.classList.remove('active');});
+const currentPage = window.location.pathname.split('/').pop() || 'index.html';const sidebarLinks = document.querySelectorAll('.sidebar ul li a');sidebarLinks.forEach(link => {const href = link.getAttribute('href');if(href === currentPage) {link.classList.add('active');}});
 </script>
 </body>
 </html>
