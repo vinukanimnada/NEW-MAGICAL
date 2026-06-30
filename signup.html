@@ -25,17 +25,17 @@
   h2 { color: #FF00FF; margin-bottom: 20px; font-size: 26px; text-shadow: 0 0 15px #FF00FF; }
   input { width: 100%; padding: 12px; margin: 8px 0; border: 2px solid #FF00FF; border-radius: 10px; background: #0D0D1A; color: #fff; font-size: 15px; outline: none; }
   input:focus { box-shadow: 0 0 10px #FF00FF; }
-  input.valid { border-color: #00ff88; box-shadow: 0 0 10px #00ff88; } /* Green */
-  input.invalid { border-color: #ff4d4d; box-shadow: 0 0 10px #ff4d4d; } /* Red */
+  input.valid { border-color: #00ff88; box-shadow: 0 0 10px #00ff88; } 
+  input.invalid { border-color: #ff4d4d; box-shadow: 0 0 10px #ff4d4d; } 
+  input:disabled { background: #222; opacity: 0.6; }
   
-  /* Nuthun Row CSS */
   .otp-row { display: flex; gap: 10px; align-items: center; margin: 8px 0; }
   .otp-row input { margin: 0; flex: 1; }
   .otp-row button { width: auto; margin: 0; padding: 12px 16px; white-space: nowrap; }
 
   button { width: 100%; padding: 14px; margin-top: 15px; border: none; border-radius: 10px; background: #FF00FF; color: #111; font-weight: bold; font-size: 16px; cursor: pointer; transition: 0.3s; }
   button:disabled { background: #555; color: #888; cursor: not-allowed; }
-  #recaptcha-container { margin-top: 10px; }
+  #recaptcha-container { margin: 10px auto; display: flex; justify-content: center; } /* Center karala */
   .login-text { color: #ccc; margin-top: 15px; font-size: 14px; }
   .login-text a { color: #FF00FF; font-weight: bold; text-decoration: none; }
   #error { color: #ff4d4d; margin-top: 10px; font-size: 13px; display: none; }
@@ -66,23 +66,21 @@
       <h2>Sign Up</h2>
       <input id="fname" type="text" placeholder="First Name" required>
       <input id="lname" type="text" placeholder="Last Name" required>
-      <input id="username" type="text" placeholder="Username" required> <!-- Login ekata -->
+      <input id="username" type="text" placeholder="Username" required> 
       
-      <!-- Number + Send OTP ehapathen -->
       <div class="otp-row">
-        <input id="phone" type="tel" placeholder="+94777853950" required> <!-- +94 ekka -->
+        <input id="phone" type="tel" placeholder="+94723988540" required> 
         <button id="sendOtpBtn" type="button">Send OTP</button>
       </div>
 
-      <!-- Verification code input eka yatin -->
-      <div id="otpVerifySection" style="display:none;">
+      <div id="otpVerifySection">
         <input id="otpInput" type="text" placeholder="Verification code" inputmode="numeric" maxlength="6">
         <button id="verifyOtpBtn" type="button">Verify OTP</button>
       </div>
 
       <input id="password" type="password" placeholder="Password - 6+ letters" required>
       
-      <div id="recaptcha-container"></div>
+      <div id="recaptcha-container"></div> <!-- Me box eka penawa dan -->
 
       <button id="signupBtn" disabled>Create Account</button>
       <div id="error"></div>
@@ -116,14 +114,24 @@ const otpInput = document.getElementById('otpInput');
 const sendOtpBtn = document.getElementById('sendOtpBtn');
 const signupBtn = document.getElementById('signupBtn');
 let confirmationResult; 
-let isPhoneVerified = false; // Green/Red check
+let isPhoneVerified = false;
 let otpTimer;
+let recaptchaWidgetId; // Widget ID save karanna
 
 const showError = (msg) => { errorDiv.innerText = msg; errorDiv.classList.add('show'); successDiv.classList.remove('show'); };
 const showSuccess = (msg) => { successDiv.innerText = msg; successDiv.classList.add('show'); errorDiv.classList.remove('show'); };
 
-// 1. reCAPTCHA Invisible Setup
-window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', { 'size': 'invisible' });
+// 1. reCAPTCHA NORMAL Setup - Fix eka meke. GitHub Pages walata meka witharai wada.
+window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', { 
+  'size': 'normal',
+  'callback': (response) => {
+    // reCAPTCHA ok una gaman
+  },
+  'expired-callback': () => {
+    // Expire una gaman aye render karanna
+    grecaptcha.reset(recaptchaWidgetId);
+  }
+});
 
 // 30s Timer Function
 function startOtpTimer() {
@@ -146,35 +154,43 @@ sendOtpBtn.onclick = async () => {
   const phoneNumber = phoneInput.value.trim();
   if(!phoneNumber.startsWith('+94')) return showError("+94 walin patawanna. Ex: +9477...");
 
+  sendOtpBtn.disabled = true;
   try {
     confirmationResult = await signInWithPhoneNumber(auth, phoneNumber, window.recaptchaVerifier);
-    document.getElementById('otpVerifySection').style.display = 'block';
-    showSuccess("OTP eka SMS karala thiyenawa.");
+    showSuccess("OTP eka SMS karala thiyenawa. Code eka danna.");
     phoneInput.classList.remove('invalid');
-    startOtpTimer(); // Timer start
+    phoneInput.classList.add('valid');
+    startOtpTimer();
   } catch(e) {
-    showError(e.message);
+    console.error(e);
+    showError("Error: " + e.code + " - " + e.message); // Code ekath pennam
     phoneInput.classList.add('invalid');
+    sendOtpBtn.disabled = false;
+    grecaptcha.reset(recaptchaWidgetId); // Fail una gaman aye captcha
   }
 };
 
 // 3. Verify OTP Click
 document.getElementById('verifyOtpBtn').onclick = async () => {
+  if(!confirmationResult) return showError("Pehala Send OTP click karapan");
+  
   const code = otpInput.value.trim();
   if(code.length !== 6) return showError("6 digit code eka damma");
   
   try {
     await confirmationResult.confirm(code);
     showSuccess("Phone Number Verified ✅");
-    otpInput.classList.add('valid'); // Green border
-    otpInput.classList.remove('invalid');
+    otpInput.classList.add('valid'); 
+    otpInput.disabled = true;
+    document.getElementById('verifyOtpBtn').disabled = true;
     isPhoneVerified = true;
-    signupBtn.disabled = false; // Eeta passe witharai Create enable
+    signupBtn.disabled = false; 
     clearInterval(otpTimer);
     sendOtpBtn.textContent = 'Verified';
+    sendOtpBtn.disabled = true;
   } catch(e) {
-    showError("OTP Code eka waradi ❌");
-    otpInput.classList.add('invalid'); // Red border
+    showError("OTP Code eka waradi ❌: " + e.message);
+    otpInput.classList.add('invalid'); 
     isPhoneVerified = false;
   }
 };
@@ -196,27 +212,21 @@ signupBtn.onclick = async () => {
   signupBtn.innerText = "Creating...";
 
   try {
-    // Firebase ekata Email ona, e nisa Phone eken fake email ekak hadanawa
     const fakeEmail = phone.replace('+','') + '@phone.user'; 
     const userCredential = await createUserWithEmailAndPassword(auth, fakeEmail, pass);
     const user = userCredential.user;
     
-    await updateProfile(user, { displayName: `${fname} ${lname}`, phoneNumber: phone });
+    await updateProfile(user, { displayName: `${fname} ${lname}` });
     await setDoc(doc(db, "users", user.uid), { 
-      uid: user.uid, 
-      firstName: fname, 
-      lastName: lname, 
-      username: username, // Login ekata ona
-      phone: phone, 
-      email: fakeEmail, // Fake email eka save
-      createdAt: new Date() 
+      uid: user.uid, firstName: fname, lastName: lname, username: username, 
+      phone: phone, email: fakeEmail, createdAt: new Date() 
     });
 
     showSuccess("Account හරි! Login වෙන්න.");
     setTimeout(() => { window.location.href = 'login.html'; }, 1500);
 
   } catch(e) {
-    showError(e.message);
+    showError(e.code + ": " + e.message); // Error code ekath pennam
     signupBtn.disabled = false;
     signupBtn.innerText = "Create Account";
   }
