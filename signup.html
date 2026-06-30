@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Sign Up - Magical Movie Land</title>
-<link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -22,16 +21,20 @@
   .overlay.active { display: block; }
   .close-btn { position: absolute; top: 15px; right: 20px; font-size: 30px; color: white; cursor: pointer; }
   main { display: flex; justify-content: center; align-items: center; padding: 40px 15px; min-height: calc(100vh - 60px); }
-  .box { background: #1A1A2E; border: 1px solid #FF00FF; padding: 25px 20px; border-radius: 16px; width: 100%; max-width: 320px; text-align: center; box-shadow: 0 0 15px #FF00FF; }
+  .box { background: #1A1A2E; border: 2px solid #FF00FF; padding: 25px 20px; border-radius: 16px; width: 100%; max-width: 350px; text-align: center; box-shadow: 0 0 15px #FF00FF; }
   h2 { color: #FF00FF; margin-bottom: 20px; font-size: 26px; text-shadow: 0 0 15px #FF00FF; }
-  input { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #FF00FF; border-radius: 10px; background: #0D0D1A; color: #fff; font-size: 15px; outline: none; }
+  input { width: 100%; padding: 12px; margin: 8px 0; border: 2px solid #FF00FF; border-radius: 10px; background: #0D0D1A; color: #fff; font-size: 15px; outline: none; }
   input:focus { box-shadow: 0 0 10px #FF00FF; }
   input.valid { border-color: #00ff88; box-shadow: 0 0 10px #00ff88; } /* Green */
   input.invalid { border-color: #ff4d4d; box-shadow: 0 0 10px #ff4d4d; } /* Red */
-  button { width: 100%; padding: 14px; margin-top: 15px; border: none; border-radius: 10px; background: #FF00FF; color: #111; font-weight: bold; font-size: 16px; cursor: pointer; }
-  button:disabled { background: #555; cursor: not-allowed; }
-  .otp-row { display: flex; gap: 10px; align-items: center; }
-  .otp-row button { width: 40%; margin-top: 8px; font-size: 14px; }
+  
+  /* Nuthun Row CSS */
+  .otp-row { display: flex; gap: 10px; align-items: center; margin: 8px 0; }
+  .otp-row input { margin: 0; flex: 1; }
+  .otp-row button { width: auto; margin: 0; padding: 12px 16px; white-space: nowrap; }
+
+  button { width: 100%; padding: 14px; margin-top: 15px; border: none; border-radius: 10px; background: #FF00FF; color: #111; font-weight: bold; font-size: 16px; cursor: pointer; transition: 0.3s; }
+  button:disabled { background: #555; color: #888; cursor: not-allowed; }
   #recaptcha-container { margin-top: 10px; }
   .login-text { color: #ccc; margin-top: 15px; font-size: 14px; }
   .login-text a { color: #FF00FF; font-weight: bold; text-decoration: none; }
@@ -65,14 +68,16 @@
       <input id="lname" type="text" placeholder="Last Name" required>
       <input id="username" type="text" placeholder="Username" required> <!-- Login ekata -->
       
+      <!-- Number + Send OTP ehapathen -->
       <div class="otp-row">
         <input id="phone" type="tel" placeholder="+94777853950" required> <!-- +94 ekka -->
-        <button id="sendOtpBtn">Send OTP</button>
+        <button id="sendOtpBtn" type="button">Send OTP</button>
       </div>
 
+      <!-- Verification code input eka yatin -->
       <div id="otpVerifySection" style="display:none;">
-        <input id="otpInput" type="text" placeholder="Enter 6-digit OTP" maxlength="6">
-        <button id="verifyOtpBtn">Verify OTP</button>
+        <input id="otpInput" type="text" placeholder="Verification code" inputmode="numeric" maxlength="6">
+        <button id="verifyOtpBtn" type="button">Verify OTP</button>
       </div>
 
       <input id="password" type="password" placeholder="Password - 6+ letters" required>
@@ -108,9 +113,11 @@ const errorDiv = document.getElementById('error');
 const successDiv = document.getElementById('success');
 const phoneInput = document.getElementById('phone');
 const otpInput = document.getElementById('otpInput');
+const sendOtpBtn = document.getElementById('sendOtpBtn');
 const signupBtn = document.getElementById('signupBtn');
 let confirmationResult; 
 let isPhoneVerified = false; // Green/Red check
+let otpTimer;
 
 const showError = (msg) => { errorDiv.innerText = msg; errorDiv.classList.add('show'); successDiv.classList.remove('show'); };
 const showSuccess = (msg) => { successDiv.innerText = msg; successDiv.classList.add('show'); errorDiv.classList.remove('show'); };
@@ -118,21 +125,36 @@ const showSuccess = (msg) => { successDiv.innerText = msg; successDiv.classList.
 // 1. reCAPTCHA Invisible Setup
 window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', { 'size': 'invisible' });
 
+// 30s Timer Function
+function startOtpTimer() {
+  let t = 30;
+  sendOtpBtn.disabled = true;
+  sendOtpBtn.textContent = t + 's';
+  otpTimer = setInterval(() => {
+    t--;
+    sendOtpBtn.textContent = t + 's';
+    if(t <= 0){
+      clearInterval(otpTimer);
+      sendOtpBtn.disabled = false;
+      sendOtpBtn.textContent = 'Resend OTP';
+    }
+  }, 1000);
+}
+
 // 2. Send OTP Click
-document.getElementById('sendOtpBtn').onclick = async () => {
+sendOtpBtn.onclick = async () => {
   const phoneNumber = phoneInput.value.trim();
   if(!phoneNumber.startsWith('+94')) return showError("+94 walin patawanna. Ex: +9477...");
 
-  document.getElementById('sendOtpBtn').disabled = true;
   try {
     confirmationResult = await signInWithPhoneNumber(auth, phoneNumber, window.recaptchaVerifier);
     document.getElementById('otpVerifySection').style.display = 'block';
     showSuccess("OTP eka SMS karala thiyenawa.");
     phoneInput.classList.remove('invalid');
+    startOtpTimer(); // Timer start
   } catch(e) {
     showError(e.message);
     phoneInput.classList.add('invalid');
-    document.getElementById('sendOtpBtn').disabled = false;
   }
 };
 
@@ -144,12 +166,15 @@ document.getElementById('verifyOtpBtn').onclick = async () => {
   try {
     await confirmationResult.confirm(code);
     showSuccess("Phone Number Verified ✅");
-    otpInput.classList.add('valid'); // Green
+    otpInput.classList.add('valid'); // Green border
+    otpInput.classList.remove('invalid');
     isPhoneVerified = true;
     signupBtn.disabled = false; // Eeta passe witharai Create enable
+    clearInterval(otpTimer);
+    sendOtpBtn.textContent = 'Verified';
   } catch(e) {
     showError("OTP Code eka waradi ❌");
-    otpInput.classList.add('invalid'); // Red
+    otpInput.classList.add('invalid'); // Red border
     isPhoneVerified = false;
   }
 };
@@ -207,4 +232,4 @@ closeSidebar.onclick = () => { sidebar.classList.remove('active'); overlay.class
 overlay.onclick = () => { sidebar.classList.remove('active'); overlay.classList.remove('active'); };
 </script>
 </body>
-</html></html>
+</html>
