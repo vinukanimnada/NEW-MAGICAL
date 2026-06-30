@@ -11,10 +11,10 @@ body{background:#000;color:white;font-family:Arial;margin:0;padding:0}
 
 /* ===== PLAYER HEIGHT - BALANCED ===== */
 .player{width:100%;height:42vh;background:#000;position:relative;overflow:hidden;margin-bottom:0}
-.player iframe{width:100%;height:100%;object-fit:contain;background:#000;display:block} /* video -> iframe karala */
+.player iframe{width:100%;height:100%;object-fit:contain;background:#000;display:block}
 
 @media (max-width: 768px){
-    .player{height:38vh} /* Screenshot එකේ උස */
+    .player{height:38vh}
 }
 
 .info{padding:0 15px 20px;max-width:1000px;margin:auto}
@@ -138,7 +138,6 @@ body{background:#000;color:white;font-family:Arial;margin:0;padding:0}
       <i class="fa fa-bars" id="menuBtn"></i>
     </div>
     
-    <!-- Search Bar -->
     <div class="search-box" id="searchBox">
       <input type="text" placeholder="Search cartoons or movies...">
       <i class="fa fa-times" id="closeSearch"></i>
@@ -162,7 +161,7 @@ body{background:#000;color:white;font-family:Arial;margin:0;padding:0}
   
 <!-- Video Player -->
 <div class="player" id="playerBox">
-  <iframe id="videoPlayer" src="" style="width:100%; height:100%; border:none; background:#000;" allow="autoplay; fullscreen; encrypted-media" allowfullscreen></iframe> <!-- video aragen iframe dala -->
+  <iframe id="videoPlayer" src="" style="width:100%; height:100%; border:none; background:#000;" allow="autoplay; fullscreen; encrypted-media" allowfullscreen></iframe>
 </div>
 
 <div class="info">
@@ -181,7 +180,6 @@ body{background:#000;color:white;font-family:Arial;margin:0;padding:0}
         <p><strong>🌍 Country:</strong> <span id="country"></span></p>
         <p><strong>📅 Release Year:</strong> <span id="year"></span></p>
         <p><strong>⭐ IMDb Rating:</strong> <span class="imdb-box">⭐ <span id="imdb"></span> <small id="imdbVotes"></small></span></p>
-
       </div>
     </div>
   </div>
@@ -195,11 +193,9 @@ body{background:#000;color:white;font-family:Arial;margin:0;padding:0}
   </p>
 </div>
 
-
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
 
 const firebaseConfig = {
   apiKey: "AIzaSyCx0TEmgr3GCyvfeok9Y42yR1PTM4_8y9M",
@@ -217,31 +213,27 @@ const db = getFirestore(app);
 const params = new URLSearchParams(window.location.search);
 const movieId = params.get('id');
 
-
 async function loadMovie() {
   if(!movieId) {
     document.getElementById('movieTitle').innerText = 'Movie හම්බුනේ නෑ';
     document.getElementById('movieDesc').innerText = 'Movie ID එකක් නෑ';
-    return;
-
+    return; // <-- meke } add
+  } // <-- meka add kale
 
   const docRef = doc(db, "movies", movieId);
   const docSnap = await getDoc(docRef);
-
 
   if(docSnap.exists()) {
     const m = docSnap.data();
     document.getElementById('pageTitle').innerText = (m.title || 'Movie') + ' - MAGICAL MOVIE LAND';
     document.getElementById('movieTitle').innerText = m.title || 'Untitled';
     
-    // Badges
     const quality = m.quality || 'HD';
     const qualityClass = quality.toLowerCase().replace('.', '-');
     let badgesHTML = `<span class="badge ${qualityClass}">${quality}</span>`;
     if(m.imdbRating) badgesHTML += `<span class="badge imdb">⭐ ${m.imdbRating}</span>`;
     document.getElementById('badges').innerHTML = badgesHTML;
     
-    // Details
     document.getElementById('genres').innerText = m.genres || 'N/A';
     document.getElementById('director').innerText = m.director || 'N/A';
     document.getElementById('duration').innerText = m.duration || 'N/A';
@@ -251,10 +243,8 @@ async function loadMovie() {
     document.getElementById('imdb').innerText = m.imdbRating || 'N/A';
     document.getElementById('imdbVotes').innerText = m.imdbVotes ? '(' + m.imdbVotes + ' votes)' : '';
     
-    // Poster
     document.getElementById('poster').src = m.poster || 'https://via.placeholder.com/200x300/222/fff?text=No+Image';
     
-    // ===== DESCRIPTION LOAD =====
     const descElement = document.getElementById('movieDesc');
     if(m.description && m.description.trim() !== '') {
         descElement.innerHTML = m.description.replace(/\n/g, '<br>');
@@ -262,11 +252,9 @@ async function loadMovie() {
         descElement.innerText = 'Description එකක් add කරලා නෑ.';
     }
     
-    // Video Player - FIXED
-    const videoPlayer = document.getElementById('videoPlayer'); // videoSource arage
-    
+    const videoPlayer = document.getElementById('videoPlayer');
     if(m.video && m.video.trim() !== '' && m.video !== '#') {
-        videoPlayer.src = m.video; // iframe ekata direct src
+        videoPlayer.src = m.video;
     } else {
         videoPlayer.src = 'about:blank';
     }
@@ -275,9 +263,8 @@ async function loadMovie() {
     document.getElementById('movieTitle').innerText = 'Movie හොයාගන්න බැරි උනා';
     document.getElementById('movieDesc').innerText = 'Database එකේ මේ movie එක නෑ';
     document.getElementById('playerBox').innerHTML = '<div style="text-align:center; padding:100px; color:#ff4444;">Movie එක හොයාගන්න බැරි වුනා</div>';
-
   }
-}
+} // <-- loadMovie close
 
 loadMovie();
 
@@ -290,37 +277,31 @@ const searchBtn = document.getElementById('searchBtn');
 const searchBox = document.getElementById('searchBox');
 const closeSearch = document.getElementById('closeSearch');
 
-
 menuBtn?.addEventListener('click', () => {
   sidebar.classList.add('active');
   overlay.classList.add('active');
 });
-
 
 closeSidebar?.addEventListener('click', () => {
   sidebar.classList.remove('active');
   overlay.classList.remove('active');
 });
 
-
 overlay?.addEventListener('click', () => {
   sidebar.classList.remove('active');
   overlay.classList.remove('active');
 });
 
-
 searchBtn?.addEventListener('click', () => {
   searchBox.classList.toggle('active');
   if(searchBox.classList.contains('active')) {
     searchBox.querySelector('input').focus();
-
-  }
+  } // <-- meka add kale
 });
 
 closeSearch?.addEventListener('click', () => {
   searchBox.classList.remove('active');
 });
-
 
 // Sidebar active link highlight
 const currentPage = window.location.pathname.split('/').pop() || 'index.html';
