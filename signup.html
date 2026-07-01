@@ -35,7 +35,7 @@
 
   button { width: 100%; padding: 14px; margin-top: 15px; border: none; border-radius: 10px; background: #FF00FF; color: #111; font-weight: bold; font-size: 16px; cursor: pointer; transition: 0.3s; }
   button:disabled { background: #555; color: #888; cursor: not-allowed; }
-  #recaptcha-container { margin: 10px auto; display: flex; justify-content: center; } /* Center karala */
+  #recaptcha-container { margin: 10px auto; display: flex; justify-content: center; } 
   .login-text { color: #ccc; margin-top: 15px; font-size: 14px; }
   .login-text a { color: #FF00FF; font-weight: bold; text-decoration: none; }
   #error { color: #ff4d4d; margin-top: 10px; font-size: 13px; display: none; }
@@ -80,7 +80,7 @@
 
       <input id="password" type="password" placeholder="Password - 6+ letters" required>
       
-      <div id="recaptcha-container"></div> <!-- Me box eka penawa dan -->
+      <div id="recaptcha-container"></div> 
 
       <button id="signupBtn" disabled>Create Account</button>
       <div id="error"></div>
@@ -121,17 +121,15 @@ let recaptchaWidgetId; // Widget ID save karanna
 const showError = (msg) => { errorDiv.innerText = msg; errorDiv.classList.add('show'); successDiv.classList.remove('show'); };
 const showSuccess = (msg) => { successDiv.innerText = msg; successDiv.classList.add('show'); errorDiv.classList.remove('show'); };
 
-// 1. reCAPTCHA NORMAL Setup - Fix eka meke. GitHub Pages walata meka witharai wada.
+// 1. reCAPTCHA NORMAL Setup - FIX KALA ✅
 window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', { 
   'size': 'normal',
-  'callback': (response) => {
-    // reCAPTCHA ok una gaman
-  },
+  'callback': (response) => {},
   'expired-callback': () => {
-    // Expire una gaman aye render karanna
-    grecaptcha.reset(recaptchaWidgetId);
+    grecaptcha.reset(recaptchaWidgetId); // Expire una gaman aye render
   }
 });
+recaptchaWidgetId = window.recaptchaVerifier.render(); // <-- Me line eka thama fix eka
 
 // 30s Timer Function
 function startOtpTimer() {
@@ -163,7 +161,7 @@ sendOtpBtn.onclick = async () => {
     startOtpTimer();
   } catch(e) {
     console.error(e);
-    showError("Error: " + e.code + " - " + e.message); // Code ekath pennam
+    showError("Error: " + e.code); // Code eka witharai pennuwe, loku na
     phoneInput.classList.add('invalid');
     sendOtpBtn.disabled = false;
     grecaptcha.reset(recaptchaWidgetId); // Fail una gaman aye captcha
@@ -189,7 +187,7 @@ document.getElementById('verifyOtpBtn').onclick = async () => {
     sendOtpBtn.textContent = 'Verified';
     sendOtpBtn.disabled = true;
   } catch(e) {
-    showError("OTP Code eka waradi ❌: " + e.message);
+    showError("OTP Code eka waradi ❌: " + e.code);
     otpInput.classList.add('invalid'); 
     isPhoneVerified = false;
   }
@@ -226,7 +224,7 @@ signupBtn.onclick = async () => {
     setTimeout(() => { window.location.href = 'login.html'; }, 1500);
 
   } catch(e) {
-    showError(e.code + ": " + e.message); // Error code ekath pennam
+    showError(e.code); // Code eka witharai
     signupBtn.disabled = false;
     signupBtn.innerText = "Create Account";
   }
