@@ -6,34 +6,22 @@
   <title>About Us - MAGICAL MOVIE LAND</title>
   <link rel="icon" href="https://files.catbox.moe/nstkne.png" type="image/png">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <link rel="stylesheet" href="style.css?v=25"> <!-- Common CSS -->
+  <link rel="stylesheet" href="style.css?v=26"> <!-- Updated -->
 
   <style>
-  /* About page eke witharai tiyena CSS */
-  .container { 
-    padding: 15px; 
-    background: #111;
-    margin: 15px;
-    border-radius: 6px;
-  }
+  .container { padding: 15px; background: #111; margin: 15px; border-radius: 6px; }
   .page-title {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 22px;
-    font-weight: 700;
-    margin: 0 0 15px 0;
+    display: flex; align-items: center; gap: 10px;
+    font-size: 22px; font-weight: 700; margin: 0 0 15px 0;
   }
   .page-title::before {
-    content: '';
-    width: 4px;
-    height: 24px;
-    background: #ff2d95; /* Pink line */
-    border-radius: 2px;
+    content: ''; width: 4px; height: 24px;
+    background: #ff2d95; border-radius: 2px;
   }
   .about-text { font-size: 15px; line-height: 1.7; color: #ccc; }
   .about-text p { margin-bottom: 15px; }
   .about-text strong { color: #fff; font-weight: 700; }
+  .about-text a { color:#ff2d95; } /* Contact Us link eka witharai pink */
   </style>
 </head>
 <body>
@@ -41,7 +29,6 @@
   <header>
     <div class="logo">𝗠𝗔𝗚𝗜𝗖𝗔𝗟 <span>𝗠🍩𝗩𝗜𝗘 𝗟🌲𝗡𝗗</span></div>
     <div class="header-right">
-      <!-- Search icon eka ain kala -->
       <i class="fa fa-bars" id="menuBtn"></i>
     </div>
   </header>
@@ -61,48 +48,24 @@
   </div>
   <div class="overlay" id="overlay"></div>
 
-  <!-- Content -->
   <div class="container">
     <h1 class="page-title">About Us</h1>
-    
     <div class="about-text">
-      <p>Welcome to <strong>MAGICAL MOVIE LAND</strong>, your number one source for high-quality Sinhala dubbed and subtitled cartoons and movies. We’re dedicated to giving you the very best of animated content, with a focus on quality, speed, and a great user experience.</p>
-
-      <p>Founded in 2026, MAGICAL MOVIE LAND has come a long way from its beginnings. Our passion for providing localized entertainment for Sri Lankan fans drove us to build this platform so that everyone can enjoy their favorite characters in their own language.</p>
-
-      <p>We hope you enjoy our platform as much as we enjoy offering it to you. If you have any questions or comments, please don’t hesitate to <a href="contact.html" style="color:#ff2d95;text-decoration:none;">Contact Us</a>.</p>
+      <p>Welcome to <strong>MAGICAL MOVIE LAND</strong>...</p>
+      <p>...please don’t hesitate to <a href="contact.html">Contact Us</a>.</p>
     </div>
   </div>
 
-
-<br><br><br>
-  <!-- FOOTER -->
   <footer class="footer">
     <div class="footer-logo">𝗠𝗔𝗚𝗜𝗖𝗔𝗟 <span>𝗠𝗢𝗩𝗜𝗘 𝗟𝗔𝗡𝗗</span></div>
-    
-    <p class="footer-text">
-      The best platform to stream latest Movies and Cartoons with high-quality subtitles. 
-      Enjoy your favorite content for free on Magical Movie Land.
-    </p>
-
+    <p class="footer-text">The best platform to stream latest Movies and Cartoons...</p>
     <div class="social-icons">
-      <a href="https://www.facebook.com/share/1BbGBZ8ddZ/?mibextid=wwXIfr" target="_blank"><i class="fa-brands fa-facebook-f"></i></a>
-      <a href="https://t.me/YourUsername" target="_blank"><i class="fa-brands fa-telegram"></i></a>
-      <a href="https://www.tiktok.com/@vinuxnoo?_r=1&_t=ZS-97SZwiHJ6jU" target="_blank"><i class="fa-brands fa-tiktok"></i></a>
+      <a href="https://www.facebook.com/share/1BbGBZ8ddZ/?mibextid=wwXIfr" target="_blank" rel="noopener"><i class="fa-brands fa-facebook-f"></i></a>
+      <a href="https://t.me/YourUsername" target="_blank" rel="noopener"><i class="fa-brands fa-telegram"></i></a>
+      <a href="https://www.tiktok.com/@vinuxnoo?_r=1&_t=ZS-97SZwiHJ6jU" target="_blank" rel="noopener"><i class="fa-brands fa-tiktok"></i></a>
     </div>
   </footer>
   
-  
-  <script>
-  // Menu JS witharai. Search JS ain
-  const menuBtn = document.getElementById('menuBtn');
-  const sidebar = document.getElementById('sidebar');
-  const closeSidebar = document.getElementById('closeSidebar');
-  const overlay = document.getElementById('overlay');
-
-  menuBtn.onclick = () => { sidebar.classList.add('active'); overlay.classList.add('active'); };
-  closeSidebar.onclick = () => { sidebar.classList.remove('active'); overlay.classList.remove('active'); };
-  overlay.onclick = () => { sidebar.classList.remove('active'); overlay.classList.remove('active'); };
-  </script>
+  <script src="script.js?v=1"></script> <!-- Common JS -->
 </body>
 </html>
