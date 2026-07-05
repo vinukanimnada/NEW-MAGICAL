@@ -19,7 +19,7 @@ a {
 }
 a:visited, a:focus { color: inherit; }
 
-/* Header */
+/* ===== HEADER - LEFT MENU ===== */
 header {
   background: #111;
   padding: 12px 15px;
@@ -29,7 +29,23 @@ header {
   position: sticky;
   top: 0;
   z-index: 999;
+  height: 60px; /* 1. Fixed height damma sidebar ganak balanna */
 }
+
+.header-left { /* 2. Aluth */
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+#menuBtn, #closeBtn { /* 3. Menu + Close 2ma */
+  font-size: 20px;
+  cursor: pointer;
+  padding: 5px;
+  color: #fff;
+  -webkit-tap-highlight-color: transparent;
+}
+#closeBtn { display: none; } /* Default patahan */
 
 .logo{ font-size: 22px; font-weight: 700; white-space: nowrap; }
 .logo span{ color: #FF10F0; }
@@ -53,22 +69,24 @@ header {
 }
 .search-box i{ margin-left: 10px; cursor: pointer; font-size: 18px; }
 
-/* ===== SIDEBAR - COMPACT v=31 ===== */
+/* ===== SIDEBAR - LEFT + HEADER YATA v=33 ===== */
 .sidebar{
   position: fixed !important;
-  top: 0 !important;
-  right: -165px !important; /* 200px > 165px */
-  width: 165px !important; /* Width adu */
-  max-width: 68vw !important; /* Screen eke 68% witharai */
-  height: 100% !important;
+  top: 60px !important; /* 4. Header eke yata */
+  left: -165px !important; /* 5. Right > Left */
+  right: auto !important; 
+  width: 165px !important;
+  max-width: 68vw !important;
+  height: calc(100% - 60px) !important; /* 6. Header eka ain kala */
   background: #1a1a1a !important;
-  transition: 0.3s !important;
+  transition: left 0.3s ease !important;
   z-index: 1000 !important;
-  padding-top: 52px !important; /* 80px > 52px */
+  padding-top: 0 !important; /* 7. Uda grey kalla ain */
   overflow-x: hidden !important;
+  border-top: 1px solid #222; /* Header ekka line */
 }
 
-.sidebar.active{ right: 0 !important; }
+.sidebar.active{ left: 0 !important; } /* Open */
 
 .sidebar ul{
   list-style: none !important;
@@ -80,15 +98,15 @@ header {
 .sidebar li{
   border-bottom: 1px solid #2a2a2a !important;
 }
-.sidebar li:first-child{ border-top: 1px solid #2a2a2a !important; }
+.sidebar li:first-child{ border-top: none !important; } /* Uda line ain */
 
 .sidebar li a{
   display: flex !important;
   align-items: center !important;
   width: 100% !important;
-  padding: 12px 10px !important; /* 16px 14px > 12px 10px */
+  padding: 12px 10px !important;
   color: #ccc !important;
-  font-size: 13px !important; /* 14px > 13px */
+  font-size: 13px !important;
   font-weight: 500 !important;
   transition: 0.2s !important;
   gap: 10px;
@@ -96,8 +114,8 @@ header {
 }
 .sidebar li a:hover{ background: #2a2a2a !important; color: #fff !important; }
 .sidebar li a i{ 
-  margin-right: 8px !important; /* 14px > 8px */
-  font-size: 14px !important; /* 16px > 14px */
+  margin-right: 8px !important;
+  font-size: 14px !important;
   width: 16px !important; 
   min-width: 16px !important;
 }
@@ -117,23 +135,12 @@ header {
   clip-path: inset(0 -100vmax) !important;
 }
 
-/* ===== CLOSE BUTTON - Podi ===== */
-.close-btn{
-  position: absolute !important; 
-  top: 6px !important; 
-  right: 6px !important;
-  font-size: 24px !important; 
-  color: #fff !important; 
-  cursor: pointer !important;
-  z-index: 1002 !important; 
-  padding: 6px !important; 
-  width: 32px !important; 
-  height: 32px !important;
-  display: flex !important; 
-  align-items: center !important; 
-  justify-content: center !important;
-}
-.close-btn:hover{ color: #ff2d95 !important; }
+/* 8. Menu > Close Swap CSS Logic */
+.sidebar.active ~ header .header-left #menuBtn { display: none !important; }
+.sidebar.active ~ header .header-left #closeBtn { display: block !important; }
+
+/* Old close-btn ain kala nisa meka na */
+/* .close-btn{ ... } ain */
 
 .overlay{
   position: fixed !important; top: 0 !important; left: 0 !important;
