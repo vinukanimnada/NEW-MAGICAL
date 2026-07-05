@@ -263,28 +263,31 @@ header {
 </head>
 <body>
 
-<!-- Header -->
 <header>
-  <div class="logo">𝗠𝗔𝗚𝗜𝗖𝗔𝗟 <span>𝗠🍩𝗩𝗜𝗘 𝗟🌲𝗡𝗗</span></div>
-  <div class="header-right">
-    <i class="fa fa-search" id="searchBtn"></i>
-    <i class="fa fa-bars" id="menuBtn"></i>
+  <div class="header-left"> <!-- Wama paththa -->
+    <i class="fa fa-bars" id="menuBtn"></i> <!-- Menu -->
+    <i class="fa fa-times" id="closeBtn"></i> <!-- Close - Patahan -->
   </div>
 
+  <div class="logo">𝗠𝗔𝗚𝗜𝗖𝗔𝗟 <span>𝗠<i class="fa-solid fa-circle"></i>VIE L<i class="fa-solid fa-circle"></i>ND</span></div>
+  
+  <div class="header-right"> <!-- Aththa paththa -->
+    <!-- Meheta search icon danna puluwan -->
+  </div>
+  
   <!-- Search Bar - ID + type="button" fix කළා -->
   <div class="search-box" id="searchBox">
     <input type="text" id="searchInput" placeholder="Search movies...">
     <i class="fa fa-times" id="closeSearch"></i>
   </div>
+  
 </header>
 
-<!-- Sidebar Menu -->
-<div class="sidebar" id="sidebar">
-  <span class="close-btn" id="closeSidebar">×</span>
+<div class="sidebar" id="sidebar"> <!-- Sidebar dan Header yata -->
   <ul>
     <li><a href="index.html"><i class="fa fa-home"></i> Home</a></li>
     <li class="active"><a href="movies.html"><i class="fa fa-film"></i> All Movies</a></li>
-    <li><a href="series.html"><i class="fa fa-tv"></i> TV Shows</a></li>
+    <li><a href="tvshows.html"><i class="fa fa-tv"></i> TV Shows</a></li>
     <li><a href="request.html"><i class="fa fa-plus-circle"></i> Requests</a></li>
     <li><a href="chanels.html"><i class="fa-solid fa-users"></i> Join Channels</a></li>
     <li><a href="about.html"><i class="fa fa-info-circle"></i> About</a></li>
@@ -293,6 +296,7 @@ header {
   </ul>
 </div>
 <div class="overlay" id="overlay"></div>
+
 
 <h1>🎬 All Movies</h1>
 
