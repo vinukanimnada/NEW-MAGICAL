@@ -19,9 +19,11 @@ a {
 }
 a:visited, a:focus { color: inherit; }
 
-/* ===== HEADER - LEFT MENU ===== */
+/* ===== HEADER - LIGHT V=34 ===== */
 header {
-  background: #111;
+  background: #fff; /* 1. #111 > #fff Kala */
+  color: #111; /* 2. Text Black */
+  border-bottom: 1px solid #ddd; /* 3. Light Line */
   padding: 12px 15px;
   display: flex;
   justify-content: space-between;
@@ -29,25 +31,30 @@ header {
   position: sticky;
   top: 0;
   z-index: 999;
-  height: 60px; /* 1. Fixed height damma sidebar ganak balanna */
+  height: 60px;
 }
 
-.header-left { /* 2. Aluth */
+.header-left { 
   display: flex;
   align-items: center;
   gap: 15px;
 }
 
-#menuBtn, #closeBtn { /* 3. Menu + Close 2ma */
+#menuBtn, #closeBtn { 
   font-size: 20px;
   cursor: pointer;
   padding: 5px;
-  color: #fff;
+  color: #111; /* 4. Icon Black Kala */
   -webkit-tap-highlight-color: transparent;
 }
 #closeBtn { display: none; } /* Default patahan */
 
-.logo{ font-size: 22px; font-weight: 700; white-space: nowrap; }
+.logo{ 
+  color: #111; /* 5. Logo Black */
+  font-size: 22px; 
+  font-weight: 700; 
+  white-space: nowrap; 
+}
 .logo span{ color: #FF10F0; }
 .logo i.fa-circle{
   font-size: 10px;
@@ -55,7 +62,7 @@ header {
   margin: 0 1px;
   color: #FF10F0;
 }
-.header-right i{ font-size: 20px; margin-left: 20px; cursor: pointer; }
+.header-right i{ font-size: 20px; margin-left: 20px; cursor: pointer; color: #111; }
 
 /* Search Box */
 .search-box{
@@ -69,24 +76,24 @@ header {
 }
 .search-box i{ margin-left: 10px; cursor: pointer; font-size: 18px; }
 
-/* ===== SIDEBAR - LEFT + HEADER YATA v=33 ===== */
+/* ===== SIDEBAR - LEFT + HEADER YATA ===== */
 .sidebar{
   position: fixed !important;
-  top: 60px !important; /* 4. Header eke yata */
-  left: -165px !important; /* 5. Right > Left */
+  top: 60px !important;
+  left: -165px !important;
   right: auto !important; 
   width: 165px !important;
   max-width: 68vw !important;
-  height: calc(100% - 60px) !important; /* 6. Header eka ain kala */
+  height: calc(100% - 60px) !important;
   background: #1a1a1a !important;
   transition: left 0.3s ease !important;
   z-index: 1000 !important;
-  padding-top: 0 !important; /* 7. Uda grey kalla ain */
+  padding-top: 0 !important;
   overflow-x: hidden !important;
-  border-top: 1px solid #222; /* Header ekka line */
+  border-top: 1px solid #222;
 }
 
-.sidebar.active{ left: 0 !important; } /* Open */
+.sidebar.active{ left: 0 !important; }
 
 .sidebar ul{
   list-style: none !important;
@@ -98,7 +105,7 @@ header {
 .sidebar li{
   border-bottom: 1px solid #2a2a2a !important;
 }
-.sidebar li:first-child{ border-top: none !important; } /* Uda line ain */
+.sidebar li:first-child{ border-top: none !important; }
 
 .sidebar li a{
   display: flex !important;
@@ -135,12 +142,9 @@ header {
   clip-path: inset(0 -100vmax) !important;
 }
 
-/* 8. Menu > Close Swap CSS Logic */
-.sidebar.active ~ header .header-left #menuBtn { display: none !important; }
-.sidebar.active ~ header .header-left #closeBtn { display: block !important; }
-
-/* Old close-btn ain kala nisa meka na */
-/* .close-btn{ ... } ain */
+/* 6. MAIN FIX: ~ selector ain kala. Body class eken karanawa */
+body.sidebar-open #menuBtn { display: none !important; }
+body.sidebar-open #closeBtn { display: block !important; }
 
 .overlay{
   position: fixed !important; top: 0 !important; left: 0 !important;
