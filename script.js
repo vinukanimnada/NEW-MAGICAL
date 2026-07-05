@@ -35,7 +35,7 @@ function createCard(m, id) {
   `;
 }
 
-// ================= HERO SLIDER - BACKGROUND IMAGE =================
+// ================= HERO SLIDER =================
 async function loadHeroSlider() {
     const heroSlides = document.getElementById('heroSlides');
     const heroDots = document.getElementById('heroDots');
@@ -88,12 +88,10 @@ async function loadHeroSlider() {
         heroSlides.innerHTML = slidesHTML;
         heroDots.innerHTML = dotsHTML;
         
-        // Dot click event
         heroDots.querySelectorAll('.dot').forEach(dot => {
             dot.addEventListener('click', () => goToSlide(parseInt(dot.dataset.slide)));
         });
 
-        // Auto slide 5sec - opacity fade
         let currentSlide = 0;
         setInterval(() => {
             currentSlide = (currentSlide + 1) % heroMovies.length;
@@ -110,7 +108,6 @@ async function loadHeroSlider() {
 function goToSlide(n) {
     const slides = document.querySelectorAll('.hero-slide');
     const dots = document.querySelectorAll('.hero-dots .dot');
-    
     slides.forEach((slide, i) => slide.classList.toggle('active', i === n));
     dots.forEach((dot, i) => dot.classList.toggle('active', i === n));
 }
@@ -120,7 +117,6 @@ async function loadLatestMovies() {
   const grid = document.getElementById("latestMovies");
   if(!grid) return;
   grid.innerHTML = '<p style="color:#666; grid-column:1/-1; text-align:center;">Loading...</p>';
-
   try {
     const q = query(collection(db, "movies"), where("category", "==", "latest"), orderBy("createdAt", "desc"), limit(12));
     const snapshot = await getDocs(q);
@@ -137,7 +133,6 @@ async function loadTVShows() {
   const grid = document.getElementById("tvShowsMovies");
   if(!grid) return;
   grid.innerHTML = '<p style="color:#666; grid-column:1/-1; text-align:center;">Loading...</p>';
-
   try {
     const q = query(collection(db, "movies"), where("category", "==", "tvshows"), orderBy("createdAt", "desc"), limit(12));
     const snapshot = await getDocs(q);
@@ -154,7 +149,6 @@ async function loadTrendingMovies() {
   const grid = document.getElementById("trendingMovies");
   if(!grid) return;
   grid.innerHTML = '<p style="color:#666; grid-column:1/-1; text-align:center;">Loading...</p>';
-
   try {
     const q = query(collection(db, "movies"), where("category", "==", "trending"), orderBy("createdAt", "desc"), limit(12));
     const snapshot = await getDocs(q);
@@ -167,25 +161,35 @@ async function loadTrendingMovies() {
   }
 }
 
-// ================= Menu + Search + Pink Fix =================
+// ================= Menu + Search + Pink Fix v=5 =================
 document.addEventListener('DOMContentLoaded', function() {
-  // Menu Toggle
+  // 1. Left Sidebar Toggle - Menu > Close swap
   const menuBtn = document.getElementById("menuBtn");
+  const closeBtn = document.getElementById("closeBtn"); // Aluth
   const sidebar = document.getElementById("sidebar");
   const overlay = document.getElementById("overlay");
-  const closeSidebar = document.getElementById("closeSidebar");
+
+  const closeSidebarFunc = () => {
+    sidebar.classList.remove("active");
+    overlay.classList.remove("active");
+  }
 
   if(menuBtn && sidebar && overlay) {
-    menuBtn.onclick = () => { sidebar.classList.add("active"); overlay.classList.add("active"); };
+    menuBtn.onclick = () => { 
+      sidebar.classList.add("active"); 
+      overlay.classList.add("active"); 
+    };
   }
-  if(closeSidebar && sidebar && overlay) {
-    closeSidebar.onclick = () => { sidebar.classList.remove("active"); overlay.classList.remove("active"); };
-  }
-  if(overlay && sidebar) {
-    overlay.onclick = () => { sidebar.classList.remove("active"); overlay.classList.remove("active"); };
+  
+  if(closeBtn && sidebar && overlay) {
+    closeBtn.onclick = closeSidebarFunc; // Close btn eken close
   }
 
-  // Search Toggle
+  if(overlay && sidebar) {
+    overlay.onclick = closeSidebarFunc;
+  }
+
+  // 2. Search Toggle
   const searchBtn = document.getElementById("searchBtn");
   const searchBox = document.getElementById("searchBox");
   const closeSearch = document.getElementById("closeSearch");
@@ -193,7 +197,7 @@ document.addEventListener('DOMContentLoaded', function() {
   if(searchBtn && searchBox) searchBtn.onclick = () => searchBox.classList.add("active");
   if(closeSearch && searchBox) closeSearch.onclick = () => searchBox.classList.remove("active");
 
-  // Main Fix: Click karala gihin back una passe `focus` ain karanawa = Pink na
+  // 3. Pink Fix: Back una passe focus ain
   document.querySelectorAll('a').forEach(link => {
     link.addEventListener('click', () => {
       setTimeout(() => link.blur(), 50); 
