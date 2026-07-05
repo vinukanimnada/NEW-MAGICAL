@@ -19,11 +19,11 @@ a {
 }
 a:visited, a:focus { color: inherit; }
 
-/* ===== HEADER - LIGHT V=34 ===== */
+/* ===== HEADER - LIGHT V=35 ===== */
 header {
-  background: #fff; /* 1. #111 > #fff Kala */
-  color: #111; /* 2. Text Black */
-  border-bottom: 1px solid #ddd; /* 3. Light Line */
+  background: #fff; 
+  color: #111; 
+  border-bottom: 1px solid #ddd; 
   padding: 12px 15px;
   display: flex;
   justify-content: space-between;
@@ -41,26 +41,27 @@ header {
 }
 
 #menuBtn, #closeBtn { 
-  font-size: 20px;
+  font-size: 22px; /* 1. Thawa loku kala */
   cursor: pointer;
   padding: 5px;
-  color: #111; /* 4. Icon Black Kala */
+  color: #111; 
   -webkit-tap-highlight-color: transparent;
+  font-weight: 900; /* 2. Bold kala */
 }
-#closeBtn { display: none; } /* Default patahan */
+#closeBtn { display: none; }
 
 .logo{ 
-  color: #111; /* 5. Logo Black */
+  color: #111; /* 3. Okkoma Black */
   font-size: 22px; 
   font-weight: 700; 
   white-space: nowrap; 
 }
-.logo span{ color: #FF10F0; }
+.logo span{ color: #111; } /* 4. Pink ain kala > Black */
 .logo i.fa-circle{
   font-size: 10px;
   vertical-align: -2px;
   margin: 0 1px;
-  color: #FF10F0;
+  color: #111; /* 5. Dot Black */
 }
 .header-right i{ font-size: 20px; margin-left: 20px; cursor: pointer; color: #111; }
 
@@ -142,7 +143,7 @@ header {
   clip-path: inset(0 -100vmax) !important;
 }
 
-/* 6. MAIN FIX: ~ selector ain kala. Body class eken karanawa */
+/* Body class eken Menu > Close swap */
 body.sidebar-open #menuBtn { display: none !important; }
 body.sidebar-open #closeBtn { display: block !important; }
 
