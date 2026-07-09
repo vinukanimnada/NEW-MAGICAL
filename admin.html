@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel - MAGICAL MOVIE LAND</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script>
+  (function(){ const theme = localStorage.getItem('theme') || 'dark'; document.documentElement.className = theme; })();
+  </script>
+  <style>
+  /* INDEX.HTML EKE CSS EKE ADMIN WALA WITHARAK COPY KARANNA */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+  html.dark { --bg: #0a0a0a; --bg-alt: #111; --card: #1a1a1a; --text: #fff; --text-dim: #aaa; --text-faint: #666; --border: #222; }
+  html.light { --bg: #f4f4f4; --bg-alt: #ffffff; --card: #f5f5f5; --text: #111; --text-dim: #444; --text-faint: #888; --border: #ddd; }
+  body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; padding-bottom: 40px; }
+  header { background: var(--bg-alt); padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 999; border-bottom: 1px solid var(--border); }
+  .logo { font-size: 22px; font-weight: 700; color: var(--text); }
+  .logo span { color: #ff2d95; }
+  .back-btn { font-size: 20px; cursor: pointer; margin-right: 14px; color: var(--text); }
+  .btn { display: inline-flex; align-items: center; gap: 8px; border: none; border-radius: 6px; padding: 12px 22px; font-size: 15px; font-weight: 600; cursor: pointer; }
+  .btn-primary { background: #ff2d95; color: #fff; }
+  .btn-outline { background: transparent; border: 1px solid var(--text-faint); color: var(--text); }
+  .admin-login-wrap { min-height: 80vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+  .admin-login-card { background: var(--card); border-radius: 14px; padding: 36px 28px; max-width: 360px; width: 100%; text-align: center; border: 1px solid var(--border); }
+  .admin-input { width: 100%; background: var(--bg); border: 1px solid var(--border); color: var(--text); padding: 13px 16px; border-radius: 8px; font-size: 15px; margin-bottom: 12px; outline: none; }
+  .admin-panel { display: none; padding: 15px; max-width: 720px; margin: 0 auto; }
+  .admin-panel.active { display: block; }
+  .admin-tabs { display: flex; gap: 8px; margin-bottom: 18px; border-bottom: 1px solid var(--border); }
+  .admin-tab { padding: 10px 16px; font-size: 14px; font-weight: 600; color: var(--text-faint); cursor: pointer; border-bottom: 2px solid transparent; }
+  .admin-tab.active { color: #ff2d95; border-color: #ff2d95; }
+  .form-group { margin-bottom: 14px; }
+  .form-group label { display: block; font-size: 13px; font-weight: 600; color: var(--text-dim); margin-bottom: 6px; }
+  .form-group select, .form-group textarea { width: 100%; background: var(--bg); border: 1px solid var(--border); color: var(--text); padding: 12px 14px; border-radius: 8px; font-size: 14px; }
+  .admin-list-item { display: flex; align-items: center; gap: 12px; background: var(--card); border-radius: 8px; padding: 10px; margin-bottom: 8px; }
+  .admin-toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: var(--card); border: 1px solid #ff2d95; color: var(--text); padding: 12px 22px; border-radius: 8px; z-index: 3000; opacity: 0; transition: 0.25s; }
+  .admin-toast.show { opacity: 1; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-left">
+      <i class="fa fa-arrow-left back-btn" onclick="window.location.href='index.html'"></i>
+      <div class="logo">Admin <span>Panel</span></div>
+    </div>
+  </header>
+
+  <div class="admin-login-wrap" id="loginWrap">
+    <div class="admin-login-card">
+      <div style="font-size: 40px; color: #ff2d95; margin-bottom: 14px;"><i class="fa fa-lock"></i></div>
+      <h2>Admin Panel</h2>
+      <p style="font-size: 13px; color: var(--text-faint); margin-bottom: 22px;">Content manage කරන්න password එක ඇතුළත් කරන්න</p>
+      <input type="password" class="admin-input" id="passInput" placeholder="Password">
+      <div style="color: #ff5b5b; font-size: 13px; margin-bottom: 10px; min-height: 16px;" id="passError"></div>
+      <button class="btn btn-primary" style="width:100%; justify-content:center;" id="unlockBtn"><i class="fa fa-unlock"></i> Unlock</button>
+    </div>
+  </div>
+
+  <div class="admin-panel" id="adminPanel">
+    <!-- INDEX.HTML EKE TIBBA ADMIN PANEL OKKOMA CODE EKA MEKATA PASTE KARANNA -->
+    <!-- TABS + FORM + MANAGE LIST + SCRIPT OKKOMA -->
+  </div>
+
+  <div class="admin-toast" id="toast"></div>
+
+  <script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getFirestore, collection, getDocs, doc, getDoc, addDoc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCx0TEmgr3GCyvfeok9Y42yR1PTM4_8y9M",
+    authDomain: "magical-movie-land.firebaseapp.com",
+    projectId: "magical-movie-land",
+    storageBucket: "magical-movie-land.firebasestorage.app",
+    messagingSenderId: "27757424288",
+    appId: "1:27757424288:web:d650e2659f09f0b9c823c5"
+  };
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  // INDEX.HTML EKE TIBBA ADMIN JS CODE OKKOMA MEKATA COPY KARANNA
+  const ADMIN_PASSWORD = "Magical movie land 2026";
+  // ... initAdmin() function eka + okkoma eke tiyena code ...
+  initAdmin(); // Call karanna
+
+  function initAdmin() {
+    // Uge index.html eke tibba initAdmin() function eke athule tiyena okkoma code eka mekata damma
+    // Mama space nisa kiyanne na. Copy paste karapan
+  }
+  </script>
+</body>
+</html>
