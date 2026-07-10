@@ -5,41 +5,45 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin Panel - MAGICAL MOVIE LAND</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <script>
-  (function(){ const theme = localStorage.getItem('theme') || 'dark'; document.documentElement.className = theme; })();
-  </script>
+  <script>(function(){ const theme = localStorage.getItem('theme') || 'dark'; document.documentElement.className = theme; })();</script>
   <style>
-  /* INDEX.HTML EKE CSS EKE ADMIN WALA WITHARAK COPY KARANNA */
     * { box-sizing: border-box; margin: 0; padding: 0; }
-  html.dark { --bg: #0a0a0a; --bg-alt: #111; --card: #1a1a1a; --text: #fff; --text-dim: #aaa; --text-faint: #666; --border: #222; }
-  html.light { --bg: #f4f4f4; --bg-alt: #ffffff; --card: #f5f5f5; --text: #111; --text-dim: #444; --text-faint: #888; --border: #ddd; }
+  html.dark { --bg: #0a0a0a; --bg-alt: #111; --card: #1a1a1a; --card-2: #222; --text: #fff; --text-dim: #aaa; --text-faint: #666; --border: #222; }
+  html.light { --bg: #f4f4f4; --bg-alt: #ffffff; --card: #f5f5f5; --card-2: #e8e8e8; --text: #111; --text-dim: #444; --text-faint: #888; --border: #ddd; }
   body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; padding-bottom: 40px; }
   header { background: var(--bg-alt); padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 999; border-bottom: 1px solid var(--border); }
-  .logo { font-size: 22px; font-weight: 700; color: var(--text); }
-  .logo span { color: #ff2d95; }
-  .back-btn { font-size: 20px; cursor: pointer; margin-right: 14px; color: var(--text); }
-  .btn { display: inline-flex; align-items: center; gap: 8px; border: none; border-radius: 6px; padding: 12px 22px; font-size: 15px; font-weight: 600; cursor: pointer; }
-  .btn-primary { background: #ff2d95; color: #fff; }
-  .btn-outline { background: transparent; border: 1px solid var(--text-faint); color: var(--text); }
-  .admin-login-wrap { min-height: 80vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
-  .admin-login-card { background: var(--card); border-radius: 14px; padding: 36px 28px; max-width: 360px; width: 100%; text-align: center; border: 1px solid var(--border); }
-  .admin-input { width: 100%; background: var(--bg); border: 1px solid var(--border); color: var(--text); padding: 13px 16px; border-radius: 8px; font-size: 15px; margin-bottom: 12px; outline: none; }
-  .admin-panel { display: none; padding: 15px; max-width: 720px; margin: 0 auto; }
-  .admin-panel.active { display: block; }
-  .admin-tabs { display: flex; gap: 8px; margin-bottom: 18px; border-bottom: 1px solid var(--border); }
-  .admin-tab { padding: 10px 16px; font-size: 14px; font-weight: 600; color: var(--text-faint); cursor: pointer; border-bottom: 2px solid transparent; }
-  .admin-tab.active { color: #ff2d95; border-color: #ff2d95; }
-  .form-group { margin-bottom: 14px; }
-  .form-group label { display: block; font-size: 13px; font-weight: 600; color: var(--text-dim); margin-bottom: 6px; }
-  .form-group select, .form-group textarea { width: 100%; background: var(--bg); border: 1px solid var(--border); color: var(--text); padding: 12px 14px; border-radius: 8px; font-size: 14px; }
-  .admin-list-item { display: flex; align-items: center; gap: 12px; background: var(--card); border-radius: 8px; padding: 10px; margin-bottom: 8px; }
-  .admin-toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: var(--card); border: 1px solid #ff2d95; color: var(--text); padding: 12px 22px; border-radius: 8px; z-index: 3000; opacity: 0; transition: 0.25s; }
-  .admin-toast.show { opacity: 1; }
+ .logo { font-size: 22px; font-weight: 700; color: var(--text); }.logo span { color: #ff2d95; }
+ .back-btn { font-size: 20px; cursor: pointer; margin-right: 14px; color: var(--text); }
+ .btn { display: inline-flex; align-items: center; gap: 8px; border: none; border-radius: 6px; padding: 12px 22px; font-size: 15px; font-weight: 600; cursor: pointer; }
+ .btn-primary { background: #ff2d95; color: #fff; }.btn-outline { background: transparent; border: 1px solid var(--text-faint); color: var(--text); }.btn-secondary { background: var(--card-2); color: var(--text); }
+ .admin-login-wrap { min-height: 80vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+ .admin-login-card { background: var(--card); border-radius: 14px; padding: 36px 28px; max-width: 360px; width: 100%; text-align: center; border: 1px solid var(--border); }
+ .admin-input { width: 100%; background: var(--bg); border: 1px solid var(--border); color: var(--text); padding: 13px 16px; border-radius: 8px; font-size: 15px; margin-bottom: 12px; outline: none; }
+ .admin-input:focus { border-color: #ff2d95; }.admin-error { color: #ff5b5b; font-size: 13px; margin-bottom: 10px; min-height: 16px; }
+ .admin-panel { display: none; padding: 15px; max-width: 720px; margin: 0 auto; }
+ .admin-panel.active { display: block; }
+ .admin-topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
+ .admin-tabs { display: flex; gap: 8px; margin-bottom: 18px; border-bottom: 1px solid var(--border); }
+ .admin-tab { padding: 10px 16px; font-size: 14px; font-weight: 600; color: var(--text-faint); cursor: pointer; border-bottom: 2px solid transparent; }
+ .admin-tab.active { color: #ff2d95; border-color: #ff2d95; }
+ .admin-form-section { display: none; }.admin-form-section.active { display: block; }
+ .form-group { margin-bottom: 14px; }.form-group label { display: block; font-size: 13px; font-weight: 600; color: var(--text-dim); margin-bottom: 6px; }
+ .form-row { display: flex; gap: 10px; }.form-row.form-group { flex: 1; }
+ .form-group select[multiple] { height: 140px; }
+ .form-group select,.form-group textarea { width: 100%; background: var(--bg); border: 1px solid var(--border); color: var(--text); padding: 12px 14px; border-radius: 8px; font-size: 14px; }
+ .form-hint { font-size: 11.5px; color: var(--text-faint); margin-top: 4px; }
+ .episode-builder { border: 1px solid var(--border); border-radius: 10px; padding: 12px; margin-top: 8px; }
+ .admin-list-item { display: flex; align-items: center; gap: 12px; background: var(--card); border-radius: 8px; padding: 10px; margin-bottom: 8px; }
+ .admin-list-item img { width: 46px; height: 66px; object-fit: cover; border-radius: 4px; }
+ .admin-list-info { flex: 1; min-width: 0; }.admin-list-title { font-size: 14px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+ .admin-list-actions { display: flex; gap: 8px; }.admin-icon-btn { width: 34px; height: 34px; border-radius: 6px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.08); color: var(--text-dim); cursor: pointer; border: none; }
+ .admin-toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: var(--card); border: 1px solid #ff2d95; color: var(--text); padding: 12px 22px; border-radius: 8px; z-index: 3000; opacity: 0; transition: 0.25s; }
+ .admin-toast.show { opacity: 1; }
   </style>
 </head>
 <body>
   <header>
-    <div class="header-left">
+    <div style="display:flex; align-items:center;">
       <i class="fa fa-arrow-left back-btn" onclick="window.location.href='index.html'"></i>
       <div class="logo">Admin <span>Panel</span></div>
     </div>
@@ -51,42 +55,92 @@
       <h2>Admin Panel</h2>
       <p style="font-size: 13px; color: var(--text-faint); margin-bottom: 22px;">Content manage කරන්න password එක ඇතුළත් කරන්න</p>
       <input type="password" class="admin-input" id="passInput" placeholder="Password">
-      <div style="color: #ff5b5b; font-size: 13px; margin-bottom: 10px; min-height: 16px;" id="passError"></div>
+      <div class="admin-error" id="passError"></div>
       <button class="btn btn-primary" style="width:100%; justify-content:center;" id="unlockBtn"><i class="fa fa-unlock"></i> Unlock</button>
     </div>
   </div>
 
   <div class="admin-panel" id="adminPanel">
-    <!-- INDEX.HTML EKE TIBBA ADMIN PANEL OKKOMA CODE EKA MEKATA PASTE KARANNA -->
-    <!-- TABS + FORM + MANAGE LIST + SCRIPT OKKOMA -->
+    <div class="admin-topbar"><h1><i class="fa fa-shield-halved"></i> Admin Panel</h1><button class="btn btn-outline" id="logoutBtn"><i class="fa fa-right-from-bracket"></i> Logout</button></div>
+    <div class="admin-tabs"><div class="admin-tab active" data-tab="add">Add New</div><div class="admin-tab" data-tab="manage">Manage Content</div></div>
+
+    <div class="admin-form-section active" id="tab-add">
+      <div class="form-group"><label>Title *</label><input type="text" class="admin-input" id="f_title"></div>
+      <div class="form-row"><div class="form-group"><label>Category *</label><select id="f_category"><option value="movie">Movie</option><option value="series">TV Series</option></select></div><div class="form-group"><label>Year</label><input type="text" class="admin-input" id="f_year"></div></div>
+      <div class="form-group"><label>Poster Image URL *</label><input type="text" class="admin-input" id="f_poster"></div>
+      <div class="form-group"><label>Backdrop URL</label><input type="text" class="admin-input" id="f_backdrop"></div>
+      <div class="form-group"><label>Description</label><textarea id="f_description"></textarea></div>
+      <div class="form-group" id="movieVideoGroup"><label>Video URL *</label><input type="text" class="admin-input" id="f_videoUrl"></div>
+      <div class="form-group" id="episodesGroup" style="display:none;"><label>Episodes</label><div class="episode-builder" id="episodeBuilder"></div><button class="btn btn-secondary" id="addEpisodeBtn"><i class="fa fa-plus"></i> Add Episode</button></div>
+
+      <!-- MEKA ALUTH SECTIONS SELECT BOX -->
+      <div class="form-group">
+        <label>Show In Sections * <span class="form-hint">Ctrl+Click to select multiple</span></label>
+        <select id="f_sections" multiple>
+          <option value="trending_home">Daily Trading - Home</option>
+          <option value="latest_home">Latest Upload - Home</option>
+          <option value="tvshows_home">TV Shows - Home</option>
+          <option value="allmovies">All Movies</option>
+          <option value="cinema">LK Cinema</option>
+          <option value="series">TV Shows Page</option>
+        </select>
+        <div class="form-hint">Meka select kale nathnam pennanne na</div>
+      </div>
+
+      <button class="btn btn-primary" id="saveBtn" style="width:100%; justify-content:center;"><i class="fa fa-save"></i> Save</button>
+    </div>
+
+    <div class="admin-form-section" id="tab-manage">
+      <input type="text" class="admin-input" id="manageSearch" placeholder="🔍 Search titles...">
+      <div id="manageList">Loading...</div>
+    </div>
   </div>
 
   <div class="admin-toast" id="toast"></div>
 
-  <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-  import { getFirestore, collection, getDocs, doc, getDoc, addDoc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getFirestore, collection, getDocs, doc, getDoc, addDoc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+const firebaseConfig = { apiKey: "AIzaSyCx0TEmgr3GCyvfeok9Y42yR1PTM4_8y9M", authDomain: "magical-movie-land.firebaseapp.com", projectId: "magical-movie-land", storageBucket: "magical-movie-land.firebasestorage.app", messagingSenderId: "27757424288", appId: "1:27757424288:web:d650e2659f09f0b9c823c5" };
+const app = initializeApp(firebaseConfig); const db = getFirestore(app);
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyCx0TEmgr3GCyvfeok9Y42yR1PTM4_8y9M",
-    authDomain: "magical-movie-land.firebaseapp.com",
-    projectId: "magical-movie-land",
-    storageBucket: "magical-movie-land.firebasestorage.app",
-    messagingSenderId: "27757424288",
-    appId: "1:27757424288:web:d650e2659f09f0b9c823c5"
-  };
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
+const ADMIN_PASSWORD = "Magical movie land 2026";
 
-  // INDEX.HTML EKE TIBBA ADMIN JS CODE OKKOMA MEKATA COPY KARANNA
-  const ADMIN_PASSWORD = "Magical movie land 2026";
-  // ... initAdmin() function eka + okkoma eke tiyena code ...
-  initAdmin(); // Call karanna
+function showToast(msg) { const toast = document.getElementById('toast'); toast.textContent = msg; toast.classList.add('show'); setTimeout(() => toast.classList.remove('show'), 2200); }
 
-  function initAdmin() {
-    // Uge index.html eke tibba initAdmin() function eke athule tiyena okkoma code eka mekata damma
-    // Mama space nisa kiyanne na. Copy paste karapan
+function initAdmin() {
+  const loginWrap = document.getElementById('loginWrap'); const adminPanel = document.getElementById('adminPanel');
+  function unlock() { loginWrap.style.display = 'none'; adminPanel.classList.add('active'); loadManageList(); }
+  if (sessionStorage.getItem('mml_admin_auth') === 'true') unlock();
+
+  document.getElementById('unlockBtn').onclick = () => {
+    if (document.getElementById('passInput').value === ADMIN_PASSWORD) {
+      sessionStorage.setItem('mml_admin_auth', 'true'); document.getElementById('passError').textContent = ''; unlock();
+    } else { document.getElementById('passError').textContent = 'Password එක වැරදියි'; }
   }
-  </script>
+  document.getElementById('logoutBtn').onclick = () => { sessionStorage.removeItem('mml_admin_auth'); location.reload(); }
+
+  document.querySelectorAll('.admin-tab').forEach(tab => { tab.onclick = () => { document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active')); tab.classList.add('active'); document.querySelectorAll('.admin-form-section').forEach(s => s.classList.remove('active')); document.getElementById('tab-' + tab.dataset.tab).classList.add('active'); if(tab.dataset.tab === 'manage') loadManageList(); } });
+
+  document.getElementById('f_category').onchange = (e) => { const isSeries = e.target.value === 'series'; document.getElementById('movieVideoGroup').style.display = isSeries? 'none' : 'block'; document.getElementById('episodesGroup').style.display = isSeries? 'block' : 'none'; }
+  document.getElementById('addEpisodeBtn').onclick = () => { document.getElementById('episodeBuilder').innerHTML += `<input type="text" class="admin-input ep-url" placeholder="Episode Video URL">`; }
+
+  document.getElementById('saveBtn').onclick = async () => {
+    const sections = Array.from(document.getElementById('f_sections').selectedOptions).map(o => o.value);
+    const data = {
+      title: document.getElementById('f_title').value, category: document.getElementById('f_category').value,
+      year: document.getElementById('f_year').value, poster: document.getElementById('f_poster').value,
+      backdrop: document.getElementById('f_backdrop').value, description: document.getElementById('f_description').value,
+      videoUrl: document.getElementById('f_videoUrl').value, sections: sections, date: new Date().toISOString()
+    };
+    if(data.category === 'series') data.episodes = Array.from(document.querySelectorAll('.ep-url')).map(i => ({videoUrl: i.value}));
+    await addDoc(collection(db, "movies"), data); showToast('✅ Added successfully'); document.getElementById('f_title').value = '';
+  }
+
+  async function loadManageList() { const snap = await getDocs(collection(db, "movies")); let html = ''; snap.forEach(d => { const m = d.data(); html += `<div class="admin-list-item"><img src="${m.poster}"><div class="admin-list-info"><div class="admin-list-title">${m.title}</div></div><div class="admin-list-actions"><button class="admin-icon-btn delete" data-id="${d.id}"><i class="fa fa-trash"></i></button></div></div>` }); document.getElementById('manageList').innerHTML = html; }
+}
+
+initAdmin();
+</script>
 </body>
 </html>
