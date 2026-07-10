@@ -227,6 +227,7 @@
   .form-row { display: flex; gap: 10px; }
   .form-row .form-group { flex: 1; }
   .form-group select { width: 100%; background: var(--bg); border: 1px solid var(--border); color: var(--text); padding: 12px 14px; border-radius: 8px; font-size: 14px; }
+  .form-group select[multiple] { height: 140px; }
   .form-group textarea { width: 100%; background: var(--bg); border: 1px solid var(--border); color: var(--text); padding: 12px 14px; border-radius: 8px; font-size: 14px; min-height: 90px; resize: vertical; font-family: inherit; }
   .form-hint { font-size: 11.5px; color: var(--text-faint); margin-top: 4px; }
   .checkbox-row { display: flex; align-items: center; gap: 8px; }
@@ -477,10 +478,16 @@
         </div>
 
         <div class="form-group">
-          <div class="checkbox-row">
-            <input type="checkbox" id="f_trending">
-            <label for="f_trending" style="margin:0;">Mark as Trending</label>
-          </div>
+          <label>Show In Sections * <span class="form-hint">Ctrl+Click (හෝ mobile එකේ ඔක්කොම tap) කරලා කීපයක් select කරන්න</span></label>
+          <select id="f_sections" multiple>
+            <option value="trending_home">Daily Trending - Home</option>
+            <option value="latest_home">Latest Uploads - Home</option>
+            <option value="tvshows_home">TV Shows - Home</option>
+            <option value="allmovies">All Movies</option>
+            <option value="cinema">LK Cinema</option>
+            <option value="series">TV Shows Page</option>
+          </select>
+          <div class="form-hint">Meka select kale nathnam home page eke pennanne na</div>
         </div>
 
         <button class="btn btn-primary" id="saveBtn" style="width:100%; justify-content:center; margin-top:6px;">
@@ -609,6 +616,10 @@
   let allContent = [];
   let heroInterval;
 
+  function hasSection(movie, sectionKey) {
+    return Array.isArray(movie.sections) && movie.sections.includes(sectionKey);
+  }
+
   function createMovieCard(movie) {
     const poster = movie.poster || 'https://via.placeholder.com/150x220/222/fff';
     const title = movie.title || 'No Title';
@@ -664,19 +675,28 @@
   }
 
   function loadTrending() {
-    const trending = allContent.filter(m => m.trending === true || m.trending === "true").slice(0, 8);
+    const trending = allContent
+      .filter(m => hasSection(m, 'trending_home'))
+      .sort((a,b) => new Date(b.date || 0) - new Date(a.date || 0))
+      .slice(0, 8);
     const container = document.getElementById('trendingMovies');
     container.innerHTML = trending.length > 0 ? trending.map(createMovieCard).join('') : '<div class="home-no-result">Trending movies නෑ</div>';
   }
 
   function loadLatest() {
-    const latest = [...allContent].sort((a,b) => new Date(b.date || 0) - new Date(a.date || 0)).slice(0, 8);
+    const latest = allContent
+      .filter(m => hasSection(m, 'latest_home'))
+      .sort((a,b) => new Date(b.date || 0) - new Date(a.date || 0))
+      .slice(0, 8);
     const container = document.getElementById('latestMovies');
     container.innerHTML = latest.length > 0 ? latest.map(createMovieCard).join('') : '<div class="home-no-result">Latest movies නෑ</div>';
   }
 
   function loadTVShows() {
-    const shows = allContent.filter(m => m.category == "series" || m.category == "tvshows" || m.type == "series" || m.type == "tv").slice(0, 8);
+    const shows = allContent
+      .filter(m => hasSection(m, 'tvshows_home'))
+      .sort((a,b) => new Date(b.date || 0) - new Date(a.date || 0))
+      .slice(0, 8);
     const container = document.getElementById('tvShowsMovies');
     container.innerHTML = shows.length > 0 ? shows.map(createMovieCard).join('') : '<div class="home-no-result">TV Shows නෑ</div>';
   }
@@ -1065,6 +1085,17 @@
 
     function clearEpisodeBuilder() { episodeBuilder.innerHTML = ''; }
 
+    const sectionsSelect = document.getElementById('f_sections');
+
+    function getSectionsFromForm() {
+      return Array.from(sectionsSelect.selectedOptions).map(o => o.value);
+    }
+
+    function setSectionsInForm(sections) {
+      const sel = new Set(Array.isArray(sections) ? sections : []);
+      Array.from(sectionsSelect.options).forEach(o => { o.selected = sel.has(o.value); });
+    }
+
     let editingId = null;
     const saveBtn = document.getElementById('saveBtn');
     const formModeLabel = document.getElementById('formModeLabel');
@@ -1086,7 +1117,7 @@
       document.getElementById('f_description').value = '';
       document.getElementById('f_trailer').value = '';
       document.getElementById('f_videoUrl').value = '';
-      document.getElementById('f_trending').checked = false;
+      setSectionsInForm([]);
       clearEpisodeBuilder();
       updateFieldVisibility();
     }
@@ -1097,8 +1128,10 @@
       const title = document.getElementById('f_title').value.trim();
       const poster = document.getElementById('f_poster').value.trim();
       const category = document.getElementById('f_category').value;
+      const sections = getSectionsFromForm();
 
       if (!title || !poster) { showToast('Title සහ Poster URL අනිවාර්යයි'); return; }
+      if (sections.length === 0) { showToast('අඩුම තරමින් Section එකක්වත් select කරන්න'); return; }
 
       const data = {
         title, category,
@@ -1112,7 +1145,7 @@
         backdrop: document.getElementById('f_backdrop').value.trim(),
         description: document.getElementById('f_description').value.trim(),
         trailer: document.getElementById('f_trailer').value.trim(),
-        trending: document.getElementById('f_trending').checked,
+        sections,
         date: new Date().toISOString()
       };
 
@@ -1164,7 +1197,7 @@
           <img src="${m.poster || 'https://via.placeholder.com/46x66/222/fff'}" loading="lazy">
           <div class="admin-list-info">
             <div class="admin-list-title">${m.title}</div>
-            <div class="admin-list-meta">${m.category === 'series' ? 'TV Series' : 'Movie'} · ${m.year || 'N/A'} ${m.trending ? '· 🔥 Trending' : ''}</div>
+            <div class="admin-list-meta">${m.category === 'series' ? 'TV Series' : 'Movie'} · ${m.year || 'N/A'} ${Array.isArray(m.sections) && m.sections.length ? '· ' + m.sections.join(', ') : ''}</div>
           </div>
           <div class="admin-list-actions">
             <button class="admin-icon-btn edit" data-id="${m.id}"><i class="fa fa-pen"></i></button>
@@ -1199,8 +1232,8 @@
       document.getElementById('f_backdrop').value = m.backdrop || '';
       document.getElementById('f_description').value = m.description || '';
       document.getElementById('f_trailer').value = m.trailer || '';
-      document.getElementById('f_trending').checked = !!m.trending;
       document.getElementById('f_videoUrl').value = m.videoUrl || '';
+      setSectionsInForm(m.sections);
 
       clearEpisodeBuilder();
       if (Array.isArray(m.episodes)) m.episodes.forEach(ep => addEpisodeRow(ep));
