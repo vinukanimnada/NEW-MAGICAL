@@ -270,17 +270,17 @@ header {
   </div>
 
   <div class="logo">𝗠𝗔𝗚𝗜𝗖𝗔𝗟 <span>𝗠<i class="fa-solid fa-circle"></i>VIE L<i class="fa-solid fa-circle"></i>ND</span></div>
-  
+
   <div class="header-right"> <!-- Aththa paththa -->
-    <!-- Meheta search icon danna puluwan -->
+    <i class="fa fa-search" id="searchBtn"></i>
   </div>
-  
-  <!-- Search Bar - ID + type="button" fix කළා -->
+
+  <!-- Search Bar -->
   <div class="search-box" id="searchBox">
     <input type="text" id="searchInput" placeholder="Search movies...">
     <i class="fa fa-times" id="closeSearch"></i>
   </div>
-  
+
 </header>
 
 <div class="sidebar" id="sidebar"> <!-- Sidebar dan Header yata -->
@@ -312,9 +312,9 @@ header {
   <!-- FOOTER -->
   <footer class="footer">
     <div class="footer-logo">𝗠𝗔𝗚𝗜𝗖𝗔𝗟 <span>𝗠𝗢𝗩𝗜𝗘 𝗟𝗔𝗡𝗗</span></div>
-    
+
     <p class="footer-text">
-      The best platform to stream latest Movies and Cartoons with high-quality subtitles. 
+      The best platform to stream latest Movies and Cartoons with high-quality subtitles.
       Enjoy your favorite content for free on Magical Movie Land.
     </p>
 
@@ -328,7 +328,7 @@ header {
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCx0TEmgr3GCyvfeok9Y42yR1PTM4_8y9M",
@@ -344,62 +344,83 @@ const db = getFirestore(app);
 const grid = document.getElementById('movieGrid');
 let allMovies = [];
 
+// admin panel eken save karana "sections" array eke "allmovies" thiyenawada kiyala check karanawa
+function hasSection(movie, sectionKey) {
+  return Array.isArray(movie.sections) && movie.sections.includes(sectionKey);
+}
+
 // Movies load + cache
 async function loadMovies() {
   try {
-    const q = query(
-      collection(db, "movies"),
-      where("category", "==", "allmovies"),
-      where("type", "==", "movie")
-    );
-    const snapshot = await getDocs(q);
+    // admin.html eken save wena "movies" collection eke tියෙන okkoma docs load karala
+    // client side eke "allmovies" section eka select karala thiyena ewa witharak filter karanawa
+    // (mekata Firestore composite index eka set karanna one nathi, admin eke section
+    //  ekakwath select nokara save kalath wenas paninne na)
+    const snapshot = await getDocs(collection(db, "movies"));
 
-    if(snapshot.empty) {
-      grid.innerHTML = '<div class="no-movies">Movies නැත. Admin එකෙන් "All Movies Page" select කරලා add කරපන්.</div>';
+    if (snapshot.empty) {
+      grid.innerHTML = '<div class="no-movies">Movies නැත.</div>';
+      return;
+    }
+
+    allMovies = [];
+    snapshot.forEach(docSnap => {
+      const m = docSnap.data();
+      m.id = docSnap.id;
+      if (m.title && m.poster && hasSection(m, 'allmovies')) {
+        allMovies.push(m);
+      }
+    });
+
+    // Aluthma ekkalu udin (date descending) penvanna
+    allMovies.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
+
+    if (allMovies.length === 0) {
+      grid.innerHTML = '<div class="no-movies">Movies නැත. Admin panel එකෙන් "Show In Sections" එකේ "All Movies" select කරලා add කරන්න.</div>';
       return;
     }
 
     grid.innerHTML = "";
-    allMovies = [];
-
-    snapshot.forEach(doc => {
-      const m = doc.data();
-      m.id = doc.id;
-      allMovies.push(m);
-
+    allMovies.forEach(m => {
       const poster = m.poster || 'https://via.placeholder.com/300x450/222/fff?text=No+Image';
-      let rating = m.imdbRating? m.imdbRating.toString().split('/')[0] : '0.0';
-      if(!rating.includes('.')) rating += '.0';
-      const quality = (m.quality || 'WEB-DL').toUpperCase();
+
+      // admin panel eke "rating" field ekai thiyenne (imdbRating na)
+      let rating = m.rating ? m.rating.toString().split('/')[0] : '';
+      if (rating && !rating.includes('.')) rating += '.0';
+
+      // admin panel eke "quality" field ekak nathi nisa default ekak dammoth harida
+      const quality = (m.quality || 'HD').toUpperCase();
+
       let title = m.title || 'Untitled';
-      if(title.length > 20) title = title.substring(0, 20) + '...';
+      if (title.length > 20) title = title.substring(0, 20) + '...';
 
       const card = `
-        <div class="movie-card" onclick="openMovie('${doc.id}')">
+        <div class="movie-card" onclick="openMovie('${m.id}')">
           <span class="quality-badge">${quality}</span>
-          <span class="rating-badge">★ ${rating}</span>
+          ${rating ? `<span class="rating-badge">★ ${rating}</span>` : ''}
           <img src="${poster}" alt="${m.title}" loading="lazy">
           <div class="movie-title">${title}</div>
         </div>
       `;
       grid.innerHTML += card;
     });
-  } catch(err) {
+  } catch (err) {
     console.error(err);
     grid.innerHTML = `<div class="no-movies">Error: ${err.message}</div>`;
   }
 }
 
-window.openMovie = function(id) {
-  window.location.href = `watch.html?id=${id}`;
-}
+// index.html ekema single-page router eka use karanawa (watch.html kiyala file ekak na)
+window.openMovie = function (id) {
+  window.location.href = `index.html?id=${id}`;
+};
 
 // Search function
 function searchMovies(query) {
   const resultsDiv = document.getElementById('searchResults');
   const gridDiv = document.getElementById('movieGrid');
 
-  if(!query.trim()) {
+  if (!query.trim()) {
     resultsDiv.classList.remove('active');
     gridDiv.style.display = 'grid';
     return;
@@ -412,7 +433,7 @@ function searchMovies(query) {
     m.title && m.title.toLowerCase().includes(query.toLowerCase())
   );
 
-  if(filtered.length === 0) {
+  if (filtered.length === 0) {
     resultsDiv.innerHTML = '<div class="search-no-result">🔍 Not Found</div>';
     return;
   }
@@ -420,11 +441,11 @@ function searchMovies(query) {
   resultsDiv.innerHTML = filtered.map(m => {
     const poster = m.poster || 'https://via.placeholder.com/60x90/222/fff';
     const year = m.year || 'N/A';
-    const duration = m.duration || 'N/A';
-    const genre = m.genre || m.language || 'Movie';
+    const duration = m.duration || '';
+    const genre = m.genre || 'Movie';
 
     let title = m.title;
-    if(title.length > 40) title = title.substring(0, 40) + '...';
+    if (title.length > 40) title = title.substring(0, 40) + '...';
 
     return `
       <div class="search-result-item" onclick="openMovie('${m.id}')">
@@ -432,7 +453,7 @@ function searchMovies(query) {
         <div class="search-result-info">
           <div class="search-result-title">${title}</div>
           <div class="search-result-meta">
-            ${year} • ${duration} min<br>
+            ${year}${duration ? ' • ' + duration : ''}<br>
             ${genre}
           </div>
         </div>
@@ -443,25 +464,18 @@ function searchMovies(query) {
 
 loadMovies();
 
-// Menu + Search JS - ID වලින්ම අල්ලගත්තා
+// Menu + Search JS
 const menuBtn = document.getElementById('menuBtn');
 const sidebar = document.getElementById('sidebar');
-const closeSidebar = document.getElementById('closeSidebar');
 const overlay = document.getElementById('overlay');
 const searchBtn = document.getElementById('searchBtn');
 const searchBox = document.getElementById('searchBox');
 const closeSearch = document.getElementById('closeSearch');
-const searchInput = document.getElementById('searchInput'); // ID එකෙන්
-const searchBtnIcon = document.getElementById('searchBtnIcon'); // ID එකෙන්
+const searchInput = document.getElementById('searchInput');
 
 menuBtn?.addEventListener('click', () => {
   sidebar.classList.add('active');
   overlay.classList.add('active');
-});
-
-closeSidebar?.addEventListener('click', () => {
-  sidebar.classList.remove('active');
-  overlay.classList.remove('active');
 });
 
 overlay?.addEventListener('click', () => {
@@ -472,7 +486,7 @@ overlay?.addEventListener('click', () => {
 // Header 🔍 click
 searchBtn?.addEventListener('click', () => {
   searchBox.classList.toggle('active');
-  if(searchBox.classList.contains('active')) {
+  if (searchBox.classList.contains('active')) {
     searchInput.focus();
   } else {
     searchMovies('');
@@ -498,15 +512,9 @@ searchInput?.addEventListener('input', (e) => {
 
 // Enter ගැහුවම search
 searchInput?.addEventListener('keypress', (e) => {
-  if(e.key === 'Enter') {
+  if (e.key === 'Enter') {
     searchMovies(e.target.value);
   }
-});
-
-// Red button click - මේක fix
-searchBtnIcon?.addEventListener('click', (e) => {
-  e.preventDefault();
-  searchMovies(searchInput.value);
 });
 </script>
 
