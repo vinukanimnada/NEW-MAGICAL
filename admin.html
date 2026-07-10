@@ -4,95 +4,199 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin Panel - MAGICAL MOVIE LAND</title>
+  <link rel="icon" href="https://files.catbox.moe/nstkne.png" type="image/png">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <script>(function(){ const theme = localStorage.getItem('theme') || 'dark'; document.documentElement.className = theme; })();</script>
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
   html.dark { --bg: #0a0a0a; --bg-alt: #111; --card: #1a1a1a; --card-2: #222; --text: #fff; --text-dim: #aaa; --text-faint: #666; --border: #222; }
   html.light { --bg: #f4f4f4; --bg-alt: #ffffff; --card: #f5f5f5; --card-2: #e8e8e8; --text: #111; --text-dim: #444; --text-faint: #888; --border: #ddd; }
   body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; padding-bottom: 40px; }
-  header { background: var(--bg-alt); padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 999; border-bottom: 1px solid var(--border); }
- .logo { font-size: 22px; font-weight: 700; color: var(--text); }.logo span { color: #ff2d95; }
- .back-btn { font-size: 20px; cursor: pointer; margin-right: 14px; color: var(--text); }
- .btn { display: inline-flex; align-items: center; gap: 8px; border: none; border-radius: 6px; padding: 12px 22px; font-size: 15px; font-weight: 600; cursor: pointer; }
- .btn-primary { background: #ff2d95; color: #fff; }.btn-outline { background: transparent; border: 1px solid var(--text-faint); color: var(--text); }.btn-secondary { background: var(--card-2); color: var(--text); }
- .admin-login-wrap { min-height: 80vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
- .admin-login-card { background: var(--card); border-radius: 14px; padding: 36px 28px; max-width: 360px; width: 100%; text-align: center; border: 1px solid var(--border); }
- .admin-input { width: 100%; background: var(--bg); border: 1px solid var(--border); color: var(--text); padding: 13px 16px; border-radius: 8px; font-size: 15px; margin-bottom: 12px; outline: none; }
- .admin-input:focus { border-color: #ff2d95; }.admin-error { color: #ff5b5b; font-size: 13px; margin-bottom: 10px; min-height: 16px; }
- .admin-panel { display: none; padding: 15px; max-width: 720px; margin: 0 auto; }
- .admin-panel.active { display: block; }
- .admin-topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
- .admin-tabs { display: flex; gap: 8px; margin-bottom: 18px; border-bottom: 1px solid var(--border); }
- .admin-tab { padding: 10px 16px; font-size: 14px; font-weight: 600; color: var(--text-faint); cursor: pointer; border-bottom: 2px solid transparent; }
- .admin-tab.active { color: #ff2d95; border-color: #ff2d95; }
- .admin-form-section { display: none; }.admin-form-section.active { display: block; }
- .form-group { margin-bottom: 14px; }.form-group label { display: block; font-size: 13px; font-weight: 600; color: var(--text-dim); margin-bottom: 6px; }
- .form-row { display: flex; gap: 10px; }.form-row.form-group { flex: 1; }
- .form-group select[multiple] { height: 140px; }
- .form-group select,.form-group textarea { width: 100%; background: var(--bg); border: 1px solid var(--border); color: var(--text); padding: 12px 14px; border-radius: 8px; font-size: 14px; }
- .form-hint { font-size: 11.5px; color: var(--text-faint); margin-top: 4px; }
- .episode-builder { border: 1px solid var(--border); border-radius: 10px; padding: 12px; margin-top: 8px; }
- .admin-list-item { display: flex; align-items: center; gap: 12px; background: var(--card); border-radius: 8px; padding: 10px; margin-bottom: 8px; }
- .admin-list-item img { width: 46px; height: 66px; object-fit: cover; border-radius: 4px; }
- .admin-list-info { flex: 1; min-width: 0; }.admin-list-title { font-size: 14px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
- .admin-list-actions { display: flex; gap: 8px; }.admin-icon-btn { width: 34px; height: 34px; border-radius: 6px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.08); color: var(--text-dim); cursor: pointer; border: none; }
- .admin-toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: var(--card); border: 1px solid #ff2d95; color: var(--text); padding: 12px 22px; border-radius: 8px; z-index: 3000; opacity: 0; transition: 0.25s; }
- .admin-toast.show { opacity: 1; }
+  header { background: var(--bg-alt); padding: 12px 15px; display: flex; align-items: center; position: sticky; top: 0; z-index: 999; border-bottom: 1px solid var(--border); }
+  .logo { font-size: 17px; font-weight: 700; color: var(--text); }
+  .back-btn { font-size: 20px; cursor: pointer; margin-right: 14px; color: var(--text); }
+  .btn { display: inline-flex; align-items: center; gap: 8px; border: none; border-radius: 6px; padding: 12px 22px; font-size: 15px; font-weight: 600; cursor: pointer; transition: transform 0.15s, opacity 0.15s; }
+  .btn:active { transform: scale(0.97); }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .btn-primary { background: #ff2d95; color: #fff; }
+  .btn-secondary { background: rgba(255,255,255,0.1); color: var(--text); }
+  .btn-outline { background: transparent; border: 1px solid var(--text-faint); color: var(--text); }
+  .admin-login-wrap { min-height: 80vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+  .admin-login-card { background: var(--card); border-radius: 14px; padding: 36px 28px; max-width: 360px; width: 100%; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.4); border: 1px solid var(--border); }
+  .admin-login-card .lock-icon { font-size: 40px; color: #ff2d95; margin-bottom: 14px; }
+  .admin-login-card h2 { font-size: 20px; margin-bottom: 6px; }
+  .admin-login-card p { font-size: 13px; color: var(--text-faint); margin-bottom: 22px; }
+  .admin-input { width: 100%; background: var(--bg); border: 1px solid var(--border); color: var(--text); padding: 13px 16px; border-radius: 8px; font-size: 15px; margin-bottom: 12px; outline: none; }
+  .admin-input:focus { border-color: #ff2d95; }
+  .admin-error { color: #ff5b5b; font-size: 13px; margin-bottom: 10px; min-height: 16px; }
+  .admin-panel { display: none; padding: 15px; max-width: 720px; margin: 0 auto; }
+  .admin-panel.active { display: block; }
+  .admin-topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
+  .admin-topbar h1 { font-size: 19px; }
+  .admin-tabs { display: flex; gap: 8px; margin-bottom: 18px; border-bottom: 1px solid var(--border); }
+  .admin-tab { padding: 10px 16px; font-size: 14px; font-weight: 600; color: var(--text-faint); cursor: pointer; border-bottom: 2px solid transparent; }
+  .admin-tab.active { color: #ff2d95; border-color: #ff2d95; }
+  .admin-form-section { display: none; }
+  .admin-form-section.active { display: block; }
+  .form-group { margin-bottom: 14px; }
+  .form-group label { display: block; font-size: 13px; font-weight: 600; color: var(--text-dim); margin-bottom: 6px; }
+  .form-row { display: flex; gap: 10px; }
+  .form-row .form-group { flex: 1; }
+  .form-group select { width: 100%; background: var(--bg); border: 1px solid var(--border); color: var(--text); padding: 12px 14px; border-radius: 8px; font-size: 14px; }
+  .form-group select[multiple] { height: 140px; }
+  .form-group textarea { width: 100%; background: var(--bg); border: 1px solid var(--border); color: var(--text); padding: 12px 14px; border-radius: 8px; font-size: 14px; min-height: 90px; resize: vertical; font-family: inherit; }
+  .form-hint { font-size: 11.5px; color: var(--text-faint); margin-top: 4px; }
+  .episode-builder { border: 1px solid var(--border); border-radius: 10px; padding: 12px; margin-top: 8px; }
+  .episode-row { margin-bottom: 8px; }
+  .admin-list-item { display: flex; align-items: center; gap: 12px; background: var(--card); border-radius: 8px; padding: 10px; margin-bottom: 8px; }
+  .admin-list-item img { width: 46px; height: 66px; object-fit: cover; border-radius: 4px; flex-shrink: 0; }
+  .admin-list-info { flex: 1; min-width: 0; }
+  .admin-list-title { font-size: 14px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .admin-list-meta { font-size: 12px; color: var(--text-faint); }
+  .admin-list-actions { display: flex; gap: 8px; flex-shrink: 0; }
+  .admin-icon-btn { width: 34px; height: 34px; border-radius: 6px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.08); color: var(--text-dim); cursor: pointer; border: none; }
+  .admin-icon-btn.edit:hover { background: rgba(255,45,149,0.2); color: #ff2d95; }
+  .admin-icon-btn.delete:hover { background: rgba(255,60,60,0.2); color: #ff5b5b; }
+  .admin-search { margin-bottom: 12px; }
+  .admin-toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--card); border: 1px solid #ff2d95; color: var(--text); padding: 12px 22px; border-radius: 8px; font-size: 14px; z-index: 3000; opacity: 0; transition: 0.25s; pointer-events: none; }
+  .admin-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  .details-skeleton { text-align: center; padding: 60px 20px; color: var(--text-faint); }
   </style>
 </head>
 <body>
   <header>
-    <div style="display:flex; align-items:center;">
-      <i class="fa fa-arrow-left back-btn" onclick="window.location.href='index.html'"></i>
-      <div class="logo">Admin <span>Panel</span></div>
-    </div>
+    <i class="fa fa-arrow-left back-btn" onclick="window.location.href='index.html'"></i>
+    <div class="logo">Admin Panel</div>
   </header>
 
   <div class="admin-login-wrap" id="loginWrap">
     <div class="admin-login-card">
-      <div style="font-size: 40px; color: #ff2d95; margin-bottom: 14px;"><i class="fa fa-lock"></i></div>
+      <div class="lock-icon"><i class="fa fa-lock"></i></div>
       <h2>Admin Panel</h2>
-      <p style="font-size: 13px; color: var(--text-faint); margin-bottom: 22px;">Content manage කරන්න password එක ඇතුළත් කරන්න</p>
+      <p>Content manage කරන්න password එක ඇතුළත් කරන්න</p>
       <input type="password" class="admin-input" id="passInput" placeholder="Password">
       <div class="admin-error" id="passError"></div>
-      <button class="btn btn-primary" style="width:100%; justify-content:center;" id="unlockBtn"><i class="fa fa-unlock"></i> Unlock</button>
+      <button class="btn btn-primary" style="width:100%; justify-content:center;" id="unlockBtn">
+        <i class="fa fa-unlock"></i> Unlock
+      </button>
     </div>
   </div>
 
   <div class="admin-panel" id="adminPanel">
-    <div class="admin-topbar"><h1><i class="fa fa-shield-halved"></i> Admin Panel</h1><button class="btn btn-outline" id="logoutBtn"><i class="fa fa-right-from-bracket"></i> Logout</button></div>
-    <div class="admin-tabs"><div class="admin-tab active" data-tab="add">Add New</div><div class="admin-tab" data-tab="manage">Manage Content</div></div>
+    <div class="admin-topbar">
+      <h1><i class="fa fa-shield-halved"></i> Admin Panel</h1>
+      <button class="btn btn-outline" id="logoutBtn" style="padding:8px 14px; font-size:13px;">
+        <i class="fa fa-right-from-bracket"></i> Logout
+      </button>
+    </div>
+
+    <div class="admin-tabs">
+      <div class="admin-tab active" data-tab="add">Add New</div>
+      <div class="admin-tab" data-tab="manage">Manage Content</div>
+    </div>
 
     <div class="admin-form-section active" id="tab-add">
-      <div class="form-group"><label>Title *</label><input type="text" class="admin-input" id="f_title"></div>
-      <div class="form-row"><div class="form-group"><label>Category *</label><select id="f_category"><option value="movie">Movie</option><option value="series">TV Series</option></select></div><div class="form-group"><label>Year</label><input type="text" class="admin-input" id="f_year"></div></div>
-      <div class="form-group"><label>Poster Image URL *</label><input type="text" class="admin-input" id="f_poster"></div>
-      <div class="form-group"><label>Backdrop URL</label><input type="text" class="admin-input" id="f_backdrop"></div>
-      <div class="form-group"><label>Description</label><textarea id="f_description"></textarea></div>
-      <div class="form-group" id="movieVideoGroup"><label>Video URL *</label><input type="text" class="admin-input" id="f_videoUrl"></div>
-      <div class="form-group" id="episodesGroup" style="display:none;"><label>Episodes</label><div class="episode-builder" id="episodeBuilder"></div><button class="btn btn-secondary" id="addEpisodeBtn"><i class="fa fa-plus"></i> Add Episode</button></div>
+      <div id="formModeLabel" style="font-size:13px; color:#ff2d95; font-weight:600; margin-bottom:10px; display:none;">
+        <i class="fa fa-pen"></i> Editing existing title — <span id="editingTitle"></span>
+        <a href="#" id="cancelEdit" style="color:var(--text-faint); margin-left:8px;">(cancel)</a>
+      </div>
 
-      <!-- MEKA ALUTH SECTIONS SELECT BOX -->
       <div class="form-group">
-        <label>Show In Sections * <span class="form-hint">Ctrl+Click to select multiple</span></label>
+        <label>Title *</label>
+        <input type="text" class="admin-input" id="f_title" placeholder="e.g. Ne Zha 2">
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Category *</label>
+          <select id="f_category">
+            <option value="movie">Movie</option>
+            <option value="series">TV Series</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Year</label>
+          <input type="text" class="admin-input" id="f_year" placeholder="2026">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>IMDb Rating</label>
+          <input type="text" class="admin-input" id="f_rating" placeholder="7.8">
+        </div>
+        <div class="form-group" id="durationGroup">
+          <label>Duration</label>
+          <input type="text" class="admin-input" id="f_duration" placeholder="1h 45m">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Genre <span class="form-hint">(comma separated)</span></label>
+        <input type="text" class="admin-input" id="f_genre" placeholder="Animation, Comedy, Fantasy">
+      </div>
+
+      <div class="form-group">
+        <label>Cast <span class="form-hint">(optional, comma separated)</span></label>
+        <input type="text" class="admin-input" id="f_cast" placeholder="Actor A, Actor B">
+      </div>
+
+      <div class="form-group">
+        <label>Poster Image URL *</label>
+        <input type="text" class="admin-input" id="f_poster" placeholder="https://...">
+      </div>
+
+      <div class="form-group">
+        <label>Backdrop / Banner Image URL <span class="form-hint">(hero slider + details page)</span></label>
+        <input type="text" class="admin-input" id="f_backdrop" placeholder="https://...">
+      </div>
+
+      <div class="form-group">
+        <label>Description</label>
+        <textarea id="f_description" placeholder="Short synopsis..."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>YouTube Trailer <span class="form-hint">(full URL or video ID)</span></label>
+        <input type="text" class="admin-input" id="f_trailer" placeholder="https://youtube.com/watch?v=...">
+      </div>
+
+      <div class="form-group" id="movieVideoGroup">
+        <label>Video URL / Embed Link *</label>
+        <input type="text" class="admin-input" id="f_videoUrl" placeholder="Direct .mp4 link or embed/iframe URL">
+        <div class="form-hint">YouTube link, direct .mp4, or any streaming embed URL — all supported.</div>
+      </div>
+
+      <div class="form-group" id="episodesGroup" style="display:none;">
+        <label>Episodes</label>
+        <div class="episode-builder" id="episodeBuilder"></div>
+        <button class="btn btn-secondary" id="addEpisodeBtn" style="margin-top:8px; font-size:13px; padding:9px 14px;">
+          <i class="fa fa-plus"></i> Add Episode
+        </button>
+        <div class="form-hint">Season / Episode / Title / Video URL — දෙන්න.</div>
+      </div>
+
+      <div class="form-group">
+        <label>Show In Sections * <span class="form-hint">Ctrl+Click (හෝ mobile එකේ ඔක්කොම tap) කරලා කීපයක් select කරන්න</span></label>
         <select id="f_sections" multiple>
-          <option value="trending_home">Daily Trading - Home</option>
-          <option value="latest_home">Latest Upload - Home</option>
+          <option value="trending_home">Daily Trending - Home</option>
+          <option value="latest_home">Latest Uploads - Home</option>
           <option value="tvshows_home">TV Shows - Home</option>
           <option value="allmovies">All Movies</option>
           <option value="cinema">LK Cinema</option>
           <option value="series">TV Shows Page</option>
         </select>
-        <div class="form-hint">Meka select kale nathnam pennanne na</div>
+        <div class="form-hint">Meka select kale nathnam home page eke pennanne na</div>
       </div>
 
-      <button class="btn btn-primary" id="saveBtn" style="width:100%; justify-content:center;"><i class="fa fa-save"></i> Save</button>
+      <button class="btn btn-primary" id="saveBtn" style="width:100%; justify-content:center; margin-top:6px;">
+        <i class="fa fa-save"></i> Save
+      </button>
     </div>
 
     <div class="admin-form-section" id="tab-manage">
-      <input type="text" class="admin-input" id="manageSearch" placeholder="🔍 Search titles...">
-      <div id="manageList">Loading...</div>
+      <input type="text" class="admin-input admin-search" id="manageSearch" placeholder="🔍 Search titles...">
+      <div id="manageList"><div class="details-skeleton">Loading...</div></div>
     </div>
   </div>
 
@@ -100,9 +204,8 @@
 
   <!-- ============================================================
        LOGIN LOGIC — plain script, NOT a module.
-       This runs immediately and does NOT depend on Firebase at all,
-       so even if the Firebase import below fails/gets blocked,
-       Unlock will still work.
+       Runs immediately, independent of Firebase — Unlock always works
+       even if the Firebase module below fails to load.
   ============================================================ -->
   <script>
     const ADMIN_PASSWORD = "Magical movie land 2026";
@@ -125,57 +228,144 @@
 
     if (sessionStorage.getItem('mml_admin_auth') === 'true') unlock();
 
-    document.getElementById('unlockBtn').addEventListener('click', () => {
-      const val = document.getElementById('passInput').value.trim();
-      if (val === ADMIN_PASSWORD) {
+    function tryUnlock() {
+      const passInput = document.getElementById('passInput');
+      const passError = document.getElementById('passError');
+      if (passInput.value === ADMIN_PASSWORD) {
         sessionStorage.setItem('mml_admin_auth', 'true');
-        document.getElementById('passError').textContent = '';
+        passError.textContent = '';
         unlock();
       } else {
-        document.getElementById('passError').textContent = 'Password එක වැරදියි';
+        passError.textContent = 'Password එක වැරදියි. නැවත උත්සාහ කරන්න.';
       }
-    });
-
-    // Allow pressing Enter in the password field to unlock too
-    document.getElementById('passInput').addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') document.getElementById('unlockBtn').click();
-    });
+    }
+    document.getElementById('unlockBtn').addEventListener('click', tryUnlock);
+    document.getElementById('passInput').addEventListener('keypress', (e) => { if (e.key === 'Enter') tryUnlock(); });
 
     document.getElementById('logoutBtn').addEventListener('click', () => {
       sessionStorage.removeItem('mml_admin_auth');
       location.reload();
     });
 
-    document.querySelectorAll('.admin-tab').forEach(tab => {
-      tab.onclick = () => {
-        document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+    const tabs = document.querySelectorAll('.admin-tab');
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove('active'));
         tab.classList.add('active');
         document.querySelectorAll('.admin-form-section').forEach(s => s.classList.remove('active'));
         document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
         if (tab.dataset.tab === 'manage' && window.loadManageList) window.loadManageList();
-      };
+      });
     });
 
-    document.getElementById('f_category').onchange = (e) => {
-      const isSeries = e.target.value === 'series';
-      document.getElementById('movieVideoGroup').style.display = isSeries ? 'none' : 'block';
-      document.getElementById('episodesGroup').style.display = isSeries ? 'block' : 'none';
-    };
+    const categorySelect = document.getElementById('f_category');
+    const movieVideoGroup = document.getElementById('movieVideoGroup');
+    const episodesGroup = document.getElementById('episodesGroup');
+    const durationGroup = document.getElementById('durationGroup');
 
-    document.getElementById('addEpisodeBtn').onclick = () => {
-      document.getElementById('episodeBuilder').innerHTML += `<input type="text" class="admin-input ep-url" placeholder="Episode Video URL">`;
+    function updateFieldVisibility() {
+      const isSeriesForm = categorySelect.value === 'series';
+      movieVideoGroup.style.display = isSeriesForm ? 'none' : 'block';
+      episodesGroup.style.display = isSeriesForm ? 'block' : 'none';
+      durationGroup.style.display = isSeriesForm ? 'none' : 'block';
+    }
+    categorySelect.addEventListener('change', updateFieldVisibility);
+    updateFieldVisibility();
+
+    const episodeBuilder = document.getElementById('episodeBuilder');
+    document.getElementById('addEpisodeBtn').addEventListener('click', () => addEpisodeRow());
+
+    function addEpisodeRow(data) {
+      data = data || {};
+      const row = document.createElement('div');
+      row.className = 'episode-row';
+      row.style.background = 'var(--bg)';
+      row.style.border = '1px solid var(--border)';
+      row.style.borderRadius = '8px';
+      row.style.padding = '10px';
+      row.innerHTML = `
+        <div style="display:flex; gap:6px; margin-bottom:6px;">
+          <input type="number" class="ep-season admin-input" placeholder="Season" value="${data.season || 1}" style="padding:9px;">
+          <input type="number" class="ep-episode admin-input" placeholder="Ep #" value="${data.episode || ''}" style="padding:9px;">
+          <span class="ep-remove" style="color:#ff5b5b; cursor:pointer; display:flex; align-items:center; padding:0 6px;"><i class="fa fa-trash"></i></span>
+        </div>
+        <input type="text" class="ep-title admin-input" placeholder="Episode Title" value="${(data.title || '').replace(/"/g,'&quot;')}" style="margin-bottom:6px; padding:9px;">
+        <input type="text" class="ep-videourl admin-input" placeholder="Episode Video URL" value="${(data.videoUrl || '').replace(/"/g,'&quot;')}" style="padding:9px;">
+      `;
+      row.querySelector('.ep-remove').addEventListener('click', () => row.remove());
+      episodeBuilder.appendChild(row);
+    }
+
+    function getEpisodesFromForm() {
+      const episodes = [];
+      episodeBuilder.childNodes.forEach(row => {
+        if (!row.querySelector) return;
+        const season = row.querySelector('.ep-season')?.value;
+        const episode = row.querySelector('.ep-episode')?.value;
+        const title = row.querySelector('.ep-title')?.value;
+        const videoUrl = row.querySelector('.ep-videourl')?.value;
+        if (videoUrl) episodes.push({ season: Number(season) || 1, episode: Number(episode) || 0, title: title || '', videoUrl });
+      });
+      return episodes;
+    }
+
+    function clearEpisodeBuilder() { episodeBuilder.innerHTML = ''; }
+
+    const sectionsSelect = document.getElementById('f_sections');
+    function getSectionsFromForm() {
+      return Array.from(sectionsSelect.selectedOptions).map(o => o.value);
+    }
+    function setSectionsInForm(sections) {
+      const sel = new Set(Array.isArray(sections) ? sections : []);
+      Array.from(sectionsSelect.options).forEach(o => { o.selected = sel.has(o.value); });
+    }
+
+    let editingId = null;
+    const saveBtn = document.getElementById('saveBtn');
+    const formModeLabel = document.getElementById('formModeLabel');
+    const editingTitle = document.getElementById('editingTitle');
+    const cancelEdit = document.getElementById('cancelEdit');
+
+    function resetForm() {
+      editingId = null;
+      formModeLabel.style.display = 'none';
+      document.getElementById('f_title').value = '';
+      document.getElementById('f_category').value = 'movie';
+      document.getElementById('f_year').value = '';
+      document.getElementById('f_rating').value = '';
+      document.getElementById('f_duration').value = '';
+      document.getElementById('f_genre').value = '';
+      document.getElementById('f_cast').value = '';
+      document.getElementById('f_poster').value = '';
+      document.getElementById('f_backdrop').value = '';
+      document.getElementById('f_description').value = '';
+      document.getElementById('f_trailer').value = '';
+      document.getElementById('f_videoUrl').value = '';
+      setSectionsInForm([]);
+      clearEpisodeBuilder();
+      updateFieldVisibility();
+    }
+    cancelEdit.addEventListener('click', (e) => { e.preventDefault(); resetForm(); });
+
+    // Firebase-dependent handlers are attached lower down once Firebase loads.
+    window.__mmlAdminHelpers = {
+      getSectionsFromForm, setSectionsInForm, getEpisodesFromForm, addEpisodeRow,
+      clearEpisodeBuilder, resetForm, updateFieldVisibility,
+      get editingId() { return editingId; }, set editingId(v) { editingId = v; },
+      formModeLabel, editingTitle, saveBtn, tabs
     };
   </script>
 
   <!-- ============================================================
        FIREBASE LOGIC — separate module, wrapped in try/catch.
-       If this fails to load (blocked, offline, CDN down), the
-       login above still works; only Save/Manage will show an error.
+       If this fails to load, login still works; only Save/Manage
+       will show an error toast.
   ============================================================ -->
   <script type="module">
     try {
       const { initializeApp } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js");
-      const { getFirestore, collection, getDocs, addDoc } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js");
+      const { getFirestore, collection, getDocs, doc, addDoc, updateDoc, deleteDoc } =
+        await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js");
 
       const firebaseConfig = {
         apiKey: "AIzaSyCx0TEmgr3GCyvfeok9Y42yR1PTM4_8y9M",
@@ -188,50 +378,144 @@
       const app = initializeApp(firebaseConfig);
       const db = getFirestore(app);
 
-      document.getElementById('saveBtn').onclick = async () => {
-        const sections = Array.from(document.getElementById('f_sections').selectedOptions).map(o => o.value);
+      const H = window.__mmlAdminHelpers;
+      let cachedContent = [];
+
+      H.saveBtn.addEventListener('click', async () => {
+        const title = document.getElementById('f_title').value.trim();
+        const poster = document.getElementById('f_poster').value.trim();
+        const category = document.getElementById('f_category').value;
+        const sections = H.getSectionsFromForm();
+
+        if (!title || !poster) { showToast('Title සහ Poster URL අනිවාර්යයි'); return; }
+        if (sections.length === 0) { showToast('අඩුම තරමින් Section එකක්වත් select කරන්න'); return; }
+
         const data = {
-          title: document.getElementById('f_title').value,
-          category: document.getElementById('f_category').value,
-          year: document.getElementById('f_year').value,
-          poster: document.getElementById('f_poster').value,
-          backdrop: document.getElementById('f_backdrop').value,
-          description: document.getElementById('f_description').value,
-          videoUrl: document.getElementById('f_videoUrl').value,
-          sections: sections,
+          title, category,
+          type: category === 'series' ? 'series' : 'movie',
+          year: document.getElementById('f_year').value.trim(),
+          rating: document.getElementById('f_rating').value.trim(),
+          duration: document.getElementById('f_duration').value.trim(),
+          genre: document.getElementById('f_genre').value.trim(),
+          cast: document.getElementById('f_cast').value.trim(),
+          poster,
+          backdrop: document.getElementById('f_backdrop').value.trim(),
+          description: document.getElementById('f_description').value.trim(),
+          trailer: document.getElementById('f_trailer').value.trim(),
+          sections,
           date: new Date().toISOString()
         };
-        if (data.category === 'series') {
-          data.episodes = Array.from(document.querySelectorAll('.ep-url')).map(i => ({ videoUrl: i.value }));
-        }
+
+        if (category === 'series') data.episodes = H.getEpisodesFromForm();
+        else data.videoUrl = document.getElementById('f_videoUrl').value.trim();
+
+        H.saveBtn.disabled = true;
+        H.saveBtn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Saving...';
+
         try {
-          await addDoc(collection(db, "movies"), data);
-          showToast('✅ Added successfully');
-          document.getElementById('f_title').value = '';
+          if (H.editingId) {
+            await updateDoc(doc(db, "movies", H.editingId), data);
+            showToast('✅ Updated successfully');
+          } else {
+            await addDoc(collection(db, "movies"), data);
+            showToast('✅ Added successfully');
+          }
+          H.resetForm();
+          loadManageList();
         } catch (err) {
           console.error(err);
-          showToast('❌ Save failed: ' + err.message);
+          showToast('❌ Error: ' + err.message);
+        } finally {
+          H.saveBtn.disabled = false;
+          H.saveBtn.innerHTML = '<i class="fa fa-save"></i> Save';
         }
-      };
+      });
 
-      window.loadManageList = async function loadManageList() {
+      async function loadManageList() {
+        const list = document.getElementById('manageList');
+        list.innerHTML = '<div class="details-skeleton"><i class="fa fa-spinner fa-spin"></i> Loading...</div>';
         try {
           const snap = await getDocs(collection(db, "movies"));
-          let html = '';
-          snap.forEach(d => {
-            const m = d.data();
-            html += `<div class="admin-list-item"><img src="${m.poster}"><div class="admin-list-info"><div class="admin-list-title">${m.title}</div></div><div class="admin-list-actions"><button class="admin-icon-btn delete" data-id="${d.id}"><i class="fa fa-trash"></i></button></div></div>`;
-          });
-          document.getElementById('manageList').innerHTML = html || 'No items yet.';
+          cachedContent = [];
+          snap.forEach(d => { const data = d.data(); data.id = d.id; cachedContent.push(data); });
+          renderManageList(cachedContent);
         } catch (err) {
-          console.error(err);
-          document.getElementById('manageList').innerHTML = 'Failed to load: ' + err.message;
+          list.innerHTML = '<div class="details-skeleton">⚠️ Load කරගන්න බැරි උනා</div>';
         }
-      };
+      }
+      window.loadManageList = loadManageList;
+
+      function renderManageList(items) {
+        const list = document.getElementById('manageList');
+        if (items.length === 0) { list.innerHTML = '<div class="details-skeleton">Content නෑ තාම</div>'; return; }
+        list.innerHTML = items.map(m => `
+          <div class="admin-list-item">
+            <img src="${m.poster || 'https://via.placeholder.com/46x66/222/fff'}" loading="lazy">
+            <div class="admin-list-info">
+              <div class="admin-list-title">${m.title}</div>
+              <div class="admin-list-meta">${m.category === 'series' ? 'TV Series' : 'Movie'} · ${m.year || 'N/A'} ${Array.isArray(m.sections) && m.sections.length ? '· ' + m.sections.join(', ') : ''}</div>
+            </div>
+            <div class="admin-list-actions">
+              <button class="admin-icon-btn edit" data-id="${m.id}"><i class="fa fa-pen"></i></button>
+              <button class="admin-icon-btn delete" data-id="${m.id}"><i class="fa fa-trash"></i></button>
+            </div>
+          </div>
+        `).join('');
+        list.querySelectorAll('.edit').forEach(btn => btn.addEventListener('click', () => loadIntoForm(btn.dataset.id)));
+        list.querySelectorAll('.delete').forEach(btn => btn.addEventListener('click', () => confirmDelete(btn.dataset.id)));
+      }
+
+      document.getElementById('manageSearch').addEventListener('input', (e) => {
+        const q = e.target.value.toLowerCase();
+        renderManageList(cachedContent.filter(m => m.title.toLowerCase().includes(q)));
+      });
+
+      function loadIntoForm(id) {
+        const m = cachedContent.find(x => x.id === id);
+        if (!m) return;
+        H.editingId = id;
+        H.formModeLabel.style.display = 'block';
+        H.editingTitle.textContent = m.title;
+
+        document.getElementById('f_title').value = m.title || '';
+        document.getElementById('f_category').value = m.category === 'series' ? 'series' : 'movie';
+        document.getElementById('f_year').value = m.year || '';
+        document.getElementById('f_rating').value = m.rating || '';
+        document.getElementById('f_duration').value = m.duration || '';
+        document.getElementById('f_genre').value = m.genre || '';
+        document.getElementById('f_cast').value = m.cast || '';
+        document.getElementById('f_poster').value = m.poster || '';
+        document.getElementById('f_backdrop').value = m.backdrop || '';
+        document.getElementById('f_description').value = m.description || '';
+        document.getElementById('f_trailer').value = m.trailer || '';
+        document.getElementById('f_videoUrl').value = m.videoUrl || '';
+        H.setSectionsInForm(m.sections);
+
+        H.clearEpisodeBuilder();
+        if (Array.isArray(m.episodes)) m.episodes.forEach(ep => H.addEpisodeRow(ep));
+
+        H.updateFieldVisibility();
+        H.tabs.forEach(t => t.classList.remove('active'));
+        document.querySelector('.admin-tab[data-tab="add"]').classList.add('active');
+        document.querySelectorAll('.admin-form-section').forEach(s => s.classList.remove('active'));
+        document.getElementById('tab-add').classList.add('active');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      function confirmDelete(id) {
+        const m = cachedContent.find(x => x.id === id);
+        if (!confirm(`"${m?.title || 'this title'}" delete කරන්න ස්ථිර ද?`)) return;
+        deleteDoc(doc(db, "movies", id))
+          .then(() => { showToast('🗑️ Deleted'); loadManageList(); })
+          .catch(err => showToast('❌ Error: ' + err.message));
+      }
+
     } catch (err) {
       console.error('Firebase failed to load:', err);
       const saveBtn = document.getElementById('saveBtn');
-      if (saveBtn) saveBtn.onclick = () => showToast('❌ Firebase load failed — Save unavailable');
+      if (saveBtn) saveBtn.addEventListener('click', () => showToast('❌ Firebase load failed — Save unavailable'));
+      const list = document.getElementById('manageList');
+      if (list) list.innerHTML = '<div class="details-skeleton">⚠️ Firebase load කරගන්න බැරි උනා</div>';
     }
   </script>
 </body>
