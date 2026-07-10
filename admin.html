@@ -98,49 +98,141 @@
 
   <div class="admin-toast" id="toast"></div>
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, collection, getDocs, doc, getDoc, addDoc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-const firebaseConfig = { apiKey: "AIzaSyCx0TEmgr3GCyvfeok9Y42yR1PTM4_8y9M", authDomain: "magical-movie-land.firebaseapp.com", projectId: "magical-movie-land", storageBucket: "magical-movie-land.firebasestorage.app", messagingSenderId: "27757424288", appId: "1:27757424288:web:d650e2659f09f0b9c823c5" };
-const app = initializeApp(firebaseConfig); const db = getFirestore(app);
+  <!-- ============================================================
+       LOGIN LOGIC — plain script, NOT a module.
+       This runs immediately and does NOT depend on Firebase at all,
+       so even if the Firebase import below fails/gets blocked,
+       Unlock will still work.
+  ============================================================ -->
+  <script>
+    const ADMIN_PASSWORD = "Magical movie land 2026";
 
-const ADMIN_PASSWORD = "Magical movie land 2026";
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2200);
+    }
 
-function showToast(msg) { const toast = document.getElementById('toast'); toast.textContent = msg; toast.classList.add('show'); setTimeout(() => toast.classList.remove('show'), 2200); }
+    const loginWrap = document.getElementById('loginWrap');
+    const adminPanel = document.getElementById('adminPanel');
 
-function initAdmin() {
-  const loginWrap = document.getElementById('loginWrap'); const adminPanel = document.getElementById('adminPanel');
-  function unlock() { loginWrap.style.display = 'none'; adminPanel.classList.add('active'); loadManageList(); }
-  if (sessionStorage.getItem('mml_admin_auth') === 'true') unlock();
+    function unlock() {
+      loginWrap.style.display = 'none';
+      adminPanel.classList.add('active');
+      if (window.loadManageList) window.loadManageList();
+    }
 
-  document.getElementById('unlockBtn').onclick = () => {
-    if (document.getElementById('passInput').value === ADMIN_PASSWORD) {
-      sessionStorage.setItem('mml_admin_auth', 'true'); document.getElementById('passError').textContent = ''; unlock();
-    } else { document.getElementById('passError').textContent = 'Password එක වැරදියි'; }
-  }
-  document.getElementById('logoutBtn').onclick = () => { sessionStorage.removeItem('mml_admin_auth'); location.reload(); }
+    if (sessionStorage.getItem('mml_admin_auth') === 'true') unlock();
 
-  document.querySelectorAll('.admin-tab').forEach(tab => { tab.onclick = () => { document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active')); tab.classList.add('active'); document.querySelectorAll('.admin-form-section').forEach(s => s.classList.remove('active')); document.getElementById('tab-' + tab.dataset.tab).classList.add('active'); if(tab.dataset.tab === 'manage') loadManageList(); } });
+    document.getElementById('unlockBtn').addEventListener('click', () => {
+      const val = document.getElementById('passInput').value.trim();
+      if (val === ADMIN_PASSWORD) {
+        sessionStorage.setItem('mml_admin_auth', 'true');
+        document.getElementById('passError').textContent = '';
+        unlock();
+      } else {
+        document.getElementById('passError').textContent = 'Password එක වැරදියි';
+      }
+    });
 
-  document.getElementById('f_category').onchange = (e) => { const isSeries = e.target.value === 'series'; document.getElementById('movieVideoGroup').style.display = isSeries? 'none' : 'block'; document.getElementById('episodesGroup').style.display = isSeries? 'block' : 'none'; }
-  document.getElementById('addEpisodeBtn').onclick = () => { document.getElementById('episodeBuilder').innerHTML += `<input type="text" class="admin-input ep-url" placeholder="Episode Video URL">`; }
+    // Allow pressing Enter in the password field to unlock too
+    document.getElementById('passInput').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') document.getElementById('unlockBtn').click();
+    });
 
-  document.getElementById('saveBtn').onclick = async () => {
-    const sections = Array.from(document.getElementById('f_sections').selectedOptions).map(o => o.value);
-    const data = {
-      title: document.getElementById('f_title').value, category: document.getElementById('f_category').value,
-      year: document.getElementById('f_year').value, poster: document.getElementById('f_poster').value,
-      backdrop: document.getElementById('f_backdrop').value, description: document.getElementById('f_description').value,
-      videoUrl: document.getElementById('f_videoUrl').value, sections: sections, date: new Date().toISOString()
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      sessionStorage.removeItem('mml_admin_auth');
+      location.reload();
+    });
+
+    document.querySelectorAll('.admin-tab').forEach(tab => {
+      tab.onclick = () => {
+        document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        document.querySelectorAll('.admin-form-section').forEach(s => s.classList.remove('active'));
+        document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
+        if (tab.dataset.tab === 'manage' && window.loadManageList) window.loadManageList();
+      };
+    });
+
+    document.getElementById('f_category').onchange = (e) => {
+      const isSeries = e.target.value === 'series';
+      document.getElementById('movieVideoGroup').style.display = isSeries ? 'none' : 'block';
+      document.getElementById('episodesGroup').style.display = isSeries ? 'block' : 'none';
     };
-    if(data.category === 'series') data.episodes = Array.from(document.querySelectorAll('.ep-url')).map(i => ({videoUrl: i.value}));
-    await addDoc(collection(db, "movies"), data); showToast('✅ Added successfully'); document.getElementById('f_title').value = '';
-  }
 
-  async function loadManageList() { const snap = await getDocs(collection(db, "movies")); let html = ''; snap.forEach(d => { const m = d.data(); html += `<div class="admin-list-item"><img src="${m.poster}"><div class="admin-list-info"><div class="admin-list-title">${m.title}</div></div><div class="admin-list-actions"><button class="admin-icon-btn delete" data-id="${d.id}"><i class="fa fa-trash"></i></button></div></div>` }); document.getElementById('manageList').innerHTML = html; }
-}
+    document.getElementById('addEpisodeBtn').onclick = () => {
+      document.getElementById('episodeBuilder').innerHTML += `<input type="text" class="admin-input ep-url" placeholder="Episode Video URL">`;
+    };
+  </script>
 
-initAdmin();
-</script>
+  <!-- ============================================================
+       FIREBASE LOGIC — separate module, wrapped in try/catch.
+       If this fails to load (blocked, offline, CDN down), the
+       login above still works; only Save/Manage will show an error.
+  ============================================================ -->
+  <script type="module">
+    try {
+      const { initializeApp } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js");
+      const { getFirestore, collection, getDocs, addDoc } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js");
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyCx0TEmgr3GCyvfeok9Y42yR1PTM4_8y9M",
+        authDomain: "magical-movie-land.firebaseapp.com",
+        projectId: "magical-movie-land",
+        storageBucket: "magical-movie-land.firebasestorage.app",
+        messagingSenderId: "27757424288",
+        appId: "1:27757424288:web:d650e2659f09f0b9c823c5"
+      };
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+
+      document.getElementById('saveBtn').onclick = async () => {
+        const sections = Array.from(document.getElementById('f_sections').selectedOptions).map(o => o.value);
+        const data = {
+          title: document.getElementById('f_title').value,
+          category: document.getElementById('f_category').value,
+          year: document.getElementById('f_year').value,
+          poster: document.getElementById('f_poster').value,
+          backdrop: document.getElementById('f_backdrop').value,
+          description: document.getElementById('f_description').value,
+          videoUrl: document.getElementById('f_videoUrl').value,
+          sections: sections,
+          date: new Date().toISOString()
+        };
+        if (data.category === 'series') {
+          data.episodes = Array.from(document.querySelectorAll('.ep-url')).map(i => ({ videoUrl: i.value }));
+        }
+        try {
+          await addDoc(collection(db, "movies"), data);
+          showToast('✅ Added successfully');
+          document.getElementById('f_title').value = '';
+        } catch (err) {
+          console.error(err);
+          showToast('❌ Save failed: ' + err.message);
+        }
+      };
+
+      window.loadManageList = async function loadManageList() {
+        try {
+          const snap = await getDocs(collection(db, "movies"));
+          let html = '';
+          snap.forEach(d => {
+            const m = d.data();
+            html += `<div class="admin-list-item"><img src="${m.poster}"><div class="admin-list-info"><div class="admin-list-title">${m.title}</div></div><div class="admin-list-actions"><button class="admin-icon-btn delete" data-id="${d.id}"><i class="fa fa-trash"></i></button></div></div>`;
+          });
+          document.getElementById('manageList').innerHTML = html || 'No items yet.';
+        } catch (err) {
+          console.error(err);
+          document.getElementById('manageList').innerHTML = 'Failed to load: ' + err.message;
+        }
+      };
+    } catch (err) {
+      console.error('Firebase failed to load:', err);
+      const saveBtn = document.getElementById('saveBtn');
+      if (saveBtn) saveBtn.onclick = () => showToast('❌ Firebase load failed — Save unavailable');
+    }
+  </script>
 </body>
 </html>
