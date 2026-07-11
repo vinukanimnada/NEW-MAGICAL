@@ -56,7 +56,7 @@
     align-items: center;
     position: sticky;
     top: 0;
-    z-index: 999;
+    z-index: 1002;
     border-bottom: 1px solid var(--border);
   }
   .logo { font-size: 22px; font-weight: 700; white-space: nowrap; color: var(--text); }
@@ -114,17 +114,16 @@
 
   /* Sidebar */
   .sidebar {
-    position: fixed; top: 0; left: -230px; width: 210px; height: 100%;
+    position: fixed; top: 60px; left: -230px; width: 210px; height: calc(100% - 60px);
     background: var(--bg-alt); z-index: 1001; transition: left 0.3s ease;
-    padding: 20px 0; box-shadow: 2px 0 12px rgba(0,0,0,0.4);
+    padding: 8px 0; box-shadow: 2px 0 12px rgba(0,0,0,0.4);
   }
   .sidebar.active { left: 0; }
-  .sidebar .close-btn { display: block; text-align: right; padding: 0 20px 15px; font-size: 26px; cursor: pointer; color: var(--text-dim); }
   .sidebar ul { list-style: none; }
   .sidebar li a { display: flex; align-items: center; gap: 12px; padding: 14px 22px; color: var(--text-dim); font-size: 15px; transition: background 0.2s, color 0.2s; }
   .sidebar li a i { width: 18px; text-align: center; color: #ff2d95; }
   .sidebar li a:hover, .sidebar li.active a { background: rgba(255,45,149,0.1); color: var(--text); }
-  .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 1000; display: none; }
+  .overlay { position: fixed; inset: 60px 0 0 0; background: rgba(0,0,0,0.6); z-index: 1000; display: none; }
   .overlay.active { display: block; }
 
   /* Hero */
@@ -238,7 +237,6 @@
 
   <!-- Sidebar (shared across all views) -->
   <div class="sidebar" id="sidebar">
-    <span class="close-btn" id="closeSidebar">×</span>
     <ul>
       <li class="active"><a href="index.html"><i class="fa fa-home"></i> Home</a></li>
       <li><a href="movies.html"><i class="fa fa-film"></i> All Movies</a></li>
@@ -358,7 +356,6 @@
      ========================================================= */
   const sidebar = document.getElementById('sidebar');
   const overlay = document.getElementById('overlay');
-  const closeSidebar = document.getElementById('closeSidebar');
 
   function setMenuBtnState(isOpen) {
     document.getElementById('menuBtn')?.classList.toggle('active', isOpen);
@@ -381,7 +378,6 @@
     else openSidebar();
   }
 
-  closeSidebar?.addEventListener('click', closeSidebarFn);
   overlay?.addEventListener('click', closeSidebarFn);
 
   /* =========================================================
