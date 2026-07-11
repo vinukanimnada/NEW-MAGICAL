@@ -34,34 +34,37 @@
 function bindSidebar() {
   const sidebar = document.getElementById('sidebar');
   const overlay = document.getElementById('overlay');
-  const menuBtn = document.getElementById('menuBtn');
+  let menuBtn = document.getElementById('menuBtn');
 
   if (!menuBtn || !sidebar || !overlay) {
     console.warn("[MAGICAL AI] Sidebar elements not found. bindSidebar() skipped");
     return null;
   }
 
+  // duplicate listener na karanna - clone karala ID aye set karanawa
+  const newMenuBtn = menuBtn.cloneNode(true);
+  newMenuBtn.id = 'menuBtn'; // <-- meka wada
+  menuBtn.parentNode.replaceChild(newMenuBtn, menuBtn);
+
+  const newOverlay = overlay.cloneNode(true);
+  newOverlay.id = 'overlay'; // <-- meka wada
+  overlay.parentNode.replaceChild(newOverlay, overlay);
+
   function openSidebar() {
     sidebar.classList.add('active');
-    overlay.classList.add('active');
-    menuBtn.classList.add('active');
+    newOverlay.classList.add('active');
+    newMenuBtn.classList.add('active'); // <-- X hadenne meken
     document.body.style.overflow = 'hidden'; // scroll lock
   }
   function closeSidebar() {
     sidebar.classList.remove('active');
-    overlay.classList.remove('active');
-    menuBtn.classList.remove('active');
+    newOverlay.classList.remove('active');
+    newMenuBtn.classList.remove('active'); // <-- hamburg hadenne meken
     document.body.style.overflow = '';
   }
   function toggleSidebar() {
     sidebar.classList.contains('active') ? closeSidebar() : openSidebar();
   }
-
-  // duplicate event listener na wenna kalin clone karanawa
-  const newMenuBtn = menuBtn.cloneNode(true);
-  const newOverlay = overlay.cloneNode(true);
-  menuBtn.parentNode.replaceChild(newMenuBtn, menuBtn);
-  overlay.parentNode.replaceChild(newOverlay, overlay);
 
   newMenuBtn.addEventListener('click', toggleSidebar);
   newOverlay.addEventListener('click', closeSidebar);
@@ -91,6 +94,7 @@ function bindSearch(onClose) {
   }
 
   const newSearchBtn = searchBtn.cloneNode(true);
+  newSearchBtn.id = 'searchBtn'; // <-- ID aye damma
   searchBtn.parentNode.replaceChild(newSearchBtn, searchBtn);
 
   newSearchBtn.addEventListener('click', () => {
