@@ -65,6 +65,7 @@
   .header-right { display: flex; align-items: center; }
   .header-right i { font-size: 20px; margin-left: 20px; cursor: pointer; color: var(--text); }
   .header-left { display: flex; align-items: center; }
+  .header-left i { font-size: 20px; margin-right: 14px; cursor: pointer; color: var(--text); }
   .menu-toggle { width: 22px; height: 16px; position: relative; background: none; border: none; padding: 0; margin: 0 14px 0 0; cursor: pointer; flex-shrink: 0; }
   .header-right .menu-toggle { margin: 0 0 0 20px; }
   .menu-toggle span { position: absolute; left: 0; width: 100%; height: 2px; background: var(--text); border-radius: 2px; transition: transform 0.3s ease, opacity 0.25s ease, top 0.3s ease; }
@@ -78,7 +79,7 @@
 
   /* Search */
   .search-box {
-    position: absolute; top: 60px; left: 0; width: 100%;
+    position: absolute; top: var(--header-h, 60px); left: 0; width: 100%;
     background: var(--bg-alt); padding: 12px 15px; display: none;
     z-index: 999; border-bottom: 1px solid var(--border); box-sizing: border-box;
   }
@@ -92,7 +93,7 @@
   #closeSearch:hover { color: #ff2d95; }
 
   .home-search-results {
-    position: absolute; top: 120px; left: 0; width: 100%;
+    position: absolute; top: calc(var(--header-h, 60px) + 69px); left: 0; width: 100%;
     background: var(--bg-alt); max-height: 70vh; overflow-y: auto;
     display: none; z-index: 998; border-bottom: 1px solid var(--border);
   }
@@ -114,7 +115,7 @@
 
   /* Sidebar */
   .sidebar {
-    position: fixed; top: 60px; left: -230px; width: 210px; height: calc(100% - 60px);
+    position: fixed; top: var(--header-h, 60px); left: -230px; width: 210px; height: calc(100% - var(--header-h, 60px));
     background: var(--bg-alt); z-index: 1001; transition: left 0.3s ease;
     padding: 8px 0; box-shadow: 2px 0 12px rgba(0,0,0,0.4);
   }
@@ -123,7 +124,7 @@
   .sidebar li a { display: flex; align-items: center; gap: 12px; padding: 14px 22px; color: var(--text-dim); font-size: 15px; transition: background 0.2s, color 0.2s; }
   .sidebar li a i { width: 18px; text-align: center; color: #ff2d95; }
   .sidebar li a:hover, .sidebar li.active a { background: rgba(255,45,149,0.1); color: var(--text); }
-  .overlay { position: fixed; inset: 60px 0 0 0; background: rgba(0,0,0,0.6); z-index: 1000; display: none; }
+  .overlay { position: fixed; inset: var(--header-h, 60px) 0 0 0; background: rgba(0,0,0,0.6); z-index: 1000; display: none; }
   .overlay.active { display: block; }
 
   /* Hero */
@@ -352,6 +353,22 @@
   const HOME_LOGO_HTML = '<a href="index.html">𝗠𝗔𝗚𝗜𝗖𝗔𝗟 <span>𝗠🍩𝗩𝗜𝗘 𝗟🌲𝗡𝗗</span></a>';
 
   /* =========================================================
+     Keep --header-h in sync with the header's real rendered
+     height, so the sidebar/overlay/search always sit flush
+     under it with no gap, regardless of font/icon rendering.
+     ========================================================= */
+  const mainHeaderEl = document.getElementById('mainHeader');
+  function syncHeaderHeight() {
+    if (!mainHeaderEl) return;
+    document.documentElement.style.setProperty('--header-h', mainHeaderEl.offsetHeight + 'px');
+  }
+  window.addEventListener('resize', syncHeaderHeight);
+  window.addEventListener('load', syncHeaderHeight);
+  if (window.ResizeObserver && mainHeaderEl) {
+    new ResizeObserver(syncHeaderHeight).observe(mainHeaderEl);
+  }
+
+  /* =========================================================
      GLOBAL: sidebar + overlay (works the same on every view)
      ========================================================= */
   const sidebar = document.getElementById('sidebar');
@@ -401,10 +418,8 @@
     mainHeader.innerHTML = `
       <div class="header-left">
         <button class="menu-toggle" id="menuBtn" aria-label="Menu"><span></span><span></span><span></span></button>
-        <div class="logo">${HOME_LOGO_HTML}</div>
-      </div>
-      <div class="header-right">
         <i class="fa fa-search" id="searchBtn"></i>
+        <div class="logo">${HOME_LOGO_HTML}</div>
       </div>
     `;
     document.getElementById('menuBtn')?.addEventListener('click', toggleSidebar);
