@@ -294,24 +294,30 @@
   }
 
   function renderWatchHeader() {
-    mainHeader.innerHTML = `
-      <div class="header-left">
-        <i class="fa fa-arrow-left back-btn" id="backBtn"></i>
-        <div class="logo small">${HOME_LOGO_HTML}</div>
-      </div>
-      <div class="header-right">
-        <button class="menu-toggle" id="menuBtn" aria-label="Menu"><span></span><span></span><span></span></button>
-      </div>
-    `;
+  mainHeader.innerHTML = `
+    <div class="header-left">
+      <i class="fa fa-arrow-left back-btn" id="backBtn"></i>
+      <div class="logo small">${HOME_LOGO_HTML}</div>
+    </div>
+    <div class="header-right">
+      <button class="menu-toggle" id="menuBtn" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
+  `;
+
+  // Header eka DOM eke awata passe bind karanna
+  setTimeout(() => {
     window.bindSidebar();
-    document.getElementById('backBtn')?.addEventListener('click', () => {
-      if (window.history.length > 1) window.history.back();
-      else window.location.href = 'index.html';
-    });
-    searchBox.classList.remove('active');
-    searchBox.style.display = 'none';
-    homeSearchResults.classList.remove('active');
-  }
+    window.syncHeaderHeight();
+  }, 0);
+
+  document.getElementById('backBtn')?.addEventListener('click', () => {
+    if (window.history.length > 1) window.history.back();
+    else window.location.href = 'index.html';
+  });
+  searchBox.classList.remove('active');
+  searchBox.style.display = 'none';
+  homeSearchResults.classList.remove('active');
+}
 
   /* =========================================================
      HOME VIEW LOGIC
