@@ -253,10 +253,10 @@
 
     // Clear cache
     clearBtn.addEventListener('click', () => {
-      if(confirm('Cache clear කරන්නද?')){
+      if(confirm('Clear Cache?')){
         localStorage.clear();
         sessionStorage.clear();
-        alert('✅ Cache clear කරා!');
+        alert('✅ Cache cleared!');
         location.reload();
       }
     });
