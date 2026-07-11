@@ -93,6 +93,23 @@
     <div class="admin-tabs">
       <div class="admin-tab active" data-tab="add">Add New</div>
       <div class="admin-tab" data-tab="manage">Manage Content</div>
+      <div class="admin-tab" data-tab="hero">Hero Banners</div>
+    </div>
+
+    <div class="admin-form-section" id="tab-hero">
+      <div id="heroFormModeLabel" style="font-size:13px; color:#ff2d95; font-weight:600; margin-bottom:10px; display:none;">
+        <i class="fa fa-pen"></i> Editing banner
+        <a href="#" id="cancelHeroEdit" style="color:var(--text-faint); margin-left:8px;">(cancel)</a>
+      </div>
+      <div class="form-group">
+        <label>Banner Image URL *</label>
+        <input type="text" class="admin-input" id="heroImageInput" placeholder="https://...">
+        <div class="form-hint">Home page top eke hero slider eke pennana image eka. Recommended: wide banner image (16:9 ratio wage).</div>
+      </div>
+      <button class="btn btn-primary" id="saveHeroBtn" style="width:100%; justify-content:center; margin-bottom:20px;">
+        <i class="fa fa-save"></i> Save Banner
+      </button>
+      <div id="heroBannerList"><div class="details-skeleton">Loading...</div></div>
     </div>
 
     <div class="admin-form-section active" id="tab-add">
@@ -255,6 +272,7 @@
         document.querySelectorAll('.admin-form-section').forEach(s => s.classList.remove('active'));
         document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
         if (tab.dataset.tab === 'manage' && window.loadManageList) window.loadManageList();
+        if (tab.dataset.tab === 'hero' && window.loadHeroBanners) window.loadHeroBanners();
       });
     });
 
@@ -347,12 +365,29 @@
     }
     cancelEdit.addEventListener('click', (e) => { e.preventDefault(); resetForm(); });
 
+    // ---- Hero Banners form state ----
+    let editingHeroId = null;
+    const heroImageInput = document.getElementById('heroImageInput');
+    const saveHeroBtn = document.getElementById('saveHeroBtn');
+    const heroFormModeLabel = document.getElementById('heroFormModeLabel');
+    const cancelHeroEdit = document.getElementById('cancelHeroEdit');
+
+    function resetHeroForm() {
+      editingHeroId = null;
+      heroFormModeLabel.style.display = 'none';
+      heroImageInput.value = '';
+      saveHeroBtn.innerHTML = '<i class="fa fa-save"></i> Save Banner';
+    }
+    cancelHeroEdit.addEventListener('click', (e) => { e.preventDefault(); resetHeroForm(); });
+
     // Firebase-dependent handlers are attached lower down once Firebase loads.
     window.__mmlAdminHelpers = {
       getSectionsFromForm, setSectionsInForm, getEpisodesFromForm, addEpisodeRow,
       clearEpisodeBuilder, resetForm, updateFieldVisibility,
       get editingId() { return editingId; }, set editingId(v) { editingId = v; },
-      formModeLabel, editingTitle, saveBtn, tabs
+      formModeLabel, editingTitle, saveBtn, tabs,
+      heroImageInput, saveHeroBtn, heroFormModeLabel, resetHeroForm,
+      get editingHeroId() { return editingHeroId; }, set editingHeroId(v) { editingHeroId = v; }
     };
   </script>
 
@@ -510,12 +545,100 @@
           .catch(err => showToast('❌ Error: ' + err.message));
       }
 
+      /* =========================================================
+         HERO BANNERS CRUD — separate "heroBanners" collection.
+         Each doc: { imageUrl, date }
+         ========================================================= */
+      let cachedHeroBanners = [];
+
+      H.saveHeroBtn.addEventListener('click', async () => {
+        const imageUrl = H.heroImageInput.value.trim();
+        if (!imageUrl) { showToast('Image URL එක අනිවාර්යයි'); return; }
+
+        H.saveHeroBtn.disabled = true;
+        H.saveHeroBtn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Saving...';
+
+        try {
+          if (H.editingHeroId) {
+            await updateDoc(doc(db, "heroBanners", H.editingHeroId), { imageUrl });
+            showToast('✅ Banner updated');
+          } else {
+            await addDoc(collection(db, "heroBanners"), { imageUrl, date: new Date().toISOString() });
+            showToast('✅ Banner added');
+          }
+          H.resetHeroForm();
+          loadHeroBanners();
+        } catch (err) {
+          console.error(err);
+          showToast('❌ Error: ' + err.message);
+        } finally {
+          H.saveHeroBtn.disabled = false;
+          H.saveHeroBtn.innerHTML = '<i class="fa fa-save"></i> Save Banner';
+        }
+      });
+
+      async function loadHeroBanners() {
+        const list = document.getElementById('heroBannerList');
+        list.innerHTML = '<div class="details-skeleton"><i class="fa fa-spinner fa-spin"></i> Loading...</div>';
+        try {
+          const snap = await getDocs(collection(db, "heroBanners"));
+          cachedHeroBanners = [];
+          snap.forEach(d => { const data = d.data(); data.id = d.id; cachedHeroBanners.push(data); });
+          cachedHeroBanners.sort((a, b) => new Date(a.date || 0) - new Date(b.date || 0));
+          renderHeroBannerList();
+        } catch (err) {
+          list.innerHTML = '<div class="details-skeleton">⚠️ Load කරගන්න බැරි උනා</div>';
+        }
+      }
+      window.loadHeroBanners = loadHeroBanners;
+
+      function renderHeroBannerList() {
+        const list = document.getElementById('heroBannerList');
+        if (cachedHeroBanners.length === 0) { list.innerHTML = '<div class="details-skeleton">Banners නෑ තාම</div>'; return; }
+        list.innerHTML = cachedHeroBanners.map(b => `
+          <div class="admin-list-item">
+            <img src="${b.imageUrl}" loading="lazy" style="width:80px; height:46px; object-fit:cover;">
+            <div class="admin-list-info">
+              <div class="admin-list-title">Banner</div>
+              <div class="admin-list-meta">${b.imageUrl}</div>
+            </div>
+            <div class="admin-list-actions">
+              <button class="admin-icon-btn edit" data-id="${b.id}"><i class="fa fa-pen"></i></button>
+              <button class="admin-icon-btn delete" data-id="${b.id}"><i class="fa fa-trash"></i></button>
+            </div>
+          </div>
+        `).join('');
+        list.querySelectorAll('.edit').forEach(btn => btn.addEventListener('click', () => loadHeroIntoForm(btn.dataset.id)));
+        list.querySelectorAll('.delete').forEach(btn => btn.addEventListener('click', () => confirmDeleteHero(btn.dataset.id)));
+      }
+
+      function loadHeroIntoForm(id) {
+        const b = cachedHeroBanners.find(x => x.id === id);
+        if (!b) return;
+        H.editingHeroId = id;
+        H.heroFormModeLabel.style.display = 'block';
+        H.heroImageInput.value = b.imageUrl || '';
+        H.saveHeroBtn.innerHTML = '<i class="fa fa-save"></i> Update Banner';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      function confirmDeleteHero(id) {
+        if (!confirm('Meka delete කරන්න ස්ථිර ද?')) return;
+        deleteDoc(doc(db, "heroBanners", id))
+          .then(() => { showToast('🗑️ Deleted'); loadHeroBanners(); })
+          .catch(err => showToast('❌ Error: ' + err.message));
+      }
+
     } catch (err) {
       console.error('Firebase failed to load:', err);
       const saveBtn = document.getElementById('saveBtn');
       if (saveBtn) saveBtn.addEventListener('click', () => showToast('❌ Firebase load failed — Save unavailable'));
+      const saveHeroBtn = document.getElementById('saveHeroBtn');
+      if (saveHeroBtn) saveHeroBtn.addEventListener('click', () => showToast('❌ Firebase load failed — Save unavailable'));
       const list = document.getElementById('manageList');
       if (list) list.innerHTML = '<div class="details-skeleton">⚠️ Firebase load කරගන්න බැරි උනා</div>';
+      const heroList = document.getElementById('heroBannerList');
+      if (heroList) heroList.innerHTML = '<div class="details-skeleton">⚠️ Firebase load කරගන්න බැරි උනා</div>';
     }
   </script>
 </body>
