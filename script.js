@@ -1,12 +1,5 @@
 /* =========================================================
    MAGICAL MOVIE LAND — shared script.js
-   Common logic used across index.html, movies.html,
-   series.html, about.html (and any future page):
-     - keep --header-h in sync with the real header height
-     - sidebar open/close (hamburger + overlay)
-     - search box open/close
-   Page-specific logic (Firebase queries, movie grids,
-   search filtering, etc.) stays in each page's own <script>.
    ========================================================= */
 
 /* ----- Header height sync ----- */
@@ -28,9 +21,7 @@
   }
 })();
 
-/* ----- Sidebar open/close -----
-   Call window.bindSidebar() any time #menuBtn / #sidebar / #overlay
-   exist in the DOM. */
+/* ----- Sidebar open/close ----- */
 function bindSidebar() {
   const sidebar = document.getElementById('sidebar');
   const overlay = document.getElementById('overlay');
@@ -41,25 +32,25 @@ function bindSidebar() {
     return null;
   }
 
-  // duplicate listener na karanna - clone karala ID aye set karanawa
+  // duplicate listener na karanna
   const newMenuBtn = menuBtn.cloneNode(true);
-  newMenuBtn.id = 'menuBtn'; // <-- meka wada
+  newMenuBtn.id = 'menuBtn';
   menuBtn.parentNode.replaceChild(newMenuBtn, menuBtn);
 
   const newOverlay = overlay.cloneNode(true);
-  newOverlay.id = 'overlay'; // <-- meka wada
+  newOverlay.id = 'overlay';
   overlay.parentNode.replaceChild(newOverlay, overlay);
 
   function openSidebar() {
     sidebar.classList.add('active');
     newOverlay.classList.add('active');
-    newMenuBtn.classList.add('active'); // <-- X hadenne meken
-    document.body.style.overflow = 'hidden'; // scroll lock
+    newMenuBtn.classList.add('active');
+    document.body.style.overflow = 'hidden';
   }
   function closeSidebar() {
     sidebar.classList.remove('active');
     newOverlay.classList.remove('active');
-    newMenuBtn.classList.remove('active'); // <-- hamburg hadenne meken
+    newMenuBtn.classList.remove('active');
     document.body.style.overflow = '';
   }
   function toggleSidebar() {
@@ -69,13 +60,16 @@ function bindSidebar() {
   newMenuBtn.addEventListener('click', toggleSidebar);
   newOverlay.addEventListener('click', closeSidebar);
 
+  // Sidebar link ekak click karamauth close wenna
+  sidebar.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', closeSidebar);
+  });
+
   return { openSidebar, closeSidebar, toggleSidebar };
 }
 window.bindSidebar = bindSidebar;
 
-/* ----- Search box open/close -----
-   Call window.bindSearch(onClose) any time #searchBtn / #searchBox
-   exist in the DOM. */
+/* ----- Search box open/close ----- */
 function bindSearch(onClose) {
   const searchBtn = document.getElementById('searchBtn');
   const searchBox = document.getElementById('searchBox');
@@ -94,7 +88,7 @@ function bindSearch(onClose) {
   }
 
   const newSearchBtn = searchBtn.cloneNode(true);
-  newSearchBtn.id = 'searchBtn'; // <-- ID aye damma
+  newSearchBtn.id = 'searchBtn';
   searchBtn.parentNode.replaceChild(newSearchBtn, searchBtn);
 
   newSearchBtn.addEventListener('click', () => {
@@ -108,7 +102,6 @@ function bindSearch(onClose) {
 
   closeSearch?.addEventListener('click', doClose);
 
-  // ESC key dala close
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && searchBox.classList.contains('active')) doClose();
   });
@@ -117,9 +110,7 @@ function bindSearch(onClose) {
 }
 window.bindSearch = bindSearch;
 
-/* ----- Auto-bind for STATIC pages only -----
-   Dynamic header thiyena index.html eke meka skip wenawa.
-   E nisa index.html eke header inject karala passe bindSidebar() call karanna. */
+/* ----- Auto-bind for STATIC pages ----- */
 function tryAutoBind() {
   if (document.getElementById('menuBtn')) bindSidebar();
   if (document.getElementById('searchBtn')) bindSearch();
