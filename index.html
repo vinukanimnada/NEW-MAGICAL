@@ -53,7 +53,7 @@
   .trending { padding: 10px 0 5px; }
   .section-header { display: flex; align-items: center; justify-content: space-between; padding: 0 15px; margin-bottom: 10px; }
   .section-header h2 { font-size: 18px; color: var(--text); }
-  .view-all { font-size: 12px; color: #ffffff; font-weight: 600; letter-spacing: 0.5px; }
+  .view-all { font-size: 12px; color: #ff2d95; font-weight: 600; letter-spacing: 0.5px; }
 
   /* Movie grid */
   .movie-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; padding: 15px; min-height: 200px; }
@@ -194,7 +194,7 @@
           <span style="position:absolute; left:0; top:50%; transform:translateY(-50%); width:4px; height:28px; background:#ff2d95; border-radius:2px;"></span>
           TV Shows
         </h2>
-        <a href="series.html" class="view-all">VIEW ALL</a>
+        <a href="tvshows.html" class="view-all">VIEW ALL</a>
       </div>
       <div class="movie-grid" id="tvShowsMovies">
         <div class="home-no-result">Loading movies...</div>
@@ -229,20 +229,14 @@
       </div>
     </div>
 
-    <br><br><br>
+    <br><br>
     <footer class="footer">
       <div class="footer-logo">𝗠𝗔𝗚𝗜𝗖𝗔𝗟 <span>𝗠𝗢𝗩𝗜𝗘 𝗟𝗔𝗡𝗗</span></div>
-      <p class="footer-text">
-        The best platform to stream latest Movies and Cartoons with high-quality subtitles.
-        Enjoy your favorite content for free on Magical Movie Land.
-      </p>
-      <div class="social-icons">
-        <a href="https://www.facebook.com/share/1BbGBZ8ddZ/?mibextid=wwXIfr" target="_blank"><i class="fa-brands fa-facebook-f"></i></a>
-        <a href="https://t.me/YourUsername" target="_blank"><i class="fa-brands fa-telegram"></i></a>
-        <a href="https://www.tiktok.com/@vinuxnoo?_r=1&_t=ZS-97SZwiHJ6jU" target="_blank"><i class="fa-brands fa-tiktok"></i></a>
-      </div>
     </footer>
   </div>
+
+  <!-- ===================== SCRIPT (shared header/sidebar/search logic) ===================== -->
+  <script src="script.js"></script>
 
   <!-- ===================== SCRIPT (Firebase + routing + all view logic) ===================== -->
   <script type="module">
@@ -264,51 +258,6 @@
   const db = getFirestore(app);
 
   const HOME_LOGO_HTML = '<a href="index.html">𝗠𝗔𝗚𝗜𝗖𝗔𝗟 <span>𝗠🍩𝗩𝗜𝗘 𝗟🌲𝗡𝗗</span></a>';
-
-  /* =========================================================
-     Keep --header-h in sync with the header's real rendered
-     height, so the sidebar/overlay/search always sit flush
-     under it with no gap, regardless of font/icon rendering.
-     ========================================================= */
-  const mainHeaderEl = document.getElementById('mainHeader');
-  function syncHeaderHeight() {
-    if (!mainHeaderEl) return;
-    document.documentElement.style.setProperty('--header-h', mainHeaderEl.offsetHeight + 'px');
-  }
-  window.addEventListener('resize', syncHeaderHeight);
-  window.addEventListener('load', syncHeaderHeight);
-  if (window.ResizeObserver && mainHeaderEl) {
-    new ResizeObserver(syncHeaderHeight).observe(mainHeaderEl);
-  }
-
-  /* =========================================================
-     GLOBAL: sidebar + overlay (works the same on every view)
-     ========================================================= */
-  const sidebar = document.getElementById('sidebar');
-  const overlay = document.getElementById('overlay');
-
-  function setMenuBtnState(isOpen) {
-    document.getElementById('menuBtn')?.classList.toggle('active', isOpen);
-  }
-
-  function openSidebar() {
-    sidebar.classList.add('active');
-    overlay.classList.add('active');
-    setMenuBtnState(true);
-  }
-
-  function closeSidebarFn() {
-    sidebar.classList.remove('active');
-    overlay.classList.remove('active');
-    setMenuBtnState(false);
-  }
-
-  function toggleSidebar() {
-    if (sidebar.classList.contains('active')) closeSidebarFn();
-    else openSidebar();
-  }
-
-  overlay?.addEventListener('click', closeSidebarFn);
 
   /* =========================================================
      ROUTER
@@ -337,15 +286,9 @@
         <i class="fa fa-search" id="searchBtn"></i>
       </div>
     `;
-    document.getElementById('menuBtn')?.addEventListener('click', toggleSidebar);
-    document.getElementById('searchBtn')?.addEventListener('click', () => {
-      searchBox.classList.toggle('active');
-      if (searchBox.classList.contains('active')) {
-        document.getElementById('searchInput').focus();
-      } else {
-        homeSearchResults.classList.remove('active');
-        document.getElementById('searchInput').value = '';
-      }
+    window.bindSidebar();
+    window.bindSearch(() => {
+      homeSearchResults.classList.remove('active');
     });
     searchBox.style.display = '';
   }
@@ -360,7 +303,7 @@
         <button class="menu-toggle" id="menuBtn" aria-label="Menu"><span></span><span></span><span></span></button>
       </div>
     `;
-    document.getElementById('menuBtn')?.addEventListener('click', toggleSidebar);
+    window.bindSidebar();
     document.getElementById('backBtn')?.addEventListener('click', () => {
       if (window.history.length > 1) window.history.back();
       else window.location.href = 'index.html';
@@ -481,7 +424,7 @@
     homeSearchResults.classList.add('active');
     const filtered = allContent.filter(m => m.title && m.title.toLowerCase().includes(query.toLowerCase()));
     if (filtered.length === 0) {
-      homeSearchResults.innerHTML = '<div class="home-no-result">🔍 Not Found</div>';
+      homeSearchResults.innerHTML = '<div class="home-no-result">🔍 Results හමු නොවීය</div>';
       return;
     }
     homeSearchResults.innerHTML = filtered.slice(0, 12).map(m => {
@@ -506,12 +449,6 @@
 
   async function initHome() {
     renderHomeHeader();
-
-    document.getElementById('closeSearch')?.addEventListener('click', () => {
-      searchBox.classList.remove('active');
-      homeSearchResults.classList.remove('active');
-      document.getElementById('searchInput').value = '';
-    });
 
     let searchTimeout;
     document.getElementById('searchInput')?.addEventListener('input', (e) => {
@@ -661,7 +598,7 @@
             ${m.trailer ? `<button class="btn btn-secondary" id="trailerBtn"><i class="fa fa-film"></i> Trailer</button>` : ''}
           </div>
           <div class="details-desc-label">Overview</div>
-          <p class="details-desc">${m.description || 'N/A'}</p>
+          <p class="details-desc">${m.description || 'Description එකක් නෑ.'}</p>
           ${m.cast ? `<div class="details-cast"><b>Cast:</b> ${m.cast}</div>` : ''}
         </div>
         <div class="player-wrap" id="playerWrap">
