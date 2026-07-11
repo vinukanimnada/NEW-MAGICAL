@@ -1,93 +1,114 @@
 <!DOCTYPE html>
-<html lang="si">
+<html lang="si" class="dark"> <!-- 1. class="dark" add kala -->
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Join Chanels - Magical Movie Land</title>
+  <title>Join Channels - Magical Movie Land</title>
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+  /* Page eke witharai tiyena CSS */
+  .join-wrapper {
+    text-align: center; 
+    padding: 60px 20px;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  .join-wrapper h1 {
+    font-size: 32px; 
+    margin-bottom: 15px;
+    color: var(--text);
+  }
+  .join-wrapper p {
+    font-size: 16px; 
+    color: var(--text-dim); 
+    margin-bottom: 40px;
+    line-height: 1.6;
+  }
+  
+  .channel-btn {
+    display: inline-block; 
+    color: #fff; 
+    padding: 15px 30px; 
+    border-radius: 8px; 
+    text-decoration: none; 
+    font-size: 16px; 
+    font-weight: 700; 
+    margin: 10px;
+    transition: transform 0.2s;
+  }
+  .channel-btn:hover { transform: scale(1.05); }
+  
+  .btn-tg { background: #0088cc; }
+  .btn-wa { background: #25D366; }
+  
+  .channel-btn i { margin-right: 8px; }
+  </style>
 </head>
 <body>
-  <header>
-     <div class="logo">𝗠𝗔𝗚𝗜𝗖𝗔𝗟 <span>𝗠🍩𝗩𝗜𝗘 𝗟🌲𝗡𝗗</span></div> 
+  <header id="mainHeader"> <!-- 2. anith page wage structure -->
+    <div class="header-left">
+      <button class="menu-toggle" id="menuBtn" aria-label="Menu"><span></span><span></span><span></span></button>
+      <div class="logo">𝗠𝗔𝗚𝗜𝗖𝗔𝗟 <span>𝗠🍩𝗩𝗜𝗘 𝗟🌲𝗡𝗗</span></div>
+    </div>
     <div class="header-right">
       <i class="fa fa-search" id="searchBtn"></i>
-      <i class="fa fa-bars" id="menuBtn"></i>
+    </div>
+
+    <div class="search-box" id="searchBox"> <!-- 3. search box add kala -->
+      <input type="text" id="searchInput" placeholder="Search...">
+      <i class="fa fa-times" id="closeSearch"></i>
     </div>
   </header>
 
-  <div class="sidebar" id="sidebar">
-  <span class="close-btn" id="closeSidebar">×</span>
-  <ul>
-    <li><a href="index.html"><i class="fa fa-home"></i> Home</a></li>
-    <li><a href="movies.html"><i class="fa fa-film"></i> All Movies</a></li>
-    <li><a href="series.html"><i class="fa fa-tv"></i> TV Shows</a></li>
-    <li><a href="request.html"><i class="fa fa-plus-circle"></i> Requests</a></li>
-    <li class="active"><a href="chanels.html"><i class="fa-solid fa-users"></i> Join Channels</a></li>
-    <li><a href="about.html"><i class="fa fa-info-circle"></i> About Us</a></li>
-    <li><a href="contact.html"><i class="fa fa-envelope"></i> Contact Us</a></li>
-    <li><a href="settings.html"><i class="fa fa-cog"></i> Settings</a></li>
-  </ul>
-</div>
-  <span class="close-btn" id="closeSidebar">×</span>
+  <div class="sidebar" id="sidebar"> <!-- 4. close-btn ain kala -->
+    <ul>
+      <li><a href="index.html"><i class="fa fa-home"></i> Home</a></li>
+      <li><a href="movies.html"><i class="fa fa-film"></i> All Movies</a></li>
+      <li><a href="series.html"><i class="fa fa-tv"></i> TV Shows</a></li>
+      <li><a href="request.html"><i class="fa fa-plus-circle"></i> Requests</a></li>
+      <li class="active"><a href="chanels.html"><i class="fa-solid fa-users"></i> Join Channels</a></li>
+      <li><a href="about.html"><i class="fa fa-info-circle"></i> About Us</a></li>
+      <li><a href="contact.html"><i class="fa fa-envelope"></i> Contact Us</a></li>
+      <li><a href="settings.html"><i class="fa fa-cog"></i> Settings</a></li>
+    </ul>
+  </div>
   <div class="overlay" id="overlay"></div>
   
-  <!-- Content - trending section වගේම design -->
+  <!-- Content -->
   <section class="trending">
     <div class="section-head">
       <h2 class="red-line">Join Our Channels</h2>
     </div>
-    <div style="text-align: center; padding: 50px 20px;">
-      <h1 style="font-size: 32px; margin-bottom: 20px;">Telegram & WhatsApp</h1>
-      <p style="font-size: 16px; color: #ccc; margin-bottom: 30px;">Latest Movies & Series Updates මෙතනින් ගන්න</p>
+    <div class="join-wrapper">
+      <h1>Telegram & WhatsApp</h1>
+      <p>Latest Movies & Series Updates මෙතනින් ගන්න. Spam නැත, Admin posts witharak.</p>
       
-      <a href="https://t.me/yourlink" target="_blank" style="display: inline-block; background: #0088cc; color: #fff; padding: 15px 30px; border-radius: 8px; text-decoration: none; font-size: 16px; font-weight: 600; margin: 10px;">Join Telegram</a>
+      <a href="https://t.me/yourlink" target="_blank" class="channel-btn btn-tg">
+        <i class="fa-brands fa-telegram"></i> Join Telegram
+      </a>
       
-      <a href="https://chat.whatsapp.com/yourlink" target="_blank" style="display: inline-block; background: #25D366; color: #fff; padding: 15px 30px; border-radius: 8px; text-decoration: none; font-size: 16px; font-weight: 600; margin: 10px;">Join WhatsApp</a>
+      <a href="https://chat.whatsapp.com/yourlink" target="_blank" class="channel-btn btn-wa">
+        <i class="fa-brands fa-whatsapp"></i> Join WhatsApp
+      </a>
     </div>
   </section>
   
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-logo">𝗠𝗔𝗚𝗜𝗖𝗔𝗟 <span>𝗠𝗢𝗩𝗜𝗘 𝗟𝗔𝗡𝗗</span></div>
+    <p class="footer-text">
+      The best platform to stream latest Movies and Cartoons with high-quality subtitles. 
+      Enjoy your favorite content for free on Magical Movie Land.
+    </p>
+    <div class="social-icons">
+      <a href="https://www.facebook.com/share/1BbGBZ8ddZ/?mibextid=wwXIfr" target="_blank"><i class="fa-brands fa-facebook-f"></i></a>
+      <a href="https://t.me/YourUsername" target="_blank"><i class="fa-brands fa-telegram"></i></a>
+      <a href="https://www.tiktok.com/@vinuxnoo?_r=1&_t=ZS-97SZwiHJ6jU" target="_blank"><i class="fa-brands fa-tiktok"></i></a>
+    </div>
+  </footer>
   
-  
-  <!-- Menu + Search JS - එක පාරක් විතරක් -->
-  <script>
-  const menuBtn = document.getElementById('menuBtn');
-  const sidebar = document.getElementById('sidebar');
-  const closeSidebar = document.getElementById('closeSidebar');
-  const overlay = document.getElementById('overlay');
-  const searchBtn = document.getElementById('searchBtn');
-  const searchBox = document.getElementById('searchBox');
-  const closeSearch = document.getElementById('closeSearch');
-
-  // Menu open/close
-  menuBtn?.addEventListener('click', () => {
-    sidebar.classList.add('active');
-    overlay.classList.add('active');
-  });
-
-  closeSidebar?.addEventListener('click', () => {
-    sidebar.classList.remove('active');
-    overlay.classList.remove('active');
-  });
-
-  overlay?.addEventListener('click', () => {
-    sidebar.classList.remove('active');
-    overlay.classList.remove('active');
-  });
-
-  // Search open/close
-  searchBtn?.addEventListener('click', () => {
-    searchBox.classList.toggle('active');
-    if(searchBox.classList.contains('active')) {
-      searchBox.querySelector('input').focus();
-    }
-  });
-  closeSearch?.addEventListener('click', () => {
-    searchBox.classList.remove('active');
-  });
-  </script>
-
-
+  <script src="script.js"></script> <!-- 5. ekama script.js eka. menu/search okkoma meken -->
 
 </body>
 </html>
