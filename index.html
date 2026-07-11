@@ -418,8 +418,10 @@
     mainHeader.innerHTML = `
       <div class="header-left">
         <button class="menu-toggle" id="menuBtn" aria-label="Menu"><span></span><span></span><span></span></button>
-        <i class="fa fa-search" id="searchBtn"></i>
         <div class="logo">${HOME_LOGO_HTML}</div>
+      </div>
+      <div class="header-right">
+        <i class="fa fa-search" id="searchBtn"></i>
       </div>
     `;
     document.getElementById('menuBtn')?.addEventListener('click', toggleSidebar);
