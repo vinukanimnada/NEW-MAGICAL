@@ -234,43 +234,8 @@
   }
   
   loadTVShows();
-
-  /* =========================================================
-     Keep --header-h in sync with the header's real height
-     ========================================================= */
-  const mainHeaderEl = document.getElementById('mainHeader');
-  function syncHeaderHeight() {
-    if (!mainHeaderEl) return;
-    document.documentElement.style.setProperty('--header-h', mainHeaderEl.offsetHeight + 'px');
-  }
-  window.addEventListener('resize', syncHeaderHeight);
-  window.addEventListener('load', syncHeaderHeight);
-  syncHeaderHeight();
-  if (window.ResizeObserver) new ResizeObserver(syncHeaderHeight).observe(mainHeaderEl);
-
-  // Menu + Search JS - same behaviour as index.html
-  const menuBtn = document.getElementById('menuBtn');
-  const sidebar = document.getElementById('sidebar');
-  const overlay = document.getElementById('overlay');
-  const searchBtn = document.getElementById('searchBtn');
-  const searchBox = document.getElementById('searchBox');
-  const closeSearch = document.getElementById('closeSearch');
-  const searchInput = document.getElementById('searchInput');
-
-  function openSidebar() {
-    sidebar.classList.add('active');
-    overlay.classList.add('active');
-    menuBtn.classList.add('active');
-  }
-  function closeSidebarFn() {
-    sidebar.classList.remove('active');
-    overlay.classList.remove('active');
-    menuBtn.classList.remove('active');
-  }
-  menuBtn.onclick = () => { sidebar.classList.contains('active') ? closeSidebarFn() : openSidebar(); };
-  overlay.onclick = closeSidebarFn;
-  searchBtn.onclick = () => { searchBox.classList.toggle('active'); if(searchBox.classList.contains('active')) searchInput.focus(); };
-  closeSearch.onclick = () => { searchBox.classList.remove('active'); };
   </script>
+
+  <script src="script.js"></script>
 
 </body></html>
