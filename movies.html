@@ -375,64 +375,19 @@ function searchMovies(query) {
 
 loadMovies();
 
-/* =========================================================
-   Keep --header-h in sync with the header's real height
-   ========================================================= */
-const mainHeaderEl = document.getElementById('mainHeader');
-function syncHeaderHeight() {
-  if (!mainHeaderEl) return;
-  document.documentElement.style.setProperty('--header-h', mainHeaderEl.offsetHeight + 'px');
-}
-window.addEventListener('resize', syncHeaderHeight);
-window.addEventListener('load', syncHeaderHeight);
-syncHeaderHeight();
-if (window.ResizeObserver) new ResizeObserver(syncHeaderHeight).observe(mainHeaderEl);
-
-// Menu + Search JS - same behaviour as index.html
-const menuBtn = document.getElementById('menuBtn');
-const sidebar = document.getElementById('sidebar');
-const overlay = document.getElementById('overlay');
-const searchBtn = document.getElementById('searchBtn');
-const searchBox = document.getElementById('searchBox');
-const closeSearch = document.getElementById('closeSearch');
-const searchInput = document.getElementById('searchInput');
-
-function openSidebar() {
-  sidebar.classList.add('active');
-  overlay.classList.add('active');
-  menuBtn.classList.add('active');
-}
-function closeSidebarFn() {
-  sidebar.classList.remove('active');
-  overlay.classList.remove('active');
-  menuBtn.classList.remove('active');
-}
-menuBtn?.addEventListener('click', () => {
-  sidebar.classList.contains('active') ? closeSidebarFn() : openSidebar();
-});
-overlay?.addEventListener('click', closeSidebarFn);
-
-// Header 🔍 click
-searchBtn?.addEventListener('click', () => {
-  searchBox.classList.toggle('active');
-  if (searchBox.classList.contains('active')) {
-    searchInput.focus();
-  } else {
-    searchMovies('');
-    searchInput.value = '';
-  }
-});
-
-// X click
-closeSearch?.addEventListener('click', () => {
-  searchBox.classList.remove('active');
-  searchMovies('');
-  searchInput.value = '';
+// Page-specific: reset search results view when the search box closes
+document.addEventListener('DOMContentLoaded', () => {
+  const searchBtn = document.getElementById('searchBtn');
+  const closeSearch = document.getElementById('closeSearch');
+  searchBtn?.addEventListener('click', () => {
+    if (!document.getElementById('searchBox')?.classList.contains('active')) searchMovies('');
+  });
+  closeSearch?.addEventListener('click', () => searchMovies(''));
 });
 
 // Type කරද්දි search - Debounce 300ms
 let searchTimeout;
-searchInput?.addEventListener('input', (e) => {
+document.getElementById('searchInput')?.addEventListener('input', (e) => {
   clearTimeout(searchTimeout);
   searchTimeout = setTimeout(() => {
     searchMovies(e.target.value);
@@ -440,11 +395,13 @@ searchInput?.addEventListener('input', (e) => {
 });
 
 // Enter ගැහුවම search
-searchInput?.addEventListener('keypress', (e) => {
+document.getElementById('searchInput')?.addEventListener('keypress', (e) => {
   if (e.key === 'Enter') {
     searchMovies(e.target.value);
   }
 });
 </script>
+
+<script src="script.js"></script>
 
 </body></html>
