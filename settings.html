@@ -359,23 +359,7 @@
     localStorage.setItem('notifications', notifToggle.checked);
   });
 
-  // Theme select
-  const themeSelect = document.getElementById('themeSelect');
-  themeSelect.value = localStorage.getItem('theme') || 'dark';
-
-  function applyTheme(theme){
-    document.documentElement.className = theme;
-  }
-
-  themeSelect.addEventListener('change', () => {
-    const theme = themeSelect.value;
-    localStorage.setItem('theme', theme);
-    applyTheme(theme);
-  });
-
-  window.addEventListener('DOMContentLoaded', () => {
-    applyTheme(themeSelect.value);
-  });
+  
   </script>
 
 </body>
