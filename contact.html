@@ -1,19 +1,20 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="si" class="dark"> <!-- 1. class="dark" + lang si -->
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Contact Us - Magical Movie Land</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css"> <!-- Common CSS witharak -->
   
   <style>
+    /* Page eke witharai tiyena CSS */
     .contact-container{
       max-width: 600px;
       margin: 40px auto;
       padding: 0 20px;
       text-align: center;
-      color: #fff;
+      color: var(--text); /* #fff > var */
     }
 
     .contact-title{
@@ -38,7 +39,7 @@
     .contact-text{
       font-size: 15px;
       line-height: 1.7;
-      color: #ccc;
+      color: var(--text-dim); /* #ccc > var */
       margin-bottom: 35px;
       max-width: 500px;
       margin-left: auto;
@@ -69,85 +70,35 @@
 
     .email-text{
       font-size: 14px;
-      color: #aaa;
+      color: var(--text-faint); /* #aaa > var */
       margin-bottom: 8px;
     }
 
     .email-address{
       font-size: 15px;
-      color: #fff;
+      color: var(--text);
       margin-bottom: 30px;
     }
 
     .website-btn{
       display: inline-block;
-      background: #2a2a2a;
-      color: #fff;
+      background: var(--card-2); /* #2a2a2a > var */
+      color: var(--text);
       padding: 10px 24px;
       border-radius: 25px;
       font-size: 14px;
       text-decoration: none;
-      border: 1px solid #3a3a3a;
+      border: 1px solid var(--border); /* #3a3a3a > var */
       transition: 0.3s;
       margin-bottom: 60px;
     }
 
     .website-btn:hover{
-      background: #3a3a3a;
+      background: var(--border);
       border-color: #ff2d95;
     }
 
-    /* ===== FOOTER SECTION ===== */
-    .footer{
-      background: #111;
-      padding: 40px 20px;
-      text-align: center;
-      border-top: 1px solid #222;
-    }
-
-    .footer-logo{
-      font-size: 22px;
-      font-weight: 700;
-      margin-bottom: 15px;
-    }
-
-    .footer-logo span{
-      color: #FF10F0;
-    }
-
-    .footer-text{
-      font-size: 14px;
-      color: #aaa;
-      line-height: 1.6;
-      max-width: 500px;
-      margin: 0 auto 25px auto;
-    }
-
-    .social-icons{
-      display: flex;
-      justify-content: center;
-      gap: 15px;
-    }
-
-    .social-icons a{
-      width: 40px;
-      height: 40px;
-      background: #2a2a2a;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #fff;
-      font-size: 18px;
-      transition: 0.3s;
-      text-decoration: none;
-    }
-
-    .social-icons a:hover{
-      background: #ff2d95;
-      transform: translateY(-3px);
-    }
-
+    /* FOOTER eka ain kala. style.css eke thiyenne */
     @media (max-width: 600px){
       .contact-container{
         margin: 30px auto;
@@ -162,31 +113,28 @@
         width: 100%;
         justify-content: center;
       }
-      .footer{
-        padding: 30px 15px;
-      }
     }
   </style>
 </head>
 <body>
-  <!-- Header -->
-  <header>
-    <div class="logo">𝗠𝗔𝗚𝗜𝗖𝗔𝗟 <span>𝗠🍩𝗩𝗜𝗘 𝗟🌲𝗡𝗗</span></div>
+  <!-- Header - anith page wage -->
+  <header id="mainHeader">
+    <div class="header-left">
+      <button class="menu-toggle" id="menuBtn" aria-label="Menu"><span></span><span></span><span></span></button>
+      <div class="logo">𝗠𝗔𝗚𝗜𝗖𝗔𝗟 <span>𝗠🍩𝗩𝗜𝗘 𝗟🌲𝗡𝗗</span></div>
+    </div>
     <div class="header-right">
       <i class="fa fa-search" id="searchBtn"></i>
-      <i class="fa fa-bars" id="menuBtn"></i>
+    </div>
+
+    <div class="search-box" id="searchBox">
+      <input type="text" id="searchInput" placeholder="Search cartoons or movies...">
+      <i class="fa fa-times" id="closeSearch"></i>
     </div>
   </header>
 
-  <!-- Search Bar -->
-  <div class="search-box" id="searchBox">
-    <input type="text" placeholder="Search cartoons or movies...">
-    <i class="fa fa-times" id="closeSearch"></i>
-  </div>
-
   <!-- Sidebar Menu -->
-  <div class="sidebar" id="sidebar">
-    <span class="close-btn" id="closeSidebar">×</span>
+  <div class="sidebar" id="sidebar"> <!-- close-btn ain kala -->
     <ul>
       <li><a href="index.html"><i class="fa fa-home"></i> Home</a></li>
       <li><a href="movies.html"><i class="fa fa-film"></i> All Movies</a></li>
@@ -223,7 +171,7 @@
     </a>
   </div>
 
-  <!-- ===== FOOTER SECTION ===== -->
+  <!-- FOOTER - style.css eken wada -->
   <footer class="footer">
     <div class="footer-logo">𝗠𝗔𝗚𝗜𝗖𝗔𝗟 <span>𝗠𝗢𝗩𝗜𝗘 𝗟𝗔𝗡𝗗</span></div>
     
@@ -239,43 +187,7 @@
     </div>
   </footer>
 
-<script src="script.js"></script>
-
-<!-- Menu + Search JS -->
-  <script>
-  const menuBtn = document.getElementById('menuBtn');
-  const sidebar = document.getElementById('sidebar');
-  const closeSidebar = document.getElementById('closeSidebar');
-  const overlay = document.getElementById('overlay');
-  const searchBtn = document.getElementById('searchBtn');
-  const searchBox = document.getElementById('searchBox');
-  const closeSearch = document.getElementById('closeSearch');
-
-  menuBtn?.addEventListener('click', () => {
-    sidebar.classList.add('active');
-    overlay.classList.add('active');
-  });
-
-  closeSidebar?.addEventListener('click', () => {
-    sidebar.classList.remove('active');
-    overlay.classList.remove('active');
-  });
-
-  overlay?.addEventListener('click', () => {
-    sidebar.classList.remove('active');
-    overlay.classList.remove('active');
-  });
-
-  searchBtn?.addEventListener('click', () => {
-    searchBox.classList.toggle('active');
-    if(searchBox.classList.contains('active')) {
-      searchBox.querySelector('input').focus();
-    }
-  });
-  closeSearch?.addEventListener('click', () => {
-    searchBox.classList.remove('active');
-  });
-  </script>
+  <script src="script.js"></script> <!-- ekama script.js eka. inline JS ain kala -->
 
 </body>
 </html>
