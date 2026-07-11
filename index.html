@@ -481,7 +481,7 @@
     homeSearchResults.classList.add('active');
     const filtered = allContent.filter(m => m.title && m.title.toLowerCase().includes(query.toLowerCase()));
     if (filtered.length === 0) {
-      homeSearchResults.innerHTML = '<div class="home-no-result">🔍 Results හමු නොවීය</div>';
+      homeSearchResults.innerHTML = '<div class="home-no-result">🔍 Not Found</div>';
       return;
     }
     homeSearchResults.innerHTML = filtered.slice(0, 12).map(m => {
@@ -661,7 +661,7 @@
             ${m.trailer ? `<button class="btn btn-secondary" id="trailerBtn"><i class="fa fa-film"></i> Trailer</button>` : ''}
           </div>
           <div class="details-desc-label">Overview</div>
-          <p class="details-desc">${m.description || 'Description එකක් නෑ.'}</p>
+          <p class="details-desc">${m.description || 'N/A'}</p>
           ${m.cast ? `<div class="details-cast"><b>Cast:</b> ${m.cast}</div>` : ''}
         </div>
         <div class="player-wrap" id="playerWrap">
