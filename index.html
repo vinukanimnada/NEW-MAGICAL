@@ -65,6 +65,15 @@
   .header-right { display: flex; align-items: center; }
   .header-right i { font-size: 20px; margin-left: 20px; cursor: pointer; color: var(--text); }
   .header-left { display: flex; align-items: center; }
+  .menu-toggle { width: 22px; height: 16px; position: relative; background: none; border: none; padding: 0; margin: 0 14px 0 0; cursor: pointer; flex-shrink: 0; }
+  .header-right .menu-toggle { margin: 0 0 0 20px; }
+  .menu-toggle span { position: absolute; left: 0; width: 100%; height: 2px; background: var(--text); border-radius: 2px; transition: transform 0.3s ease, opacity 0.25s ease, top 0.3s ease; }
+  .menu-toggle span:nth-child(1) { top: 0; }
+  .menu-toggle span:nth-child(2) { top: 7px; }
+  .menu-toggle span:nth-child(3) { top: 14px; }
+  .menu-toggle.active span:nth-child(1) { top: 7px; transform: rotate(45deg); }
+  .menu-toggle.active span:nth-child(2) { opacity: 0; }
+  .menu-toggle.active span:nth-child(3) { top: 7px; transform: rotate(-45deg); }
   .back-btn { font-size: 20px; cursor: pointer; margin-right: 14px; color: var(--text); }
 
   /* Search */
@@ -350,10 +359,30 @@
   const sidebar = document.getElementById('sidebar');
   const overlay = document.getElementById('overlay');
   const closeSidebar = document.getElementById('closeSidebar');
-  closeSidebar?.addEventListener('click', () => { sidebar.classList.remove('active'); overlay.classList.remove('active'); });
-  overlay?.addEventListener('click', () => { sidebar.classList.remove('active'); overlay.classList.remove('active'); });
 
-  function openSidebar() { sidebar.classList.add('active'); overlay.classList.add('active'); }
+  function setMenuBtnState(isOpen) {
+    document.getElementById('menuBtn')?.classList.toggle('active', isOpen);
+  }
+
+  function openSidebar() {
+    sidebar.classList.add('active');
+    overlay.classList.add('active');
+    setMenuBtnState(true);
+  }
+
+  function closeSidebarFn() {
+    sidebar.classList.remove('active');
+    overlay.classList.remove('active');
+    setMenuBtnState(false);
+  }
+
+  function toggleSidebar() {
+    if (sidebar.classList.contains('active')) closeSidebarFn();
+    else openSidebar();
+  }
+
+  closeSidebar?.addEventListener('click', closeSidebarFn);
+  overlay?.addEventListener('click', closeSidebarFn);
 
   /* =========================================================
      ROUTER
@@ -374,13 +403,15 @@
 
   function renderHomeHeader() {
     mainHeader.innerHTML = `
-      <div class="logo">${HOME_LOGO_HTML}</div>
+      <div class="header-left">
+        <button class="menu-toggle" id="menuBtn" aria-label="Menu"><span></span><span></span><span></span></button>
+        <div class="logo">${HOME_LOGO_HTML}</div>
+      </div>
       <div class="header-right">
         <i class="fa fa-search" id="searchBtn"></i>
-        <i class="fa fa-bars" id="menuBtn"></i>
       </div>
     `;
-    document.getElementById('menuBtn')?.addEventListener('click', openSidebar);
+    document.getElementById('menuBtn')?.addEventListener('click', toggleSidebar);
     document.getElementById('searchBtn')?.addEventListener('click', () => {
       searchBox.classList.toggle('active');
       if (searchBox.classList.contains('active')) {
@@ -400,10 +431,10 @@
         <div class="logo small">${HOME_LOGO_HTML}</div>
       </div>
       <div class="header-right">
-        <i class="fa fa-bars" id="menuBtn"></i>
+        <button class="menu-toggle" id="menuBtn" aria-label="Menu"><span></span><span></span><span></span></button>
       </div>
     `;
-    document.getElementById('menuBtn')?.addEventListener('click', openSidebar);
+    document.getElementById('menuBtn')?.addEventListener('click', toggleSidebar);
     document.getElementById('backBtn')?.addEventListener('click', () => {
       if (window.history.length > 1) window.history.back();
       else window.location.href = 'index.html';
