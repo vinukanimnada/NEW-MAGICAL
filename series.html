@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="si">
+<html lang="si" class="dark"> <!-- 1. class="dark" add kala -->
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,14 +7,8 @@
   <link rel="stylesheet" href="style.css?v=19">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
-  * { box-sizing: border-box; }
-  body {
-    background: #0a0a0a;
-    color: #fff;
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-  }
+    * { box-sizing: border-box; }
+  /* body{} ain kala. style.css eken wada */
 
   .container { padding: 15px; } /* Content eka wrap karanna */
 
@@ -23,6 +17,7 @@
     margin: 15px 0;
     padding-left: 12px;
     border-left: 4px solid #ff2d95;
+    color: var(--text); /* theme color */
   }
   
   /* Cinesubz style grid */
@@ -30,10 +25,11 @@
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 8px;
+    background: transparent; /* #000 ain */
   }
   
-  @media(max-width: 768px) {
-    .movie-grid { grid-template-columns: repeat(3, 1fr); gap: 6px; }
+  @media(min-width: 768px) { /* mobile first > desktop */
+    .movie-grid { grid-template-columns: repeat(5, 1fr); gap: 12px; }
   }
   
   /* Card style - Cinesubz වගේ */
@@ -42,18 +38,21 @@
     aspect-ratio: 2/3;
     border-radius: 6px;
     overflow: hidden;
-    background: #111;
+    background: var(--card); /* #111 > var */
     cursor: pointer;
+    transition: transform 0.2s;
   }
+  .movie-card:hover { transform: scale(1.05); }
   
   .movie-card img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     display: block;
+    background: var(--card-2);
   }
   
-  /* Season badge - කොළ/රතු (UNCHANGED) */
+  /* Season badge - කොළ/රතු */
   .season-badge {
     position: absolute;
     top: 6px;
@@ -73,7 +72,7 @@
   
   .season-badge.complete { background: #dc2626; /* රතු - complete */ }
   
-  /* Rating badge - කහ (UNCHANGED) */
+  /* Rating badge - කහ */
   .rating-badge {
     position: absolute;
     top: 6px;
@@ -116,11 +115,11 @@
     align-items: center;
     justify-content: center;
     font-size: 35px;
-    color: #333;
-    background: #1a1a1a;
+    color: var(--text-faint);
+    background: var(--card-2);
   }
   
-  .home-no-result { text-align:center; color:#666; padding:50px 0; }
+  .home-no-result { text-align:center; color:var(--text-faint); padding:50px 0; grid-column: 1/-1; }
   </style>
 </head>
 <body>
@@ -236,6 +235,6 @@
   loadTVShows();
   </script>
 
-  <script src="script.js"></script>
+  <script src="script.js"></script> <!-- sidebar/menu/search okkoma meken -->
 
 </body></html>
