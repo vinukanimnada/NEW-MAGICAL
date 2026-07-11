@@ -1,121 +1,21 @@
 <!DOCTYPE html>
-<html lang="si">
+<html lang="si" class="dark"> <!-- 1. class="dark" default -->
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Settings - MAGICAL MOVIE LAND</title>
   
-  <!-- Theme load script - CSS එකට කලින්ම දාන්න ඕන -->
-  
-  
   <link rel="stylesheet" href="style.css?v=21">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
-  body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    transition: background 0.3s, color 0.3s;
-  }
+  /* body{} header{} sidebar{} ain kala. style.css eken wada */
   
-  header {
-    padding: 12px 15px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: sticky;
-    top: 0;
-    z-index: 999;
-    border-bottom: 1px solid;
-  }
-
-  .logo{
-    font-size: 22px;
-    font-weight: 700;
-    white-space: nowrap;
-  }
-
-  .logo span{
-    color: #ff2d95;
-  }
-
-  .header-right i{
-    font-size: 20px;
-    cursor: pointer;
-  }
-
-  /* Sidebar CSS - Border fix කළා */
-  .sidebar {
-    position: fixed;
-    top: 0;
-    right: -300px;
-    width: 280px;
-    height: 100%;
-    transition: right 0.3s ease;
-    z-index: 1001;
-    padding-top: 60px;
-  }
-  .sidebar.active {right: 0;}
-  
-  .sidebar ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    border-top: none;
-  }
-  
-  .sidebar ul li {
-    border-bottom: 1px solid #2a2a2a; /* Dark border */
-    border-top: none;
-  }
-  
-  .sidebar ul li:first-child {
-    border-top: 3px solid #ff2d95; /* Home උඩ pink border */
-  }
-  
-  /* Light theme sidebar borders */
-  html.light .sidebar ul li {
-    border-bottom: 1px solid #ddd;
-  }
-  
-  .sidebar ul li a {
-    display: block;
-    padding: 15px 20px;
-    text-decoration: none;
-    border-bottom: none;
-  }
-  
-  .sidebar ul li.active a {
-    background: #ff2d95;
-    color: white;
-  }
-  
-  .overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.7);
-    display: none;
-    z-index: 1000;
-  }
-  .overlay.active {display: block;}
-  
-  .close-btn {
-    position: absolute;
-    top: 15px;
-    right: 20px;
-    font-size: 30px;
-    cursor: pointer;
-    z-index: 1002;
-  }
-
   h1 {
     font-size: 20px;
     margin: 20px 15px;
     padding-left: 12px;
     border-left: 4px solid #ff2d95;
+    color: var(--text);
   }
 
   .container {
@@ -125,6 +25,7 @@
   }
 
   .setting-box {
+    background: var(--card); /* #111 > var */
     border-radius: 10px;
     padding: 20px;
     margin-bottom: 15px;
@@ -135,7 +36,7 @@
     justify-content: space-between;
     align-items: center;
     padding: 15px 0;
-    border-bottom: 1px solid;
+    border-bottom: 1px solid var(--border); /* #2a2a2a > var */
   }
   .setting-item:last-child {
     border-bottom: none;
@@ -143,22 +44,29 @@
 
   .setting-label {
     font-size: 14px;
+    color: var(--text);
   }
   .setting-label i {
     margin-right: 8px;
     color: #ff2d95;
   }
+  
+  .info-text {
+    font-size: 12px;
+    margin-top: 5px;
+    color: var(--text-faint); /* opacity 0.6 > var */
+  }
 
   /* Select box */
   select {
-    border:1px solid;
+    border:1px solid var(--border);
     border-radius:6px;
     padding:8px 12px;
     font-size:13px;
     cursor:pointer;
     min-width:100px;
-    background: inherit;
-    color: inherit;
+    background: var(--bg-alt);
+    color: var(--text);
   }
   select:focus {
     outline: none;
@@ -184,7 +92,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: #333;
+    background-color: var(--card-2);
     transition: .4s;
     border-radius: 24px;
   }
@@ -217,29 +125,31 @@
     font-weight: 700;
     cursor: pointer;
     margin-top: 10px;
+    transition: transform 0.2s;
   }
   .btn-clear:active {
     transform: scale(0.97);
-  }
-
-  .info-text {
-    font-size: 12px;
-    margin-top: 5px;
-    opacity: 0.6;
   }
   </style>
 </head>
 <body>
   
-  <header>
-    <div class="logo">𝗠𝗔𝗚𝗜𝗖𝗔𝗟 <span>𝗠🍩𝗩𝗜𝗘 𝗟🌲𝗡𝗗</span></div>
+  <header id="mainHeader"> <!-- anith page wage -->
+    <div class="header-left">
+      <button class="menu-toggle" id="menuBtn" aria-label="Menu"><span></span><span></span><span></span></button>
+      <div class="logo">𝗠𝗔𝗚𝗜𝗖𝗔𝗟 <span>𝗠🍩𝗩𝗜𝗘 𝗟🌲𝗡𝗗</span></div>
+    </div>
     <div class="header-right">
-      <i class="fa fa-bars" id="menuBtn"></i>
+      <i class="fa fa-search" id="searchBtn"></i>
+    </div>
+
+    <div class="search-box" id="searchBox">
+      <input type="text" id="searchInput" placeholder="Search...">
+      <i class="fa fa-times" id="closeSearch"></i>
     </div>
   </header>
 
-  <div class="sidebar" id="sidebar">
-    <span class="close-btn" id="closeSidebar">×</span>
+  <div class="sidebar" id="sidebar"> <!-- close-btn ain kala -->
     <ul>
       <li><a href="index.html"><i class="fa fa-home"></i> Home</a></li>
       <li><a href="movies.html"><i class="fa fa-film"></i> All Movies</a></li>
@@ -286,7 +196,7 @@
           <div class="setting-label"><i class="fa fa-trash"></i> Clear Cache</div>
           <div class="info-text">Clear saved data</div>
         </div>
-        <button class="btn-clear" onclick="clearCache()">Clear</button>
+        <button class="btn-clear" id="clearBtn">Clear</button>
       </div>
 
       <div class="setting-item">
@@ -316,46 +226,44 @@
   </footer>
 
   <script>
-  // Menu open/close
-  const menuBtn = document.getElementById('menuBtn');
-  const sidebar = document.getElementById('sidebar');
-  const closeSidebar = document.getElementById('closeSidebar');
-  const overlay = document.getElementById('overlay');
+  // Settings page logic witharak. Menu eka script.js eken
+  document.addEventListener('DOMContentLoaded', () => {
+    const themeSelect = document.getElementById('themeSelect');
+    const notifToggle = document.getElementById('notifToggle');
+    const clearBtn = document.getElementById('clearBtn');
 
-  menuBtn?.addEventListener('click', () => {
-    sidebar.classList.add('active');
-    overlay.classList.add('active');
+    // Theme load
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    themeSelect.value = savedTheme;
+    document.documentElement.className = savedTheme === 'auto' ? 
+      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : savedTheme;
+
+    themeSelect.addEventListener('change', (e) => {
+      const theme = e.target.value;
+      localStorage.setItem('theme', theme);
+      document.documentElement.className = theme === 'auto' ? 
+        (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme;
+    });
+
+    // Notification toggle
+    notifToggle.checked = localStorage.getItem('notifications') === 'true';
+    notifToggle.addEventListener('change', () => {
+      localStorage.setItem('notifications', notifToggle.checked);
+    });
+
+    // Clear cache
+    clearBtn.addEventListener('click', () => {
+      if(confirm('Cache clear කරන්නද?')){
+        localStorage.clear();
+        sessionStorage.clear();
+        alert('✅ Cache clear කරා!');
+        location.reload();
+      }
+    });
   });
-
-  closeSidebar?.addEventListener('click', () => {
-    sidebar.classList.remove('active');
-    overlay.classList.remove('active');
-  });
-
-  overlay?.addEventListener('click', () => {
-    sidebar.classList.remove('active');
-    overlay.classList.remove('active');
-  });
-
-  // Clear cache
-  function clearCache(){
-    if(confirm('Cache clear කරන්නද?')){
-      localStorage.clear();
-      sessionStorage.clear();
-      alert('✅ Cache clear කරා!');
-      location.reload();
-    }
-  }
-
-  // Notification toggle
-  const notifToggle = document.getElementById('notifToggle');
-  notifToggle.checked = localStorage.getItem('notifications') === 'true';
-  notifToggle.addEventListener('change', () => {
-    localStorage.setItem('notifications', notifToggle.checked);
-  });
-
-  
   </script>
+
+  <script src="script.js"></script> <!-- menu/search okkoma meken -->
 
 </body>
 </html>
