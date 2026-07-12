@@ -121,3 +121,29 @@ if (document.readyState === 'loading') {
 } else {
   tryAutoBind();
 }
+
+
+
+
+
+// Sakura Petals Effect
+function createPetal() {
+  const petal = document.createElement('div');
+  petal.classList.add('sakura-petal');
+  
+  petal.style.left = Math.random() * 100 + 'vw'; // random thanna
+  petal.style.animationDuration = Math.random() * 5 + 5 + 's'; // 5s - 10s
+  petal.style.animationDelay = Math.random() * 5 + 's'; // random delay
+  petal.style.width = Math.random() * 8 + 8 + 'px'; // 8px - 16px
+  petal.style.height = petal.style.width;
+  petal.style.background = `rgba(255, ${45 + Math.random()*20}, ${149 + Math.random()*20}, 0.7)`; // rosa shade wenas
+
+  document.getElementById('sakura-container').appendChild(petal);
+
+  setTimeout(() => {
+    petal.remove();
+  }, 10000); // 10s walin ain wenawa
+}
+
+// hama 200ms walata petal 1k
+setInterval(createPetal, 200);
