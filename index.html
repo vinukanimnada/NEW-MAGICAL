@@ -514,15 +514,39 @@ html.light .movie-card h3 { color: #111; }
 
       const playerWrap = document.getElementById('playerWrap'); const playerBox = document.getElementById('playerBox'); const nowPlayingLabel = document.getElementById('nowPlayingLabel');
 
-      // ===== FINAL PINK PLAY BUTTON =====
+      // ===== FINAL PINK PLAY BUTTON WITH AUTO LINK FIX =====
       function loadPlayerWithOverlay(url, label) {
+
+        // STEP 1: Link eka auto hari karanna
+        if(url){
+          // Pixeldrain link nam /u/ -> /api/file/ karanawa
+          if(url.includes("pixeldrain.com/u/")){
+            const fileId = url.split("/u/")[1];
+            url = `https://pixeldrain.com/api/file/${fileId}`;
+          }
+
+          // Google Drive link nam direct download link ekata hadanawa
+          if(url.includes("drive.google.com")){
+            const fileId = url.split("/d/")[1].split("/")[0];
+            url = `https://drive.google.com/uc?export=download&id=${fileId}`;
+          }
+        }
+
+        // Heroku Bot / Direct MP4 link nam wenas karanne na
+
+        // STEP 2: Video file da kiyala check karanna
         let isVideoFile = /\.(mp4|webm|ogg|mkv)(\?.*)?$/i.test(url);
+
+        // STEP 3: Player eke danna
         playerBox.innerHTML = `
           <div class="player-play-overlay" id="bigPlayOverlay"><div class="big-play-btn"><i class="fa fa-play"></i></div></div>
           ${isVideoFile
-          ? `<video id="moviePlayer" src="${url}" preload="metadata" playsinline controls controlsList="nodownload"></video>`
+        ? `<video id="moviePlayer" src="${url}" preload="metadata" playsinline controlsList="nodownload"></video>`
             : `<iframe id="moviePlayer" src="${url}" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>`}`;
-        nowPlayingLabel.textContent = label || ''; playerWrap.classList.add('active'); playerWrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        nowPlayingLabel.textContent = label || '';
+        playerWrap.classList.add('active');
+        playerWrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
         document.getElementById('bigPlayOverlay').onclick = () => {
           const player = document.getElementById('moviePlayer');
           if (isVideoFile) {player.play();} else {player.src = url + (url.includes('?')? '&' : '?') + 'autoplay=1';}
