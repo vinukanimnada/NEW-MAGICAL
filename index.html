@@ -277,14 +277,19 @@ html.light .movie-card h3 { color: #111; }
   <!-- ===================== HEADER (content swapped by JS per view) ===================== -->
   <header id="mainHeader">
     <div class="header-left">
-      <div class="logo"><a href="index.html">𝗠𝗔𝗚𝗜𝗖𝗔𝗟 <span>𝗠🍩𝗩𝗜𝗘 𝗟🌲𝗡𝗗</span></a></div>
+      <button class="menu-toggle" id="menuBtn" aria-label="Menu"><span></span><span></span><span></span></button>
+      <div class="logo">𝗠𝗔𝗚𝗜𝗖𝗔𝗟 <span>𝗠🍩𝗩𝗜𝗘 𝗟🌲𝗡𝗗</span></div>
+    </div>
+    <div class="header-right"> <!-- 2. search icon add kala -->
+      <i class="fa fa-search" id="searchBtn"></i>
+    </div>
+
+    <div class="search-box" id="searchBox"> <!-- 3. search box add kala -->
+      <input type="text" id="searchInput" placeholder="Search...">
+      <i class="fa fa-times" id="closeSearch"></i>
     </div>
   </header>
 
-  <div class="search-box" id="searchBox">
-    <input type="text" id="searchInput" placeholder="Search movies & TV shows...">
-    <i class="fa fa-times" id="closeSearch"></i>
-  </div>
 
   <div class="home-search-results" id="homeSearchResults"></div>
 
