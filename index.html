@@ -71,66 +71,58 @@
 
 
   /* ===== WATCH PAGE -  STYLE ===== */
-.details-hero {
-  padding: 15px!important;
-  background: none!important;
-  min-height: auto!important;
-  display: block!important;
-}
-.details-hero::before { display: none!important; }
+/* Details / Watch view */
+  .details-hero { position: relative; min-height: 340px; background-size: cover; background-position: center top; display: flex; align-items: flex-end; padding: 20px 15px; }
+  .details-hero::before { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, var(--bg) 5%, rgba(10,10,10,0.55) 55%, rgba(10,10,10,0.35)); }
+  .details-hero-inner { position: relative; z-index: 2; display: flex; gap: 16px; align-items: flex-end; width: 100%; }
+  .details-poster { width: 110px; height: 160px; border-radius: 8px; object-fit: cover; flex-shrink: 0; box-shadow: 0 8px 24px rgba(0,0,0,0.5); border: 2px solid rgba(255,255,255,0.15); }
+  .details-title-block { flex: 1; min-width: 0; }
+  .details-title { font-size: 22px; font-weight: 700; color: #fff; line-height: 1.25; margin-bottom: 6px; text-shadow: 0 2px 6px rgba(0,0,0,0.6); }
+  .details-meta { display: flex; flex-wrap: wrap; gap: 8px; font-size: 12.5px; color: #ddd; margin-bottom: 4px; }
+  .details-meta span { background: rgba(255,255,255,0.12); padding: 3px 9px; border-radius: 20px; backdrop-filter: blur(2px); }
+  .details-meta .rating { background: rgba(255,45,149,0.25); color: #ff9dc7; font-weight: 700; }
+  .details-body { padding: 18px 15px; }
+  .details-actions { display: flex; gap: 10px; margin-bottom: 18px; flex-wrap: wrap; }
+  .details-desc-label { font-size: 15px; font-weight: 700; margin-bottom: 6px; color: var(--text); }
+  .details-desc { font-size: 14px; line-height: 1.7; color: var(--text-dim); margin-bottom: 18px; }
+  .details-cast { font-size: 13px; color: var(--text-faint); margin-bottom: 6px; }
+  .details-cast b { color: var(--text-dim); }
 
-.details-hero-inner {
-  display: flex!important;
-  flex-direction: row!important;
-  gap: 15px!important;
-  align-items: flex-start!important;
-  position: static!important;
-}
+  .player-wrap { padding: 0 15px 15px; display: none; }
+  .player-wrap.active { display: block; }
+  .player-container { position: relative; width: 100%; padding-top: 56.25%; background: #000; border-radius: 8px; overflow: hidden; }
+  .player-container iframe, .player-container video { position: absolute; inset: 0; width: 100%; height: 100%; border: none; }
+  .now-playing-label { font-size: 13px; color: var(--text-faint); margin: 8px 0 0; }
 
-.details-poster {
-  width: 120px!important;
-  height: 170px!important;
-  border-radius: 10px!important;
-  box-shadow: 0 0 15px rgba(255,45,149,0.3)!important;
-  border: none!important;
-}
+  .episodes-wrap { padding: 0 15px 10px; }
+  .episodes-title { font-size: 16px; font-weight: 700; margin-bottom: 10px; }
+  .season-select { background: var(--card); color: var(--text); border: 1px solid var(--border); border-radius: 6px; padding: 8px 12px; margin-bottom: 12px; font-size: 14px; }
+  .episode-item { display: flex; align-items: center; gap: 12px; background: var(--card); border-radius: 8px; padding: 10px 12px; margin-bottom: 8px; cursor: pointer; transition: background 0.2s; border: 1px solid transparent; }
+  .episode-item:hover { background: var(--card-2); }
+  .episode-item.playing { border-color: #ff2d95; background: rgba(255,45,149,0.08); }
+  .episode-num { width: 34px; height: 34px; flex-shrink: 0; border-radius: 50%; background: rgba(255,45,149,0.15); color: #ff2d95; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; }
+  .episode-info { flex: 1; min-width: 0; }
+  .episode-title { font-size: 14px; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .episode-sub { font-size: 12px; color: var(--text-faint); }
+  .episode-play-icon { color: var(--text-faint); font-size: 16px; }
+  .episode-item.playing .episode-play-icon { color: #ff2d95; }
 
-.details-title {
-  font-size: 22px!important;
-  font-weight: 800!important;
-  color: var(--text)!important;
-  text-shadow: none!important;
-}
+  .related-wrap { padding: 6px 0 0; }
 
-.details-meta span {
-  background: var(--card)!important;
-  color: var(--text-dim)!important;
-}
-.details-meta.rating {
-  background: rgba(255,45,149,0.15)!important;
-  color: #ff2d95!important;
-}
+  .trailer-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2000; display: none; align-items: center; justify-content: center; padding: 20px; }
+  .trailer-modal.active { display: flex; }
+  .trailer-modal-inner { width: 100%; max-width: 900px; position: relative; }
+  .trailer-modal-inner .player-container { padding-top: 56.25%; }
+  .trailer-close { position: absolute; top: -40px; right: 0; font-size: 28px; color: #fff; cursor: pointer; background: rgba(255,255,255,0.1); width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
 
-.btn-primary {
-  background: #ff2d95!important;
-  color: #fff!important;
-}
-.btn-primary:hover { background: #e02585!important; }
+  .details-skeleton { text-align: center; padding: 60px 20px; color: var(--text-faint); }
 
-.btn-secondary {
-  background: var(--card-2)!important;
-  color: var(--text)!important;
-}
+  html.light .movie-card h3 { color: #111; }
 
-/* You May Also Like rosa bar */
-.related-wrap.section-header h2 {
-  position: relative; padding-left: 12px;
-}
-.related-wrap.section-header h2::before {
-  content: ''; position: absolute; left: 0; top: 50%;
-  transform: translateY(-50%); width: 4px; height: 20px;
-  background: #ff2d95; border-radius: 2px;
-}
+  @media (min-width: 700px) {
+    .movie-grid { grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); }
+    .details-poster { width: 150px; height: 220px; }
+  }
   </style>
 </head>
 <body>
