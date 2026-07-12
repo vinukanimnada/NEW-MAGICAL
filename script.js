@@ -21,7 +21,7 @@
   }
 })();
 
-/* ----- Sidebar open/close ----- */
+/* ----- Sidebar open/close with X Animation ----- */
 function bindSidebar() {
   const sidebar = document.getElementById('sidebar');
   const overlay = document.getElementById('overlay');
@@ -32,7 +32,6 @@ function bindSidebar() {
     return null;
   }
 
-  // duplicate listener na karanna
   const newMenuBtn = menuBtn.cloneNode(true);
   newMenuBtn.id = 'menuBtn';
   menuBtn.parentNode.replaceChild(newMenuBtn, menuBtn);
@@ -44,13 +43,13 @@ function bindSidebar() {
   function openSidebar() {
     sidebar.classList.add('active');
     newOverlay.classList.add('active');
-    newMenuBtn.classList.add('active');
+    newMenuBtn.classList.add('active'); // X animation trigger
     document.body.style.overflow = 'hidden';
   }
   function closeSidebar() {
     sidebar.classList.remove('active');
     newOverlay.classList.remove('active');
-    newMenuBtn.classList.remove('active');
+    newMenuBtn.classList.remove('active'); // aye 3 line
     document.body.style.overflow = '';
   }
   function toggleSidebar() {
@@ -60,7 +59,6 @@ function bindSidebar() {
   newMenuBtn.addEventListener('click', toggleSidebar);
   newOverlay.addEventListener('click', closeSidebar);
 
-  // Sidebar link ekak click karamauth close wenna
   sidebar.querySelectorAll('a').forEach(link => {
     link.addEventListener('click', closeSidebar);
   });
@@ -122,28 +120,23 @@ if (document.readyState === 'loading') {
   tryAutoBind();
 }
 
-
-
-
-
 // Sakura Petals Effect
 function createPetal() {
   const petal = document.createElement('div');
   petal.classList.add('sakura-petal');
   
-  petal.style.left = Math.random() * 100 + 'vw'; // random thanna
-  petal.style.animationDuration = Math.random() * 5 + 5 + 's'; // 5s - 10s
-  petal.style.animationDelay = Math.random() * 5 + 's'; // random delay
-  petal.style.width = Math.random() * 8 + 8 + 'px'; // 8px - 16px
+  petal.style.left = Math.random() * 100 + 'vw';
+  petal.style.animationDuration = Math.random() * 5 + 5 + 's';
+  petal.style.animationDelay = Math.random() * 5 + 's';
+  petal.style.width = Math.random() * 8 + 8 + 'px';
   petal.style.height = petal.style.width;
-  petal.style.background = `rgba(255, ${45 + Math.random()*20}, ${149 + Math.random()*20}, 0.7)`; // rosa shade wenas
+  petal.style.background = `rgba(255, ${45 + Math.random()*20}, ${149 + Math.random()*20}, 0.7)`;
 
   document.getElementById('sakura-container').appendChild(petal);
 
   setTimeout(() => {
     petal.remove();
-  }, 10000); // 10s walin ain wenawa
+  }, 10000);
 }
 
-// hama 200ms walata petal 1k
 setInterval(createPetal, 200);
