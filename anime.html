@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="si" class="dark"> <!-- 1. class="dark" add kala -->
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anime - Magical Movie Land</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+/* body style eka ain kala. style.css eken wada */
+/* * { box-sizing: border-box; } witharak thiyanna */
+
+* { box-sizing: border-box; }
+
+h1 {
+  text-align: center;
+  color: #ff2d95;
+  margin: 20px 0 30px;
+  font-size: 24px;
+}
+
+/* Cinesubz Grid - Mobile 3x3 */
+.movie-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  padding: 10px;
+  background: transparent; /* #000 ain kala */
+}
+
+/* Desktop 5x grid */
+@media (min-width: 768px) {
+.movie-grid {
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+    padding: 20px;
+  }
+}
+
+.movie-card {
+  position: relative;
+  border-radius: 6px;
+  overflow: hidden;
+  background: var(--card); /* #111 > var */
+  cursor: pointer;
+  transition: transform 0.2s;
+  aspect-ratio: 2/3;
+}
+
+.movie-card:hover {
+  transform: scale(1.05);
+}
+
+.movie-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  background: var(--card-2);
+}
+
+/* Top Left - WEB-DL RED Badge */
+.quality-badge {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  background: #e50914;
+  padding: 2px 5px;
+  font-size: 10px;
+  font-weight: 700;
+  border-radius: 3px;
+  color: white;
+  z-index: 3;
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+/* Top Right - ★ Rating YELLOW Badge */
+.rating-badge {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background: #ffc107;
+  color: #000;
+  padding: 2px 5px;
+  font-size: 10px;
+  font-weight: 700;
+  border-radius: 3px;
+  z-index: 3;
+  line-height: 1;
+}
+
+/* Bottom Title - Left align + Gradient */
+.movie-title {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 20px 6px 6px;
+  font-size: 12px;
+  text-align: left;
+  font-weight: 500;
+  color: #fff;
+  background: linear-gradient(to top, rgba(0,0,0,0.95) 50%, transparent);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  z-index: 2;
+  line-height: 1.2;
+}
+
+.no-movies {
+  text-align: center;
+  color: var(--text-faint);
+  padding: 50px 0;
+  grid-column: 1/-1;
+}
+
+/* Search Results List View */
+.search-results {
+  display: none;
+  padding: 10px;
+}
+
+.search-results.active {
+  display: block;
+}
+
+.search-result-item {
+  display: flex;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.search-result-item:hover {
+  background: var(--card);
+}
+
+.search-result-poster {
+  width: 60px;
+  height: 90px;
+  border-radius: 4px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.search-result-info {
+  flex: 1;
+  overflow: hidden;
+}
+
+.search-result-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.search-result-meta {
+  font-size: 13px;
+  color: var(--text-dim);
+  line-height: 1.5;
+}
+
+.search-no-result {
+  text-align: center;
+  color: var(--text-faint);
+  padding: 50px 20px;
+  font-size: 14px;
+}
+</style>
+</head>
+<body>
+
+<header id="mainHeader">
+  <div class="header-left">
+    <button class="menu-toggle" id="menuBtn" aria-label="Menu"><span></span><span></span><span></span></button>
+    <div class="logo">𝗠𝗔𝗚𝗜𝗖𝗔𝗟 <span>𝗠🍩𝗩𝗜𝗘 𝗟🌲𝗡𝗗</span></div>
+  </div>
+
+  <div class="header-right">
+    <i class="fa fa-search" id="searchBtn"></i>
+  </div>
+
+  <!-- Search Bar -->
+  <div class="search-box" id="searchBox">
+    <input type="text" id="searchInput" placeholder="Search anime...">
+    <i class="fa fa-times" id="closeSearch"></i>
+  </div>
+
+</header>
+
+<div class="sidebar" id="sidebar">
+  <ul>
+    <li><a href="index.html"><i class="fa fa-home"></i> Home</a></li>
+    <li><a href="movies.html"><i class="fa fa-film"></i> All Movies</a></li>
+    <li><a href="series.html"><i class="fa fa-tv"></i> TV Shows</a></li>
+    <li class="active"><a href="anime.html"><i class="fa-solid fa-dragon"></i> Anime</a></li>
+    <li><a href="request.html"><i class="fa fa-plus-circle"></i> Requests</a></li>
+    <li><a href="chanels.html"><i class="fa-solid fa-users"></i> Join Channels</a></li>
+    <li><a href="about.html"><i class="fa fa-info-circle"></i> About</a></li>
+    <li><a href="contact.html"><i class="fa fa-envelope"></i> Contact Us</a></li>
+    <li><a href="settings.html"><i class="fa fa-cog"></i> Settings</a></li>
+  </ul>
+</div>
+<div class="overlay" id="overlay"></div>
+
+<h1>🎌 Anime</h1>
+
+<!-- Movie Grid -->
+<div class="movie-grid" id="movieGrid">
+  <div class="no-movies">Loading movies...</div>
+</div>
+
+<!-- Search Results List -->
+<div class="search-results" id="searchResults"></div>
+
+<br><br><br>
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-logo">𝗠𝗔𝗚𝗜𝗖𝗔𝗟 <span>𝗠𝗢𝗩𝗜𝗘 𝗟𝗔𝗡𝗗</span></div>
+
+    <p class="footer-text">
+      The best platform to stream latest Movies and Cartoons with high-quality subtitles.
+      Enjoy your favorite content for free on Magical Movie Land.
+    </p>
+
+    <div class="social-icons">
+      <a href="https://www.facebook.com/share/1BbGBZ8ddZ/?mibextid=wwXIfr" target="_blank"><i class="fa-brands fa-facebook-f"></i></a>
+      <a href="https://t.me/YourUsername" target="_blank"><i class="fa-brands fa-telegram"></i></a>
+      <a href="https://www.tiktok.com/@vinuxnoo?_r=1&_t=ZS-97SZwiHJ6jU" target="_blank"><i class="fa-brands fa-tiktok"></i></a>
+    </div>
+  </footer>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCx0TEmgr3GCyvfeok9Y42yR1PTM4_8y9M",
+  authDomain: "magical-movie-land.firebaseapp.com",
+  projectId: "magical-movie-land",
+  storageBucket: "magical-movie-land.firebasestorage.app",
+  messagingSenderId: "27757424288",
+  appId: "1:27757424288:web:d650e2659f09f0b9c823c5"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const grid = document.getElementById('movieGrid');
+let allMovies = [];
+
+function hasSection(movie, sectionKey) {
+  return Array.isArray(movie.sections) && movie.sections.includes(sectionKey);
+}
+
+async function loadMovies() {
+  try {
+    const snapshot = await getDocs(collection(db, "movies"));
+
+    if (snapshot.empty) {
+      grid.innerHTML = '<div class="no-movies">Movies නැත.</div>';
+      return;
+    }
+
+    allMovies = [];
+    snapshot.forEach(docSnap => {
+      const m = docSnap.data();
+      m.id = docSnap.id;
+      if (m.title && m.poster && hasSection(m, 'anime')) {
+        allMovies.push(m);
+      }
+    });
+
+    allMovies.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
+
+    if (allMovies.length === 0) {
+      grid.innerHTML = '<div class="no-movies">Anime නැත. Admin panel එකෙන් "Show In Sections" එකේ "Anime" select කරලා add කරන්න.</div>';
+      return;
+    }
+
+    grid.innerHTML = "";
+    allMovies.forEach(m => {
+      const poster = m.poster || 'https://via.placeholder.com/300x450/222/fff?text=No+Image';
+      let rating = m.rating? m.rating.toString().split('/')[0] : '';
+      if (rating &&!rating.includes('.')) rating += '.0';
+      const quality = (m.quality || 'HD').toUpperCase();
+      let title = m.title || 'Untitled';
+      if (title.length > 20) title = title.substring(0, 20) + '...';
+
+      const card = `
+        <div class="movie-card" onclick="openMovie('${m.id}')">
+          <span class="quality-badge">${quality}</span>
+          ${rating? `<span class="rating-badge">★ ${rating}</span>` : ''}
+          <img src="${poster}" alt="${m.title}" loading="lazy">
+          <div class="movie-title">${title}</div>
+        </div>
+      `;
+      grid.innerHTML += card;
+    });
+  } catch (err) {
+    console.error(err);
+    grid.innerHTML = `<div class="no-movies">Error: ${err.message}</div>`;
+  }
+}
+
+window.openMovie = function (id) {
+  window.location.href = `index.html?id=${id}`;
+};
+
+function searchMovies(query) {
+  const resultsDiv = document.getElementById('searchResults');
+  const gridDiv = document.getElementById('movieGrid');
+
+  if (!query.trim()) {
+    resultsDiv.classList.remove('active');
+    gridDiv.style.display = 'grid';
+    return;
+  }
+
+  gridDiv.style.display = 'none';
+  resultsDiv.classList.add('active');
+
+  const filtered = allMovies.filter(m =>
+    m.title && m.title.toLowerCase().includes(query.toLowerCase())
+  );
+
+  if (filtered.length === 0) {
+    resultsDiv.innerHTML = '<div class="search-no-result">🔍 Not Found</div>';
+    return;
+  }
+
+  resultsDiv.innerHTML = filtered.map(m => {
+    const poster = m.poster || 'https://via.placeholder.com/60x90/222/fff';
+    const year = m.year || 'N/A';
+    const duration = m.duration || '';
+    const genre = m.genre || 'Movie';
+    let title = m.title;
+    if (title.length > 40) title = title.substring(0, 40) + '...';
+
+    return `
+      <div class="search-result-item" onclick="openMovie('${m.id}')">
+        <img src="${poster}" class="search-result-poster" loading="lazy">
+        <div class="search-result-info">
+          <div class="search-result-title">${title}</div>
+          <div class="search-result-meta">
+            ${year}${duration? ' • ' + duration : ''}<br>
+            ${genre}
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+loadMovies();
+
+document.addEventListener('DOMContentLoaded', () => {
+  const searchBtn = document.getElementById('searchBtn');
+  const closeSearch = document.getElementById('closeSearch');
+  searchBtn?.addEventListener('click', () => {
+    if (!document.getElementById('searchBox')?.classList.contains('active')) searchMovies('');
+  });
+  closeSearch?.addEventListener('click', () => searchMovies(''));
+});
+
+let searchTimeout;
+document.getElementById('searchInput')?.addEventListener('input', (e) => {
+  clearTimeout(searchTimeout);
+  searchTimeout = setTimeout(() => {
+    searchMovies(e.target.value);
+  }, 300);
+});
+
+document.getElementById('searchInput')?.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') {
+    searchMovies(e.target.value);
+  }
+});
+</script>
+
+<script src="script.js"></script> <!-- sidebar/menu/search okkoma meken -->
+
+</body>
+</html>
