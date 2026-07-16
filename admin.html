@@ -61,6 +61,7 @@
   .admin-toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--card); border: 1px solid #ff2d95; color: var(--text); padding: 12px 22px; border-radius: 8px; font-size: 14px; z-index: 3000; opacity: 0; transition: 0.25s; pointer-events: none; }
   .admin-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
   .details-skeleton { text-align: center; padding: 60px 20px; color: var(--text-faint); }
+  .cast-photo-preview { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 1px solid var(--border); flex-shrink: 0; background: var(--card-2); }
   </style>
 </head>
 <body>
@@ -154,8 +155,12 @@
       </div>
 
       <div class="form-group">
-        <label>Cast <span class="form-hint">(optional, comma separated)</span></label>
-        <input type="text" class="admin-input" id="f_cast" placeholder="Actor A, Actor B">
+        <label>Cast <span class="form-hint">(optional — add photo, name & character for each actor)</span></label>
+        <div class="episode-builder" id="castBuilder"></div>
+        <button class="btn btn-secondary" id="addCastBtn" style="margin-top:8px; font-size:13px; padding:9px 14px;">
+          <i class="fa fa-plus"></i> Add Cast Member
+        </button>
+        <div class="form-hint">Photo URL, Name, Character/Role — දෙන්න. Photo නැත්නම් automatic placeholder එකක් පෙන්වයි.</div>
       </div>
 
       <div class="form-group">
@@ -330,6 +335,52 @@
 
     function clearEpisodeBuilder() { episodeBuilder.innerHTML = ''; }
 
+    // ---- Cast builder (photo + name + character per member) ----
+    const castBuilder = document.getElementById('castBuilder');
+    document.getElementById('addCastBtn').addEventListener('click', () => addCastRow());
+
+    function addCastRow(data) {
+      data = data || {};
+      const row = document.createElement('div');
+      row.className = 'episode-row';
+      row.style.background = 'var(--bg)';
+      row.style.border = '1px solid var(--border)';
+      row.style.borderRadius = '8px';
+      row.style.padding = '10px';
+      row.innerHTML = `
+        <div style="display:flex; gap:6px; margin-bottom:6px; align-items:center;">
+          <img class="cast-photo-preview" src="${(data.photo || '').replace(/"/g,'&quot;') || 'https://via.placeholder.com/40x40/222/fff?text=%3F'}">
+          <input type="text" class="cast-photo-input admin-input" placeholder="Photo URL" value="${(data.photo || '').replace(/"/g,'&quot;')}" style="padding:9px; flex:1; margin-bottom:0;">
+          <span class="cast-remove" style="color:#ff5b5b; cursor:pointer; display:flex; align-items:center; padding:0 6px;"><i class="fa fa-trash"></i></span>
+        </div>
+        <div style="display:flex; gap:6px;">
+          <input type="text" class="cast-name-input admin-input" placeholder="Actor Name" value="${(data.name || '').replace(/"/g,'&quot;')}" style="padding:9px; flex:1;">
+          <input type="text" class="cast-character-input admin-input" placeholder="Character" value="${(data.character || '').replace(/"/g,'&quot;')}" style="padding:9px; flex:1;">
+        </div>
+      `;
+      const preview = row.querySelector('.cast-photo-preview');
+      const photoInput = row.querySelector('.cast-photo-input');
+      photoInput.addEventListener('input', () => {
+        preview.src = photoInput.value.trim() || 'https://via.placeholder.com/40x40/222/fff?text=%3F';
+      });
+      row.querySelector('.cast-remove').addEventListener('click', () => row.remove());
+      castBuilder.appendChild(row);
+    }
+
+    function getCastFromForm() {
+      const cast = [];
+      castBuilder.childNodes.forEach(row => {
+        if (!row.querySelector) return;
+        const photo = row.querySelector('.cast-photo-input')?.value.trim();
+        const name = row.querySelector('.cast-name-input')?.value.trim();
+        const character = row.querySelector('.cast-character-input')?.value.trim();
+        if (name) cast.push({ photo: photo || '', name, character: character || '' });
+      });
+      return cast;
+    }
+
+    function clearCastBuilder() { castBuilder.innerHTML = ''; }
+
     const sectionsSelect = document.getElementById('f_sections');
     function getSectionsFromForm() {
       return Array.from(sectionsSelect.selectedOptions).map(o => o.value);
@@ -354,7 +405,6 @@
       document.getElementById('f_rating').value = '';
       document.getElementById('f_duration').value = '';
       document.getElementById('f_genre').value = '';
-      document.getElementById('f_cast').value = '';
       document.getElementById('f_poster').value = '';
       document.getElementById('f_backdrop').value = '';
       document.getElementById('f_description').value = '';
@@ -362,6 +412,7 @@
       document.getElementById('f_videoUrl').value = '';
       setSectionsInForm([]);
       clearEpisodeBuilder();
+      clearCastBuilder();
       updateFieldVisibility();
     }
     cancelEdit.addEventListener('click', (e) => { e.preventDefault(); resetForm(); });
@@ -384,7 +435,8 @@
     // Firebase-dependent handlers are attached lower down once Firebase loads.
     window.__mmlAdminHelpers = {
       getSectionsFromForm, setSectionsInForm, getEpisodesFromForm, addEpisodeRow,
-      clearEpisodeBuilder, resetForm, updateFieldVisibility,
+      clearEpisodeBuilder, getCastFromForm, addCastRow, clearCastBuilder,
+      resetForm, updateFieldVisibility,
       get editingId() { return editingId; }, set editingId(v) { editingId = v; },
       formModeLabel, editingTitle, saveBtn, tabs,
       heroImageInput, saveHeroBtn, heroFormModeLabel, resetHeroForm,
@@ -433,7 +485,7 @@
           rating: document.getElementById('f_rating').value.trim(),
           duration: document.getElementById('f_duration').value.trim(),
           genre: document.getElementById('f_genre').value.trim(),
-          cast: document.getElementById('f_cast').value.trim(),
+          castMembers: H.getCastFromForm(),
           poster,
           backdrop: document.getElementById('f_backdrop').value.trim(),
           description: document.getElementById('f_description').value.trim(),
@@ -519,7 +571,6 @@
         document.getElementById('f_rating').value = m.rating || '';
         document.getElementById('f_duration').value = m.duration || '';
         document.getElementById('f_genre').value = m.genre || '';
-        document.getElementById('f_cast').value = m.cast || '';
         document.getElementById('f_poster').value = m.poster || '';
         document.getElementById('f_backdrop').value = m.backdrop || '';
         document.getElementById('f_description').value = m.description || '';
@@ -529,6 +580,14 @@
 
         H.clearEpisodeBuilder();
         if (Array.isArray(m.episodes)) m.episodes.forEach(ep => H.addEpisodeRow(ep));
+
+        H.clearCastBuilder();
+        if (Array.isArray(m.castMembers) && m.castMembers.length > 0) {
+          m.castMembers.forEach(c => H.addCastRow(c));
+        } else if (m.cast) {
+          // migrate legacy comma-separated cast string into the builder
+          m.cast.split(',').map(c => c.trim()).filter(Boolean).forEach(name => H.addCastRow({ name }));
+        }
 
         H.updateFieldVisibility();
         H.tabs.forEach(t => t.classList.remove('active'));
