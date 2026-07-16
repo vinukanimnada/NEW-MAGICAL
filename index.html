@@ -627,36 +627,6 @@
     `;
   }
 
-  function createRelatedCard(m) {
-    const poster = m.poster || 'https://via.placeholder.com/150x220/222/fff';
-    return `
-      <div class="movie-card" onclick="window.location.href='index.html?id=${m.id}'">
-        <img src="${poster}" alt="${m.title}" loading="lazy">
-        <h3>${m.title}</h3>
-      </div>
-    `;
-  }
-
-  function buildRelatedHTML(current, all) {
-    const related = all.filter(m =>
-      m.id !== current.id &&
-      ((m.genre && current.genre && m.genre.split(',')[0].trim() === current.genre.split(',')[0].trim()) ||
-       isSeries(m) === isSeries(current))
-    ).slice(0, 8);
-    if (related.length === 0) return '';
-    return `
-      <section class="trending related-wrap">
-        <div class="section-header">
-          <h2 style="position:relative; padding-left:12px;">
-            <span style="position:absolute; left:0; top:50%; transform:translateY(-50%); width:4px; height:28px; background:#ff2d95; border-radius:2px;"></span>
-            You May Also Like
-          </h2>
-        </div>
-        <div class="movie-grid">${related.map(createRelatedCard).join('')}</div>
-      </section>
-    `;
-  }
-
   function renderNotFound() {
     document.getElementById('detailsRoot').innerHTML = `
       <div class="details-skeleton">
@@ -729,7 +699,6 @@
         </div>
         ${buildCastHTML(m)}
         ${episodesHTML}
-        <div id="relatedRoot"></div>
       `;
 
       const playerWrap = document.getElementById('playerWrap');
@@ -844,11 +813,6 @@
           if (e.target === trailerModal) { trailerModal.classList.remove('active'); trailerPlayerBox.innerHTML = ''; }
         });
       }
-
-      const allSnap = await getDocs(collection(db, "movies"));
-      const all = [];
-      allSnap.forEach(d => { const data = d.data(); data.id = d.id; if (data.title) all.push(data); });
-      document.getElementById('relatedRoot').innerHTML = buildRelatedHTML(m, all);
 
     } catch (err) {
       console.error("❌ Firebase Error:", err);
