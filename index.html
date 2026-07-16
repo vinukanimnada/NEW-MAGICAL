@@ -187,6 +187,16 @@
   .episode-play-icon { color: var(--text-faint); font-size: 16px; }
   .episode-item.playing .episode-play-icon { color: #ff2d95; }
 
+  .cast-wrap { padding: 4px 15px 10px; }
+  .cast-title { font-size: 16px; font-weight: 700; margin-bottom: 14px; display: flex; align-items: center; gap: 10px; color: var(--text); }
+  .cast-bar { width: 4px; height: 20px; background: #ff2d95; border-radius: 2px; display: inline-block; flex-shrink: 0; }
+  .cast-scroll { display: flex; gap: 18px; overflow-x: auto; padding-bottom: 6px; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+  .cast-scroll::-webkit-scrollbar { display: none; }
+  .cast-item { flex: 0 0 auto; width: 84px; text-align: center; }
+  .cast-photo { width: 78px; height: 78px; border-radius: 50%; object-fit: cover; border: 2px solid var(--border); margin: 0 auto 8px; background: var(--card); }
+  .cast-name { font-size: 12.5px; font-weight: 700; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .cast-role { font-size: 11px; color: var(--text-faint); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 2px; }
+
   .related-wrap { padding: 6px 0 0; }
 
   .trailer-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2000; display: none; align-items: center; justify-content: center; padding: 20px; }
@@ -640,6 +650,32 @@
     return `<iframe src="${url}" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>`;
   }
 
+  function buildCastHTML(m) {
+    let members = Array.isArray(m.castMembers) ? m.castMembers.filter(c => c && c.name) : [];
+    if (members.length === 0 && m.cast) {
+      members = m.cast.split(',').map(c => c.trim()).filter(Boolean).map(name => ({ name, character: '', photo: '' }));
+    }
+    if (members.length === 0) return '';
+    return `
+      <div class="cast-wrap">
+        <div class="cast-title"><span class="cast-bar"></span> Cast</div>
+        <div class="cast-scroll">
+          ${members.map(c => {
+            const initial = (c.name || '?').trim().charAt(0).toUpperCase();
+            const photo = c.photo || `https://via.placeholder.com/80x80/222/fff?text=${encodeURIComponent(initial)}`;
+            return `
+              <div class="cast-item">
+                <img class="cast-photo" src="${photo}" alt="${c.name || ''}" loading="lazy">
+                <div class="cast-name">${c.name || ''}</div>
+                ${c.character ? `<div class="cast-role">${c.character}</div>` : ''}
+              </div>
+            `;
+          }).join('')}
+        </div>
+      </div>
+    `;
+  }
+
   function createRelatedCard(m) {
     const poster = m.poster || 'https://via.placeholder.com/150x220/222/fff';
     return `
@@ -739,8 +775,8 @@
         <div class="details-body">
           <div class="details-desc-label">Overview</div>
           <p class="details-desc">${m.description || 'Description එකක් නෑ.'}</p>
-          ${m.cast ? `<div class="details-cast"><b>Cast:</b> ${m.cast}</div>` : ''}
         </div>
+        ${buildCastHTML(m)}
         ${episodesHTML}
         <div id="relatedRoot"></div>
       `;
