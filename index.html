@@ -141,6 +141,8 @@
   .btn-secondary { background: rgba(255,255,255,0.1); color: var(--text); }
   .btn-outline { background: transparent; border: 1px solid var(--text-faint); color: var(--text); }
   .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .btn-back { background: rgba(255,255,255,0.08); color: var(--text); border: 1px solid #4dc3ff; }
+  .btn-back i { color: #4dc3ff; }
 
   /* Footer */
   .footer { text-align: center; padding: 30px 20px; border-top: 1px solid var(--border); margin-top: 20px; }
@@ -173,6 +175,16 @@
   .player-container { position: relative; width: 100%; padding-top: 56.25%; background: #000; border-radius: 8px; overflow: hidden; }
   .player-container iframe, .player-container video { position: absolute; inset: 0; width: 100%; height: 100%; border: none; }
   .now-playing-label { font-size: 13px; color: var(--text-faint); margin: 8px 0 0; }
+
+  .player-poster { position: absolute; inset: 0; width: 100%; height: 100%; background-size: cover; background-position: center; background-color: #000; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+  .player-poster::before { content: ''; position: absolute; inset: 0; background: rgba(0,0,0,0.4); }
+  .player-play-btn { position: relative; z-index: 2; width: 72px; height: 72px; border-radius: 50%; background: #ff2d95; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 0 10px rgba(255,45,149,0.22), 0 8px 26px rgba(255,45,149,0.55); cursor: pointer; transition: transform 0.15s ease; animation: playPulse 2s ease-in-out infinite; }
+  .player-play-btn:active { transform: scale(0.9); }
+  .player-play-btn i { color: #fff; font-size: 26px; margin-left: 4px; }
+  @keyframes playPulse {
+    0%, 100% { box-shadow: 0 0 0 10px rgba(255,45,149,0.22), 0 8px 26px rgba(255,45,149,0.55); }
+    50% { box-shadow: 0 0 0 16px rgba(255,45,149,0.12), 0 8px 26px rgba(255,45,149,0.55); }
+  }
 
   .episodes-wrap { padding: 0 15px 10px; }
   .episodes-title { font-size: 16px; font-weight: 700; margin-bottom: 10px; }
@@ -785,21 +797,57 @@
       const playerBox = document.getElementById('playerBox');
       const nowPlayingLabel = document.getElementById('nowPlayingLabel');
 
-      function playUrl(url, label) {
-        playerBox.innerHTML = buildPlayerHTML(url);
+      function playUrl(url, label, posterImg) {
         nowPlayingLabel.textContent = label || '';
         playerWrap.classList.add('active');
+        playerBox.innerHTML = `
+          <div class="player-poster" style="background-image:url('${(posterImg || '').replace(/'/g, "\\'")}')">
+            <div class="player-play-btn"><i class="fa fa-play"></i></div>
+          </div>
+        `;
+        const posterEl = playerBox.querySelector('.player-poster');
+        posterEl.addEventListener('click', () => {
+          playerBox.innerHTML = buildPlayerHTML(url);
+        }, { once: true });
         playerWrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
 
-      document.getElementById('watchNowBtn').addEventListener('click', () => {
+      const watchNowBtn = document.getElementById('watchNowBtn');
+      let playerIsOpen = false;
+
+      function setWatchBtnState(isOpen) {
+        playerIsOpen = isOpen;
+        if (isOpen) {
+          watchNowBtn.classList.remove('btn-primary');
+          watchNowBtn.classList.add('btn-back');
+          watchNowBtn.innerHTML = '<i class="fa fa-arrow-left"></i> Back';
+        } else {
+          watchNowBtn.classList.remove('btn-back');
+          watchNowBtn.classList.add('btn-primary');
+          watchNowBtn.innerHTML = '<i class="fa fa-play"></i> Watch Now';
+        }
+      }
+
+      function closePlayer() {
+        playerWrap.classList.remove('active');
+        playerBox.innerHTML = '';
+        nowPlayingLabel.textContent = '';
+        setWatchBtnState(false);
+      }
+
+      watchNowBtn.addEventListener('click', () => {
+        if (playerIsOpen) {
+          closePlayer();
+          return;
+        }
         if (series) {
           const first = m.episodes[0];
-          playUrl(first.videoUrl, `S${first.season || 1} · E${first.episode || 1} — ${first.title || m.title}`);
+          playUrl(first.videoUrl, `S${first.season || 1} · E${first.episode || 1} — ${first.title || m.title}`, backdrop || poster);
           renderEpisodes(first.season || 1);
         } else {
-          playUrl(m.videoUrl, m.title);
+          playUrl(m.videoUrl, m.title, backdrop || poster);
         }
+        setWatchBtnState(true);
       });
 
       function renderEpisodes(season) {
@@ -820,7 +868,8 @@
           item.addEventListener('click', () => {
             list.querySelectorAll('.episode-item').forEach(i => i.classList.remove('playing'));
             item.classList.add('playing');
-            playUrl(item.dataset.video, item.dataset.label);
+            playUrl(item.dataset.video, item.dataset.label, backdrop || poster);
+            setWatchBtnState(true);
           });
         });
       }
