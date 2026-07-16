@@ -617,7 +617,7 @@
     if (!url) return '<div class="details-skeleton">Video link නෑ</div>';
     const ytId = (url.includes('youtube.com') || url.includes('youtu.be')) ? ytIdFromUrl(url) : null;
     if (ytId) return `<iframe src="https://www.youtube.com/embed/${ytId}?autoplay=1" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>`;
-    if (/\.(mp4|webm|ogg)(\?.*)?$/i.test(url)) return `<video src="${url}" controls autoplay playsinline></video>`;
+    if (/\.(mp4|webm|ogg)(\?.*)?$/i.test(url)) return `<video src="${url}" controls autoplay muted playsinline></video>`;
     return `<iframe src="${url}" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>`;
   }
 
@@ -738,11 +738,21 @@
           playerBox.innerHTML = buildPlayerHTML(url);
           const videoEl = playerBox.querySelector('video');
           if (videoEl) {
-            videoEl.play().catch(() => {
-              // Some browsers block unmuted autoplay even on a click — retry muted, then unmute.
-              videoEl.muted = true;
-              videoEl.play().then(() => { videoEl.muted = false; }).catch(() => {});
-            });
+            // Browsers reliably allow MUTED autoplay but often block unmuted
+            // autoplay even inside a click handler. So we always start muted
+            // (guarantees playback starts immediately on this single click),
+            // then try to unmute right after. If unmute is blocked, it just
+            // stays muted and the user can tap the speaker icon.
+            videoEl.muted = true;
+            const tryPlay = videoEl.play();
+            if (tryPlay && typeof tryPlay.then === 'function') {
+              tryPlay.then(() => {
+                setTimeout(() => { videoEl.muted = false; }, 150);
+              }).catch(() => {
+                // Even muted autoplay failed — try once more shortly after.
+                setTimeout(() => { videoEl.play().catch(() => {}); }, 200);
+              });
+            }
           }
         }, { once: true });
         playerWrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
