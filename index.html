@@ -739,41 +739,36 @@
       const playerBox = document.getElementById('playerBox');
       const nowPlayingLabel = document.getElementById('nowPlayingLabel');
 
-      // ============================================================
-      // FIX: pink play-poster step eliminate karala, "Watch Now" /
-      // episode click ekema athulen playerBox eke video/iframe eka
-      // load karala ekma click ekema .play() call karanawa. Meken
-      // video element ekak nam, real user-gesture ekema athule
-      // .play() call wena nisa dewenuwakuma click ekak one wenne nෑ.
-      // (Iframe embed - youtube/3rd-party host - nam eka cross-origin
-      // nisa apita eketa athulen play() call karanna bʌhinne, eya
-      // host site eke autoplay=1 URL param eka handle karana widiyata
-      // depend wenawa.)
-      // ============================================================
       function playUrl(url, label, posterImg) {
         nowPlayingLabel.textContent = label || '';
         playerWrap.classList.add('active');
-
-        // Player eka click ekemma load karanawa (venama poster/play-btn step ekak nathuwa)
-        playerBox.innerHTML = buildPlayerHTML(url);
-
-        const videoEl = playerBox.querySelector('video');
-        if (videoEl) {
-          // Browsers walata click handler ekak athule muted autoplay eka
-          // reliable widiyata allow karanawa. Ee nisa mula muted karala
-          // play karala, ithin passe unmute karanna try karanawa.
-          videoEl.muted = true;
-          const tryPlay = videoEl.play();
-          if (tryPlay && typeof tryPlay.then === 'function') {
-            tryPlay.then(() => {
-              setTimeout(() => { videoEl.muted = false; }, 150);
-            }).catch(() => {
-              // Muted autoplay ekath block unath, tikak passe try ekak thawa.
-              setTimeout(() => { videoEl.play().catch(() => {}); }, 200);
-            });
+        playerBox.innerHTML = `
+          <div class="player-poster" style="background-image:url('${(posterImg || '').replace(/'/g, "\\'")}')">
+            <div class="player-play-btn"><i class="fa fa-play"></i></div>
+          </div>
+        `;
+        const posterEl = playerBox.querySelector('.player-poster');
+        posterEl.addEventListener('click', () => {
+          playerBox.innerHTML = buildPlayerHTML(url);
+          const videoEl = playerBox.querySelector('video');
+          if (videoEl) {
+            // Browsers reliably allow MUTED autoplay but often block unmuted
+            // autoplay even inside a click handler. So we always start muted
+            // (guarantees playback starts immediately on this single click),
+            // then try to unmute right after. If unmute is blocked, it just
+            // stays muted and the user can tap the speaker icon.
+            videoEl.muted = true;
+            const tryPlay = videoEl.play();
+            if (tryPlay && typeof tryPlay.then === 'function') {
+              tryPlay.then(() => {
+                setTimeout(() => { videoEl.muted = false; }, 150);
+              }).catch(() => {
+                // Even muted autoplay failed — try once more shortly after.
+                setTimeout(() => { videoEl.play().catch(() => {}); }, 200);
+              });
+            }
           }
-        }
-
+        }, { once: true });
         playerWrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
 
