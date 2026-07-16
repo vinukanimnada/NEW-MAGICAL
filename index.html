@@ -808,6 +808,14 @@
         const posterEl = playerBox.querySelector('.player-poster');
         posterEl.addEventListener('click', () => {
           playerBox.innerHTML = buildPlayerHTML(url);
+          const videoEl = playerBox.querySelector('video');
+          if (videoEl) {
+            videoEl.play().catch(() => {
+              // Some browsers block unmuted autoplay even on a click — retry muted, then unmute.
+              videoEl.muted = true;
+              videoEl.play().then(() => { videoEl.muted = false; }).catch(() => {});
+            });
+          }
         }, { once: true });
         playerWrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
