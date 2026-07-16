@@ -14,6 +14,8 @@
   <link rel="apple-touch-icon" href="https://files.catbox.moe/nstkne.png">
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <!-- podu search bar style eka style.css eken enawa (siyalu pages walata podu) -->
+  <link rel="stylesheet" href="style.css">
 
   <script>
   (function(){
@@ -77,49 +79,8 @@
   .menu-toggle.active span:nth-child(3) { top: 7px; transform: rotate(-45deg); }
   .back-btn { font-size: 20px; cursor: pointer; margin-right: 14px; color: var(--text); }
 
-  .search-box {
-    display: none;
-    align-items: center;
-    gap: 10px;
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    margin: 10px 15px 0;
-    padding: 11px 14px;
-  }
-  .search-box.active { display: flex; }
-  .search-box input {
-    flex: 1;
-    background: transparent;
-    border: none;
-    outline: none;
-    color: var(--text);
-    font-size: 15px;
-    min-width: 0;
-  }
-  .search-box input::placeholder { color: var(--text-faint); }
-  .search-box i { color: var(--text-faint); cursor: pointer; font-size: 15px; flex-shrink: 0; }
-
-  .home-search-results {
-    position: absolute; top: calc(var(--header-h, 60px) + 69px); left: 0; width: 100%;
-    background: var(--bg-alt); max-height: 70vh; overflow-y: auto;
-    display: none; z-index: 998; border-bottom: 1px solid var(--border);
-  }
-  .home-search-results.active { display: block; }
-  .home-result-item {
-    display: flex; gap: 12px; padding: 12px 15px; border-bottom: 1px solid var(--border);
-    cursor: pointer; transition: background 0.2s;
-  }
-  .home-result-item:hover { background: var(--card); }
-  .home-result-poster { width: 50px; height: 75px; border-radius: 4px; object-fit: cover; flex-shrink: 0; }
-  .home-result-info { flex: 1; overflow: hidden; }
-  .home-result-title {
-    font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 4px;
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-  }
-  .home-result-meta { font-size: 13px; color: var(--text-dim); }
-  .home-result-type { font-size: 11px; color: #ff2d95; margin-top: 2px; font-weight: 600; }
-  .home-no-result { text-align: center; color: var(--text-faint); padding: 30px 20px; font-size: 14px; }
+  /* NOTE: search bar (.search-box / .home-search-results) styles ain kara style.css ekata
+     maru kalා — ehema siyalu pages walata podu (common) search bar style ekak wenawa. */
 
   /* Sidebar */
   .sidebar {
