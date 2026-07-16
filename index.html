@@ -248,8 +248,8 @@
     <ul>
       <li class="active"><a href="index.html"><i class="fa fa-home"></i> Home</a></li>
       <li><a href="movies.html"><i class="fa fa-film"></i> All Movies</a></li>
-      <li><a href="series.html"><i class="fa fa-tv"></i> TV Shows</a></li>
       <li><a href="anime.html"><i class="fa-solid fa-dragon"></i> Anime</a></li>
+      <li><a href="series.html"><i class="fa fa-tv"></i> TV Shows</a></li>
       <li><a href="request.html"><i class="fa fa-plus-circle"></i> Requests</a></li>
       <li><a href="chanels.html"><i class="fa-solid fa-users"></i> Join Channels</a></li>
       <li><a href="about.html"><i class="fa fa-info-circle"></i> About</a></li>
@@ -426,8 +426,10 @@
     mainHeader.innerHTML = `
       <div class="header-left">
         <button class="menu-toggle" id="menuBtn" aria-label="Menu"><span></span><span></span><span></span></button>
-        <i class="fa fa-search" id="searchBtn"></i>
         <div class="logo">${HOME_LOGO_HTML}</div>
+      </div>
+      <div class="header-right">
+        <i class="fa fa-search" id="searchBtn"></i>
       </div>
     `;
     document.getElementById('menuBtn')?.addEventListener('click', toggleSidebar);
