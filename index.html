@@ -40,61 +40,14 @@
   }
 
   body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     overflow-x: hidden;
-    padding-bottom: 40px;
   }
   a { text-decoration: none; color: inherit; }
   img { display: block; }
 
-  /* Header */
-  header {
-    background: var(--bg-alt);
-    padding: 12px 15px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: sticky;
-    top: 0;
-    z-index: 1002;
-    border-bottom: 1px solid var(--border);
-  }
-  .logo { font-size: 22px; font-weight: 700; white-space: nowrap; color: var(--text); }
-  .logo.small { font-size: 17px; }
-  .logo span { color: #ff2d95; }
-  .header-right { display: flex; align-items: center; }
-  .header-right i { font-size: 20px; margin-left: 20px; cursor: pointer; color: var(--text); }
-  .header-left { display: flex; align-items: center; }
-  .header-left i { font-size: 20px; margin-right: 14px; cursor: pointer; color: var(--text); }
-  .menu-toggle { width: 22px; height: 16px; position: relative; background: none; border: none; padding: 0; margin: 0 14px 0 0; cursor: pointer; flex-shrink: 0; }
-  .header-right .menu-toggle { margin: 0 0 0 20px; }
-  .menu-toggle span { position: absolute; left: 0; width: 100%; height: 2px; background: var(--text); border-radius: 2px; transition: transform 0.3s ease, opacity 0.25s ease, top 0.3s ease; }
-  .menu-toggle span:nth-child(1) { top: 0; }
-  .menu-toggle span:nth-child(2) { top: 7px; }
-  .menu-toggle span:nth-child(3) { top: 14px; }
-  .menu-toggle.active span:nth-child(1) { top: 7px; transform: rotate(45deg); }
-  .menu-toggle.active span:nth-child(2) { opacity: 0; }
-  .menu-toggle.active span:nth-child(3) { top: 7px; transform: rotate(-45deg); }
-  .back-btn { font-size: 20px; cursor: pointer; margin-right: 14px; color: var(--text); }
-
-  /* NOTE: search bar (.search-box / .home-search-results) styles ain kara style.css ekata
-     maru kalා — ehema siyalu pages walata podu (common) search bar style ekak wenawa. */
-
-  /* Sidebar */
-  .sidebar {
-    position: fixed; top: var(--header-h, 60px); left: -230px; width: 210px; height: calc(100% - var(--header-h, 60px));
-    background: var(--bg-alt); z-index: 1001; transition: left 0.3s ease;
-    padding: 8px 0; box-shadow: 2px 0 12px rgba(0,0,0,0.4);
-  }
-  .sidebar.active { left: 0; }
-  .sidebar ul { list-style: none; }
-  .sidebar li a { display: flex; align-items: center; gap: 12px; padding: 14px 22px; color: var(--text-dim); font-size: 15px; transition: background 0.2s, color 0.2s; }
-  .sidebar li a i { width: 18px; text-align: center; color: #ff2d95; }
-  .sidebar li a:hover, .sidebar li.active a { background: rgba(255,45,149,0.1); color: var(--text); }
-  .overlay { position: fixed; inset: var(--header-h, 60px) 0 0 0; background: rgba(0,0,0,0.6); z-index: 1000; display: none; }
-  .overlay.active { display: block; }
+  /* NOTE: header, logo, menu-toggle, back-btn, sidebar, overlay, search bar —
+     mewa okkoma style.css ekenma enawa (movies.html wage podu/common style).
+     Duplicate wenna one nisa methanin ain kara. */
 
   /* Hero */
   .hero { position: relative; width: auto; height: 180px; overflow: hidden; background: var(--card); margin: 12px 15px; border-radius: 16px; }
