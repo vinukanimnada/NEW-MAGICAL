@@ -613,12 +613,26 @@
     return null;
   }
 
+  function withAutoplayParams(url) {
+    // Best-effort: tell third-party embed players to autoplay muted, since
+    // we can't reach inside a cross-origin iframe to call play() ourselves.
+    try {
+      const u = new URL(url, window.location.href);
+      if (!u.searchParams.has('autoplay')) u.searchParams.set('autoplay', '1');
+      if (!u.searchParams.has('mute') && !u.searchParams.has('muted')) u.searchParams.set('mute', '1');
+      return u.toString();
+    } catch (e) {
+      const sep = url.includes('?') ? '&' : '?';
+      return `${url}${sep}autoplay=1&mute=1`;
+    }
+  }
+
   function buildPlayerHTML(url) {
     if (!url) return '<div class="details-skeleton">Video link නෑ</div>';
     const ytId = (url.includes('youtube.com') || url.includes('youtu.be')) ? ytIdFromUrl(url) : null;
-    if (ytId) return `<iframe src="https://www.youtube.com/embed/${ytId}?autoplay=1" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>`;
+    if (ytId) return `<iframe src="https://www.youtube.com/embed/${ytId}?autoplay=1&mute=1&playsinline=1" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>`;
     if (/\.(mp4|webm|ogg)(\?.*)?$/i.test(url)) return `<video src="${url}" controls autoplay muted playsinline></video>`;
-    return `<iframe src="${url}" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>`;
+    return `<iframe src="${withAutoplayParams(url)}" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>`;
   }
 
   function buildCastHTML(m) {
