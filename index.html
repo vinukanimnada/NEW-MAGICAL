@@ -731,13 +731,15 @@
             <button class="btn btn-primary" id="watchNowBtn"><i class="fa fa-play"></i> Watch Now</button>
             ${m.trailer ? `<button class="btn btn-secondary" id="trailerBtn"><i class="fa fa-film"></i> Trailer</button>` : ''}
           </div>
-          <div class="details-desc-label">Overview</div>
-          <p class="details-desc">${m.description || 'Description එකක් නෑ.'}</p>
-          ${m.cast ? `<div class="details-cast"><b>Cast:</b> ${m.cast}</div>` : ''}
         </div>
         <div class="player-wrap" id="playerWrap">
           <div class="player-container" id="playerBox"></div>
           <div class="now-playing-label" id="nowPlayingLabel"></div>
+        </div>
+        <div class="details-body">
+          <div class="details-desc-label">Overview</div>
+          <p class="details-desc">${m.description || 'Description එකක් නෑ.'}</p>
+          ${m.cast ? `<div class="details-cast"><b>Cast:</b> ${m.cast}</div>` : ''}
         </div>
         ${episodesHTML}
         <div id="relatedRoot"></div>
@@ -836,4 +838,3 @@
   </script>
 </body>
 </html>
-
