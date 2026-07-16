@@ -77,6 +77,29 @@
   .menu-toggle.active span:nth-child(3) { top: 7px; transform: rotate(-45deg); }
   .back-btn { font-size: 20px; cursor: pointer; margin-right: 14px; color: var(--text); }
 
+  .search-box {
+    display: none;
+    align-items: center;
+    gap: 10px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin: 10px 15px 0;
+    padding: 11px 14px;
+  }
+  .search-box.active { display: flex; }
+  .search-box input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--text);
+    font-size: 15px;
+    min-width: 0;
+  }
+  .search-box input::placeholder { color: var(--text-faint); }
+  .search-box i { color: var(--text-faint); cursor: pointer; font-size: 15px; flex-shrink: 0; }
+
   .home-search-results {
     position: absolute; top: calc(var(--header-h, 60px) + 69px); left: 0; width: 100%;
     background: var(--bg-alt); max-height: 70vh; overflow-y: auto;
