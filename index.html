@@ -628,12 +628,30 @@
   }
 
   function buildPlayerHTML(url) {
-    if (!url) return '<div class="details-skeleton">Video link නෑ</div>';
-    const ytId = (url.includes('youtube.com') || url.includes('youtu.be')) ? ytIdFromUrl(url) : null;
-    if (ytId) return `<iframe src="https://www.youtube.com/embed/${ytId}?autoplay=1&mute=1&playsinline=1" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>`;
-    if (/\.(mp4|webm|ogg)(\?.*)?$/i.test(url)) return `<video src="${url}" controls autoplay muted playsinline></video>`;
-    return `<iframe src="${withAutoplayParams(url)}" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>`;
+  if (!url) return '<div class="details-skeleton">Video link නෑ</div>';
+
+  const ytId = (url.includes('youtube.com') || url.includes('youtu.be')) ? ytIdFromUrl(url) : null;
+  if (ytId) return `<iframe src="https://www.youtube.com/embed/${ytId}?autoplay=1" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>`;
+
+  // MP4 nam direct play
+  if (url.includes('.mp4')) {
+    return `<video src="${url}" controls autoplay playsinline></video>`;
   }
+
+  // MKV nam: Download button pennanna
+  if (url.includes('.mkv')) {
+    return `
+      <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; color:#fff; text-align:center; padding:20px; background:#000;">
+        <i class="fa fa-warning" style="font-size:40px; color:#ff2d95; margin-bottom:10px;"></i>
+        <b>MKV Format eka direct play wenne na</b><br>
+        <span style="color:#aaa; font-size:13px; margin:10px 0;">Phone eke balanna nam MP4 walata convert karanna</span>
+        <a href="${url}" target="_blank" class="btn btn-primary"><i class="fa fa-download"></i> Download karanna</a>
+      </div>`;
+  }
+
+  // anith ewa iframe
+  return `<iframe src="${url}" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>`;
+}
 
   function buildCastHTML(m) {
     let members = Array.isArray(m.castMembers) ? m.castMembers.filter(c => c && c.name) : [];
