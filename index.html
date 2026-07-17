@@ -649,25 +649,34 @@
   const ytId = (url.includes('youtube.com') || url.includes('youtu.be')) ? ytIdFromUrl(url) : null;
   if (ytId) return `<iframe src="https://www.youtube.com/embed/${ytId}?autoplay=1" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>`;
 
-  // MP4 nam direct play
-  if (url.includes('.mp4')) {
-    return `<video src="${url}" controls autoplay playsinline></video>`;
-  }
-
-  // MKV nam: Download button pennanna
-  if (url.includes('.mkv')) {
-    return `
-      <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; color:#fff; text-align:center; padding:20px; background:#000;">
-        <i class="fa fa-warning" style="font-size:40px; color:#ff2d95; margin-bottom:10px;"></i>
-        <b>MKV Format eka direct play wenne na</b><br>
-        <span style="color:#aaa; font-size:13px; margin:10px 0;">Phone eke balanna nam MP4 walata convert karanna</span>
-        <a href="${url}" target="_blank" class="btn btn-primary"><i class="fa fa-download"></i> Download karanna</a>
-      </div>`;
+  // MP4 / MKV / other raw file links: try to play natively first.
+  // Some browsers (esp. Safari/iOS) CAN play HEVC-in-MKV directly, others can't —
+  // so we attempt playback and only show the "download instead" fallback if it
+  // actually errors out at runtime (handled by attachVideoFallback() below).
+  if (isDirectFileUrl(url) || url.includes('.mp4')) {
+    return `<video src="${url}" controls autoplay playsinline data-fallback-url="${url}"></video>`;
   }
 
   // anith ewa iframe
   return `<iframe src="${url}" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>`;
 }
+
+  // If native <video> playback fails (unsupported codec/container), swap in
+  // a friendly "can't play in-browser, please download" message instead.
+  function attachVideoFallback(playerBox) {
+    const videoEl = playerBox.querySelector('video[data-fallback-url]');
+    if (!videoEl) return;
+    videoEl.addEventListener('error', () => {
+      const url = videoEl.dataset.fallbackUrl;
+      playerBox.innerHTML = `
+        <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; color:#fff; text-align:center; padding:20px; background:#000;">
+          <i class="fa fa-warning" style="font-size:40px; color:#ff2d95; margin-bottom:10px;"></i>
+          <b>Meka browser eke play wenne na</b><br>
+          <span style="color:#aaa; font-size:13px; margin:10px 0;">Phone eke balanna nam MP4 walata convert karanna, nathnam download karala balanna</span>
+          <a href="${url}" target="_blank" class="btn btn-primary"><i class="fa fa-download"></i> Download karanna</a>
+        </div>`;
+    }, { once: true });
+  }
 
   function buildCastHTML(m) {
     let members = Array.isArray(m.castMembers) ? m.castMembers.filter(c => c && c.name) : [];
@@ -695,8 +704,29 @@
     `;
   }
 
+  // A URL is "directly downloadable" if it's a raw file (mp4, mkv, etc).
+  // YouTube links and generic third-party iframe embeds can't be downloaded
+  // directly (cross-origin / ToS restrictions), so we don't offer those.
+  function isDirectFileUrl(url) {
+    if (!url) return false;
+    if (url.includes('youtube.com') || url.includes('youtu.be')) return false;
+    return /\.(mp4|mkv|webm|mov|m4v)(\?|$)/i.test(url) || url.includes('r2.dev') || url.includes('r2.cloudflarestorage.com');
+  }
+
   function buildDownloadHTML(m) {
-    if (!m.downloadUrl && !m.telegramDownloadUrl) return '';
+    // Prefer an explicit downloadUrl; otherwise fall back to videoUrl / first
+    // episode's videoUrl if that itself is a direct file link.
+    let autoDownloadUrl = '';
+    if (!m.downloadUrl) {
+      const candidate = isSeries(m) && Array.isArray(m.episodes) && m.episodes.length > 0
+        ? m.episodes[0].videoUrl
+        : m.videoUrl;
+      if (isDirectFileUrl(candidate)) autoDownloadUrl = candidate;
+    }
+    const directUrl = m.downloadUrl || autoDownloadUrl;
+
+    if (!directUrl && !m.telegramDownloadUrl) return '';
+
     return `
       <div class="download-wrap" id="downloadWrap" style="display:none;">
         <div class="download-title"><span class="download-bar"></span> Direct & Telegram Download Links</div>
@@ -705,8 +735,8 @@
           <div class="download-countdown-text">Your high-speed link is being prepared...</div>
         </div>
         <div class="download-links" id="downloadLinksBox">
-          ${m.downloadUrl ? `
-          <div class="download-link-item" onclick="window.open('${m.downloadUrl}','_blank')">
+          ${directUrl ? `
+          <div class="download-link-item" onclick="window.open('${directUrl}','_blank')">
             <div class="download-link-icon"><i class="fa fa-download"></i></div>
             <div class="download-link-info">
               <div class="download-link-title">Direct Download Link</div>
@@ -786,7 +816,11 @@
           <div class="details-actions">
             <button class="btn btn-primary" id="watchNowBtn"><i class="fa fa-play"></i> Watch Now</button>
             ${m.trailer ? `<button class="btn btn-secondary" id="trailerBtn"><i class="fa fa-film"></i> Trailer</button>` : ''}
-            ${(m.downloadUrl || m.telegramDownloadUrl) ? `<button class="btn btn-outline" id="downloadBtn"><i class="fa fa-download"></i> Download</button>` : ''}
+            ${(() => {
+              const firstEpUrl = (series && Array.isArray(m.episodes) && m.episodes.length > 0) ? m.episodes[0].videoUrl : m.videoUrl;
+              const hasDownload = m.downloadUrl || m.telegramDownloadUrl || isDirectFileUrl(firstEpUrl);
+              return hasDownload ? `<button class="btn btn-outline" id="downloadBtn"><i class="fa fa-download"></i> Download</button>` : '';
+            })()}
           </div>
         </div>
         <div class="player-wrap" id="playerWrap">
@@ -817,6 +851,7 @@
         const posterEl = playerBox.querySelector('.player-poster');
         posterEl.addEventListener('click', () => {
           playerBox.innerHTML = buildPlayerHTML(url);
+          attachVideoFallback(playerBox);
           const videoEl = playerBox.querySelector('video');
           if (videoEl) {
             // Browsers reliably allow MUTED autoplay but often block unmuted
@@ -914,6 +949,7 @@
           trailerPlayerBox.innerHTML = ytId
             ? `<iframe src="https://www.youtube.com/embed/${ytId}?autoplay=1" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>`
             : buildPlayerHTML(m.trailer);
+          attachVideoFallback(trailerPlayerBox);
           trailerModal.classList.add('active');
         });
         document.getElementById('trailerClose').addEventListener('click', () => {
