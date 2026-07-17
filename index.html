@@ -422,7 +422,7 @@
     mainHeader.innerHTML = `
       <div class="header-left">
         <i class="fa fa-arrow-left back-btn" id="backBtn"></i>
-        <div class="logo small">${HOME_LOGO_HTML}</div>
+        <div class="logo">${HOME_LOGO_HTML}</div>
       </div>
       <div class="header-right">
         <button class="menu-toggle" id="menuBtn" aria-label="Menu"><span></span><span></span><span></span></button>
@@ -430,8 +430,17 @@
     `;
     document.getElementById('menuBtn')?.addEventListener('click', toggleSidebar);
     document.getElementById('backBtn')?.addEventListener('click', () => {
-      if (window.history.length > 1) window.history.back();
-      else window.location.href = 'index.html';
+      // Movie cards okkoma window.open(..., '_blank') karala aluth tab ekakin
+      // methanata enawa. Ehema aluth tab ekaka history.length eka reliable na
+      // (browser ekaka 1 widihata, wenat ekaka 2 widihata dakinna puluwan),
+      // e nisa history.back() ekedma podi bug eka una (blank/wrong page ekata yanawa).
+      // Ethakota document.referrer eken pennapu ekama site ekakin awoth eyata yanawa,
+      // nathnam home ekata redirect karanawa — meka hemadama sure widihata thiyenawa.
+      if (document.referrer && document.referrer.startsWith(window.location.origin)) {
+        window.location.href = document.referrer;
+      } else {
+        window.location.href = 'index.html';
+      }
     });
     searchBox.classList.remove('active');
     searchBox.style.display = 'none';
