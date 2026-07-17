@@ -654,7 +654,7 @@
   // so we attempt playback and only show the "download instead" fallback if it
   // actually errors out at runtime (handled by attachVideoFallback() below).
   if (isDirectFileUrl(url) || url.includes('.mp4')) {
-    return `<video src="${url}" controls autoplay playsinline data-fallback-url="${url}"></video>`;
+    return `<video src="${url}" controls playsinline data-fallback-url="${url}"></video>`;
   }
 
   // anith ewa iframe
@@ -854,21 +854,19 @@
           attachVideoFallback(playerBox);
           const videoEl = playerBox.querySelector('video');
           if (videoEl) {
-            // This runs inside a direct user click, so the browser will allow
-            // unmuted autoplay here — no need for the muted-then-unmute trick.
+            // No native "autoplay" attribute on the tag anymore, so this is
+            // the ONLY play() call — no race with the browser's own autoplay
+            // engine. Since this runs synchronously inside the user's click,
+            // the browser allows unmuted playback here.
             videoEl.muted = false;
-            const tryPlay = videoEl.play();
-            if (tryPlay && typeof tryPlay.then === 'function') {
-              tryPlay.catch(() => {
-                // If unmuted playback is still blocked for some reason,
-                // fall back to muted so playback at least starts, then
-                // try to restore sound right after.
-                videoEl.muted = true;
-                videoEl.play().then(() => {
-                  setTimeout(() => { videoEl.muted = false; }, 150);
-                }).catch(() => {});
-              });
-            }
+            videoEl.play().catch(() => {
+              // Rare fallback: some browsers still reject unmuted playback.
+              // Start muted (always allowed) then unmute the instant it's
+              // actually playing.
+              videoEl.muted = true;
+              videoEl.play().catch(() => {});
+              videoEl.addEventListener('playing', () => { videoEl.muted = false; }, { once: true });
+            });
           }
         }, { once: true });
         playerWrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
