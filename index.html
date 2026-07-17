@@ -854,19 +854,19 @@
           attachVideoFallback(playerBox);
           const videoEl = playerBox.querySelector('video');
           if (videoEl) {
-            // Browsers reliably allow MUTED autoplay but often block unmuted
-            // autoplay even inside a click handler. So we always start muted
-            // (guarantees playback starts immediately on this single click),
-            // then try to unmute right after. If unmute is blocked, it just
-            // stays muted and the user can tap the speaker icon.
-            videoEl.muted = true;
+            // This runs inside a direct user click, so the browser will allow
+            // unmuted autoplay here — no need for the muted-then-unmute trick.
+            videoEl.muted = false;
             const tryPlay = videoEl.play();
             if (tryPlay && typeof tryPlay.then === 'function') {
-              tryPlay.then(() => {
-                setTimeout(() => { videoEl.muted = false; }, 150);
-              }).catch(() => {
-                // Even muted autoplay failed — try once more shortly after.
-                setTimeout(() => { videoEl.play().catch(() => {}); }, 200);
+              tryPlay.catch(() => {
+                // If unmuted playback is still blocked for some reason,
+                // fall back to muted so playback at least starts, then
+                // try to restore sound right after.
+                videoEl.muted = true;
+                videoEl.play().then(() => {
+                  setTimeout(() => { videoEl.muted = false; }, 150);
+                }).catch(() => {});
               });
             }
           }
