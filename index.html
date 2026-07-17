@@ -169,6 +169,22 @@
 
   html.light .movie-card h3 { color: #111; }
 
+  /* Download section */
+  .download-wrap { padding: 0 15px 18px; }
+  .download-title { font-size: 16px; font-weight: 700; margin-bottom: 12px; display:flex; align-items:center; gap:10px; color: var(--text); }
+  .download-bar { width: 4px; height: 20px; background: #ff2d95; border-radius: 2px; display:inline-block; flex-shrink:0; }
+  .download-countdown-box { background: var(--card); border-radius: 8px; padding: 30px 20px; text-align: center; }
+  .download-countdown-num { width: 70px; height: 70px; border-radius: 50%; border: 3px solid #ff2d95; color: #ff2d95; font-size: 28px; font-weight: 700; display:flex; align-items:center; justify-content:center; margin: 0 auto 14px; }
+  .download-countdown-text { color: var(--text-dim); font-size: 14px; }
+  .download-links { display: none; }
+  .download-links.active { display: block; }
+  .download-link-item { display:flex; align-items:center; gap:14px; background: var(--card); border-radius:8px; padding: 14px; margin-bottom: 10px; cursor:pointer; transition: background .2s; }
+  .download-link-item:hover { background: var(--card-2); }
+  .download-link-icon { width:44px; height:44px; border-radius:50%; background:#ff2d95; display:flex; align-items:center; justify-content:center; flex-shrink:0; color:#fff; font-size:18px; }
+  .download-link-info { flex:1; min-width:0; }
+  .download-link-title { font-size:14.5px; font-weight:700; color:var(--text); }
+  .download-link-sub { font-size:12px; color:var(--text-faint); margin-top:2px; }
+
   @media (min-width: 700px) {
     .movie-grid { grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); }
     .details-poster { width: 150px; height: 220px; }
@@ -679,6 +695,37 @@
     `;
   }
 
+  function buildDownloadHTML(m) {
+    if (!m.downloadUrl && !m.telegramDownloadUrl) return '';
+    return `
+      <div class="download-wrap" id="downloadWrap" style="display:none;">
+        <div class="download-title"><span class="download-bar"></span> Direct & Telegram Download Links</div>
+        <div class="download-countdown-box" id="downloadCountdownBox">
+          <div class="download-countdown-num" id="downloadCountdownNum">5</div>
+          <div class="download-countdown-text">Your high-speed link is being prepared...</div>
+        </div>
+        <div class="download-links" id="downloadLinksBox">
+          ${m.downloadUrl ? `
+          <div class="download-link-item" onclick="window.open('${m.downloadUrl}','_blank')">
+            <div class="download-link-icon"><i class="fa fa-download"></i></div>
+            <div class="download-link-info">
+              <div class="download-link-title">Direct Download Link</div>
+              <div class="download-link-sub">Cloudflare R2 • High Speed Direct Access</div>
+            </div>
+          </div>` : ''}
+          ${m.telegramDownloadUrl ? `
+          <div class="download-link-item" onclick="window.open('${m.telegramDownloadUrl}','_blank')">
+            <div class="download-link-icon"><i class="fa-brands fa-telegram"></i></div>
+            <div class="download-link-info">
+              <div class="download-link-title">Telegram Download Link</div>
+              <div class="download-link-sub">Join our channel • Easy Mobile Download</div>
+            </div>
+          </div>` : ''}
+        </div>
+      </div>
+    `;
+  }
+
   function renderNotFound() {
     document.getElementById('detailsRoot').innerHTML = `
       <div class="details-skeleton">
@@ -739,6 +786,7 @@
           <div class="details-actions">
             <button class="btn btn-primary" id="watchNowBtn"><i class="fa fa-play"></i> Watch Now</button>
             ${m.trailer ? `<button class="btn btn-secondary" id="trailerBtn"><i class="fa fa-film"></i> Trailer</button>` : ''}
+            ${(m.downloadUrl || m.telegramDownloadUrl) ? `<button class="btn btn-outline" id="downloadBtn"><i class="fa fa-download"></i> Download</button>` : ''}
           </div>
         </div>
         <div class="player-wrap" id="playerWrap">
@@ -750,6 +798,7 @@
           <p class="details-desc">${m.description || 'Description එකක් නෑ.'}</p>
         </div>
         ${buildCastHTML(m)}
+        ${buildDownloadHTML(m)}
         ${episodesHTML}
       `;
 
@@ -873,6 +922,38 @@
         });
         trailerModal.addEventListener('click', (e) => {
           if (e.target === trailerModal) { trailerModal.classList.remove('active'); trailerPlayerBox.innerHTML = ''; }
+        });
+      }
+
+      // ===================== DOWNLOAD BUTTON: countdown then reveal links =====================
+      const downloadBtn = document.getElementById('downloadBtn');
+      if (downloadBtn) {
+        downloadBtn.addEventListener('click', () => {
+          const wrap = document.getElementById('downloadWrap');
+          const countdownBox = document.getElementById('downloadCountdownBox');
+          const countdownNum = document.getElementById('downloadCountdownNum');
+          const linksBox = document.getElementById('downloadLinksBox');
+          if (!wrap || !countdownBox || !countdownNum || !linksBox) return;
+
+          downloadBtn.disabled = true;
+          wrap.style.display = '';
+          countdownBox.style.display = '';
+          linksBox.classList.remove('active');
+          wrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+          let count = 5;
+          countdownNum.textContent = count;
+          const timer = setInterval(() => {
+            count--;
+            if (count <= 0) {
+              clearInterval(timer);
+              countdownBox.style.display = 'none';
+              linksBox.classList.add('active');
+              downloadBtn.disabled = false;
+            } else {
+              countdownNum.textContent = count;
+            }
+          }, 1000);
         });
       }
 
