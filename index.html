@@ -854,18 +854,34 @@
           attachVideoFallback(playerBox);
           const videoEl = playerBox.querySelector('video');
           if (videoEl) {
-            // No native "autoplay" attribute on the tag anymore, so this is
-            // the ONLY play() call — no race with the browser's own autoplay
-            // engine. Since this runs synchronously inside the user's click,
-            // the browser allows unmuted playback here.
+            // Show a spinner overlay while the video buffers, so the user
+            // isn't tempted to re-tap the native controls (which would abort
+            // the pending play() request and — due to the AbortError that
+            // follows — used to incorrectly trigger the "muted fallback").
+            const spinner = document.createElement('div');
+            spinner.className = 'video-buffer-spinner';
+            spinner.innerHTML = '<i class="fa fa-spinner fa-spin"></i>';
+            spinner.style.cssText = 'position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:32px; color:#ff2d95; pointer-events:none; z-index:3; background:rgba(0,0,0,0.25);';
+            playerBox.appendChild(spinner);
+            const removeSpinner = () => spinner.remove();
+            videoEl.addEventListener('playing', removeSpinner, { once: true });
+            videoEl.addEventListener('error', removeSpinner, { once: true });
+
+            // Keep the video unmuted for as long as this player instance lives —
+            // guards against anything else ever flipping it back to muted.
+            videoEl.addEventListener('playing', () => { videoEl.muted = false; });
+
             videoEl.muted = false;
-            videoEl.play().catch(() => {
-              // Rare fallback: some browsers still reject unmuted playback.
-              // Start muted (always allowed) then unmute the instant it's
-              // actually playing.
-              videoEl.muted = true;
-              videoEl.play().catch(() => {});
-              videoEl.addEventListener('playing', () => { videoEl.muted = false; }, { once: true });
+            videoEl.play().catch((err) => {
+              // Only fall back to muted playback if the browser genuinely
+              // blocked unmuted autoplay (NotAllowedError). Ignore AbortError
+              // (happens if the request gets superseded/interrupted) and any
+              // other transient errors — don't mute the video for those.
+              if (err && err.name === 'NotAllowedError') {
+                videoEl.muted = true;
+                videoEl.play().catch(() => {});
+                videoEl.addEventListener('playing', () => { videoEl.muted = false; }, { once: true });
+              }
             });
           }
         }, { once: true });
