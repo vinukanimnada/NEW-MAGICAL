@@ -109,7 +109,7 @@
   }
 
   .episodes-wrap { padding: 0 15px 10px; }
-  .episodes-title { font-size: 16px; font-weight: 700; margin-bottom: 10px; }
+  .episodes-title { font-size: 16px; font-weight: 700; margin-bottom: 10px; display: flex; align-items: center; gap: 10px; color: var(--text); }
   .season-select { background: var(--card); color: var(--text); border: 1px solid var(--border); border-radius: 6px; padding: 8px 12px; margin-bottom: 12px; font-size: 14px; }
   .episode-item { display: flex; align-items: center; gap: 12px; background: var(--card); border-radius: 8px; padding: 10px 12px; margin-bottom: 8px; cursor: pointer; transition: background 0.2s; border: 1px solid transparent; }
   .episode-item:hover { background: var(--card-2); }
@@ -465,7 +465,7 @@
         const seasons = [...new Set(m.episodes.map(e => e.season || 1))].sort((a,b)=>a-b);
         episodesHTML = `
           <section class="episodes-wrap">
-            <div class="episodes-title">Episodes</div>
+            <div class="episodes-title"><span class="cast-bar"></span> Select Episode to Watch</div>
             ${seasons.length > 1 ? `<select class="season-select" id="seasonSelect">${seasons.map(s => `<option value="${s}">Season ${s}</option>`).join('')}</select>` : ''}
             <div id="episodeList"></div>
           </section>
@@ -501,9 +501,9 @@
           <div class="details-desc-label">Overview</div>
           <p class="details-desc">${m.description || 'Description එකක් නෑ.'}</p>
         </div>
+        ${episodesHTML}
         ${buildCastHTML(m)}
         ${buildDownloadHTML(m)}
-        ${episodesHTML}
       `;
 
       const playerWrap = document.getElementById('playerWrap');
@@ -589,9 +589,9 @@
         const eps = m.episodes.filter(e => (e.season || 1) === Number(season)).sort((a,b) => (a.episode||0) - (b.episode||0));
         list.innerHTML = eps.map(e => `
           <div class="episode-item" data-video="${e.videoUrl}" data-label="S${e.season||1} · E${e.episode||1} — ${e.title||''}">
-            <div class="episode-num">${e.episode || '-'}</div>
+            <div class="episode-num">${String(e.episode || 0).padStart(2,'0')}</div>
             <div class="episode-info">
-              <div class="episode-title">${e.title || 'Episode ' + (e.episode||'')}</div>
+              <div class="episode-title">${e.title || 'Episode ' + String(e.episode||0).padStart(2,'0')}</div>
               <div class="episode-sub">Season ${e.season || 1}</div>
             </div>
             <i class="fa fa-play episode-play-icon"></i>
