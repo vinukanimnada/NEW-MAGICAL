@@ -700,15 +700,40 @@
         });
       }
 
-      // ===================== DOWNLOAD BUTTON: countdown then reveal links =====================
+      // ===================== DOWNLOAD BUTTON: countdown then reveal links,
+      // then button itself becomes "Back" to collapse the list again =====================
       const downloadBtn = document.getElementById('downloadBtn');
       if (downloadBtn) {
+        let downloadVisible = false;
+
+        function setDownloadBtnState(isOpen) {
+          downloadVisible = isOpen;
+          if (isOpen) {
+            downloadBtn.classList.remove('btn-outline');
+            downloadBtn.classList.add('btn-back');
+            downloadBtn.innerHTML = '<i class="fa fa-arrow-left"></i> Back';
+          } else {
+            downloadBtn.classList.remove('btn-back');
+            downloadBtn.classList.add('btn-outline');
+            downloadBtn.innerHTML = '<i class="fa fa-download"></i> Download';
+          }
+        }
+
         downloadBtn.addEventListener('click', () => {
           const wrap = document.getElementById('downloadWrap');
           const countdownBox = document.getElementById('downloadCountdownBox');
           const countdownNum = document.getElementById('downloadCountdownNum');
           const linksBox = document.getElementById('downloadLinksBox');
           if (!wrap || !countdownBox || !countdownNum || !linksBox) return;
+
+          // Already showing — this click is now the "Back" action, collapse it.
+          if (downloadVisible) {
+            wrap.style.display = 'none';
+            countdownBox.style.display = '';
+            linksBox.classList.remove('active');
+            setDownloadBtnState(false);
+            return;
+          }
 
           downloadBtn.disabled = true;
           wrap.style.display = '';
@@ -725,6 +750,7 @@
               countdownBox.style.display = 'none';
               linksBox.classList.add('active');
               downloadBtn.disabled = false;
+              setDownloadBtnState(true);
             } else {
               countdownNum.textContent = count;
             }
