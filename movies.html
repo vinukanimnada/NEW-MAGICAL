@@ -293,8 +293,17 @@ async function loadMovies() {
       return;
     }
 
-    grid.innerHTML = "";
-    allMovies.forEach(m => {
+    // BUG FIX: kalin "grid.innerHTML += card" widiyata loop ekaka danna
+    // one nisa, hama iteration ekakama browser eka DAN THIYENA <img> tags
+    // OKKOMA destroy karala aluthin hadanawa (innerHTML += full re-parse
+    // karana nisa) — eka nisa kalin add kala images okkoma repeat repeat
+    // reload wenawa (poster load una wagema penne ithuru welawakin —
+    // anthima card ekata witharak me “destroy+recreate” cycle eka
+    // ellenne na nisa ikmanata penne eka witharai). Movies gananak
+    // thibboth meka n² widiyata wadi wela "stuck on loading" wage
+    // penennath puluwan. Fix eka: HTML string ekak "build" karala,
+    // anthimata WATAVAKMA innerHTML set karanawa.
+    grid.innerHTML = allMovies.map(m => {
       const poster = m.poster || 'https://via.placeholder.com/300x450/222/fff?text=No+Image';
       let rating = m.rating? m.rating.toString().split('/')[0] : '';
       if (rating &&!rating.includes('.')) rating += '.0';
@@ -302,7 +311,7 @@ async function loadMovies() {
       let title = m.title || 'Untitled';
       if (title.length > 20) title = title.substring(0, 20) + '...';
 
-      const card = `
+      return `
         <div class="movie-card" onclick="openMovie('${m.id}')">
           <span class="quality-badge">${quality}</span>
           ${rating? `<span class="rating-badge">★ ${rating}</span>` : ''}
@@ -310,8 +319,7 @@ async function loadMovies() {
           <div class="movie-title">${title}</div>
         </div>
       `;
-      grid.innerHTML += card;
-    });
+    }).join('');
   } catch (err) {
     console.error(err);
     grid.innerHTML = `<div class="no-movies">Error: ${err.message}</div>`;
