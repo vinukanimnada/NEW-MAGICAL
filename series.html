@@ -124,6 +124,25 @@
   }
   
   .home-no-result { text-align:center; color:var(--text-faint); padding:50px 0; grid-column: 1/-1; }
+
+  /* ===== Search Results List View (methanata mulinma add kala —
+     kalinma search input/button eka thibbath, results container ekakwath
+     JS wiring ekakwath thibbe na, e nisa search eka wada kale na) ===== */
+  .search-results { display: none; padding: 10px; }
+  .search-results.active { display: block; }
+  .search-result-item {
+    display: flex; gap: 12px; padding: 10px 0;
+    border-bottom: 1px solid var(--border); cursor: pointer; transition: background 0.2s;
+  }
+  .search-result-item:hover { background: var(--card); }
+  .search-result-poster { width: 60px; height: 90px; border-radius: 4px; object-fit: cover; flex-shrink: 0; }
+  .search-result-info { flex: 1; overflow: hidden; }
+  .search-result-title {
+    font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 4px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .search-result-meta { font-size: 13px; color: var(--text-dim); line-height: 1.5; }
+  .search-no-result { text-align: center; color: var(--text-faint); padding: 50px 20px; font-size: 14px; }
   </style>
 </head>
 <body>
@@ -164,6 +183,9 @@
     </div>
   </div>
 
+  <!-- Search Results List (aluthin add kala) -->
+  <div class="search-results" id="searchResults"></div>
+
   <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
   import { getFirestore, collection, getDocs, orderBy, query } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
@@ -180,6 +202,24 @@
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
 
+  // searchIndex — Firestore eke thiyena OKKOMA movies (section ekakata
+  // witharak tag karapu ewath ethulath), title eken dedupe karala. Search
+  // ekata witharak use karanawa — grid eke pennana "TV Shows" filter ekata
+  // wenama widiyakata.
+  let searchIndex = [];
+
+  function dedupeByTitle(list) {
+    const seen = new Set();
+    const out = [];
+    (list || []).forEach(m => {
+      const key = (m.title || '').trim().toLowerCase();
+      if (!key || seen.has(key)) return;
+      seen.add(key);
+      out.push(m);
+    });
+    return out;
+  }
+
   async function loadTVShows() {
     const grid = document.getElementById('tvShowsGrid');
     
@@ -194,6 +234,12 @@
         grid.innerHTML = '<div class="home-no-result">TV Shows නැත</div>';
         return;
       }
+
+      // Search index eka methanin hadanawa — snapshot eka okkoma dees ekama
+      // documents tika, section filter ekakwath nathuwa.
+      const allDocs = [];
+      snapshot.forEach(d => { const m = d.data(); m.id = d.id; if (m.title) allDocs.push(m); });
+      searchIndex = dedupeByTitle(allDocs);
       
       let html = '';
       snapshot.forEach(doc => {
@@ -243,6 +289,77 @@
   }
   
   loadTVShows();
+
+  /* =========================================================
+     SEARCH — aluthin add kala. Kalin search input/button eka
+     header eke thibbath, mekata kisima JS wiring ekak thibbe na
+     (results container ekakwath thibbe na), e nisa search eka
+     kisisema wada kale na. Dan searchIndex (okkoma movies) eken
+     search karanawa.
+     ========================================================= */
+  function searchTVShows(qText) {
+    const resultsDiv = document.getElementById('searchResults');
+    const gridDiv = document.getElementById('tvShowsGrid');
+    if (!resultsDiv || !gridDiv) return;
+
+    if (!qText.trim()) {
+      resultsDiv.classList.remove('active');
+      gridDiv.style.display = 'grid';
+      return;
+    }
+
+    gridDiv.style.display = 'none';
+    resultsDiv.classList.add('active');
+
+    const filtered = searchIndex.filter(m =>
+      m.title && m.title.toLowerCase().includes(qText.toLowerCase())
+    );
+
+    if (filtered.length === 0) {
+      resultsDiv.innerHTML = '<div class="search-no-result">🔍 Not Found</div>';
+      return;
+    }
+
+    resultsDiv.innerHTML = filtered.map(m => {
+      const poster = m.poster || 'https://via.placeholder.com/60x90/222/fff';
+      const year = m.year || 'N/A';
+      const duration = m.duration || '';
+      const genre = m.genre || 'TV Show';
+      let title = m.title;
+      if (title.length > 40) title = title.substring(0, 40) + '...';
+
+      return `
+        <div class="search-result-item" onclick="window.location.href='watch.html?id=${m.id}'">
+          <img src="${poster}" class="search-result-poster" loading="lazy">
+          <div class="search-result-info">
+            <div class="search-result-title">${title}</div>
+            <div class="search-result-meta">
+              ${year}${duration ? ' • ' + duration : ''}<br>
+              ${genre}
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const searchBtn = document.getElementById('searchBtn');
+    const closeSearch = document.getElementById('closeSearch');
+    searchBtn?.addEventListener('click', () => {
+      if (!document.getElementById('searchBox')?.classList.contains('active')) searchTVShows('');
+    });
+    closeSearch?.addEventListener('click', () => searchTVShows(''));
+  });
+
+  let searchTimeout;
+  document.getElementById('searchInput')?.addEventListener('input', (e) => {
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(() => searchTVShows(e.target.value), 300);
+  });
+  document.getElementById('searchInput')?.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') searchTVShows(e.target.value);
+  });
   </script>
 
   <script src="script.js"></script> <!-- sidebar/menu/search okkoma meken -->
