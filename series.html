@@ -180,7 +180,10 @@
     const grid = document.getElementById('tvShowsGrid');
     
     try {
-      const q = query(collection(db, "movies"), orderBy("createdAt", "desc"));
+      // FIX: admin panel eken save karanne "date" field eka widiyata (createdAt na).
+      // "createdAt" nathi documents Firestore orderBy eken silent widiyata ain wenawa,
+      // eka nisa "TV Shows නෑ" kiyala penuna. "date" widiyata fix kala.
+      const q = query(collection(db, "movies"), orderBy("date", "desc"));
       const snapshot = await getDocs(q);
       
       if(snapshot.empty) {
@@ -192,8 +195,11 @@
       snapshot.forEach(doc => {
         const m = doc.data();
         
-        // tvshows or alltvshows විතරක්
-        if(m.category !== 'tvshows' && m.category !== 'alltvshows' && m.type !== 'series') return;
+        // FIX: admin panel eke "Show In Sections" list eke "TV Shows Page" (value="series")
+        // select kala documents witharak methanata ganna. m.type === 'series' fallback
+        // widiyata thiyenne pරanha (sections nathi) purana entries walata.
+        const sections = Array.isArray(m.sections) ? m.sections : [];
+        if(!sections.includes('series') && m.type !== 'series') return;
         
         const poster = m.poster || '';
         const title = m.title || 'Untitled';
