@@ -354,7 +354,7 @@
       .sort((a,b) => new Date(b.date || 0) - new Date(a.date || 0))
       .slice(0, 8);
     const container = document.getElementById('trendingMovies');
-    container.innerHTML = trending.length > 0 ? trending.map(createMovieCard).join('') : '<div class="home-no-result">Trending movies නෑ</div>';
+    container.innerHTML = trending.length > 0 ? trending.map(createMovieCard).join('') : '<div class="home-no-result">Error:Check Your Internet Connection and Refresh the page...</div>';
   }
 
   function loadLatest() {
@@ -363,7 +363,7 @@
       .sort((a,b) => new Date(b.date || 0) - new Date(a.date || 0))
       .slice(0, 8);
     const container = document.getElementById('latestMovies');
-    container.innerHTML = latest.length > 0 ? latest.map(createMovieCard).join('') : '<div class="home-no-result">Latest movies නෑ</div>';
+    container.innerHTML = latest.length > 0 ? latest.map(createMovieCard).join('') : '<div class="home-no-result">Error:Check Your Internet Connection and Refresh the page...</div>';
   }
 
   function loadTVShows() {
@@ -372,7 +372,7 @@
       .sort((a,b) => new Date(b.date || 0) - new Date(a.date || 0))
       .slice(0, 8);
     const container = document.getElementById('tvShowsMovies');
-    container.innerHTML = shows.length > 0 ? shows.map(createMovieCard).join('') : '<div class="home-no-result">TV Shows නෑ</div>';
+    container.innerHTML = shows.length > 0 ? shows.map(createMovieCard).join('') : '<div class="home-no-result">Error:Check Your Internet Connection and Refresh the page...</div>';
   }
 
   function homeSearch(query) {
@@ -380,7 +380,7 @@
     homeSearchResults.classList.add('active');
     const filtered = allContent.filter(m => m.title && m.title.toLowerCase().includes(query.toLowerCase()));
     if (filtered.length === 0) {
-      homeSearchResults.innerHTML = '<div class="home-no-result">🔍 Results හමු නොවීය</div>';
+      homeSearchResults.innerHTML = '<div class="home-no-result">🔍 Not Found</div>';
       return;
     }
     homeSearchResults.innerHTML = filtered.slice(0, 12).map(m => {
@@ -412,29 +412,56 @@
     if (e.key === 'Enter') homeSearch(e.target.value);
   });
 
+  async function fetchMoviesOnce() {
+    const snapshot = await getDocs(collection(db, "movies"));
+    const items = [];
+    snapshot.forEach(d => {
+      const m = d.data();
+      m.id = d.id;
+      if (m.title && m.poster) items.push(m);
+    });
+    return items;
+  }
+
   async function initHome() {
-    try {
-      const snapshot = await getDocs(collection(db, "movies"));
-      allContent = [];
-      snapshot.forEach(d => {
-        const m = d.data();
-        m.id = d.id;
-        if (m.title && m.poster) allContent.push(m);
-      });
-      console.log("✅ Loaded:", allContent.length, "items");
-      loadHeroSlider();
-      loadTrending();
-      loadLatest();
-      loadTVShows();
-    } catch (err) {
-      console.error("❌ Firebase Error:", err);
-      const msg = !navigator.onLine
-        ? '<div class="home-no-result">📶 Internet connection එක නෑ. Data on කරලා refresh කරන්න.</div>'
-        : '<div class="home-no-result">Movies හමු නොවීය</div>';
-      document.getElementById('trendingMovies').innerHTML = msg;
-      document.getElementById('latestMovies').innerHTML = msg;
-      document.getElementById('tvShowsMovies').innerHTML = msg;
+    // Podi network hiccup ekaka Firestore eken kisima error ekak nathuwama
+    // hisi (empty) result ekak ennath puluwan (4G/unstable connection walata
+    // common). Eth wenne error na nisa catch block ekata welenne na, badu
+    // "Trending movies නෑ" wage state ekakma pennanawa — manual refresh ekakin
+    // witharak fix wenawa. Methanin retry kihipayak automatic karala e
+    // scenario eka handle karanawa.
+    const MAX_ATTEMPTS = 4;
+    const RETRY_DELAY_MS = 1200;
+
+    for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
+      try {
+        const items = await fetchMoviesOnce();
+        if (items.length > 0) {
+          allContent = items;
+          console.log(`✅ Loaded: ${allContent.length} items (attempt ${attempt})`);
+          loadHeroSlider();
+          loadTrending();
+          loadLatest();
+          loadTVShows();
+          return;
+        }
+        // Empty result but no error — likely a transient network glitch.
+        console.warn(`⚠️ Got 0 movies on attempt ${attempt}, retrying...`);
+      } catch (err) {
+        console.error(`❌ Firebase Error (attempt ${attempt}):`, err);
+      }
+      if (attempt < MAX_ATTEMPTS) {
+        await new Promise(resolve => setTimeout(resolve, RETRY_DELAY_MS));
+      }
     }
+
+    // All attempts exhausted — genuinely no data or no connection.
+    const msg = !navigator.onLine
+      ? '<div class="home-no-result">Error:Check Your Internet Connection and Refresh the page...</div>'
+      : '<div class="home-no-result">Movies හමු නොවීය</div>';
+    document.getElementById('trendingMovies').innerHTML = msg;
+    document.getElementById('latestMovies').innerHTML = msg;
+    document.getElementById('tvShowsMovies').innerHTML = msg;
   }
 
   initHome();
