@@ -349,7 +349,7 @@
       .sort((a,b) => new Date(b.date || 0) - new Date(a.date || 0))
       .slice(0, 8);
     const container = document.getElementById('trendingMovies');
-    container.innerHTML = trending.length > 0 ? trending.map(createMovieCard).join('') : '<div class="home-no-result">Trending movies නෑ</div>';
+    container.innerHTML = trending.length > 0 ? trending.map(createMovieCard).join('') : '<div class="home-no-result">Error: Not loading Movies... Please Check Your Internet Connection and Refresh page...</div>';
   }
 
   function loadLatest() {
@@ -358,7 +358,7 @@
       .sort((a,b) => new Date(b.date || 0) - new Date(a.date || 0))
       .slice(0, 8);
     const container = document.getElementById('latestMovies');
-    container.innerHTML = latest.length > 0 ? latest.map(createMovieCard).join('') : '<div class="home-no-result">Latest movies නෑ</div>';
+    container.innerHTML = latest.length > 0 ? latest.map(createMovieCard).join('') : '<div class="home-no-result">Error: Not loading Movies... Please Check Your Internet Connection and Refresh page...</div>';
   }
 
   function loadTVShows() {
@@ -367,7 +367,7 @@
       .sort((a,b) => new Date(b.date || 0) - new Date(a.date || 0))
       .slice(0, 8);
     const container = document.getElementById('tvShowsMovies');
-    container.innerHTML = shows.length > 0 ? shows.map(createMovieCard).join('') : '<div class="home-no-result">TV Shows නෑ</div>';
+    container.innerHTML = shows.length > 0 ? shows.map(createMovieCard).join('') : '<div class="home-no-result">Error: Not loading Movies... Please Check Your Internet Connection and Refresh page...</div>';
   }
 
   function homeSearch(query) {
