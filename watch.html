@@ -463,10 +463,8 @@
       let episodesHTML = '';
       if (series && Array.isArray(m.episodes) && m.episodes.length > 0) {
         const seasons = [...new Set(m.episodes.map(e => e.season || 1))].sort((a,b)=>a-b);
-        // FIX: "Watch Now" click karana kalatath, gamanma okkoma episode penne
-        // hitiye methanata display:none ekak nathi nisa. Dan section eka
-        // default widiyata hide karala thiyenne — "Watch Now" click kalothin
-        // watchNowBtn eke click handler eken methana display eka toggle karanawa.
+        // Episode list eka default widiyata hide karala thiyenne — "Watch Now"
+        // click kalothin methana display eka toggle karanawa.
         episodesHTML = `
           <section class="episodes-wrap" id="episodesSection" style="display:none;">
             <div class="episodes-title"><span class="cast-bar"></span> Select Episode to Watch</div>
@@ -513,6 +511,28 @@
       const playerWrap = document.getElementById('playerWrap');
       const playerBox = document.getElementById('playerBox');
       const nowPlayingLabel = document.getElementById('nowPlayingLabel');
+      const episodesSection = document.getElementById('episodesSection');
+
+      // FIX: "player open" state saha "episode list visible" state dekama
+      // wenama boolean dekakin track karanne methanin — kalin dekama
+      // "playerIsOpen" ekama use karana nisa Back click kalama episode
+      // list eka hide wenne nathuwa player-close logic ekama trigger unath,
+      // button eka witharak "Watch Now" widiyata reset una.
+      let playerIsOpen = false;
+      let episodesVisible = false;
+
+      function updateWatchBtnLabel() {
+        const showBack = playerIsOpen || episodesVisible;
+        if (showBack) {
+          watchNowBtn.classList.remove('btn-primary');
+          watchNowBtn.classList.add('btn-back');
+          watchNowBtn.innerHTML = '<i class="fa fa-arrow-left"></i> Back';
+        } else {
+          watchNowBtn.classList.remove('btn-back');
+          watchNowBtn.classList.add('btn-primary');
+          watchNowBtn.innerHTML = '<i class="fa fa-play"></i> Watch Now';
+        }
+      }
 
       function playUrl(url, label, posterImg) {
         nowPlayingLabel.textContent = label || '';
@@ -550,58 +570,47 @@
       }
 
       const watchNowBtn = document.getElementById('watchNowBtn');
-      let playerIsOpen = false;
-      // FIX: series ekakata "Select Episode" section eka penenawada kiyala
-      // track karanne methanin — Watch Now click karama witharak eka penewi.
-      let episodesVisible = false;
-
-      function setWatchBtnState(isOpen) {
-        playerIsOpen = isOpen;
-        if (isOpen) {
-          watchNowBtn.classList.remove('btn-primary');
-          watchNowBtn.classList.add('btn-back');
-          watchNowBtn.innerHTML = '<i class="fa fa-arrow-left"></i> Back';
-        } else {
-          watchNowBtn.classList.remove('btn-back');
-          watchNowBtn.classList.add('btn-primary');
-          watchNowBtn.innerHTML = '<i class="fa fa-play"></i> Watch Now';
-        }
-      }
 
       function closePlayer() {
         playerWrap.classList.remove('active');
         playerBox.innerHTML = '';
         nowPlayingLabel.textContent = '';
-        setWatchBtnState(false);
+        playerIsOpen = false;
+        updateWatchBtnLabel();
+      }
+
+      function showEpisodes() {
+        if (!episodesSection) return;
+        episodesVisible = true;
+        episodesSection.style.display = '';
+        updateWatchBtnLabel();
+        episodesSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+
+      function hideEpisodes() {
+        if (!episodesSection) return;
+        episodesVisible = false;
+        episodesSection.style.display = 'none';
+        updateWatchBtnLabel();
       }
 
       watchNowBtn.addEventListener('click', () => {
-        // Player ekak dan open nam (episode ekak play wela), Back button
-        // ekak widiyata player ekama close karanawa — episode list eka
-        // ehemama penila thiyenawa.
+        // Player ekak dan open nam, Back button ekak widiyata player ekama
+        // close karanawa (episode list eka thibba widiyatama ehemama thiyei).
         if (playerIsOpen) {
           closePlayer();
           return;
         }
 
         if (series) {
-          // FIX: kalin widiyata gamanma first episode eka auto-play unath,
-          // dan Watch Now click kalama karanne episode list eka
-          // pennanawa witharai (auto-play na). Episode ekak thoranne
-          // user ma click karama witharak player eka open wela play wenawa.
-          const episodesSection = document.getElementById('episodesSection');
-          if (!episodesSection) return;
-          episodesVisible = !episodesVisible;
-          episodesSection.style.display = episodesVisible ? '' : 'none';
-          if (episodesVisible) {
-            setWatchBtnState(true); // "Back" button — click again to hide the list
-            episodesSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          } else {
-            setWatchBtnState(false);
-          }
+          // Episode list eka toggle karanawa — Watch Now click kalama penei,
+          // aayet click kalama hide wei, aayet click kalama aayet penei.
+          if (episodesVisible) hideEpisodes();
+          else showEpisodes();
         } else {
           playUrl(m.videoUrl, m.title, backdrop || poster);
-          setWatchBtnState(true);
+          playerIsOpen = true;
+          updateWatchBtnLabel();
         }
       });
 
@@ -624,7 +633,8 @@
             list.querySelectorAll('.episode-item').forEach(i => i.classList.remove('playing'));
             item.classList.add('playing');
             playUrl(item.dataset.video, item.dataset.label, backdrop || poster);
-            setWatchBtnState(true);
+            playerIsOpen = true;
+            updateWatchBtnLabel();
           });
         });
       }
