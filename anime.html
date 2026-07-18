@@ -286,8 +286,10 @@ async function loadMovies() {
       return;
     }
 
-    grid.innerHTML = "";
-    allMovies.forEach(m => {
+    // Same fix as movies.html — build the HTML once and set innerHTML a
+    // single time instead of "+=" in a loop (which was destroying and
+    // re-fetching every already-added image on each iteration).
+    grid.innerHTML = allMovies.map(m => {
       const poster = m.poster || 'https://via.placeholder.com/300x450/222/fff?text=No+Image';
       let rating = m.rating? m.rating.toString().split('/')[0] : '';
       if (rating &&!rating.includes('.')) rating += '.0';
@@ -295,7 +297,7 @@ async function loadMovies() {
       let title = m.title || 'Untitled';
       if (title.length > 20) title = title.substring(0, 20) + '...';
 
-      const card = `
+      return `
         <div class="movie-card" onclick="openMovie('${m.id}')">
           <span class="quality-badge">${quality}</span>
           ${rating? `<span class="rating-badge">★ ${rating}</span>` : ''}
@@ -303,8 +305,7 @@ async function loadMovies() {
           <div class="movie-title">${title}</div>
         </div>
       `;
-      grid.innerHTML += card;
-    });
+    }).join('');
   } catch (err) {
     console.error(err);
     grid.innerHTML = `<div class="no-movies">Error: ${err.message}</div>`;
