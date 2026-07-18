@@ -279,14 +279,11 @@
   document.getElementById('menuBtn')?.addEventListener('click', toggleSidebar);
 
   document.getElementById('backBtn')?.addEventListener('click', () => {
-    // Movie cards okkoma window.open(..., '_blank') karala aluth tab ekakin
-    // methanata enawa. Ehema aluth tab ekaka history.length eka reliable na
-    // (browser ekaka 1 widihata, wenat ekaka 2 widihata dakinna puluwan),
-    // e nisa history.back() ekedma podi bug eka una (blank/wrong page ekata yanawa).
-    // Ethakota document.referrer eken pennapu ekama site ekakin awoth eyata yanawa,
-    // nathnam home ekata redirect karanawa — meka hemadama sure widihata thiyenawa.
-    if (document.referrer && document.referrer.startsWith(window.location.origin)) {
-      window.location.href = document.referrer;
+    // Dan card click ekedi window.location.href use karana nisa (aluth tab
+    // ekak open wenne na), same-tab history eka thiyenawa hariyata — e nisa
+    // browser eke sadharana history.back() ekma use karanna puluwan.
+    if (window.history.length > 1) {
+      window.history.back();
     } else {
       window.location.href = 'index.html';
     }
@@ -339,19 +336,15 @@
     return `<iframe src="${url}" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>`;
   }
 
-  // If native <video> playback fails (unsupported codec/container), swap in
-  // a friendly "can't play in-browser, please download" message instead.
+  // If native <video> playback fails (unsupported codec/container/network
+  // issue), swap in a simple generic error message instead.
   function attachVideoFallback(playerBox) {
     const videoEl = playerBox.querySelector('video[data-fallback-url]');
     if (!videoEl) return;
     videoEl.addEventListener('error', () => {
-      const url = videoEl.dataset.fallbackUrl;
       playerBox.innerHTML = `
         <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; color:#fff; text-align:center; padding:20px; background:#000;">
-          <i class="fa fa-warning" style="font-size:40px; color:#ff2d95; margin-bottom:10px;"></i>
-          <b>Meka browser eke play wenne na</b><br>
-          <span style="color:#aaa; font-size:13px; margin:10px 0;">Phone eke balanna nam MP4 walata convert karanna, nathnam download karala balanna</span>
-          <a href="${url}" target="_blank" class="btn btn-primary"><i class="fa fa-download"></i> Download karanna</a>
+          <b>Error : Refresh Page or Check Your Network.</b>
         </div>`;
     }, { once: true });
   }
