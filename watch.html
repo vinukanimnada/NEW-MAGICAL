@@ -463,8 +463,12 @@
       let episodesHTML = '';
       if (series && Array.isArray(m.episodes) && m.episodes.length > 0) {
         const seasons = [...new Set(m.episodes.map(e => e.season || 1))].sort((a,b)=>a-b);
+        // FIX: "Watch Now" click karana kalatath, gamanma okkoma episode penne
+        // hitiye methanata display:none ekak nathi nisa. Dan section eka
+        // default widiyata hide karala thiyenne — "Watch Now" click kalothin
+        // watchNowBtn eke click handler eken methana display eka toggle karanawa.
         episodesHTML = `
-          <section class="episodes-wrap">
+          <section class="episodes-wrap" id="episodesSection" style="display:none;">
             <div class="episodes-title"><span class="cast-bar"></span> Select Episode to Watch</div>
             ${seasons.length > 1 ? `<select class="season-select" id="seasonSelect">${seasons.map(s => `<option value="${s}">Season ${s}</option>`).join('')}</select>` : ''}
             <div id="episodeList"></div>
@@ -547,6 +551,9 @@
 
       const watchNowBtn = document.getElementById('watchNowBtn');
       let playerIsOpen = false;
+      // FIX: series ekakata "Select Episode" section eka penenawada kiyala
+      // track karanne methanin — Watch Now click karama witharak eka penewi.
+      let episodesVisible = false;
 
       function setWatchBtnState(isOpen) {
         playerIsOpen = isOpen;
@@ -569,18 +576,33 @@
       }
 
       watchNowBtn.addEventListener('click', () => {
+        // Player ekak dan open nam (episode ekak play wela), Back button
+        // ekak widiyata player ekama close karanawa — episode list eka
+        // ehemama penila thiyenawa.
         if (playerIsOpen) {
           closePlayer();
           return;
         }
+
         if (series) {
-          const first = m.episodes[0];
-          playUrl(first.videoUrl, `S${first.season || 1} · E${first.episode || 1} — ${first.title || m.title}`, backdrop || poster);
-          renderEpisodes(first.season || 1);
+          // FIX: kalin widiyata gamanma first episode eka auto-play unath,
+          // dan Watch Now click kalama karanne episode list eka
+          // pennanawa witharai (auto-play na). Episode ekak thoranne
+          // user ma click karama witharak player eka open wela play wenawa.
+          const episodesSection = document.getElementById('episodesSection');
+          if (!episodesSection) return;
+          episodesVisible = !episodesVisible;
+          episodesSection.style.display = episodesVisible ? '' : 'none';
+          if (episodesVisible) {
+            setWatchBtnState(true); // "Back" button — click again to hide the list
+            episodesSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          } else {
+            setWatchBtnState(false);
+          }
         } else {
           playUrl(m.videoUrl, m.title, backdrop || poster);
+          setWatchBtnState(true);
         }
-        setWatchBtnState(true);
       });
 
       function renderEpisodes(season) {
