@@ -62,7 +62,7 @@
   .trending { padding: 10px 0 5px; }
   .section-header { display: flex; align-items: center; justify-content: space-between; padding: 0 15px; margin-bottom: 10px; }
   .section-header h2 { font-size: 18px; color: var(--text); }
-  .view-all { font-size: 12px; color: #ff2d95; font-weight: 600; letter-spacing: 0.5px; }
+  .view-all { font-size: 12px; color: #fff; font-weight: 600; letter-spacing: 0.5px; background: #ff2d95; padding: 6px 14px; border-radius: 20px; display: inline-block; }
 
   /* Movie grid */
   .movie-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; padding: 15px; min-height: 200px; }
@@ -166,7 +166,7 @@
         <span style="position:absolute; left:0; top:50%; transform:translateY(-50%); width:4px; height:28px; background:#ff2d95; border-radius:2px;"></span>
         TV Shows
       </h2>
-      <a href="series.html" class="view-all">VIEW ALL</a>
+      <a href="tvshows.html" class="view-all">VIEW ALL</a>
     </div>
     <div class="movie-grid" id="tvShowsMovies">
       <div class="loading-spinner-wrap"><div class="loading-spinner"></div></div>
@@ -354,7 +354,7 @@
       .sort((a,b) => new Date(b.date || 0) - new Date(a.date || 0))
       .slice(0, 8);
     const container = document.getElementById('trendingMovies');
-    container.innerHTML = trending.length > 0 ? trending.map(createMovieCard).join('') : '<div class="home-no-result">Error:Check Your Internet Connection and Refresh the page...</div>';
+    container.innerHTML = trending.length > 0 ? trending.map(createMovieCard).join('') : '<div class="home-no-result">Trending movies නෑ</div>';
   }
 
   function loadLatest() {
@@ -363,7 +363,7 @@
       .sort((a,b) => new Date(b.date || 0) - new Date(a.date || 0))
       .slice(0, 8);
     const container = document.getElementById('latestMovies');
-    container.innerHTML = latest.length > 0 ? latest.map(createMovieCard).join('') : '<div class="home-no-result">Error:Check Your Internet Connection and Refresh the page...</div>';
+    container.innerHTML = latest.length > 0 ? latest.map(createMovieCard).join('') : '<div class="home-no-result">Latest movies නෑ</div>';
   }
 
   function loadTVShows() {
@@ -372,7 +372,7 @@
       .sort((a,b) => new Date(b.date || 0) - new Date(a.date || 0))
       .slice(0, 8);
     const container = document.getElementById('tvShowsMovies');
-    container.innerHTML = shows.length > 0 ? shows.map(createMovieCard).join('') : '<div class="home-no-result">Error:Check Your Internet Connection and Refresh the page...</div>';
+    container.innerHTML = shows.length > 0 ? shows.map(createMovieCard).join('') : '<div class="home-no-result">TV Shows නෑ</div>';
   }
 
   function homeSearch(query) {
@@ -380,7 +380,7 @@
     homeSearchResults.classList.add('active');
     const filtered = allContent.filter(m => m.title && m.title.toLowerCase().includes(query.toLowerCase()));
     if (filtered.length === 0) {
-      homeSearchResults.innerHTML = '<div class="home-no-result">🔍 Not Found</div>';
+      homeSearchResults.innerHTML = '<div class="home-no-result">🔍 Results හමු නොවීය</div>';
       return;
     }
     homeSearchResults.innerHTML = filtered.slice(0, 12).map(m => {
@@ -457,8 +457,8 @@
 
     // All attempts exhausted — genuinely no data or no connection.
     const msg = !navigator.onLine
-      ? '<div class="home-no-result">Error:Check Your Internet Connection and Refresh the page...</div>'
-      : '<div class="home-no-result">Not Found</div>';
+      ? '<div class="home-no-result">📶 Internet connection එක නෑ. Data on කරලා refresh කරන්න.</div>'
+      : '<div class="home-no-result">Movies හමු නොවීය</div>';
     document.getElementById('trendingMovies').innerHTML = msg;
     document.getElementById('latestMovies').innerHTML = msg;
     document.getElementById('tvShowsMovies').innerHTML = msg;
