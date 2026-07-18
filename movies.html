@@ -259,10 +259,32 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const grid = document.getElementById('movieGrid');
-let allMovies = [];
+
+// gridMovies: "All Movies" section ekata tag karapu ewa witharak — grid eke
+// penei. searchIndex: Firestore eke thiyena OKKOMA movies (kohomath section
+// ekakata tag karala thibbath) — search ekata witharak use karanawa, ehema
+// wena pages/sections walata witharak add karapu movies search ekedi
+// hamu wenawa.
+let gridMovies = [];
+let searchIndex = [];
 
 function hasSection(movie, sectionKey) {
   return Array.isArray(movie.sections) && movie.sections.includes(sectionKey);
+}
+
+// Same title thiyena documents kihipayak thibbath (wenawena pages/sections
+// walata add karapu ekama movie eka), search result eka dekak-thunak
+// widiyata duplicate wenna epa — title eken dedupe karanawa.
+function dedupeByTitle(list) {
+  const seen = new Set();
+  const out = [];
+  (list || []).forEach(m => {
+    const key = (m.title || '').trim().toLowerCase();
+    if (!key || seen.has(key)) return;
+    seen.add(key);
+    out.push(m);
+  });
+  return out;
 }
 
 async function loadMovies() {
@@ -274,27 +296,31 @@ async function loadMovies() {
       return;
     }
 
-    allMovies = [];
+    const all = [];
     snapshot.forEach(docSnap => {
       const m = docSnap.data();
       m.id = docSnap.id;
-      if (m.title && m.poster && hasSection(m, 'allmovies')) {
-        allMovies.push(m);
-      }
+      if (m.title && m.poster) all.push(m);
     });
+
+    // Search index eka — okkoma movies, title eken dedupe karala.
+    searchIndex = dedupeByTitle(all);
+
+    // Grid eke penna one "All Movies" section ekata tag karapu ewa witharak.
+    gridMovies = all.filter(m => hasSection(m, 'allmovies'));
 
     // Vinuka ge ඉල්ලීම: aluthinma save karapu movie eka LIST EKE ANTHIMATA
     // yanna one (kalin tibba widiyata "descending/aluth udin" nemei) —
     // ea nisa ascending (oldest -> newest) widiyata sort karanawa.
-    allMovies.sort((a, b) => new Date(a.date || 0) - new Date(b.date || 0));
+    gridMovies.sort((a, b) => new Date(a.date || 0) - new Date(b.date || 0));
 
-    if (allMovies.length === 0) {
+    if (gridMovies.length === 0) {
       grid.innerHTML = '<div class="no-movies">Error:Check Your Internet Connection and Refresh the page.... Admin panel එකෙන් "Show In Sections" එකේ "All Movies" select කරලා add කරන්න.</div>';
       return;
     }
 
     grid.innerHTML = "";
-    allMovies.forEach(m => {
+    gridMovies.forEach(m => {
       const poster = m.poster || 'https://via.placeholder.com/300x450/222/fff?text=No+Image';
       let rating = m.rating? m.rating.toString().split('/')[0] : '';
       if (rating &&!rating.includes('.')) rating += '.0';
@@ -319,7 +345,9 @@ async function loadMovies() {
 }
 
 window.openMovie = function (id) {
-  window.location.href = `index.html?id=${id}`;
+  // FIX: kalin "index.html?id=" ekata yawwe — eth index.html dan home page
+  // ekama witharai, ?id= param ekak handle karanne na. Watch page eka watch.html.
+  window.location.href = `watch.html?id=${id}`;
 };
 
 function searchMovies(query) {
@@ -335,7 +363,11 @@ function searchMovies(query) {
   gridDiv.style.display = 'none';
   resultsDiv.classList.add('active');
 
-  const filtered = allMovies.filter(m =>
+  // FIX: kalin allMovies (grid ekata witharak tag karapu ewa) walin search
+  // kalu — dan searchIndex (Firestore eke thiyena OKKOMA movies, dedupe
+  // karapu) eken search karanawa, e nisa wena section ekakata witharak
+  // tag karapu movies wath search ekedi hamu wenawa.
+  const filtered = searchIndex.filter(m =>
     m.title && m.title.toLowerCase().includes(query.toLowerCase())
   );
 
