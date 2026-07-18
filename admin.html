@@ -195,7 +195,7 @@
         <button class="btn btn-secondary" id="addEpisodeBtn" style="margin-top:8px; font-size:13px; padding:9px 14px;">
           <i class="fa fa-plus"></i> Add Episode
         </button>
-        <div class="form-hint">Season / Episode / Title / Video URL — දෙන්න.</div>
+        <div class="form-hint">Season / Episode / Title / Video URL — දෙන්න. <b>Video URL එක අනිවාර්යයි</b> — ඒක නැති episode save වෙන්නේ නෑ. Episode # හිස්ව තිබ්බොත් row එකේ තියෙන පිළිවෙලට 1, 2, 3... auto විදිහට දාගන්නවා.</div>
       </div>
 
       <div class="form-group">
@@ -320,15 +320,28 @@
       episodeBuilder.appendChild(row);
     }
 
+    // ---- FIX: episode saving bug -----------------------------------------
+    // Meke thibba bug eka: video URL eka type karama data pushed wenne
+    // "if (videoUrl)" kiyala trim() nathuwa check karana nisa whitespace
+    // hari episode number field eka empty thiyenna puluwan nisa, episode
+    // number 0 wela "-" widiyata pennuna. Methanin fix karala thiyenne:
+    //  1. Row select karanne .episode-row class eken direct (childNodes
+    //     walata wada robust — text node walin confuse wenne na).
+    //  2. videoUrl trim කරලා empty නම් ithin row eka skip කරනවා.
+    //  3. Episode # field එක හිස්ව තිබ්බොත් auto-increment (1,2,3...) කරනවා
+    //     — ඒකෙන් "-" widiyata episode number පෙන්නපු bug එක fix වෙනවා.
     function getEpisodesFromForm() {
       const episodes = [];
-      episodeBuilder.childNodes.forEach(row => {
-        if (!row.querySelector) return;
+      let autoNum = 1;
+      episodeBuilder.querySelectorAll('.episode-row').forEach(row => {
         const season = row.querySelector('.ep-season')?.value;
-        const episode = row.querySelector('.ep-episode')?.value;
-        const title = row.querySelector('.ep-title')?.value;
-        const videoUrl = row.querySelector('.ep-videourl')?.value;
-        if (videoUrl) episodes.push({ season: Number(season) || 1, episode: Number(episode) || 0, title: title || '', videoUrl });
+        const episodeVal = row.querySelector('.ep-episode')?.value;
+        const title = (row.querySelector('.ep-title')?.value || '').trim();
+        const videoUrl = (row.querySelector('.ep-videourl')?.value || '').trim();
+        if (!videoUrl) return; // Video URL නැති row එකක් save කරන්නේ නෑ
+        const episodeNum = episodeVal && Number(episodeVal) > 0 ? Number(episodeVal) : autoNum;
+        episodes.push({ season: Number(season) || 1, episode: episodeNum, title: title || '', videoUrl });
+        autoNum = episodeNum + 1;
       });
       return episodes;
     }
@@ -494,8 +507,22 @@
           date: new Date().toISOString()
         };
 
-        if (category === 'series') data.episodes = H.getEpisodesFromForm();
-        else data.videoUrl = document.getElementById('f_videoUrl').value.trim();
+        // ---- FIX: episode saving bug -------------------------------------
+        // Kalinviye category === 'series' unath, episode Video URL blank wela
+        // hari season/episode number field walata number danne nathnam,
+        // "data.episodes" empty array ekak widiyata silent widiyata save
+        // wela, admin ta penune episode save wenne na hariyata kiyala.
+        // Dan: episodes array eka හදලා, ethule element ekakwath naethnam
+        // save eka nawaththala clear error toast ekak pennanawa.
+        if (category === 'series') {
+          data.episodes = H.getEpisodesFromForm();
+          if (data.episodes.length === 0) {
+            showToast('⚠️ අඩුම තරමින් එක Episode එකකටවත් Video URL එකක් දාන්න');
+            return;
+          }
+        } else {
+          data.videoUrl = document.getElementById('f_videoUrl').value.trim();
+        }
 
         H.saveBtn.disabled = true;
         H.saveBtn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Saving...';
