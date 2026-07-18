@@ -283,7 +283,10 @@ async function loadMovies() {
       }
     });
 
-    allMovies.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
+    // Vinuka ge ඉල්ලීම: aluthinma save karapu movie eka LIST EKE ANTHIMATA
+    // yanna one (kalin tibba widiyata "descending/aluth udin" nemei) —
+    // ea nisa ascending (oldest -> newest) widiyata sort karanawa.
+    allMovies.sort((a, b) => new Date(a.date || 0) - new Date(b.date || 0));
 
     if (allMovies.length === 0) {
       grid.innerHTML = '<div class="no-movies">Error:Check Your Internet Connection and Refresh the page.... Admin panel එකෙන් "Show In Sections" එකේ "All Movies" select කරලා add කරන්න.</div>';
