@@ -385,15 +385,52 @@
   }
 
   function buildDownloadHTML(m) {
-    // Prefer an explicit downloadUrl; otherwise fall back to videoUrl / first
-    // episode's videoUrl if that itself is a direct file link.
-    let autoDownloadUrl = '';
-    if (!m.downloadUrl) {
-      const candidate = isSeries(m) && Array.isArray(m.episodes) && m.episodes.length > 0
-        ? m.episodes[0].videoUrl
-        : m.videoUrl;
-      if (isDirectFileUrl(candidate)) autoDownloadUrl = candidate;
+    const series = isSeries(m);
+
+    // ---- TV Series: list a direct download link for EVERY episode ----
+    if (series) {
+      const episodeLinks = (Array.isArray(m.episodes) ? m.episodes : [])
+        .slice()
+        .sort((a, b) => (a.season||1) - (b.season||1) || (a.episode||0) - (b.episode||0))
+        .map(e => ({
+          url: e.downloadUrl || e.videoUrl,
+          label: e.title ? `S${e.season||1} · E${String(e.episode||0).padStart(2,'0')} — ${e.title}` : `S${e.season||1} · Episode ${String(e.episode||0).padStart(2,'0')}`
+        }))
+        .filter(e => e.url && isDirectFileUrl(e.url));
+
+      if (episodeLinks.length === 0 && !m.telegramDownloadUrl) return '';
+
+      return `
+        <div class="download-wrap" id="downloadWrap" style="display:none;">
+          <div class="download-title"><span class="download-bar"></span> Direct Download Links</div>
+          <div class="download-countdown-box" id="downloadCountdownBox">
+            <div class="download-countdown-num" id="downloadCountdownNum">5</div>
+            <div class="download-countdown-text">Your high-speed link is being prepared...</div>
+          </div>
+          <div class="download-links" id="downloadLinksBox">
+            ${episodeLinks.map(e => `
+            <div class="download-link-item" onclick="window.open('${e.url}','_blank')">
+              <div class="download-link-icon"><i class="fa fa-download"></i></div>
+              <div class="download-link-info">
+                <div class="download-link-title">${e.label}</div>
+                <div class="download-link-sub">Cloudflare R2 • High Speed Direct Access</div>
+              </div>
+            </div>`).join('')}
+            ${m.telegramDownloadUrl ? `
+            <div class="download-link-item" onclick="window.open('${m.telegramDownloadUrl}','_blank')">
+              <div class="download-link-icon"><i class="fa-brands fa-telegram"></i></div>
+              <div class="download-link-info">
+                <div class="download-link-title">Telegram Download Link</div>
+                <div class="download-link-sub">Join our channel • Easy Mobile Download</div>
+              </div>
+            </div>` : ''}
+          </div>
+        </div>
+      `;
     }
+
+    // ---- Movie: single direct link (unchanged behavior) ----
+    const autoDownloadUrl = !m.downloadUrl && isDirectFileUrl(m.videoUrl) ? m.videoUrl : '';
     const directUrl = m.downloadUrl || autoDownloadUrl;
 
     if (!directUrl && !m.telegramDownloadUrl) return '';
@@ -489,8 +526,9 @@
             <button class="btn btn-primary" id="watchNowBtn"><i class="fa fa-play"></i> Watch Now</button>
             ${m.trailer ? `<button class="btn btn-secondary" id="trailerBtn"><i class="fa fa-film"></i> Trailer</button>` : ''}
             ${(() => {
-              const firstEpUrl = (series && Array.isArray(m.episodes) && m.episodes.length > 0) ? m.episodes[0].videoUrl : m.videoUrl;
-              const hasDownload = m.downloadUrl || m.telegramDownloadUrl || isDirectFileUrl(firstEpUrl);
+              const hasDownload = series
+                ? (m.telegramDownloadUrl || (Array.isArray(m.episodes) && m.episodes.some(e => isDirectFileUrl(e.downloadUrl || e.videoUrl))))
+                : (m.downloadUrl || m.telegramDownloadUrl || isDirectFileUrl(m.videoUrl));
               return hasDownload ? `<button class="btn btn-outline" id="downloadBtn"><i class="fa fa-download"></i> Download</button>` : '';
             })()}
           </div>
@@ -513,11 +551,9 @@
       const nowPlayingLabel = document.getElementById('nowPlayingLabel');
       const episodesSection = document.getElementById('episodesSection');
 
-      // FIX: "player open" state saha "episode list visible" state dekama
-      // wenama boolean dekakin track karanne methanin — kalin dekama
-      // "playerIsOpen" ekama use karana nisa Back click kalama episode
-      // list eka hide wenne nathuwa player-close logic ekama trigger unath,
-      // button eka witharak "Watch Now" widiyata reset una.
+      // Player-open state saha episode-list-visible state dekama wenama
+      // boolean dekakin track karanawa — Back click kalama dekama ekapara
+      // reset wenna one (player close + episode list hide) ekama widiyata.
       let playerIsOpen = false;
       let episodesVisible = false;
 
@@ -576,7 +612,6 @@
         playerBox.innerHTML = '';
         nowPlayingLabel.textContent = '';
         playerIsOpen = false;
-        updateWatchBtnLabel();
       }
 
       function showEpisodes() {
@@ -591,22 +626,23 @@
         if (!episodesSection) return;
         episodesVisible = false;
         episodesSection.style.display = 'none';
-        updateWatchBtnLabel();
       }
 
       watchNowBtn.addEventListener('click', () => {
-        // Player ekak dan open nam, Back button ekak widiyata player ekama
-        // close karanawa (episode list eka thibba widiyatama ehemama thiyei).
-        if (playerIsOpen) {
+        // Back button ekak widiyata penei nam (player open wela, or
+        // episode list eka penichcha nam) — dekama ekapara reset karanawa,
+        // "Watch Now" tanivama sudusu tatvayata yanawa.
+        if (playerIsOpen || episodesVisible) {
           closePlayer();
+          hideEpisodes();
+          updateWatchBtnLabel();
           return;
         }
 
         if (series) {
-          // Episode list eka toggle karanawa — Watch Now click kalama penei,
-          // aayet click kalama hide wei, aayet click kalama aayet penei.
-          if (episodesVisible) hideEpisodes();
-          else showEpisodes();
+          // Episode list eka penawanawa — episode ekak select karana thuru
+          // player eka open wenne na.
+          showEpisodes();
         } else {
           playUrl(m.videoUrl, m.title, backdrop || poster);
           playerIsOpen = true;
