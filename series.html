@@ -36,15 +36,17 @@
     .movie-grid { grid-template-columns: repeat(5, 1fr); gap: 12px; }
   }
   
-  /* Card style - Cinesubz වගේ */
+  /* Card style — movies.html eke card style ekama hariyata match kala
+     (kalinma thibba season-badge/movie-info-bottom wrapper eka ain kara,
+     dan quality-badge + rating-badge + gradient title ekama design eka) */
   .movie-card {
     position: relative;
-    aspect-ratio: 2/3;
     border-radius: 6px;
     overflow: hidden;
-    background: var(--card); /* #111 > var */
+    background: var(--card);
     cursor: pointer;
     transition: transform 0.2s;
+    aspect-ratio: 2/3;
   }
   .movie-card:hover { transform: scale(1.05); }
   
@@ -56,71 +58,54 @@
     background: var(--card-2);
   }
   
-  /* Season badge - කොළ/රතු */
-  .season-badge {
+  /* Top Left - RED Badge (season/quality info) */
+  .quality-badge {
     position: absolute;
-    top: 6px;
-    left: 6px;
-    background: #22c55e; /* කොළ - ongoing */
-    color: #fff;
-    font-size: 9px;
+    top: 5px;
+    left: 5px;
+    background: #e50914;
+    padding: 2px 5px;
+    font-size: 10px;
     font-weight: 700;
-    padding: 3px 5px;
-    border-radius: 4px;
-    z-index: 2;
-    white-space: nowrap;
-    max-width: 65%;
-    text-overflow: ellipsis;
-    overflow: hidden;
+    border-radius: 3px;
+    color: white;
+    z-index: 3;
+    text-transform: uppercase;
+    line-height: 1;
   }
   
-  .season-badge.complete { background: #dc2626; /* රතු - complete */ }
-  
-  /* Rating badge - කහ */
+  /* Top Right - ★ Rating YELLOW Badge */
   .rating-badge {
     position: absolute;
-    top: 6px;
-    right: 6px;
-    background: #fbbf24;
+    top: 5px;
+    right: 5px;
+    background: #ffc107;
     color: #000;
-    font-size: 9px;
+    padding: 2px 5px;
+    font-size: 10px;
     font-weight: 700;
-    padding: 3px 5px;
-    border-radius: 4px;
-    z-index: 2;
+    border-radius: 3px;
+    z-index: 3;
+    line-height: 1;
   }
   
-  /* Bottom title - gradient */
-  .movie-info-bottom {
+  /* Bottom Title - Left align + Gradient */
+  .movie-title {
     position: absolute;
     bottom: 0;
     left: 0;
     right: 0;
-    padding: 35px 6px 6px 6px;
-    background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, transparent 100%);
-    z-index: 2;
-  }
-  
-  .movie-title {
-    font-size: 11px;
-    font-weight: 600;
+    padding: 20px 6px 6px;
+    font-size: 12px;
+    text-align: left;
+    font-weight: 500;
     color: #fff;
-    margin: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.95) 50%, transparent);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    line-height: 1.3;
-  }
-  
-  .img-placeholder {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 35px;
-    color: var(--text-faint);
-    background: var(--card-2);
+    z-index: 2;
+    line-height: 1.2;
   }
   
   .home-no-result { text-align:center; color:var(--text-faint); padding:50px 0; grid-column: 1/-1; }
@@ -224,10 +209,10 @@
     const grid = document.getElementById('tvShowsGrid');
     
     try {
-      // FIX: admin panel eken save karanne "date" field eka widiyata (createdAt na).
-      // "createdAt" nathi documents Firestore orderBy eken silent widiyata ain wenawa,
-      // eka nisa "TV Shows නෑ" kiyala penuna. "date" widiyata fix kala.
-      const q = query(collection(db, "movies"), orderBy("date", "desc"));
+      // Vinuka ge ඉල්ලීම: aluthinma save karapu movie eka LIST EKE
+      // ANTHIMATA yanna one (kalin "desc" nisa aluth ekama palaweniyata
+      // enawa) — ea nisa "asc" (oldest -> newest) widiyata badalu.
+      const q = query(collection(db, "movies"), orderBy("date", "asc"));
       const snapshot = await getDocs(q);
       
       if(snapshot.empty) {
@@ -251,31 +236,28 @@
         const sections = Array.isArray(m.sections) ? m.sections : [];
         if(!sections.includes('series') && m.type !== 'series') return;
         
-        const poster = m.poster || '';
+        const poster = m.poster || 'https://via.placeholder.com/300x450/222/fff?text=No+Image';
         const title = m.title || 'Untitled';
         const year = m.year || '';
         const season = m.season || ''; // S01 EP05
-        const rating = m.rating || '0.0';
+        let rating = m.rating? m.rating.toString().split('/')[0] : '';
+        if (rating && !rating.includes('.')) rating += '.0';
         
         let displayTitle = title;
         if(year) displayTitle += ` (${year})`;
+        if (displayTitle.length > 20) displayTitle = displayTitle.substring(0, 20) + '...';
         
-        let badgeClass = '';
-        if(season && season.toUpperCase().includes('COMPLETE')) {
-          badgeClass = 'complete';
-        }
-        
+        // movies.html eke card style ekama — quality-badge (top-left) +
+        // rating-badge (top-right) + gradient title. Season text eka
+        // tibboth quality-badge ekema pennanawa (kalin tibba green/red
+        // season-badge design eka ain kara, ekama pink/red badge style eka).
         html += `
           <div class="movie-card" onclick="window.location.href='watch.html?id=${doc.id}'">
-            ${season ? `<div class="season-badge ${badgeClass}">${season}</div>` : ''}
-            <div class="rating-badge">★ ${rating}</div>
-            ${poster ? 
-              `<img src="${poster}" loading="lazy" onerror="this.outerHTML='<div class=img-placeholder>?</div>'">` 
-              : `<div class="img-placeholder">?</div>`
-            }
-            <div class="movie-info-bottom">
-              <p class="movie-title">${displayTitle}</p>
-            </div>
+            ${season ? `<span class="quality-badge">${season}</span>` : ''}
+            ${rating ? `<span class="rating-badge">★ ${rating}</span>` : ''}
+            <img src="${poster}" alt="${title}" loading="eager" decoding="async"
+                 onerror="this.onerror=null; this.src='https://via.placeholder.com/300x450/222/fff?text=No+Image';">
+            <div class="movie-title">${displayTitle}</div>
           </div>
         `;
       });
