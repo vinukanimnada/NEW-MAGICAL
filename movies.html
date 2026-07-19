@@ -287,60 +287,82 @@ function dedupeByTitle(list) {
   return out;
 }
 
+async function fetchAllMoviesOnce() {
+  const snapshot = await getDocs(collection(db, "movies"));
+  const items = [];
+  snapshot.forEach(docSnap => {
+    const m = docSnap.data();
+    m.id = docSnap.id;
+    if (m.title && m.poster) items.push(m);
+  });
+  return items;
+}
+
 async function loadMovies() {
-  try {
-    const snapshot = await getDocs(collection(db, "movies"));
+  // Podi network hiccup ekaka Firestore eken kisima error ekak nathuwama
+  // hisi (empty) result ekak ennath puluwan (4G/unstable connection walata
+  // common) — eka nisa tamai samahara welawata cards tika penne na, page
+  // eka refresh karama witharak fix una. Methanin index.html eke thibba
+  // widiyatama retry kihipayak automatic karala e scenario eka handle
+  // karanawa — user ta manual refresh ekak one wenne na.
+  const MAX_ATTEMPTS = 4;
+  const RETRY_DELAY_MS = 1200;
 
-    if (snapshot.empty) {
-      grid.innerHTML = '<div class="no-movies">Error:Check Your Internet Connection and Refresh the page...</div>';
+  for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
+    try {
+      const all = await fetchAllMoviesOnce();
+
+      if (all.length === 0) {
+        // Empty result but no error thrown — likely a transient glitch, retry.
+        console.warn(`⚠️ Got 0 movies on attempt ${attempt}, retrying...`);
+        if (attempt < MAX_ATTEMPTS) { await new Promise(r => setTimeout(r, RETRY_DELAY_MS)); continue; }
+        grid.innerHTML = '<div class="no-movies">Error:Check Your Internet Connection and Refresh the page...</div>';
+        return;
+      }
+
+      // Search index eka — okkoma movies, title eken dedupe karala.
+      searchIndex = dedupeByTitle(all);
+
+      // Grid eke penna one "All Movies" section ekata tag karapu ewa witharak.
+      gridMovies = all.filter(m => hasSection(m, 'allmovies'));
+
+      // Vinuka ge ඉල්ලීම: aluthinma save karapu movie eka LIST EKE ANTHIMATA
+      // yanna one (kalin tibba widiyata "descending/aluth udin" nemei) —
+      // ea nisa ascending (oldest -> newest) widiyata sort karanawa.
+      gridMovies.sort((a, b) => new Date(a.date || 0) - new Date(b.date || 0));
+
+      if (gridMovies.length === 0) {
+        grid.innerHTML = '<div class="no-movies">Error:Check Your Internet Connection and Refresh the page.... Admin panel එකෙන් "Show In Sections" එකේ "All Movies" select කරලා add කරන්න.</div>';
+        return;
+      }
+
+      grid.innerHTML = "";
+      gridMovies.forEach(m => {
+        const poster = m.poster || 'https://via.placeholder.com/300x450/222/fff?text=No+Image';
+        let rating = m.rating? m.rating.toString().split('/')[0] : '';
+        if (rating &&!rating.includes('.')) rating += '.0';
+        const quality = (m.quality || 'HD').toUpperCase();
+        let title = m.title || 'Untitled';
+        if (title.length > 20) title = title.substring(0, 20) + '...';
+
+        const card = `
+          <div class="movie-card" onclick="openMovie('${m.id}')">
+            <span class="quality-badge">${quality}</span>
+            ${rating? `<span class="rating-badge">★ ${rating}</span>` : ''}
+            <img src="${poster}" alt="${m.title}" loading="eager" decoding="async"
+                 onerror="this.onerror=null; this.src='https://via.placeholder.com/300x450/222/fff?text=No+Image';">
+            <div class="movie-title">${title}</div>
+          </div>
+        `;
+        grid.innerHTML += card;
+      });
+      return;
+    } catch (err) {
+      console.error(`❌ Firebase Error (attempt ${attempt}):`, err);
+      if (attempt < MAX_ATTEMPTS) { await new Promise(r => setTimeout(r, RETRY_DELAY_MS)); continue; }
+      grid.innerHTML = `<div class="no-movies">Error: ${err.message}</div>`;
       return;
     }
-
-    const all = [];
-    snapshot.forEach(docSnap => {
-      const m = docSnap.data();
-      m.id = docSnap.id;
-      if (m.title && m.poster) all.push(m);
-    });
-
-    // Search index eka — okkoma movies, title eken dedupe karala.
-    searchIndex = dedupeByTitle(all);
-
-    // Grid eke penna one "All Movies" section ekata tag karapu ewa witharak.
-    gridMovies = all.filter(m => hasSection(m, 'allmovies'));
-
-    // Vinuka ge ඉල්ලීම: aluthinma save karapu movie eka LIST EKE ANTHIMATA
-    // yanna one (kalin tibba widiyata "descending/aluth udin" nemei) —
-    // ea nisa ascending (oldest -> newest) widiyata sort karanawa.
-    gridMovies.sort((a, b) => new Date(a.date || 0) - new Date(b.date || 0));
-
-    if (gridMovies.length === 0) {
-      grid.innerHTML = '<div class="no-movies">Error:Check Your Internet Connection and Refresh the page.... Admin panel එකෙන් "Show In Sections" එකේ "All Movies" select කරලා add කරන්න.</div>';
-      return;
-    }
-
-    grid.innerHTML = "";
-    gridMovies.forEach(m => {
-      const poster = m.poster || 'https://via.placeholder.com/300x450/222/fff?text=No+Image';
-      let rating = m.rating? m.rating.toString().split('/')[0] : '';
-      if (rating &&!rating.includes('.')) rating += '.0';
-      const quality = (m.quality || 'HD').toUpperCase();
-      let title = m.title || 'Untitled';
-      if (title.length > 20) title = title.substring(0, 20) + '...';
-
-      const card = `
-        <div class="movie-card" onclick="openMovie('${m.id}')">
-          <span class="quality-badge">${quality}</span>
-          ${rating? `<span class="rating-badge">★ ${rating}</span>` : ''}
-          <img src="${poster}" alt="${m.title}" loading="lazy">
-          <div class="movie-title">${title}</div>
-        </div>
-      `;
-      grid.innerHTML += card;
-    });
-  } catch (err) {
-    console.error(err);
-    grid.innerHTML = `<div class="no-movies">Error: ${err.message}</div>`;
   }
 }
 
