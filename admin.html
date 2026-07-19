@@ -332,16 +332,6 @@
       episodeBuilder.appendChild(row);
     }
 
-    // ---- FIX: episode saving bug -----------------------------------------
-    // Meke thibba bug eka: video URL eka type karama data pushed wenne
-    // "if (videoUrl)" kiyala trim() nathuwa check karana nisa whitespace
-    // hari episode number field eka empty thiyenna puluwan nisa, episode
-    // number 0 wela "-" widiyata pennuna. Methanin fix karala thiyenne:
-    //  1. Row select karanne .episode-row class eken direct (childNodes
-    //     walata wada robust — text node walin confuse wenne na).
-    //  2. videoUrl trim කරලා empty නම් ithin row eka skip කරනවා.
-    //  3. Episode # field එක හිස්ව තිබ්බොත් auto-increment (1,2,3...) කරනවා
-    //     — ඒකෙන් "-" widiyata episode number පෙන්නපු bug එක fix වෙනවා.
     function getEpisodesFromForm() {
       const episodes = [];
       let autoNum = 1;
@@ -460,10 +450,6 @@
 
     // ============================================================
     // AUTO-FILL FROM URL (TMDB / IMDb) — uses TMDB API.
-    // IMDb walata official free public API ekak nathi nisa, IMDb URL
-    // ekakin awoth eken "tt" ID eka gahala TMDB ekema "/find" endpoint
-    // eken TMDB record eka soyaganna. TMDB URL ekak nam kelinma
-    // /movie/{id} or /tv/{id} call karanawa.
     // ============================================================
     const TMDB_KEY_STORAGE = 'mml_tmdb_api_key';
     const TMDB_IMG = 'https://image.tmdb.org/t/p';
@@ -632,6 +618,18 @@
         if (!title || !poster) { showToast('Title සහ Poster URL අනිවාර්යයි'); return; }
         if (sections.length === 0) { showToast('අඩුම තරමින් Section එකක්වත් select කරන්න'); return; }
 
+        // ---- FIX: "edit කරාම list එකේ අන්තිමට යනවා" bug -----------------
+        // Kalin: data object eke "date: new Date().toISOString()" kiyala
+        // hardcode karala thibba nisa, EDIT karana welawatath aluth date
+        // ekak assign wela — movies.html/series.html webpage dෙකම list eka
+        // sort karanne date ascending (parana ewa issella, aluthma ewa
+        // anthimata) widiyata nisa, edit kala movie eka anthimatama pනila.
+        // Dan: "date" field eka data object ekata methanin danne na.
+        //   - Aluth movie ekak add karana welawata witharak "date" ekak
+        //     dagannawa (pahala addDoc call eke).
+        //   - Edit karana welawata "date" field eke touch karanne na —
+        //     ea nisa Firestore eke thiyena parana date ekama thawath
+        //     wenas nathuwa thiyenawa, list eke position eka wenas wenne na.
         const data = {
           title, category,
           type: category === 'series' ? 'series' : 'movie',
@@ -644,17 +642,9 @@
           backdrop: document.getElementById('f_backdrop').value.trim(),
           description: document.getElementById('f_description').value.trim(),
           trailer: document.getElementById('f_trailer').value.trim(),
-          sections,
-          date: new Date().toISOString()
+          sections
         };
 
-        // ---- FIX: episode saving bug -------------------------------------
-        // Kalinviye category === 'series' unath, episode Video URL blank wela
-        // hari season/episode number field walata number danne nathnam,
-        // "data.episodes" empty array ekak widiyata silent widiyata save
-        // wela, admin ta penune episode save wenne na hariyata kiyala.
-        // Dan: episodes array eka හදලා, ethule element ekakwath naethnam
-        // save eka nawaththala clear error toast ekak pennanawa.
         if (category === 'series') {
           data.episodes = H.getEpisodesFromForm();
           if (data.episodes.length === 0) {
@@ -670,9 +660,13 @@
 
         try {
           if (H.editingId) {
+            // EDIT: date field එකට අත නොදාන්නම් update කරනවා — original
+            // position eka list eke thiyenawa.
             await updateDoc(doc(db, "movies", H.editingId), data);
             showToast('✅ Updated successfully');
           } else {
+            // NEW: methanata witharak aluth date ekak dagannawa.
+            data.date = new Date().toISOString();
             await addDoc(collection(db, "movies"), data);
             showToast('✅ Added successfully');
           }
