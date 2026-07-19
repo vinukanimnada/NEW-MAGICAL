@@ -24,16 +24,21 @@
     color: var(--text); /* theme color */
   }
   
-  /* Cinesubz style grid */
+  /* Cinesubz style grid — padding eka methanata direct dama (movies.html
+     eke widiyatama), container eke padding eka double-apply wenna epa nisa
+     kalin card size eka poddak wenas una. Dan movies.html ekema padding
+     values (10px mobile / 20px desktop) use karanawa — card size eka
+     hariyatama match wenawa. */
   .movie-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 8px;
+    padding: 10px;
     background: transparent; /* #000 ain */
   }
   
   @media(min-width: 768px) { /* mobile first > desktop */
-    .movie-grid { grid-template-columns: repeat(5, 1fr); gap: 12px; }
+    .movie-grid { grid-template-columns: repeat(5, 1fr); gap: 12px; padding: 20px; }
   }
   
   /* Card style — movies.html eke card style ekama hariyata match kala
@@ -163,9 +168,9 @@
 
   <div class="container">
     <h1>TV Shows</h1>
-    <div class="movie-grid" id="tvShowsGrid">
-      <div class="home-no-result">Loading...</div>
-    </div>
+  </div>
+  <div class="movie-grid" id="tvShowsGrid">
+    <div class="home-no-result">Loading...</div>
   </div>
 
   <!-- Search Results List (aluthin add kala) -->
