@@ -318,55 +318,26 @@
     }
   }
 
-  // Detect the raw file extension (ignoring any query string) so we can
-  // decide whether it's an mkv (needs an explicit mime type hint) or not.
-  function fileExtFromUrl(url) {
-    if (!url) return '';
-    const clean = url.split('?')[0].split('#')[0];
-    const m = clean.match(/\.([a-z0-9]+)$/i);
-    return m ? m[1].toLowerCase() : '';
-  }
-
-  function mimeForExt(ext) {
-    switch (ext) {
-      case 'mkv': return 'video/x-matroska';
-      case 'mp4': return 'video/mp4';
-      case 'webm': return 'video/webm';
-      case 'mov': return 'video/quicktime';
-      case 'm4v': return 'video/x-m4v';
-      default: return '';
-    }
-  }
-
   function buildPlayerHTML(url) {
     if (!url) return '<div class="details-skeleton">Video link නෑ</div>';
 
     const ytId = (url.includes('youtube.com') || url.includes('youtu.be')) ? ytIdFromUrl(url) : null;
     if (ytId) return `<iframe src="https://www.youtube.com/embed/${ytId}?autoplay=1" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>`;
 
-    // MP4 / MKV / other raw file links: play natively. Modern Chrome/Edge/
-    // Firefox can all play .mkv directly (H.264/AAC or VP9/Opus inside a
-    // Matroska container) the same way they play .mp4 — no special gating
-    // needed. We just give the <source> an explicit MIME type so the
-    // browser's demuxer picks the right path immediately instead of
-    // guessing from the URL. If a browser genuinely can't play it, the
-    // 'error' event (handled by attachVideoFallback below) catches that.
+    // MP4 / MKV / other raw file links: try to play natively first.
+    // Some browsers (esp. Safari/iOS) CAN play HEVC-in-MKV directly, others can't —
+    // so we attempt playback and only show the "download instead" fallback if it
+    // actually errors out at runtime (handled by attachVideoFallback() below).
     if (isDirectFileUrl(url) || url.includes('.mp4')) {
-      const ext = fileExtFromUrl(url);
-      const mime = mimeForExt(ext);
-      return `<video controls playsinline preload="auto" data-fallback-url="${url}"><source src="${url}"${mime ? ` type="${mime}"` : ''}></video>`;
+      return `<video src="${url}" controls playsinline preload="auto" data-fallback-url="${url}"></video>`;
     }
 
     // anith ewa iframe
     return `<iframe src="${url}" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>`;
   }
 
-  // If native <video> playback genuinely fails (unsupported codec/container,
-  // broken link, network error), swap in a simple generic error message.
-  // We rely only on the real 'error' event here — no artificial timeouts —
-  // since a large file over a slow mobile connection can legitimately take
-  // a while to start buffering, and a timer would misfire on those and show
-  // "error" for a video that was actually about to play fine.
+  // If native <video> playback fails (unsupported codec/container/network
+  // issue), swap in a simple generic error message instead.
   function attachVideoFallback(playerBox) {
     const videoEl = playerBox.querySelector('video[data-fallback-url]');
     if (!videoEl) return;
