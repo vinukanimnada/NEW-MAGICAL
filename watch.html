@@ -338,45 +338,22 @@
     }
   }
 
-  function unsupportedVideoHTML(url, ext) {
-    return `
-      <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; color:#fff; text-align:center; padding:20px; background:#000; gap:10px;">
-        <b>Error : Refresh Page or Check Your Network.</b>
-      </div>`;
-  }
-
   function buildPlayerHTML(url) {
     if (!url) return '<div class="details-skeleton">Video link නෑ</div>';
 
     const ytId = (url.includes('youtube.com') || url.includes('youtu.be')) ? ytIdFromUrl(url) : null;
     if (ytId) return `<iframe src="https://www.youtube.com/embed/${ytId}?autoplay=1" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>`;
 
-    // MP4 / MKV / other raw file links: try to play natively first.
-    // Some browsers (esp. Safari/iOS) CAN play HEVC-in-MKV directly, others can't —
-    // so we attempt playback and only show the "download instead" fallback if it
-    // actually errors out at runtime (handled by attachVideoFallback() below).
+    // MP4 / MKV / other raw file links: play natively. Modern Chrome/Edge/
+    // Firefox can all play .mkv directly (H.264/AAC or VP9/Opus inside a
+    // Matroska container) the same way they play .mp4 — no special gating
+    // needed. We just give the <source> an explicit MIME type so the
+    // browser's demuxer picks the right path immediately instead of
+    // guessing from the URL. If a browser genuinely can't play it, the
+    // 'error' event (handled by attachVideoFallback below) catches that.
     if (isDirectFileUrl(url) || url.includes('.mp4')) {
       const ext = fileExtFromUrl(url);
       const mime = mimeForExt(ext);
-
-      // Ask the browser up-front whether it can even play this container/codec.
-      // Safari/iOS in particular doesn't support .mkv at all (regardless of
-      // the codec inside), and it won't necessarily fire an 'error' event for
-      // that — it just sits there stuck at 00:00/00:00 forever. Checking
-      // canPlayType() lets us show the "not supported" fallback immediately
-      // instead of rendering a player that silently never loads.
-      if (mime) {
-        const testEl = document.createElement('video');
-        const support = testEl.canPlayType(mime);
-        if (!support) {
-          return unsupportedVideoHTML(url, ext);
-        }
-      }
-
-      // Using a <source> child (instead of a bare video[src]) lets us pass an
-      // explicit MIME type — this is what lets Chrome/Edge/Firefox correctly
-      // recognize an .mkv container (video/x-matroska) instead of guessing
-      // from the extension alone, which is what was breaking mkv playback.
       return `<video controls playsinline preload="auto" data-fallback-url="${url}"><source src="${url}"${mime ? ` type="${mime}"` : ''}></video>`;
     }
 
@@ -384,35 +361,21 @@
     return `<iframe src="${url}" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>`;
   }
 
-  // If native <video> playback fails (unsupported codec/container/network
-  // issue), swap in a simple generic error message instead.
+  // If native <video> playback genuinely fails (unsupported codec/container,
+  // broken link, network error), swap in a simple generic error message.
+  // We rely only on the real 'error' event here — no artificial timeouts —
+  // since a large file over a slow mobile connection can legitimately take
+  // a while to start buffering, and a timer would misfire on those and show
+  // "error" for a video that was actually about to play fine.
   function attachVideoFallback(playerBox) {
     const videoEl = playerBox.querySelector('video[data-fallback-url]');
     if (!videoEl) return;
-
-    let settled = false;
-    const showFallback = () => {
-      if (settled) return;
-      settled = true;
+    videoEl.addEventListener('error', () => {
       playerBox.innerHTML = `
         <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; color:#fff; text-align:center; padding:20px; background:#000;">
           <b>Error : Refresh Page or Check Your Network.</b>
         </div>`;
-    };
-
-    videoEl.addEventListener('error', showFallback, { once: true });
-
-    // Some browsers (notably Chrome/Edge with certain .mkv streams) can read
-    // metadata (duration, dimensions) without actually being able to decode
-    // and render frames — the video sits frozen forever with no 'error'
-    // event at all. So we only treat playback as "working" once frames are
-    // truly decoding ('playing' fires), not just once metadata has loaded.
-    videoEl.addEventListener('playing', () => { settled = true; }, { once: true });
-    setTimeout(() => {
-      if (!settled) {
-        showFallback();
-      }
-    }, 7000);
+    }, { once: true });
   }
 
   function buildCastHTML(m) {
