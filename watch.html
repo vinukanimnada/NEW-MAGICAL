@@ -402,16 +402,17 @@
 
     videoEl.addEventListener('error', showFallback, { once: true });
 
-    // Some browsers (notably Safari/iOS with an unsupported container like
-    // .mkv) don't fire 'error' at all — the player just sits stuck at
-    // 00:00/00:00 forever. If metadata hasn't loaded within a few seconds,
-    // treat that as failed playback too.
-    videoEl.addEventListener('loadedmetadata', () => { settled = true; }, { once: true });
+    // Some browsers (notably Chrome/Edge with certain .mkv streams) can read
+    // metadata (duration, dimensions) without actually being able to decode
+    // and render frames — the video sits frozen forever with no 'error'
+    // event at all. So we only treat playback as "working" once frames are
+    // truly decoding ('playing' fires), not just once metadata has loaded.
+    videoEl.addEventListener('playing', () => { settled = true; }, { once: true });
     setTimeout(() => {
-      if (!settled && videoEl.readyState === 0) {
+      if (!settled) {
         showFallback();
       }
-    }, 6000);
+    }, 7000);
   }
 
   function buildCastHTML(m) {
