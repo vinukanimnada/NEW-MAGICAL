@@ -284,7 +284,8 @@
     const title = movie.title || 'No Title';
     return `
       <div class="movie-card" onclick="window.location.href='watch.html?id=${movie.id}'">
-        <img src="${poster}" alt="${title}" loading="lazy">
+        <img src="${poster}" alt="${title}" loading="eager" decoding="async"
+             onerror="this.onerror=null; this.src='https://via.placeholder.com/150x220/222/fff';">
         <h3>${title}</h3>
       </div>
     `;
@@ -407,7 +408,8 @@
       if (title.length > 35) title = title.substring(0, 35) + '...';
       return `
         <div class="home-result-item" onclick="window.location.href='watch.html?id=${m.id}'">
-          <img src="${poster}" class="home-result-poster" loading="lazy">
+          <img src="${poster}" class="home-result-poster" loading="eager" decoding="async"
+               onerror="this.onerror=null; this.src='https://via.placeholder.com/50x75/222/fff';">
           <div class="home-result-info">
             <div class="home-result-title">${title}</div>
             <div class="home-result-meta">${year}</div>
