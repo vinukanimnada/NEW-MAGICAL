@@ -119,6 +119,18 @@
         <a href="#" id="cancelEdit" style="color:var(--text-faint); margin-left:8px;">(cancel)</a>
       </div>
 
+      <div class="form-group" style="border:1px solid var(--border); border-radius:10px; padding:12px; background:var(--card);">
+        <label><i class="fa fa-bolt"></i> Auto-Fill from URL</label>
+        <div style="display:flex; gap:8px;">
+          <input type="text" class="admin-input" id="f_autofillUrl" placeholder="TMDB or IMDb URL / IMDb tt-ID" style="margin-bottom:0; flex:1;">
+          <button class="btn btn-secondary" id="autofillBtn" style="flex-shrink:0; padding:12px 16px;"><i class="fa fa-magic"></i></button>
+        </div>
+        <div class="form-hint">
+          e.g. <span style="opacity:.8">https://www.themoviedb.org/movie/1011477</span> හෝ <span style="opacity:.8">https://www.imdb.com/title/tt1234567</span> paste කරලා Fetch button එක ඔබන්න — Title, Poster, Backdrop, Year, Rating, Duration, Genre, Description, Trailer, Cast auto fill වෙනවා.
+          <a href="#" id="setApiKeyLink" style="color:#ff2d95;">TMDB API Key set කරන්න</a>
+        </div>
+      </div>
+
       <div class="form-group">
         <label>Title *</label>
         <input type="text" class="admin-input" id="f_title" placeholder="e.g. Ne Zha 2">
@@ -423,6 +435,7 @@
       document.getElementById('f_description').value = '';
       document.getElementById('f_trailer').value = '';
       document.getElementById('f_videoUrl').value = '';
+      document.getElementById('f_autofillUrl').value = '';
       setSectionsInForm([]);
       clearEpisodeBuilder();
       clearCastBuilder();
@@ -444,6 +457,134 @@
       saveHeroBtn.innerHTML = '<i class="fa fa-save"></i> Save Banner';
     }
     cancelHeroEdit.addEventListener('click', (e) => { e.preventDefault(); resetHeroForm(); });
+
+    // ============================================================
+    // AUTO-FILL FROM URL (TMDB / IMDb) — uses TMDB API.
+    // IMDb walata official free public API ekak nathi nisa, IMDb URL
+    // ekakin awoth eken "tt" ID eka gahala TMDB ekema "/find" endpoint
+    // eken TMDB record eka soyaganna. TMDB URL ekak nam kelinma
+    // /movie/{id} or /tv/{id} call karanawa.
+    // ============================================================
+    const TMDB_KEY_STORAGE = 'mml_tmdb_api_key';
+    const TMDB_IMG = 'https://image.tmdb.org/t/p';
+
+    function getTmdbKey() {
+      return (localStorage.getItem(TMDB_KEY_STORAGE) || '').trim();
+    }
+
+    function promptForTmdbKey() {
+      const existing = getTmdbKey();
+      const key = prompt(
+        'TMDB API Key එක දාන්න.\n\nFree ගන්න: themoviedb.org walata signup වෙලා → Settings → API → "API Read Access Token (v4 auth)" හෝ "API Key (v3 auth)" copy කරගන්න.',
+        existing || ''
+      );
+      if (key !== null) {
+        localStorage.setItem(TMDB_KEY_STORAGE, key.trim());
+        if (key.trim()) showToast('✅ API Key saved');
+      }
+    }
+    document.getElementById('setApiKeyLink').addEventListener('click', (e) => { e.preventDefault(); promptForTmdbKey(); });
+
+    function parseAutofillUrl(raw) {
+      const url = raw.trim();
+      let m = url.match(/themoviedb\.org\/(movie|tv)\/(\d+)/i);
+      if (m) return { source: 'tmdb', type: m[1].toLowerCase(), id: m[2] };
+      m = url.match(/(tt\d{6,9})/i);
+      if (m) return { source: 'imdb', imdbId: m[1] };
+      return null;
+    }
+
+    async function tmdbFetch(path, keyParam, headers) {
+      const sep = path.includes('?') ? '&' : '?';
+      const res = await fetch(`https://api.themoviedb.org/3${path}${sep}${keyParam}`, { headers });
+      if (!res.ok) {
+        if (res.status === 401) throw new Error('API Key එක වැරදියි');
+        if (res.status === 404) throw new Error('Record එක හම්බුනේ නෑ');
+        throw new Error('TMDB request failed (' + res.status + ')');
+      }
+      return res.json();
+    }
+
+    async function fetchDetailsFromUrl(parsed) {
+      const key = getTmdbKey();
+      if (!key) { promptForTmdbKey(); throw new Error('TMDB API Key එකක් set කරන්න මුලින්ම'); }
+      const isBearer = key.startsWith('eyJ');
+      const headers = isBearer ? { Authorization: `Bearer ${key}`, accept: 'application/json' } : {};
+      const keyParam = isBearer ? '' : `api_key=${encodeURIComponent(key)}`;
+
+      let type, id;
+      if (parsed.source === 'tmdb') {
+        type = parsed.type;
+        id = parsed.id;
+      } else {
+        const found = await tmdbFetch(`/find/${parsed.imdbId}`, keyParam ? `${keyParam}&external_source=imdb_id` : `external_source=imdb_id`, headers);
+        if (found.movie_results && found.movie_results.length) { type = 'movie'; id = found.movie_results[0].id; }
+        else if (found.tv_results && found.tv_results.length) { type = 'tv'; id = found.tv_results[0].id; }
+        else throw new Error('මේ IMDb ID එකට TMDB එකේ match වෙන්නක් නෑ');
+      }
+
+      const d = await tmdbFetch(`/${type}/${id}`, keyParam ? `${keyParam}&append_to_response=credits,videos` : `append_to_response=credits,videos`, headers);
+      return { type, data: d };
+    }
+
+    function populateFormFromTmdb(type, d) {
+      document.getElementById('f_title').value = d.title || d.name || '';
+      document.getElementById('f_category').value = type === 'tv' ? 'series' : 'movie';
+      updateFieldVisibility();
+
+      const dateStr = d.release_date || d.first_air_date || '';
+      document.getElementById('f_year').value = dateStr ? dateStr.slice(0, 4) : '';
+      document.getElementById('f_rating').value = d.vote_average ? Number(d.vote_average).toFixed(1) : '';
+
+      if (type === 'movie' && d.runtime) {
+        const h = Math.floor(d.runtime / 60), mnt = d.runtime % 60;
+        document.getElementById('f_duration').value = (h ? h + 'h ' : '') + mnt + 'm';
+      } else if (type === 'tv' && Array.isArray(d.episode_run_time) && d.episode_run_time[0]) {
+        document.getElementById('f_duration').value = d.episode_run_time[0] + 'm';
+      }
+
+      document.getElementById('f_genre').value = (d.genres || []).map(g => g.name).join(', ');
+      document.getElementById('f_poster').value = d.poster_path ? `${TMDB_IMG}/w500${d.poster_path}` : '';
+      document.getElementById('f_backdrop').value = d.backdrop_path ? `${TMDB_IMG}/original${d.backdrop_path}` : '';
+      document.getElementById('f_description').value = d.overview || '';
+
+      const vids = (d.videos && d.videos.results) || [];
+      const trailer = vids.find(v => v.site === 'YouTube' && v.type === 'Trailer' && v.official)
+        || vids.find(v => v.site === 'YouTube' && v.type === 'Trailer')
+        || vids.find(v => v.site === 'YouTube');
+      document.getElementById('f_trailer').value = trailer ? `https://www.youtube.com/watch?v=${trailer.key}` : '';
+
+      clearCastBuilder();
+      const castList = ((d.credits && d.credits.cast) || []).slice(0, 10);
+      castList.forEach(c => addCastRow({
+        photo: c.profile_path ? `${TMDB_IMG}/w200${c.profile_path}` : '',
+        name: c.name || '',
+        character: c.character || ''
+      }));
+    }
+
+    document.getElementById('autofillBtn').addEventListener('click', async () => {
+      const raw = document.getElementById('f_autofillUrl').value.trim();
+      if (!raw) { showToast('TMDB හෝ IMDb URL එකක් දාන්න'); return; }
+      const parsed = parseAutofillUrl(raw);
+      if (!parsed) { showToast('❌ මේක TMDB URL එකක් හෝ IMDb URL/ID එකක් නෙවෙයි'); return; }
+
+      const btn = document.getElementById('autofillBtn');
+      const original = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i>';
+      try {
+        const { type, data } = await fetchDetailsFromUrl(parsed);
+        populateFormFromTmdb(type, data);
+        showToast('✅ Details auto-fill උනා — check කරලා Save කරන්න');
+      } catch (err) {
+        console.error(err);
+        showToast('❌ ' + err.message);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = original;
+      }
+    });
 
     // Firebase-dependent handlers are attached lower down once Firebase loads.
     window.__mmlAdminHelpers = {
