@@ -82,12 +82,37 @@ header {
   position: fixed; top: 60px; left: -230px; width: 210px; height: calc(100% - 60px);
   background: #111; z-index: 1001; transition: left 0.3s ease;
   padding: 8px 0; box-shadow: 2px 0 12px rgba(0,0,0,0.4);
+  /* scroll wenna one nisa add kala tika */
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-height: 100vh;                 /* fallback browsers walata */
+  max-height: 100dvh;                /* mobile browser address-bar eka wenas wena widiyata */
+  -webkit-overflow-scrolling: touch;  /* iOS eke smooth momentum scroll */
+  overscroll-behavior: contain;       /* sidebar scroll una gaman background page eka scroll wenne na */
+  scrollbar-width: thin;              /* Firefox - patta scrollbar ekak */
+  scrollbar-color: rgba(255,45,149,0.4) transparent;
 }
 .sidebar.active { left: 0; }
 .sidebar ul { list-style: none; }
 .sidebar li a { display: flex; align-items: center; gap: 12px; padding: 14px 22px; color: #aaa; font-size: 15px; }
 .sidebar li a i { width: 18px; text-align: center; color: #ff2d95; }
 .sidebar li a:hover, .sidebar li.active a { background: rgba(255,45,149,0.1); color: #fff; }
+
+/* Chrome/Safari/Edge scrollbar styling */
+.sidebar::-webkit-scrollbar {
+  width: 4px;
+}
+.sidebar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.sidebar::-webkit-scrollbar-thumb {
+  background: rgba(255,45,149,0.4);
+  border-radius: 4px;
+}
+.sidebar::-webkit-scrollbar-thumb:hover {
+  background: rgba(255,45,149,0.7);
+}
+
 .overlay { position: fixed; inset: 60px 0 0 0; background: rgba(0,0,0,0.6); z-index: 1000; display: none; }
 .overlay.active { display: block; }
 
