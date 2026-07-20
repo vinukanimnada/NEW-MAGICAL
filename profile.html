@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="si" class="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Profile - Magical Movie Land</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<link rel="icon" href="https://files.catbox.moe/nstkne.png" type="image/png">
+<link rel="apple-touch-icon" href="https://files.catbox.moe/nstkne.png">
+
+<style>
+* { box-sizing: border-box; }
+
+.profile-wrap {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 18px 15px 60px;
+}
+
+/* ---------- Logged out state ---------- */
+.profile-loggedout {
+  text-align: center;
+  padding: 80px 20px;
+  display: none;
+}
+.profile-loggedout i {
+  font-size: 42px;
+  color: #ff2d95;
+  margin-bottom: 16px;
+}
+.profile-loggedout h2 {
+  font-size: 18px;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+.profile-loggedout p {
+  font-size: 13.5px;
+  color: var(--text-faint);
+  margin-bottom: 20px;
+}
+.profile-loggedout button {
+  background: #ff2d95;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 28px;
+  font-size: 14.5px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* ---------- Logged in state ---------- */
+#profileLoggedIn { display: none; }
+
+.profile-card {
+  background: var(--card);
+  border-radius: 14px;
+  padding: 30px 20px 24px;
+  text-align: center;
+  margin-bottom: 14px;
+}
+
+.profile-avatar-wrap {
+  position: relative;
+  width: 92px;
+  height: 92px;
+  margin: 0 auto 16px;
+}
+.profile-avatar {
+  width: 92px;
+  height: 92px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ff2d95, #b6178f);
+  color: #fff;
+  font-size: 36px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.profile-avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+.profile-edit-badge {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #ff2d95;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12.5px;
+  cursor: pointer;
+  border: 3px solid var(--card);
+}
+
+.profile-name {
+  font-size: 21px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 12px;
+}
+
+.profile-edit-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 22px;
+  border: 1px solid #ff2d95;
+  color: #ff2d95;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  background: transparent;
+  margin-bottom: 14px;
+}
+.profile-edit-btn:hover { background: rgba(255,45,149,0.1); }
+
+.profile-joined {
+  font-size: 12.5px;
+  color: var(--text-faint);
+}
+
+/* ---------- Inline edit form (swaps in place of name/joined) ---------- */
+.profile-edit-form { display: none; text-align: left; margin-top: 6px; }
+.profile-edit-form.active { display: block; }
+.profile-edit-form .admin-input,
+.profile-edit-form input {
+  width: 100%;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 12px 14px;
+  border-radius: 8px;
+  font-size: 14px;
+  margin-bottom: 10px;
+  outline: none;
+}
+.profile-edit-form input:focus { border-color: #ff2d95; }
+.profile-static-field {
+  font-size: 13px;
+  color: var(--text-faint);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 11px 14px;
+  margin-bottom: 10px;
+}
+.profile-static-field b { color: var(--text-dim); font-weight: 600; }
+.profile-edit-form .row { display: flex; gap: 8px; }
+.profile-edit-form .row input { flex: 1; }
+.profile-edit-actions { display: flex; gap: 8px; margin-top: 4px; }
+.profile-save-btn, .profile-cancel-btn {
+  flex: 1;
+  border: none;
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.profile-save-btn { background: #ff2d95; color: #fff; }
+.profile-cancel-btn { background: rgba(255,255,255,0.08); color: var(--text); }
+.profile-error { color: #ff5b5b; font-size: 12.5px; margin: -4px 0 10px; min-height: 14px; }
+
+/* ---------- Stats grid ---------- */
+.profile-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  background: var(--card);
+  border-radius: 14px;
+  overflow: hidden;
+  margin-bottom: 14px;
+}
+.profile-stat {
+  text-align: center;
+  padding: 18px 8px;
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.profile-stat:nth-child(2n) { border-right: none; }
+.profile-stat:nth-child(3), .profile-stat:nth-child(4) { border-bottom: none; }
+.profile-stat-num { font-size: 21px; font-weight: 700; color: var(--text); }
+.profile-stat-label { font-size: 12px; color: var(--text-faint); margin-top: 3px; }
+
+/* ---------- Tabs ---------- */
+.profile-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 4px;
+}
+.profile-tab {
+  flex: 1;
+  text-align: center;
+  padding: 12px 4px 10px;
+  font-size: 12.5px;
+  color: var(--text-faint);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  border-bottom: 2px solid transparent;
+}
+.profile-tab i { font-size: 15px; }
+.profile-tab.active { color: #ff2d95; border-color: #ff2d95; }
+
+.profile-tab-content { display: none; padding-top: 6px; }
+.profile-tab-content.active { display: block; }
+
+.profile-empty {
+  text-align: center;
+  color: var(--text-faint);
+  padding: 46px 20px;
+  font-size: 13.5px;
+}
+
+.profile-list-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+.profile-list-grid .movie-card { aspect-ratio: 2/3; border-radius: 6px; overflow: hidden; cursor: pointer; background: var(--card-2); }
+.profile-list-grid .movie-card img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* ---------- Settings tab ---------- */
+.settings-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--card);
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--text);
+}
+.settings-item i.left { color: #ff2d95; margin-right: 10px; width: 18px; text-align: center; }
+.settings-item i.right { color: var(--text-faint); font-size: 12px; }
+.settings-item.danger { color: #ff5b5b; }
+.settings-item.danger i.left { color: #ff5b5b; }
+</style>
+</head>
+<body>
+
+<header id="mainHeader">
+  <div class="header-left">
+    <button class="menu-toggle" id="menuBtn" aria-label="Menu"><span></span><span></span><span></span></button>
+    <div class="logo">𝗠𝗔𝗚𝗜𝗖𝗔𝗟 <span>𝗠🍩𝗩𝗜𝗘 𝗟🌲𝗡𝗗</span></div>
+  </div>
+
+  <div class="header-right">
+    <i class="fa fa-search" id="searchBtn"></i>
+  </div>
+
+  <div class="search-box" id="searchBox">
+    <input type="text" id="searchInput" placeholder="Search movies...">
+    <i class="fa fa-times" id="closeSearch"></i>
+  </div>
+</header>
+
+<div class="sidebar" id="sidebar">
+  <ul>
+    <li><a href="index.html"><i class="fa fa-home"></i> Home</a></li>
+    <li><a href="movies.html"><i class="fa fa-film"></i> All Movies</a></li>
+    <li><a href="lkcinema.html"><i class="fa-solid fa-clapperboard"></i> LK Cinema</a></li>
+    <li><a href="anime.html"><i class="fa-solid fa-dragon"></i> Anime</a></li>
+    <li><a href="series.html"><i class="fa fa-tv"></i> TV Shows</a></li>
+    <li><a href="request.html"><i class="fa fa-plus-circle"></i> Requests</a></li>
+    <li><a href="chanels.html"><i class="fa-solid fa-users"></i> Join Channels</a></li>
+    <li><a href="about.html"><i class="fa fa-info-circle"></i> About</a></li>
+    <li><a href="contact.html"><i class="fa fa-envelope"></i> Contact Us</a></li>
+    <li><a href="settings.html"><i class="fa fa-cog"></i> Settings</a></li>
+  </ul>
+</div>
+<div class="overlay" id="overlay"></div>
+
+<div class="profile-wrap">
+
+  <!-- ============ LOGGED OUT ============ -->
+  <div class="profile-loggedout" id="profileLoggedOut">
+    <i class="fa fa-user-circle"></i>
+    <h2>Log in to view your Profile</h2>
+    <p>Account එකකට log in වුනොත් My List, Seen List සහ Profile settings බලාගන්න පුළුවන්.</p>
+    <button id="goLoginBtn"><i class="fa fa-sign-in-alt"></i> Log in</button>
+  </div>
+
+  <!-- ============ LOGGED IN ============ -->
+  <div id="profileLoggedIn">
+
+    <div class="profile-card">
+      <div class="profile-avatar-wrap">
+        <div class="profile-avatar" id="profileAvatar">?</div>
+        <div class="profile-edit-badge" id="profileEditBadge"><i class="fa fa-pen"></i></div>
+      </div>
+
+      <!-- Display mode -->
+      <div id="profileDisplayMode">
+        <div class="profile-name" id="profileDisplayName">—</div>
+        <button class="profile-edit-btn" id="profileEditBtn"><i class="fa fa-pen"></i> Edit Profile</button>
+        <div class="profile-joined" id="profileJoined"></div>
+      </div>
+
+      <!-- Edit mode -->
+      <div class="profile-edit-form" id="profileEditForm">
+        <div class="profile-error" id="profileEditError"></div>
+        <div class="profile-static-field"><b>Username:</b> <span id="editUsernameStatic">—</span></div>
+        <div class="profile-static-field"><b>Email:</b> <span id="editEmailStatic">—</span></div>
+        <div class="row">
+          <input type="text" id="editFirstName" placeholder="Name">
+          <input type="text" id="editLastName" placeholder="Last name">
+        </div>
+        <div class="profile-edit-actions">
+          <button class="profile-cancel-btn" id="profileCancelBtn">Cancel</button>
+          <button class="profile-save-btn" id="profileSaveBtn"><i class="fa fa-save"></i> Save</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="profile-stats">
+      <div class="profile-stat">
+        <div class="profile-stat-num" id="statMyList">0</div>
+        <div class="profile-stat-label">My List</div>
+      </div>
+      <div class="profile-stat">
+        <div class="profile-stat-num" id="statSeen">0</div>
+        <div class="profile-stat-label">Seen List</div>
+      </div>
+      <div class="profile-stat">
+        <div class="profile-stat-num" id="statLinks">0</div>
+        <div class="profile-stat-label">Shared Links</div>
+      </div>
+      <div class="profile-stat">
+        <div class="profile-stat-num" id="statComments">0</div>
+        <div class="profile-stat-label">Comments</div>
+      </div>
+    </div>
+
+    <div class="profile-tabs">
+      <div class="profile-tab active" data-tab="list"><i class="fa-solid fa-table-cells-large"></i> List</div>
+      <div class="profile-tab" data-tab="seen"><i class="fa fa-eye"></i> Seen</div>
+      <div class="profile-tab" data-tab="links"><i class="fa fa-link"></i> Links</div>
+      <div class="profile-tab" data-tab="settings"><i class="fa fa-cog"></i> Settings</div>
+    </div>
+
+    <div class="profile-tab-content active" id="tab-list">
+      <div class="profile-list-grid" id="myListGrid"></div>
+      <div class="profile-empty" id="myListEmpty">No content available on your list.</div>
+    </div>
+
+    <div class="profile-tab-content" id="tab-seen">
+      <div class="profile-list-grid" id="seenListGrid"></div>
+      <div class="profile-empty" id="seenListEmpty">No content available on your seen list.</div>
+    </div>
+
+    <div class="profile-tab-content" id="tab-links">
+      <div class="profile-empty">No shared links yet.</div>
+    </div>
+
+    <div class="profile-tab-content" id="tab-settings">
+      <div class="settings-item" id="changePasswordItem">
+        <span><i class="fa fa-key left"></i> Change Password</span>
+        <i class="fa fa-chevron-right right"></i>
+      </div>
+      <div class="settings-item danger" id="logoutItem">
+        <span><i class="fa fa-right-from-bracket left"></i> Logout</span>
+        <i class="fa fa-chevron-right right"></i>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import {
+  getAuth, onAuthStateChanged, signOut, sendPasswordResetEmail
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import {
+  getFirestore, doc, getDoc, setDoc
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCx0TEmgr3GCyvfeok9Y42yR1PTM4_8y9M",
+  authDomain: "magical-movie-land.firebaseapp.com",
+  projectId: "magical-movie-land",
+  storageBucket: "magical-movie-land.firebasestorage.app",
+  messagingSenderId: "27757424288",
+  appId: "1:27757424288:web:d650e2659f09f0b9c823c5"
+};
+
+// Reuse the app instance auth.js already initialized (auth.js loads on
+// every page including this one, via script.js/header), instead of
+// throwing a "duplicate app" error.
+const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+const loggedOutView = document.getElementById('profileLoggedOut');
+const loggedInView = document.getElementById('profileLoggedIn');
+const displayMode = document.getElementById('profileDisplayMode');
+const editForm = document.getElementById('profileEditForm');
+const editError = document.getElementById('profileEditError');
+
+let currentUser = null;
+let currentData = {};
+
+document.getElementById('goLoginBtn').addEventListener('click', () => {
+  // auth.js exposes window.MMLAuth on every page — open its login modal.
+  if (window.MMLAuth) window.MMLAuth.openLogin();
+});
+
+function initials(label) {
+  return (label || '?').trim().charAt(0).toUpperCase() || '?';
+}
+
+function renderDisplay(user, data) {
+  const label = data.username || user.displayName || (user.email || '').split('@')[0] || '?';
+  const fullName = [data.firstName, data.lastName].filter(Boolean).join(' ');
+
+  document.getElementById('profileAvatar').textContent = initials(label);
+  document.getElementById('profileDisplayName').textContent = fullName || label;
+
+  let joinedText = '';
+  if (data.createdAt) {
+    const d = new Date(data.createdAt);
+    if (!isNaN(d)) joinedText = 'Joined Date: ' + d.toISOString().slice(0, 10);
+  }
+  document.getElementById('profileJoined').textContent = joinedText;
+
+  // ---- Stats -------------------------------------------------------
+  // "My List" / "Seen List" walata dedicated watchlist feature ekak site
+  // eke kalinma implement wela nathi nisa, users/{uid} document eke
+  // methanata array widiyata thiyenawa nam (myList / seenList) e length
+  // eka pennanawa — features eka pasuwa add karama methana wenas
+  // karanna deyak one na, hariyatama wada karayi.
+  const myList = Array.isArray(data.myList) ? data.myList : [];
+  const seenList = Array.isArray(data.seenList) ? data.seenList : [];
+  document.getElementById('statMyList').textContent = myList.length;
+  document.getElementById('statSeen').textContent = seenList.length;
+  document.getElementById('statLinks').textContent = Array.isArray(data.sharedLinks) ? data.sharedLinks.length : 0;
+  document.getElementById('statComments').textContent = Number(data.commentsCount) || 0;
+
+  renderListGrid('myListGrid', 'myListEmpty', myList);
+  renderListGrid('seenListGrid', 'seenListEmpty', seenList);
+}
+
+function renderListGrid(gridId, emptyId, items) {
+  const grid = document.getElementById(gridId);
+  const empty = document.getElementById(emptyId);
+  if (!items.length) {
+    grid.innerHTML = '';
+    empty.style.display = 'block';
+    return;
+  }
+  empty.style.display = 'none';
+  grid.innerHTML = items.map(it => `
+    <div class="movie-card" onclick="window.location.href='watch.html?id=${it.id || ''}'">
+      <img src="${it.poster || 'https://via.placeholder.com/300x450/222/fff?text=No+Image'}" loading="lazy">
+    </div>
+  `).join('');
+}
+
+async function loadAndRender(user) {
+  const snap = await getDoc(doc(db, 'users', user.uid));
+  currentData = snap.exists() ? snap.data() : {};
+  renderDisplay(user, currentData);
+}
+
+onAuthStateChanged(auth, (user) => {
+  currentUser = user;
+  if (!user) {
+    loggedOutView.style.display = 'block';
+    loggedInView.style.display = 'none';
+    return;
+  }
+  loggedOutView.style.display = 'none';
+  loggedInView.style.display = 'block';
+  loadAndRender(user).catch(err => {
+    console.error(err);
+    document.getElementById('profileDisplayName').textContent = 'Error loading profile';
+  });
+});
+
+/* ---------------- Edit Profile toggle ---------------- */
+function openEdit() {
+  editError.textContent = '';
+  document.getElementById('editUsernameStatic').textContent = currentData.username || currentUser.displayName || '—';
+  document.getElementById('editEmailStatic').textContent = currentData.email || currentUser.email || '—';
+  document.getElementById('editFirstName').value = currentData.firstName || '';
+  document.getElementById('editLastName').value = currentData.lastName || '';
+  displayMode.style.display = 'none';
+  editForm.classList.add('active');
+}
+function closeEdit() {
+  editForm.classList.remove('active');
+  displayMode.style.display = 'block';
+}
+
+document.getElementById('profileEditBtn').addEventListener('click', openEdit);
+document.getElementById('profileEditBadge').addEventListener('click', openEdit);
+document.getElementById('profileCancelBtn').addEventListener('click', closeEdit);
+
+document.getElementById('profileSaveBtn').addEventListener('click', async () => {
+  if (!currentUser) return;
+  const btn = document.getElementById('profileSaveBtn');
+  const firstName = document.getElementById('editFirstName').value.trim();
+  const lastName = document.getElementById('editLastName').value.trim();
+
+  editError.textContent = '';
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Saving...';
+
+  try {
+    await setDoc(doc(db, 'users', currentUser.uid), { firstName, lastName }, { merge: true });
+    currentData = { ...currentData, firstName, lastName };
+    renderDisplay(currentUser, currentData);
+    closeEdit();
+  } catch (err) {
+    console.error(err);
+    editError.textContent = 'Error: ' + err.message;
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fa fa-save"></i> Save';
+  }
+});
+
+/* ---------------- Tabs ---------------- */
+document.querySelectorAll('.profile-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.profile-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.profile-tab-content').forEach(c => c.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
+  });
+});
+
+/* ---------------- Settings tab actions ---------------- */
+document.getElementById('changePasswordItem').addEventListener('click', async () => {
+  if (!currentUser || !currentUser.email) return;
+  try {
+    await sendPasswordResetEmail(auth, currentUser.email);
+    alert('Password reset link එකක් ' + currentUser.email + ' වලට යවලා තියෙනවා.');
+  } catch (err) {
+    alert('Error: ' + err.message);
+  }
+});
+
+document.getElementById('logoutItem').addEventListener('click', async () => {
+  if (!confirm('Logout කරන්න ස්ථිර ද?')) return;
+  await signOut(auth);
+  window.location.href = 'index.html';
+});
+</script>
+
+<!-- auth.js builds the header account button + login/signup modal on
+     every page (needed here for the "Log in" button in logged-out
+     state, and to keep the header icon in sync). -->
+<script type="module" src="auth.js"></script>
+<script src="script.js"></script> <!-- sidebar/menu/search okkoma meken -->
+
+</body>
+</html>
