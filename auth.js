@@ -21,6 +21,13 @@
       class eka already thiyenawa). Ee class eka nathi
       page ekaka nam, <header> tag ekatama button eka append
       wenawa (fallback).
+
+   ---------------- PROFILE PAGE ----------------
+   Header eke account icon eken "Profile" select kalama, dan
+   full "profile.html" page ekata navigate wenawa (kalinviye
+   modal ekema tiny profile view ekakata giya, dan wenas kala —
+   My List / Seen List / Shared Links / Comments stats + tabs
+   thiyena dedicated page ekak profile.html eke thiyenawa).
    ============================================================ */
 
 import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -103,17 +110,13 @@ style.textContent = `
 .mml-auth-menu-user { padding:10px 12px; font-size:13.5px; font-weight:700; color:#fff; border-bottom:1px solid #222; margin-bottom:6px; }
 .mml-auth-menu-item { padding:10px 12px; font-size:14px; color:#ddd; cursor:pointer; border-radius:6px; }
 .mml-auth-menu-item:hover { background:#1a1a1a; color:#ff2d95; }
-.mml-profile-field { margin-bottom: 14px; }
-.mml-profile-label { font-size:12px; color:#888; margin-bottom:5px; }
-.mml-profile-static { font-size:14.5px; color:#fff; padding:12px 14px; background:#0a0a0a; border:1px solid #222; border-radius:8px; }
-.mml-profile-avatar { width:80px; height:80px; border-radius:50%; background:#ff2d95; color:#fff; font-size:32px; font-weight:700; display:flex; align-items:center; justify-content:center; margin:0 auto 16px; }
-.mml-profile-name { font-size:19px; font-weight:700; color:#fff; text-align:center; }
-.mml-profile-joined { font-size:12.5px; color:#888; text-align:center; margin-top:6px; }
 `;
 document.head.appendChild(style);
 
 /* =========================================================
-   Inject modal HTML
+   Inject modal HTML (login / signup only — the old in-modal
+   profile view/edit sections were removed since Profile now
+   navigates to the dedicated profile.html page instead)
    ========================================================= */
 const overlay = document.createElement('div');
 overlay.className = 'mml-auth-overlay';
@@ -145,33 +148,6 @@ overlay.innerHTML = `
       </div>
       <button class="mml-auth-submit" id="mmlSignupBtn"><i class="fa fa-user-plus"></i> Sign up</button>
       <div class="mml-auth-switch">Do you already have an account? <a id="mmlGoLogin">Login here</a></div>
-    </div>
-
-    <div class="mml-auth-section" id="mmlProfileViewSection">
-      <div class="mml-profile-avatar" id="mmlProfileAvatar">?</div>
-      <div class="mml-profile-name" id="mmlProfileDisplayName">—</div>
-      <div class="mml-profile-joined" id="mmlProfileJoined"></div>
-      <button class="mml-auth-submit" id="mmlEditProfileBtn" style="margin-top:18px;"><i class="fa fa-pen"></i> Edit Profile</button>
-    </div>
-
-    <div class="mml-auth-section" id="mmlProfileEditSection">
-      <div class="mml-auth-title">Edit Profile</div>
-      <div class="mml-auth-error" id="mmlProfileError"></div>
-      <div class="mml-profile-field">
-        <div class="mml-profile-label">Username</div>
-        <div class="mml-profile-static" id="mmlProfileUsername">—</div>
-      </div>
-      <div class="mml-profile-field">
-        <div class="mml-profile-label">Email</div>
-        <div class="mml-profile-static" id="mmlProfileEmail">—</div>
-      </div>
-      <div class="form-row mml-auth-row" style="margin-bottom:14px;">
-        <input type="text" class="mml-auth-input" id="mmlProfileFirstName" placeholder="Name" style="margin-bottom:0;">
-        <input type="text" class="mml-auth-input" id="mmlProfileLastName" placeholder="Last name" style="margin-bottom:0;">
-      </div>
-      <button class="mml-auth-submit" id="mmlProfileSaveBtn"><i class="fa fa-save"></i> Save Changes</button>
-      <div class="mml-auth-forgot" id="mmlProfileChangePassword">Change my password</div>
-      <div class="mml-auth-switch"><a id="mmlBackToProfileView">← Back to Profile</a></div>
     </div>
   </div>
 `;
@@ -211,20 +187,14 @@ if (headerRight) {
    ========================================================= */
 const loginSection = document.getElementById('mmlLoginSection');
 const signupSection = document.getElementById('mmlSignupSection');
-const profileViewSection = document.getElementById('mmlProfileViewSection');
-const profileEditSection = document.getElementById('mmlProfileEditSection');
 const loginError = document.getElementById('mmlLoginError');
 const signupError = document.getElementById('mmlSignupError');
-const profileError = document.getElementById('mmlProfileError');
 
 function openModal(section) {
   loginError.textContent = '';
   signupError.textContent = '';
-  profileError.textContent = '';
   loginSection.classList.toggle('active', section === 'login');
   signupSection.classList.toggle('active', section === 'signup');
-  profileViewSection.classList.toggle('active', section === 'profileView');
-  profileEditSection.classList.toggle('active', section === 'profileEdit');
   overlay.classList.add('active');
 }
 function closeModal() { overlay.classList.remove('active'); }
@@ -237,7 +207,7 @@ document.getElementById('mmlGoLogin').addEventListener('click', () => openModal(
 /* =========================================================
    Header profile button behavior:
    - Logged out -> opens login modal
-   - Logged in  -> opens small dropdown menu (username + Logout)
+   - Logged in  -> opens small dropdown menu (username + Profile + Logout)
    ========================================================= */
 let currentUser = null;
 
@@ -262,94 +232,15 @@ document.getElementById('mmlLogoutBtn').addEventListener('click', async () => {
   menu.classList.remove('active');
 });
 
-let cachedProfileData = null;
-
-async function loadProfileData() {
-  if (!currentUser) return null;
-  const snap = await getDoc(doc(db, 'users', currentUser.uid));
-  return snap.exists() ? snap.data() : {};
-}
-
-function renderProfileView(data) {
-  const label = data.username || currentUser.displayName || (currentUser.email || '').split('@')[0] || '?';
-  const fullName = [data.firstName, data.lastName].filter(Boolean).join(' ');
-  document.getElementById('mmlProfileAvatar').textContent = label.charAt(0).toUpperCase();
-  document.getElementById('mmlProfileDisplayName').textContent = fullName || label;
-  let joinedText = '';
-  if (data.createdAt) {
-    const d = new Date(data.createdAt);
-    if (!isNaN(d)) joinedText = 'Joined ' + d.toISOString().slice(0, 10);
-  }
-  document.getElementById('mmlProfileJoined').textContent = joinedText;
-}
-
-function renderProfileEditForm(data) {
-  document.getElementById('mmlProfileUsername').textContent = data.username || currentUser.displayName || '—';
-  document.getElementById('mmlProfileEmail').textContent = data.email || currentUser.email || '—';
-  document.getElementById('mmlProfileFirstName').value = data.firstName || '';
-  document.getElementById('mmlProfileLastName').value = data.lastName || '';
-}
-
-document.getElementById('mmlProfileBtn').addEventListener('click', async () => {
+// FIX: kalinviye methana modal ekema tiny "profileView" section eka
+// open kala. Dan Vinuka ge ඉල්ලීම anuwa — dedicated "profile.html"
+// page ekakata navigate karanawa (My List / Seen List / Shared Links /
+// Comments stats + List/Seen/Links/Settings tabs thiyena screenshot eke
+// design ekatama match wena full page eka).
+document.getElementById('mmlProfileBtn').addEventListener('click', () => {
   menu.classList.remove('active');
   if (!currentUser) return;
-
-  openModal('profileView');
-  document.getElementById('mmlProfileDisplayName').textContent = 'Loading...';
-  document.getElementById('mmlProfileJoined').textContent = '';
-
-  try {
-    cachedProfileData = await loadProfileData();
-    renderProfileView(cachedProfileData);
-  } catch (err) {
-    console.error(err);
-    document.getElementById('mmlProfileDisplayName').textContent = 'Error loading profile';
-  }
-});
-
-document.getElementById('mmlEditProfileBtn').addEventListener('click', () => {
-  openModal('profileEdit');
-  renderProfileEditForm(cachedProfileData || {});
-});
-
-document.getElementById('mmlBackToProfileView').addEventListener('click', (e) => {
-  e.preventDefault();
-  openModal('profileView');
-  renderProfileView(cachedProfileData || {});
-});
-
-document.getElementById('mmlProfileSaveBtn').addEventListener('click', async () => {
-  if (!currentUser) return;
-  const btn = document.getElementById('mmlProfileSaveBtn');
-  const firstName = document.getElementById('mmlProfileFirstName').value.trim();
-  const lastName = document.getElementById('mmlProfileLastName').value.trim();
-
-  profileError.textContent = '';
-  btn.disabled = true;
-  btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i>';
-
-  try {
-    await setDoc(doc(db, 'users', currentUser.uid), { firstName, lastName }, { merge: true });
-    cachedProfileData = { ...(cachedProfileData || {}), firstName, lastName };
-    openModal('profileView');
-    renderProfileView(cachedProfileData);
-  } catch (err) {
-    console.error(err);
-    profileError.textContent = 'Error: ' + err.message;
-  } finally {
-    btn.disabled = false;
-    btn.innerHTML = '<i class="fa fa-save"></i> Save Changes';
-  }
-});
-
-document.getElementById('mmlProfileChangePassword').addEventListener('click', async () => {
-  if (!currentUser || !currentUser.email) return;
-  try {
-    await sendPasswordResetEmail(auth, currentUser.email);
-    alert('Password reset link එකක් ' + currentUser.email + ' වලට යවලා තියෙනවා.');
-  } catch (err) {
-    alert('Error: ' + err.message);
-  }
+  window.location.href = 'profile.html';
 });
 
 /* =========================================================
