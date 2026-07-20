@@ -76,7 +76,9 @@ async function emailForUsername(username) {
    ========================================================= */
 const style = document.createElement('style');
 style.textContent = `
-.mml-auth-btn { width:38px; height:38px; border-radius:50%; background:#ff2d95; color:#fff; display:flex; align-items:center; justify-content:center; font-size:16px; cursor:pointer; border:none; flex-shrink:0; font-weight:700; margin-left:12px; }
+.mml-auth-btn { width:38px; height:38px; min-width:38px; border-radius:8px; background:#ff2d95; color:#fff; display:flex; align-items:center; justify-content:center; cursor:pointer; border:none; flex-shrink:0; margin-left:12px; padding:0; line-height:1; }
+.mml-auth-btn i { font-size:16px; }
+.mml-auth-btn:not(:has(i)) { font-size:15px; font-weight:700; }
 .mml-auth-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:5000; display:none; align-items:center; justify-content:center; padding:20px; }
 .mml-auth-overlay.active { display:flex; }
 .mml-auth-card { background:#111; border:1px solid #222; border-radius:14px; padding:28px 24px; max-width:380px; width:100%; max-height:88vh; overflow-y:auto; position:relative; }
