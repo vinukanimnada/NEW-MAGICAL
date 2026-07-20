@@ -43,7 +43,6 @@
   .form-row { display: flex; gap: 10px; }
   .form-row .form-group { flex: 1; }
   .form-group select { width: 100%; background: var(--bg); border: 1px solid var(--border); color: var(--text); padding: 12px 14px; border-radius: 8px; font-size: 14px; }
-  .form-group select[multiple] { height: 140px; }
   .form-group textarea { width: 100%; background: var(--bg); border: 1px solid var(--border); color: var(--text); padding: 12px 14px; border-radius: 8px; font-size: 14px; min-height: 90px; resize: vertical; font-family: inherit; }
   .form-hint { font-size: 11.5px; color: var(--text-faint); margin-top: 4px; }
   .episode-builder { border: 1px solid var(--border); border-radius: 10px; padding: 12px; margin-top: 8px; }
@@ -62,6 +61,16 @@
   .admin-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
   .details-skeleton { text-align: center; padding: 60px 20px; color: var(--text-faint); }
   .cast-photo-preview { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 1px solid var(--border); flex-shrink: 0; background: var(--card-2); }
+
+  /* Sections checkbox grid — replaces the old native <select multiple>,
+     which was unreliable on mobile (a tap could deselect everything else
+     instead of adding to the selection). Checkboxes are unambiguous:
+     each one is independently on/off, on every device. */
+  .sections-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 12px; }
+  @media (min-width: 500px) { .sections-grid { grid-template-columns: 1fr 1fr 1fr; } }
+  .section-check { display: flex; align-items: center; gap: 8px; font-size: 13.5px; color: var(--text); cursor: pointer; padding: 6px; border-radius: 6px; }
+  .section-check:hover { background: var(--card); }
+  .section-check input[type="checkbox"] { width: 17px; height: 17px; accent-color: #ff2d95; flex-shrink: 0; cursor: pointer; }
   </style>
 </head>
 <body>
@@ -211,16 +220,16 @@
       </div>
 
       <div class="form-group">
-        <label>Show In Sections * <span class="form-hint">Ctrl+Click (හෝ mobile එකේ ඔක්කොම tap) කරලා කීපයක් select කරන්න</span></label>
-        <select id="f_sections" multiple>
-          <option value="trending_home">Daily Trending - Home</option>
-          <option value="latest_home">Latest Uploads - Home</option>
-          <option value="tvshows_home">TV Shows - Home</option>
-          <option value="allmovies">All Movies</option>
-          <option value="cinema">LK Cinema</option>
-          <option value="anime">Anime</option>
-          <option value="series">TV Shows Page</option>
-        </select>
+        <label>Show In Sections * <span class="form-hint">අදාළ box tick කරන්න — කීපයක්ම select කරන්න පුළුවන්</span></label>
+        <div class="sections-grid" id="f_sections">
+          <label class="section-check"><input type="checkbox" value="trending_home"> Daily Trending - Home</label>
+          <label class="section-check"><input type="checkbox" value="latest_home"> Latest Uploads - Home</label>
+          <label class="section-check"><input type="checkbox" value="tvshows_home"> TV Shows - Home</label>
+          <label class="section-check"><input type="checkbox" value="allmovies"> All Movies</label>
+          <label class="section-check"><input type="checkbox" value="cinema"> LK Cinema</label>
+          <label class="section-check"><input type="checkbox" value="anime"> Anime</label>
+          <label class="section-check"><input type="checkbox" value="series"> TV Shows Page</label>
+        </div>
         <div class="form-hint">Meka select kale nathnam home page eke pennanne na</div>
       </div>
 
@@ -396,13 +405,20 @@
 
     function clearCastBuilder() { castBuilder.innerHTML = ''; }
 
-    const sectionsSelect = document.getElementById('f_sections');
+    // ---- Sections (checkbox grid) ----
+    // Was a native <select multiple> before — on mobile, a single tap in
+    // the native picker could replace the whole selection instead of
+    // adding to it, so "Anime" would get ticked but any earlier picks (or
+    // the tick itself) silently didn't stick. Checkboxes give one
+    // independent on/off control per section — no ambiguity, works the
+    // same on every device.
+    const sectionsGrid = document.getElementById('f_sections');
     function getSectionsFromForm() {
-      return Array.from(sectionsSelect.selectedOptions).map(o => o.value);
+      return Array.from(sectionsGrid.querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.value);
     }
     function setSectionsInForm(sections) {
       const sel = new Set(Array.isArray(sections) ? sections : []);
-      Array.from(sectionsSelect.options).forEach(o => { o.selected = sel.has(o.value); });
+      sectionsGrid.querySelectorAll('input[type="checkbox"]').forEach(cb => { cb.checked = sel.has(cb.value); });
     }
 
     let editingId = null;
