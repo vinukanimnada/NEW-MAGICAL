@@ -76,7 +76,7 @@ async function emailForUsername(username) {
    ========================================================= */
 const style = document.createElement('style');
 style.textContent = `
-.mml-auth-btn { width:38px; height:38px; border-radius:50%; background:rgba(255,255,255,0.08); color:#fff; display:flex; align-items:center; justify-content:center; font-size:15px; cursor:pointer; border:none; flex-shrink:0; font-weight:700; }
+.mml-auth-btn { width:38px; height:38px; border-radius:50%; background:#ff2d95; color:#fff; display:flex; align-items:center; justify-content:center; font-size:16px; cursor:pointer; border:none; flex-shrink:0; font-weight:700; margin-left:12px; }
 .mml-auth-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:5000; display:none; align-items:center; justify-content:center; padding:20px; }
 .mml-auth-overlay.active { display:flex; }
 .mml-auth-card { background:#111; border:1px solid #222; border-radius:14px; padding:28px 24px; max-width:380px; width:100%; max-height:88vh; overflow-y:auto; position:relative; }
@@ -159,9 +159,12 @@ authBtn.className = 'mml-auth-btn';
 authBtn.id = 'mmlAuthBtn';
 authBtn.innerHTML = '<i class="fa fa-user"></i>';
 
+// Appended AFTER whatever's already in .header-right (e.g. the search
+// icon), so the layout reads [search] [profile] left-to-right — search
+// stays on the left, the login/profile button sits on the right.
 const headerRight = document.querySelector('.header-right');
 if (headerRight) {
-  headerRight.insertBefore(authBtn, headerRight.firstChild);
+  headerRight.appendChild(authBtn);
 } else {
   const header = document.querySelector('header');
   if (header) header.appendChild(authBtn);
