@@ -103,6 +103,9 @@ style.textContent = `
 .mml-auth-menu-user { padding:10px 12px; font-size:13.5px; font-weight:700; color:#fff; border-bottom:1px solid #222; margin-bottom:6px; }
 .mml-auth-menu-item { padding:10px 12px; font-size:14px; color:#ddd; cursor:pointer; border-radius:6px; }
 .mml-auth-menu-item:hover { background:#1a1a1a; color:#ff2d95; }
+.mml-profile-field { margin-bottom: 14px; }
+.mml-profile-label { font-size:12px; color:#888; margin-bottom:5px; }
+.mml-profile-static { font-size:14.5px; color:#fff; padding:12px 14px; background:#0a0a0a; border:1px solid #222; border-radius:8px; }
 `;
 document.head.appendChild(style);
 
@@ -140,6 +143,25 @@ overlay.innerHTML = `
       <button class="mml-auth-submit" id="mmlSignupBtn"><i class="fa fa-user-plus"></i> Sign up</button>
       <div class="mml-auth-switch">Do you already have an account? <a id="mmlGoLogin">Login here</a></div>
     </div>
+
+    <div class="mml-auth-section" id="mmlProfileSection">
+      <div class="mml-auth-title">My Profile</div>
+      <div class="mml-auth-error" id="mmlProfileError"></div>
+      <div class="mml-profile-field">
+        <div class="mml-profile-label">Username</div>
+        <div class="mml-profile-static" id="mmlProfileUsername">—</div>
+      </div>
+      <div class="mml-profile-field">
+        <div class="mml-profile-label">Email</div>
+        <div class="mml-profile-static" id="mmlProfileEmail">—</div>
+      </div>
+      <div class="form-row mml-auth-row" style="margin-bottom:14px;">
+        <input type="text" class="mml-auth-input" id="mmlProfileFirstName" placeholder="Name" style="margin-bottom:0;">
+        <input type="text" class="mml-auth-input" id="mmlProfileLastName" placeholder="Last name" style="margin-bottom:0;">
+      </div>
+      <button class="mml-auth-submit" id="mmlProfileSaveBtn"><i class="fa fa-save"></i> Save Changes</button>
+      <div class="mml-auth-forgot" id="mmlProfileChangePassword">Change my password</div>
+    </div>
   </div>
 `;
 document.body.appendChild(overlay);
@@ -149,6 +171,7 @@ menu.className = 'mml-auth-menu';
 menu.id = 'mmlAuthMenu';
 menu.innerHTML = `
   <div class="mml-auth-menu-user" id="mmlMenuUsername"></div>
+  <div class="mml-auth-menu-item" id="mmlProfileBtn"><i class="fa fa-user-circle"></i> Profile</div>
   <div class="mml-auth-menu-item" id="mmlLogoutBtn"><i class="fa fa-right-from-bracket"></i> Logout</div>
 `;
 document.body.appendChild(menu);
@@ -177,14 +200,18 @@ if (headerRight) {
    ========================================================= */
 const loginSection = document.getElementById('mmlLoginSection');
 const signupSection = document.getElementById('mmlSignupSection');
+const profileSection = document.getElementById('mmlProfileSection');
 const loginError = document.getElementById('mmlLoginError');
 const signupError = document.getElementById('mmlSignupError');
+const profileError = document.getElementById('mmlProfileError');
 
 function openModal(section) {
   loginError.textContent = '';
   signupError.textContent = '';
-  loginSection.classList.toggle('active', section !== 'signup');
+  profileError.textContent = '';
+  loginSection.classList.toggle('active', section === 'login');
   signupSection.classList.toggle('active', section === 'signup');
+  profileSection.classList.toggle('active', section === 'profile');
   overlay.classList.add('active');
 }
 function closeModal() { overlay.classList.remove('active'); }
@@ -220,6 +247,61 @@ document.addEventListener('click', (e) => {
 document.getElementById('mmlLogoutBtn').addEventListener('click', async () => {
   await signOut(auth);
   menu.classList.remove('active');
+});
+
+document.getElementById('mmlProfileBtn').addEventListener('click', async () => {
+  menu.classList.remove('active');
+  if (!currentUser) return;
+
+  openModal('profile');
+  document.getElementById('mmlProfileUsername').textContent = 'Loading...';
+  document.getElementById('mmlProfileEmail').textContent = 'Loading...';
+  document.getElementById('mmlProfileFirstName').value = '';
+  document.getElementById('mmlProfileLastName').value = '';
+
+  try {
+    const snap = await getDoc(doc(db, 'users', currentUser.uid));
+    const data = snap.exists() ? snap.data() : {};
+    document.getElementById('mmlProfileUsername').textContent = data.username || currentUser.displayName || '—';
+    document.getElementById('mmlProfileEmail').textContent = data.email || currentUser.email || '—';
+    document.getElementById('mmlProfileFirstName').value = data.firstName || '';
+    document.getElementById('mmlProfileLastName').value = data.lastName || '';
+  } catch (err) {
+    console.error(err);
+    profileError.textContent = 'Profile data load කරගන්න බැරි උනා.';
+  }
+});
+
+document.getElementById('mmlProfileSaveBtn').addEventListener('click', async () => {
+  if (!currentUser) return;
+  const btn = document.getElementById('mmlProfileSaveBtn');
+  const firstName = document.getElementById('mmlProfileFirstName').value.trim();
+  const lastName = document.getElementById('mmlProfileLastName').value.trim();
+
+  profileError.textContent = '';
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i>';
+
+  try {
+    await setDoc(doc(db, 'users', currentUser.uid), { firstName, lastName }, { merge: true });
+    closeModal();
+  } catch (err) {
+    console.error(err);
+    profileError.textContent = 'Error: ' + err.message;
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fa fa-save"></i> Save Changes';
+  }
+});
+
+document.getElementById('mmlProfileChangePassword').addEventListener('click', async () => {
+  if (!currentUser || !currentUser.email) return;
+  try {
+    await sendPasswordResetEmail(auth, currentUser.email);
+    alert('Password reset link එකක් ' + currentUser.email + ' වලට යවලා තියෙනවා.');
+  } catch (err) {
+    alert('Error: ' + err.message);
+  }
 });
 
 /* =========================================================
