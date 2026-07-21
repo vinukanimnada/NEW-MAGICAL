@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="si" class="dark">
+<html lang="si" class="dark"> <!-- 1. class="dark" add kala -->
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,10 +7,14 @@
 <link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-<link rel="icon" href="https://files.catbox.moe/nstkne.png" type="image/png">
-<link rel="apple-touch-icon" href="https://files.catbox.moe/nstkne.png">
 
+<link rel="icon" href="https://files.catbox.moe/nstkne.png" type="image/png">
+  <link rel="apple-touch-icon" href="https://files.catbox.moe/nstkne.png">
+    
 <style>
+/* body style eka ain kala. style.css eken wada */
+/* * { box-sizing: border-box; } witharak thiyanna */
+
 * { box-sizing: border-box; }
 
 h1 {
@@ -20,42 +24,13 @@ h1 {
   font-size: 24px;
 }
 
-/* ========== HEADER FIX - Photo eka wage ========== */
-header#mainHeader {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px 12px;
-  background: var(--bg);
-  position: sticky;
-  top: 0;
-  z-index: 999;
-}
-.header-left { display: flex; align-items: center; gap: 10px; }
-.header-right { display: flex; align-items: center; gap: 16px; }
-
-.logo svg { height: 32px; width: auto; }
-.logo a { display: flex; align-items: center; }
-
-.menu-toggle { background: none; border: none; cursor: pointer; display: flex; flex-direction: column; gap: 5px; padding: 5px; }
-.menu-toggle span { width: 24px; height: 2.5px; background: var(--text); border-radius: 2px; transition: 0.3s; }
-
-.header-right.fa-search { font-size: 20px; color: var(--text); cursor: pointer; }
-.header-right.profile-btn { width: 32px; height: 32px; border-radius: 50%; overflow: hidden; cursor: pointer; border: 2px solid #ff2d95; }
-.header-right.profile-btn img { width: 100%; height: 100%; object-fit: cover; }
-
-.search-box { position: absolute; top: 0; left: 0; right: 0; background: var(--bg); padding: 10px 12px; display: none; align-items: center; gap: 10px; z-index: 1000; }
-.search-box.active { display: flex; }
-.search-box input { flex: 1; background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; color: var(--text); font-size: 15px; outline: none; }
-.search-box.fa-times { font-size: 20px; color: var(--text-faint); cursor: pointer; }
-
 /* Cinesubz Grid - Mobile 3x3 */
 .movie-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 8px;
   padding: 10px;
-  background: transparent;
+  background: transparent; /* #000 ain kala */
 }
 
 /* Desktop 5x grid */
@@ -71,12 +46,16 @@ header#mainHeader {
   position: relative;
   border-radius: 6px;
   overflow: hidden;
-  background: var(--card);
+  background: var(--card); /* #111 > var */
   cursor: pointer;
   transition: transform 0.2s;
   aspect-ratio: 2/3;
 }
-.movie-card:hover { transform: scale(1.05); }
+
+.movie-card:hover {
+  transform: scale(1.05);
+}
+
 .movie-card img {
   width: 100%;
   height: 100%;
@@ -135,27 +114,71 @@ header#mainHeader {
   line-height: 1.2;
 }
 
-.no-movies { text-align: center; color: var(--text-faint); padding: 50px 0; grid-column: 1/-1; }
+.no-movies {
+  text-align: center;
+  color: var(--text-faint);
+  padding: 50px 0;
+  grid-column: 1/-1;
+}
 
 /* Search Results List View */
-.search-results { display: none; padding: 10px; }
-.search-results.active { display: block; }
-.search-result-item { display: flex; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); cursor: pointer; transition: background 0.2s; }
-.search-result-item:hover { background: var(--card); }
-.search-result-poster { width: 60px; height: 90px; border-radius: 4px; object-fit: cover; flex-shrink: 0; }
-.search-result-info { flex: 1; overflow: hidden; }
-.search-result-title { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.search-result-meta { font-size: 13px; color: var(--text-dim); line-height: 1.5; }
-.search-no-result { text-align: center; color: var(--text-faint); padding: 50px 20px; font-size: 14px; }
+.search-results {
+  display: none;
+  padding: 10px;
+}
 
-/* Footer */
-.footer { text-align: center; padding: 30px 20px; border-top: 1px solid var(--border); margin-top: 20px; }
-.footer-logo { font-size: 20px; font-weight: 700; margin-bottom: 10px; }
-.footer-logo span { color: #ff2d95; }
-.footer-text { color: var(--text-dim); font-size: 13px; max-width: 480px; margin: 0 auto 16px; line-height: 1.6; }
-.social-icons { display: flex; justify-content: center; gap: 18px; }
-.social-icons a { width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; background: var(--card); border-radius: 50%; color: var(--text-dim); font-size: 16px; }
-.social-icons a:hover { color: #ff2d95; }
+.search-results.active {
+  display: block;
+}
+
+.search-result-item {
+  display: flex;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.search-result-item:hover {
+  background: var(--card);
+}
+
+.search-result-poster {
+  width: 60px;
+  height: 90px;
+  border-radius: 4px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.search-result-info {
+  flex: 1;
+  overflow: hidden;
+}
+
+.search-result-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.search-result-meta {
+  font-size: 13px;
+  color: var(--text-dim);
+  line-height: 1.5;
+}
+
+.search-no-result {
+  text-align: center;
+  color: var(--text-faint);
+  padding: 50px 20px;
+  font-size: 14px;
+}
 </style>
 </head>
 <body>
@@ -164,28 +187,46 @@ header#mainHeader {
   <div class="header-left">
     <button class="menu-toggle" id="menuBtn" aria-label="Menu"><span></span><span></span><span></span></button>
     <div class="logo">
-      <a href="index.html" aria-label="Movie Land">
-        <svg viewBox="0 0 246 64" role="img" aria-label="Movie Land">
-          <defs>
-            <linearGradient id="mlTicketGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#ff6fb0"/><stop offset="55%" stop-color="#ff2d95"/><stop offset="100%" stop-color="#b6178f"/></linearGradient>
-            <linearGradient id="mlLandGrad" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#ff5fab"/><stop offset="100%" stop-color="#ff2d95"/></linearGradient>
-            <filter id="mlGlow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="2.4" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-            <mask id="mlTicketMask"><rect x="-26" y="-18" width="52" height="36" rx="7" fill="#fff"/><circle cx="-26" cy="0" r="5" fill="#000"/><circle cx="26" cy="0" r="5" fill="#000"/></mask>
-          </defs>
-          <g transform="translate(34,32) rotate(-8)" filter="url(#mlGlow)"><rect x="-26" y="-18" width="52" height="36" rx="7" fill="url(#mlTicketGrad)" mask="url(#mlTicketMask)"/><line x1="0" y1="-13" x2="0" y2="13" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-dasharray="0.5 4.5" opacity="0.85"/><path d="M -19,-7 L -19,7 L -6,0 Z" fill="#fff" opacity="0.95"/><path d="M20,0 L14.77,1.77 L13,7 L11.23,1.77 L6,0 L11.23,-1.77 L13,-7 L14.77,-1.77 Z" fill="#fff" opacity="0.95"/></g>
-          <text x="74" y="41" font-family="'Poppins','Segoe UI',Arial,sans-serif" font-weight="800" font-size="27" letter-spacing="0.5" fill="#ffffff">MOVIE</text>
-          <text x="160" y="41" font-family="'Poppins','Segoe UI',Arial,sans-serif" font-weight="800" font-size="27" letter-spacing="0.5" fill="url(#mlLandGrad)">LAND</text>
-        </svg>
-      </a>
-    </div>
-  </div>
+  <a href="index.html" aria-label="Movie Land">
+    <svg viewBox="0 0 246 64" role="img" aria-label="Movie Land">
+      <defs>
+        <linearGradient id="mlTicketGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#ff6fb0"/>
+          <stop offset="55%" stop-color="#ff2d95"/>
+          <stop offset="100%" stop-color="#b6178f"/>
+        </linearGradient>
+        <linearGradient id="mlLandGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#ff5fab"/>
+          <stop offset="100%" stop-color="#ff2d95"/>
+        </linearGradient>
+        <filter id="mlGlow" x="-60%" y="-60%" width="220%" height="220%">
+          <feGaussianBlur stdDeviation="2.4" result="blur"/>
+          <feMerge>
+            <feMergeNode in="blur"/>
+            <feMergeNode in="SourceGraphic"/>
+          </feMerge>
+        </filter>
+        <mask id="mlTicketMask">
+          <rect x="-26" y="-18" width="52" height="36" rx="7" fill="#fff"/>
+          <circle cx="-26" cy="0" r="5" fill="#000"/>
+          <circle cx="26" cy="0" r="5" fill="#000"/>
+        </mask>
+      </defs>
+      <g transform="translate(34,32) rotate(-8)" filter="url(#mlGlow)">
+        <rect x="-26" y="-18" width="52" height="36" rx="7" fill="url(#mlTicketGrad)" mask="url(#mlTicketMask)"/>
+        <line x1="0" y1="-13" x2="0" y2="13" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-dasharray="0.5 4.5" opacity="0.85"/>
+        <path d="M -19,-7 L -19,7 L -6,0 Z" fill="#fff" opacity="0.95"/>
+        <path d="M20,0 L14.77,1.77 L13,7 L11.23,1.77 L6,0 L11.23,-1.77 L13,-7 L14.77,-1.77 Z" fill="#fff" opacity="0.95"/>
+      </g>
+      <text x="74" y="41" font-family="'Poppins','Segoe UI',Arial,sans-serif" font-weight="800" font-size="27" letter-spacing="0.5" fill="#ffffff">MOVIE</text>
+      <text x="160" y="41" font-family="'Poppins','Segoe UI',Arial,sans-serif" font-weight="800" font-size="27" letter-spacing="0.5" fill="url(#mlLandGrad)">LAND</text>
+    </svg>
+  </a>
+</div>
+
 
   <div class="header-right">
     <i class="fa fa-search" id="searchBtn"></i>
-    <!-- Profile/Login Button - Photo eke wage -->
-    <div class="profile-btn" id="profileBtn">
-      <img src="https://files.catbox.moe/nstkne.png" alt="Profile">
-    </div>
   </div>
 
   <!-- Search Bar -->
@@ -193,6 +234,7 @@ header#mainHeader {
     <input type="text" id="searchInput" placeholder="Search movies...">
     <i class="fa fa-times" id="closeSearch"></i>
   </div>
+
 </header>
 
 <div class="sidebar" id="sidebar">
@@ -213,22 +255,30 @@ header#mainHeader {
 
 <h1>🎬 LK Cinema</h1>
 
+<!-- Movie Grid -->
 <div class="movie-grid" id="movieGrid">
   <div class="no-movies">Loading movies...</div>
 </div>
 
+<!-- Search Results List -->
 <div class="search-results" id="searchResults"></div>
 
 <br><br><br>
-<footer class="footer">
-  <div class="footer-logo">𝗠𝗔𝗚𝗜𝗖𝗔𝗟 <span>𝗠𝗢𝗩𝗜𝗘 𝗟𝗔𝗡𝗗</span></div>
-  <p class="footer-text">The best platform to stream latest Movies and Cartoons with high-quality subtitles. Enjoy your favorite content for free on Magical Movie Land.</p>
-  <div class="social-icons">
-    <a href="https://www.facebook.com/share/1BbGBZ8ddZ/?mibextid=wwXIfr" target="_blank"><i class="fa-brands fa-facebook-f"></i></a>
-    <a href="https://t.me/YourUsername" target="_blank"><i class="fa-brands fa-telegram"></i></a>
-    <a href="https://www.tiktok.com/@vinuxnoo?_r=1&_t=ZS-97SZwiHJ6jU" target="_blank"><i class="fa-brands fa-tiktok"></i></a>
-  </div>
-</footer>
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-logo">𝗠𝗔𝗚𝗜𝗖𝗔𝗟 <span>𝗠𝗢𝗩𝗜𝗘 𝗟𝗔𝗡𝗗</span></div>
+
+    <p class="footer-text">
+      The best platform to stream latest Movies and Cartoons with high-quality subtitles.
+      Enjoy your favorite content for free on Magical Movie Land.
+    </p>
+
+    <div class="social-icons">
+      <a href="https://www.facebook.com/share/1BbGBZ8ddZ/?mibextid=wwXIfr" target="_blank"><i class="fa-brands fa-facebook-f"></i></a>
+      <a href="https://t.me/YourUsername" target="_blank"><i class="fa-brands fa-telegram"></i></a>
+      <a href="https://www.tiktok.com/@vinuxnoo?_r=1&_t=ZS-97SZwiHJ6jU" target="_blank"><i class="fa-brands fa-tiktok"></i></a>
+    </div>
+  </footer>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -247,13 +297,25 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const grid = document.getElementById('movieGrid');
 
+// gridMovies: "LK Cinema" section ekata tag karapu ewa witharak — grid eke
+// penei. searchIndex: Firestore eke thiyena OKKOMA movies (kohomath section
+// ekakata tag karala thibbath) — search ekata witharak use karanawa, ehema
+// wena pages/sections walata witharak add karapu movies search ekedi
+// hamu wenawa.
 let gridMovies = [];
 let searchIndex = [];
+
+// Meka witharak movies.html ekata wada wenas kalapu thana — "allmovies"
+// wenuwata "cinema" section eka check karanawa.
 const SECTION_KEY = 'cinema';
 
 function hasSection(movie, sectionKey) {
   return Array.isArray(movie.sections) && movie.sections.includes(sectionKey);
 }
+
+// Same title thiyena documents kihipayak thibbath (wenawena pages/sections
+// walata add karapu ekama movie eka), search result eka dekak-thunak
+// widiyata duplicate wenna epa — title eken dedupe karanawa.
 function dedupeByTitle(list) {
   const seen = new Set();
   const out = [];
@@ -265,6 +327,7 @@ function dedupeByTitle(list) {
   });
   return out;
 }
+
 async function fetchAllMoviesOnce() {
   const snapshot = await getDocs(collection(db, "movies"));
   const items = [];
@@ -275,24 +338,45 @@ async function fetchAllMoviesOnce() {
   });
   return items;
 }
+
 async function loadMovies() {
+  // Podi network hiccup ekaka Firestore eken kisima error ekak nathuwama
+  // hisi (empty) result ekak ennath puluwan (4G/unstable connection walata
+  // common) — eka nisa tamai samahara welawata cards tika penne na, page
+  // eka refresh karama witharak fix una. Methanin index.html eke thibba
+  // widiyatama retry kihipayak automatic karala e scenario eka handle
+  // karanawa — user ta manual refresh ekak one wenne na.
   const MAX_ATTEMPTS = 4;
   const RETRY_DELAY_MS = 1200;
+
   for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
     try {
       const all = await fetchAllMoviesOnce();
+
       if (all.length === 0) {
+        // Empty result but no error thrown — likely a transient glitch, retry.
+        console.warn(`⚠️ Got 0 movies on attempt ${attempt}, retrying...`);
         if (attempt < MAX_ATTEMPTS) { await new Promise(r => setTimeout(r, RETRY_DELAY_MS)); continue; }
         grid.innerHTML = '<div class="no-movies">Error:Check Your Internet Connection and Refresh the page...</div>';
         return;
       }
+
+      // Search index eka — okkoma movies, title eken dedupe karala.
       searchIndex = dedupeByTitle(all);
+
+      // Grid eke penna one "LK Cinema" section ekata tag karapu ewa witharak.
       gridMovies = all.filter(m => hasSection(m, SECTION_KEY));
+
+      // Vinuka ge ඉල්ලීම: aluthinma save karapu movie eka LIST EKE ANTHIMATA
+      // yanna one (kalin tibba widiyata "descending/aluth udin" nemei) —
+      // ea nisa ascending (oldest -> newest) widiyata sort karanawa.
       gridMovies.sort((a, b) => new Date(a.date || 0) - new Date(b.date || 0));
+
       if (gridMovies.length === 0) {
-        grid.innerHTML = '<div class="no-movies">Admin panel එකෙන් "Show In Sections" එකේ "LK Cinema" select කරලා add කරන්න.</div>';
+        grid.innerHTML = '<div class="no-movies">Error:Check Your Internet Connection and Refresh the page.... Admin panel එකෙන් "Show In Sections" එකේ "LK Cinema" select කරලා add කරන්න.</div>';
         return;
       }
+
       grid.innerHTML = "";
       gridMovies.forEach(m => {
         const poster = m.poster || 'https://via.placeholder.com/300x450/222/fff?text=No+Image';
@@ -301,6 +385,7 @@ async function loadMovies() {
         const quality = (m.quality || 'HD').toUpperCase();
         let title = m.title || 'Untitled';
         if (title.length > 20) title = title.substring(0, 20) + '...';
+
         const card = `
           <div class="movie-card" onclick="openMovie('${m.id}')">
             <span class="quality-badge">${quality}</span>
@@ -314,32 +399,43 @@ async function loadMovies() {
       });
       return;
     } catch (err) {
+      console.error(`❌ Firebase Error (attempt ${attempt}):`, err);
       if (attempt < MAX_ATTEMPTS) { await new Promise(r => setTimeout(r, RETRY_DELAY_MS)); continue; }
       grid.innerHTML = `<div class="no-movies">Error: ${err.message}</div>`;
       return;
     }
   }
 }
+
 window.openMovie = function (id) {
   window.location.href = `watch.html?id=${id}`;
 };
+
 function searchMovies(query) {
   const resultsDiv = document.getElementById('searchResults');
   const gridDiv = document.getElementById('movieGrid');
+
   if (!query.trim()) {
     resultsDiv.classList.remove('active');
     gridDiv.style.display = 'grid';
     return;
   }
+
   gridDiv.style.display = 'none';
   resultsDiv.classList.add('active');
+
+  // searchIndex (Firestore eke thiyena OKKOMA movies, dedupe karapu) eken
+  // search karanawa, e nisa wena section ekakata witharak tag karapu
+  // movies wath search ekedi hamu wenawa.
   const filtered = searchIndex.filter(m =>
     m.title && m.title.toLowerCase().includes(query.toLowerCase())
   );
+
   if (filtered.length === 0) {
     resultsDiv.innerHTML = '<div class="search-no-result">🔍 Not Found</div>';
     return;
   }
+
   resultsDiv.innerHTML = filtered.map(m => {
     const poster = m.poster || 'https://via.placeholder.com/60x90/222/fff';
     const year = m.year || 'N/A';
@@ -347,36 +443,49 @@ function searchMovies(query) {
     const genre = m.genre || 'Movie';
     let title = m.title;
     if (title.length > 40) title = title.substring(0, 40) + '...';
+
     return `
       <div class="search-result-item" onclick="openMovie('${m.id}')">
         <img src="${poster}" class="search-result-poster" loading="lazy">
         <div class="search-result-info">
           <div class="search-result-title">${title}</div>
-          <div class="search-result-meta">${year}${duration? ' • ' + duration : ''}<br>${genre}</div>
+          <div class="search-result-meta">
+            ${year}${duration? ' • ' + duration : ''}<br>
+            ${genre}
+          </div>
         </div>
       </div>
     `;
   }).join('');
 }
+
 loadMovies();
 
 document.addEventListener('DOMContentLoaded', () => {
   const searchBtn = document.getElementById('searchBtn');
   const closeSearch = document.getElementById('closeSearch');
-  const searchBox = document.getElementById('searchBox');
-  searchBtn?.addEventListener('click', () => { searchBox.classList.add('active'); document.getElementById('searchInput').focus(); });
-  closeSearch?.addEventListener('click', () => { searchBox.classList.remove('active'); searchMovies(''); });
-  document.getElementById('profileBtn')?.addEventListener('click', () => { window.location.href = 'settings.html'; }); // login page ekata maranna
+  searchBtn?.addEventListener('click', () => {
+    if (!document.getElementById('searchBox')?.classList.contains('active')) searchMovies('');
+  });
+  closeSearch?.addEventListener('click', () => searchMovies(''));
 });
+
 let searchTimeout;
 document.getElementById('searchInput')?.addEventListener('input', (e) => {
   clearTimeout(searchTimeout);
-  searchTimeout = setTimeout(() => { searchMovies(e.target.value); }, 300);
+  searchTimeout = setTimeout(() => {
+    searchMovies(e.target.value);
+  }, 300);
 });
-document.getElementById('searchInput')?.addEventListener('keypress', (e) => { if (e.key === 'Enter') { searchMovies(e.target.value); } });
+
+document.getElementById('searchInput')?.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') {
+    searchMovies(e.target.value);
+  }
+});
 </script>
 
-<script src="script.js"></script>
+<script src="script.js"></script> <!-- sidebar/menu/search okkoma meken -->
 
 </body>
 </html>
