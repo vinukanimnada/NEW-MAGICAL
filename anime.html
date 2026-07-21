@@ -279,7 +279,13 @@ async function loadMovies() {
       }
     });
 
-    allMovies.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
+    // FIX: Vinuka ge ඉල්ලීම anuwa — aluthinma save karapu movie eka LIST
+    // EKE ANTHIMATA yanna one (kalin "descending/aluth udin" widiyata
+    // thibba) — ea nisa ascending (oldest -> newest) widiyata sort kala.
+    // Meka wada karanne admin.html eke "date" field eka edit karaddi wath
+    // wenas wenne nathuwa mula date ekama retain karana fix ekath ekka
+    // ekathuwa — dan edit karapu movie ekaka position eka wenas wenne na.
+    allMovies.sort((a, b) => new Date(a.date || 0) - new Date(b.date || 0));
 
     if (allMovies.length === 0) {
       grid.innerHTML = '<div class="no-movies">Anime නැත. Admin panel එකෙන් "Show In Sections" එකේ "Anime" select කරලා add කරන්න.</div>';
