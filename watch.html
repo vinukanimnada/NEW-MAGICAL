@@ -5,13 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Watch - MAGICAL MOVIE LAND</title>
 
+  <!-- FAVICON -->
   <link rel="icon" href="https://files.catbox.moe/nstkne.png" type="image/png">
   <link rel="apple-touch-icon" href="https://files.catbox.moe/nstkne.png">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <link rel="stylesheet" href="style.css">
 
-  <!-- MKV/M3U8 fallback walata HLS.js add kale -->
-  <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.15/dist/hls.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <!-- podu search bar style eka style.css eken enawa (siyalu pages walata podu) -->
+  <link rel="stylesheet" href="style.css">
 
   <script>
   (function(){
@@ -21,62 +21,150 @@
   </script>
 
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-  html.dark { --bg: #0a0a0a; --bg-alt: #111; --card: #1a1a1a; --card-2: #222; --text: #fff; --text-dim: #aaa; --text-faint: #666; --border: #222; }
-  html.light { --bg: #f4f4f4; --bg-alt: #ffffff; --card: #f5f5f5; --card-2: #e8e8e8; --text: #111; --text-dim: #444; --text-faint: #888; --border: #ddd; }
-  body { overflow-x: hidden; background: var(--bg); color: var(--text); }
+  /* =========================================================
+     MAGICAL MOVIE LAND — Watch/details page stylesheet
+     ========================================================= */
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html.dark {
+    --bg: #0a0a0a; --bg-alt: #111; --card: #1a1a1a; --card-2: #222;
+    --text: #fff; --text-dim: #aaa; --text-faint: #666; --border: #222;
+  }
+  html.light {
+    --bg: #f4f4f4; --bg-alt: #ffffff; --card: #f5f5f5; --card-2: #e8e8e8;
+    --text: #111; --text-dim: #444; --text-faint: #888; --border: #ddd;
+  }
+
+  body {
+    overflow-x: hidden;
+  }
   a { text-decoration: none; color: inherit; }
   img { display: block; }
- .btn { display: inline-flex; align-items: center; gap: 8px; border: none; border-radius: 6px; padding: 12px 22px; font-size: 15px; font-weight: 600; cursor: pointer; transition: transform 0.15s, opacity 0.15s; }
- .btn:active { transform: scale(0.97); }
- .btn-primary { background: #ff2d95; color: #fff; }
- .btn-secondary { background: rgba(255,255,255,0.1); color: var(--text); }
- .btn-outline { background: transparent; border: 1px solid var(--text-faint); color: var(--text); }
- .btn:disabled { opacity: 0.5; cursor: not-allowed; }
- .btn-back { background: rgba(255,255,255,0.08); color: var(--text); border: 1px solid #4dc3ff; }
- .btn-back i { color: #4dc3ff; }
- .footer { text-align: center; padding: 30px 20px; border-top: 1px solid var(--border); margin-top: 20px; }
- .footer-logo { font-size: 20px; font-weight: 700; margin-bottom: 10px; }
- .footer-logo span { color: #ff2d95; }
- .footer-text { color: var(--text-dim); font-size: 13px; max-width: 480px; margin: 0 auto 16px; line-height: 1.6; }
- .social-icons { display: flex; justify-content: center; gap: 18px; }
- .social-icons a { width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; background: var(--card); border-radius: 50%; color: var(--text-dim); font-size: 16px; }
- .social-icons a:hover { color: #ff2d95; }
- .details-hero { position: relative; width: 100%; min-height: 230px; background-size: cover; background-repeat: no-repeat; background-position: center center; background-color: #000; display: flex; align-items: flex-end; padding: 20px 15px; }
- .details-hero::before { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, var(--bg) 5%, rgba(10,10,10,0.55) 55%, rgba(10,10,10,0.35)); }
- .details-hero-inner { position: relative; z-index: 2; display: flex; gap: 16px; align-items: flex-end; width: 100%; }
- .details-poster { width: 110px; height: 160px; border-radius: 8px; object-fit: cover; flex-shrink: 0; box-shadow: 0 8px 24px rgba(0,0,0,0.5); border: 2px solid rgba(255,255,255,0.15); }
- .details-title-block { flex: 1; min-width: 0; }
- .details-title { font-size: 22px; font-weight: 700; color: #fff; line-height: 1.25; margin-bottom: 6px; text-shadow: 0 2px 6px rgba(0,0,0,0.6); }
- .details-meta { display: flex; flex-wrap: wrap; gap: 8px; font-size: 12.5px; color: #ddd; margin-bottom: 4px; }
- .details-meta span { background: rgba(255,255,255,0.12); padding: 3px 9px; border-radius: 20px; backdrop-filter: blur(2px); }
- .details-meta.rating { background: rgba(255,45,149,0.25); color: #ff9dc7; font-weight: 700; }
- .details-body { padding: 18px 15px; }
- .details-actions { display: flex; gap: 10px; margin-bottom: 18px; flex-wrap: wrap; }
- .details-desc-label { font-size: 15px; font-weight: 700; margin-bottom: 6px; color: var(--text); }
- .details-desc { font-size: 14px; line-height: 1.7; color: var(--text-dim); margin-bottom: 18px; }
- .player-wrap { padding: 0 15px 15px; display: none; }
- .player-wrap.active { display: block; }
- .player-container { position: relative; width: 100%; padding-top: 56.25%; background: #000; border-radius: 8px; overflow: hidden; }
- .player-container iframe,.player-container video { position: absolute; inset: 0; width: 100%; height: 100%; border: none; }
- .now-playing-label { font-size: 13px; color: var(--text-faint); margin: 8px 0 0; }
- .player-poster { position: absolute; inset: 0; width: 100%; height: 100%; background-size: cover; background-position: center; background-color: #000; display: flex; align-items: center; justify-content: center; cursor: pointer; }
- .player-poster::before { content: ''; position: absolute; inset: 0; background: rgba(0,0,0,0.4); }
- .player-play-btn { position: relative; z-index: 2; width: 72px; height: 72px; border-radius: 50%; background: #ff2d95; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 0 10px rgba(255,45,149,0.22), 0 8px 26px rgba(255,45,149,0.55); cursor: pointer; transition: transform 0.15s ease; animation: playPulse 2s ease-in-out infinite; }
- .player-play-btn:active { transform: scale(0.9); }
- .player-play-btn i { color: #fff; font-size: 26px; margin-left: 4px; }
-  @keyframes playPulse { 0%, 100% { box-shadow: 0 0 0 10px rgba(255,45,149,0.22), 0 8px 26px rgba(255,45,149,0.55); } 50% { box-shadow: 0 0 0 16px rgba(255,45,149,0.12), 0 8px 26px rgba(255,45,149,0.55); } }
- .trailer-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2000; display: none; align-items: center; justify-content: center; padding: 20px; }
- .trailer-modal.active { display: flex; }
- .trailer-modal-inner { width: 100%; max-width: 900px; position: relative; }
- .trailer-modal-inner.player-container { padding-top: 56.25%; }
- .trailer-close { position: absolute; top: -40px; right: 0; font-size: 28px; color: #fff; cursor: pointer; background: rgba(255,255,255,0.1); width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
- .details-skeleton { text-align: center; padding: 60px 20px; color: var(--text-faint); }
-  @media (min-width: 700px) {.details-poster { width: 150px; height: 220px; } }
+
+  /* NOTE: header, logo, menu-toggle, back-btn, sidebar, overlay, search bar —
+     mewa okkoma style.css ekenma enawa (movies.html wage podu/common style).
+     Duplicate wenna one nisa methanin ain kara. */
+
+  /* Buttons */
+  .btn { display: inline-flex; align-items: center; gap: 8px; border: none; border-radius: 6px; padding: 12px 22px; font-size: 15px; font-weight: 600; cursor: pointer; transition: transform 0.15s, opacity 0.15s; }
+  .btn:active { transform: scale(0.97); }
+  .btn-primary { background: #ff2d95; color: #fff; }
+  .btn-secondary { background: rgba(255,255,255,0.1); color: var(--text); }
+  .btn-outline { background: transparent; border: 1px solid var(--text-faint); color: var(--text); }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .btn-back { background: rgba(255,255,255,0.08); color: var(--text); border: 1px solid #4dc3ff; }
+  .btn-back i { color: #4dc3ff; }
+
+  /* Footer */
+  .footer { text-align: center; padding: 30px 20px; border-top: 1px solid var(--border); margin-top: 20px; }
+  .footer-logo { font-size: 20px; font-weight: 700; margin-bottom: 10px; }
+  .footer-logo span { color: #ff2d95; }
+  .footer-text { color: var(--text-dim); font-size: 13px; max-width: 480px; margin: 0 auto 16px; line-height: 1.6; }
+  .social-icons { display: flex; justify-content: center; gap: 18px; }
+  .social-icons a { width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; background: var(--card); border-radius: 50%; color: var(--text-dim); font-size: 16px; }
+  .social-icons a:hover { color: #ff2d95; }
+
+  /* Details / Watch view */
+  .details-hero {
+    position: relative;
+    width: 100%;
+    min-height: 230px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-color: #000;
+    display: flex;
+    align-items: flex-end;
+    padding: 20px 15px;
+  }
+  .details-hero::before { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, var(--bg) 5%, rgba(10,10,10,0.55) 55%, rgba(10,10,10,0.35)); }
+  .details-hero-inner { position: relative; z-index: 2; display: flex; gap: 16px; align-items: flex-end; width: 100%; }
+  .details-poster { width: 110px; height: 160px; border-radius: 8px; object-fit: cover; flex-shrink: 0; box-shadow: 0 8px 24px rgba(0,0,0,0.5); border: 2px solid rgba(255,255,255,0.15); }
+  .details-title-block { flex: 1; min-width: 0; }
+  .details-title { font-size: 22px; font-weight: 700; color: #fff; line-height: 1.25; margin-bottom: 6px; text-shadow: 0 2px 6px rgba(0,0,0,0.6); }
+  .details-meta { display: flex; flex-wrap: wrap; gap: 8px; font-size: 12.5px; color: #ddd; margin-bottom: 4px; }
+  .details-meta span { background: rgba(255,255,255,0.12); padding: 3px 9px; border-radius: 20px; backdrop-filter: blur(2px); }
+  .details-meta .rating { background: rgba(255,45,149,0.25); color: #ff9dc7; font-weight: 700; }
+  .details-body { padding: 18px 15px; }
+  .details-actions { display: flex; gap: 10px; margin-bottom: 18px; flex-wrap: wrap; }
+  .details-desc-label { font-size: 15px; font-weight: 700; margin-bottom: 6px; color: var(--text); }
+  .details-desc { font-size: 14px; line-height: 1.7; color: var(--text-dim); margin-bottom: 18px; }
+  .details-cast { font-size: 13px; color: var(--text-faint); margin-bottom: 6px; }
+  .details-cast b { color: var(--text-dim); }
+
+  .player-wrap { padding: 0 15px 15px; display: none; }
+  .player-wrap.active { display: block; }
+  .player-container { position: relative; width: 100%; padding-top: 56.25%; background: #000; border-radius: 8px; overflow: hidden; }
+  .player-container iframe, .player-container video { position: absolute; inset: 0; width: 100%; height: 100%; border: none; }
+  .now-playing-label { font-size: 13px; color: var(--text-faint); margin: 8px 0 0; }
+
+  .player-poster { position: absolute; inset: 0; width: 100%; height: 100%; background-size: cover; background-position: center; background-color: #000; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+  .player-poster::before { content: ''; position: absolute; inset: 0; background: rgba(0,0,0,0.4); }
+  .player-play-btn { position: relative; z-index: 2; width: 72px; height: 72px; border-radius: 50%; background: #ff2d95; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 0 10px rgba(255,45,149,0.22), 0 8px 26px rgba(255,45,149,0.55); cursor: pointer; transition: transform 0.15s ease; animation: playPulse 2s ease-in-out infinite; }
+  .player-play-btn:active { transform: scale(0.9); }
+  .player-play-btn i { color: #fff; font-size: 26px; margin-left: 4px; }
+  @keyframes playPulse {
+    0%, 100% { box-shadow: 0 0 0 10px rgba(255,45,149,0.22), 0 8px 26px rgba(255,45,149,0.55); }
+    50% { box-shadow: 0 0 0 16px rgba(255,45,149,0.12), 0 8px 26px rgba(255,45,149,0.55); }
+  }
+
+  .episodes-wrap { padding: 0 15px 10px; }
+  .episodes-title { font-size: 16px; font-weight: 700; margin-bottom: 10px; display: flex; align-items: center; gap: 10px; color: var(--text); }
+  .season-select { background: var(--card); color: var(--text); border: 1px solid var(--border); border-radius: 6px; padding: 8px 12px; margin-bottom: 12px; font-size: 14px; }
+  .episode-item { display: flex; align-items: center; gap: 12px; background: var(--card); border-radius: 8px; padding: 10px 12px; margin-bottom: 8px; cursor: pointer; transition: background 0.2s; border: 1px solid transparent; }
+  .episode-item:hover { background: var(--card-2); }
+  .episode-item.playing { border-color: #ff2d95; background: rgba(255,45,149,0.08); }
+  .episode-num { width: 34px; height: 34px; flex-shrink: 0; border-radius: 50%; background: rgba(255,45,149,0.15); color: #ff2d95; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; }
+  .episode-info { flex: 1; min-width: 0; }
+  .episode-title { font-size: 14px; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .episode-sub { font-size: 12px; color: var(--text-faint); }
+  .episode-play-icon { color: var(--text-faint); font-size: 16px; }
+  .episode-item.playing .episode-play-icon { color: #ff2d95; }
+
+  .cast-wrap { padding: 4px 15px 10px; }
+  .cast-title { font-size: 16px; font-weight: 700; margin-bottom: 14px; display: flex; align-items: center; gap: 10px; color: var(--text); }
+  .cast-bar { width: 4px; height: 20px; background: #ff2d95; border-radius: 2px; display: inline-block; flex-shrink: 0; }
+  .cast-scroll { display: flex; gap: 18px; overflow-x: auto; padding-bottom: 6px; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+  .cast-scroll::-webkit-scrollbar { display: none; }
+  .cast-item { flex: 0 0 auto; width: 84px; text-align: center; }
+  .cast-photo { width: 78px; height: 78px; border-radius: 50%; object-fit: cover; border: 2px solid var(--border); margin: 0 auto 8px; background: var(--card); }
+  .cast-name { font-size: 12.5px; font-weight: 700; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .cast-role { font-size: 11px; color: var(--text-faint); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 2px; }
+
+  .related-wrap { padding: 6px 0 0; }
+
+  .trailer-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2000; display: none; align-items: center; justify-content: center; padding: 20px; }
+  .trailer-modal.active { display: flex; }
+  .trailer-modal-inner { width: 100%; max-width: 900px; position: relative; }
+  .trailer-modal-inner .player-container { padding-top: 56.25%; }
+  .trailer-close { position: absolute; top: -40px; right: 0; font-size: 28px; color: #fff; cursor: pointer; background: rgba(255,255,255,0.1); width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+
+  .details-skeleton { text-align: center; padding: 60px 20px; color: var(--text-faint); }
+
+  /* Download section */
+  .download-wrap { padding: 0 15px 18px; }
+  .download-title { font-size: 16px; font-weight: 700; margin-bottom: 12px; display:flex; align-items:center; gap:10px; color: var(--text); }
+  .download-bar { width: 4px; height: 20px; background: #ff2d95; border-radius: 2px; display:inline-block; flex-shrink:0; }
+  .download-countdown-box { background: var(--card); border-radius: 8px; padding: 30px 20px; text-align: center; }
+  .download-countdown-num { width: 70px; height: 70px; border-radius: 50%; border: 3px solid #ff2d95; color: #ff2d95; font-size: 28px; font-weight: 700; display:flex; align-items:center; justify-content:center; margin: 0 auto 14px; }
+  .download-countdown-text { color: var(--text-dim); font-size: 14px; }
+  .download-links { display: none; }
+  .download-links.active { display: block; }
+  .download-link-item { display:flex; align-items:center; gap:14px; background: var(--card); border-radius:8px; padding: 14px; margin-bottom: 10px; cursor:pointer; transition: background .2s; }
+  .download-link-item:hover { background: var(--card-2); }
+  .download-link-icon { width:44px; height:44px; border-radius:50%; background:#ff2d95; display:flex; align-items:center; justify-content:center; flex-shrink:0; color:#fff; font-size:18px; }
+  .download-link-info { flex:1; min-width:0; }
+  .download-link-title { font-size:14.5px; font-weight:700; color:var(--text); }
+  .download-link-sub { font-size:12px; color:var(--text-faint); margin-top:2px; }
+
+  @media (min-width: 700px) {
+    .details-poster { width: 150px; height: 220px; }
+  }
   </style>
 </head>
 <body>
 
+  <!-- ===================== HEADER ===================== -->
   <header id="mainHeader">
     <div class="header-left">
       <i class="fa fa-arrow-left back-btn" id="backBtn"></i>
@@ -87,6 +175,23 @@
     </div>
   </header>
 
+  <!-- Sidebar -->
+  <div class="sidebar" id="sidebar">
+    <ul>
+      <li><a href="index.html"><i class="fa fa-home"></i> Home</a></li>
+      <li><a href="movies.html"><i class="fa fa-film"></i> All Movies</a></li>
+      <li><a href="anime.html"><i class="fa-solid fa-dragon"></i> Anime</a></li>
+      <li><a href="series.html"><i class="fa fa-tv"></i> TV Shows</a></li>
+      <li><a href="request.html"><i class="fa fa-plus-circle"></i> Requests</a></li>
+      <li><a href="chanels.html"><i class="fa-solid fa-users"></i> Join Channels</a></li>
+      <li><a href="about.html"><i class="fa fa-info-circle"></i> About</a></li>
+      <li><a href="contact.html"><i class="fa fa-envelope"></i> Contact Us</a></li>
+      <li><a href="settings.html"><i class="fa fa-cog"></i> Settings</a></li>
+    </ul>
+  </div>
+  <div class="overlay" id="overlay"></div>
+
+  <!-- ===================== WATCH / DETAILS VIEW ===================== -->
   <div id="detailsRoot">
     <div class="details-skeleton"><i class="fa fa-spinner fa-spin"></i> Loading...</div>
   </div>
@@ -101,16 +206,95 @@
   <br><br>
   <footer class="footer">
     <div class="footer-logo">𝗠𝗔𝗚𝗜𝗖𝗔𝗟 <span>𝗠𝗢𝗩𝗜𝗘 𝗟𝗔𝗡𝗗</span></div>
-    <p class="footer-text">The best platform to stream latest Movies and Cartoons with high-quality subtitles. Enjoy your favorite content for free on Magical Movie Land.</p>
+    <p class="footer-text">
+      The best platform to stream latest Movies and Cartoons with high-quality subtitles.
+      Enjoy your favorite content for free on Magical Movie Land.
+    </p>
+    <div class="social-icons">
+      <a href="https://www.facebook.com/share/1BbGBZ8ddZ/?mibextid=wwXIfr" target="_blank"><i class="fa-brands fa-facebook-f"></i></a>
+      <a href="https://t.me/YourUsername" target="_blank"><i class="fa-brands fa-telegram"></i></a>
+      <a href="https://www.tiktok.com/@vinuxnoo?_r=1&_t=ZS-97SZwiHJ6jU" target="_blank"><i class="fa-brands fa-tiktok"></i></a>
+    </div>
   </footer>
 
+  <!-- ===================== SCRIPT (Firebase + watch view logic) ===================== -->
   <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-  import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+  import {
+    getFirestore, doc, getDoc
+  } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-  const firebaseConfig = { apiKey: "AIzaSyCx0TEmgr3GCyvfeok9Y42yR1PTM4_8y9M", authDomain: "magical-movie-land.firebaseapp.com", projectId: "magical-movie-land", storageBucket: "magical-movie-land.firebasestorage.app", messagingSenderId: "27757424288", appId: "1:27757424288:web:d650e2659f09f0b9c823c5" };
+  const firebaseConfig = {
+    apiKey: "AIzaSyCx0TEmgr3GCyvfeok9Y42yR1PTM4_8y9M",
+    authDomain: "magical-movie-land.firebaseapp.com",
+    projectId: "magical-movie-land",
+    storageBucket: "magical-movie-land.firebasestorage.app",
+    messagingSenderId: "27757424288",
+    appId: "1:27757424288:web:d650e2659f09f0b9c823c5"
+  };
+
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
+
+  /* =========================================================
+     Keep --header-h in sync with the header's real rendered
+     height, so the sidebar/overlay/search always sit flush
+     under it with no gap, regardless of font/icon rendering.
+     ========================================================= */
+  const mainHeaderEl = document.getElementById('mainHeader');
+  function syncHeaderHeight() {
+    if (!mainHeaderEl) return;
+    document.documentElement.style.setProperty('--header-h', mainHeaderEl.offsetHeight + 'px');
+  }
+  window.addEventListener('resize', syncHeaderHeight);
+  window.addEventListener('load', syncHeaderHeight);
+  if (window.ResizeObserver && mainHeaderEl) {
+    new ResizeObserver(syncHeaderHeight).observe(mainHeaderEl);
+  }
+
+  /* =========================================================
+     Sidebar + overlay
+     ========================================================= */
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('overlay');
+
+  function setMenuBtnState(isOpen) {
+    document.getElementById('menuBtn')?.classList.toggle('active', isOpen);
+  }
+  function openSidebar() {
+    sidebar.classList.add('active');
+    overlay.classList.add('active');
+    setMenuBtnState(true);
+  }
+  function closeSidebarFn() {
+    sidebar.classList.remove('active');
+    overlay.classList.remove('active');
+    setMenuBtnState(false);
+  }
+  function toggleSidebar() {
+    if (sidebar.classList.contains('active')) closeSidebarFn();
+    else openSidebar();
+  }
+  overlay?.addEventListener('click', closeSidebarFn);
+  document.getElementById('menuBtn')?.addEventListener('click', toggleSidebar);
+
+  document.getElementById('backBtn')?.addEventListener('click', () => {
+    // Dan card click ekedi window.location.href use karana nisa (aluth tab
+    // ekak open wenne na), same-tab history eka thiyenawa hariyata — e nisa
+    // browser eke sadharana history.back() ekma use karanna puluwan.
+    if (window.history.length > 1) {
+      window.history.back();
+    } else {
+      window.location.href = 'index.html';
+    }
+  });
+
+  /* =========================================================
+     WATCH / DETAILS VIEW LOGIC
+     ========================================================= */
+  function isSeries(m) {
+    return m.category === 'series' || m.category === 'tvshows' || m.type === 'series' || m.type === 'tv';
+  }
 
   function ytIdFromUrl(url) {
     if (!url) return null;
@@ -120,101 +304,464 @@
     return null;
   }
 
-  function isDirectFileUrl(url) {
-    if (!url) return false;
-    if (url.includes('youtube.com') || url.includes('youtu.be')) return false;
-    return /\.(mp4|mkv|webm|mov|m4v|m3u8)(\?|$)/i.test(url) || url.includes('r2.dev') || url.includes('r2.cloudflarestorage.com');
+  function withAutoplayParams(url) {
+    // Best-effort: tell third-party embed players to autoplay muted, since
+    // we can't reach inside a cross-origin iframe to call play() ourselves.
+    try {
+      const u = new URL(url, window.location.href);
+      if (!u.searchParams.has('autoplay')) u.searchParams.set('autoplay', '1');
+      if (!u.searchParams.has('mute') && !u.searchParams.has('muted')) u.searchParams.set('mute', '1');
+      return u.toString();
+    } catch (e) {
+      const sep = url.includes('?') ? '&' : '?';
+      return `${url}${sep}autoplay=1&mute=1`;
+    }
   }
 
-  // CHANGE 1: MKV + MP4 + M3U8 okkoma handle
   function buildPlayerHTML(url) {
     if (!url) return '<div class="details-skeleton">Video link නෑ</div>';
-    const ytId = (url.includes('youtube.com') || url.includes('youtu.be'))? ytIdFromUrl(url) : null;
+
+    const ytId = (url.includes('youtube.com') || url.includes('youtu.be')) ? ytIdFromUrl(url) : null;
     if (ytId) return `<iframe src="https://www.youtube.com/embed/${ytId}?autoplay=1" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>`;
 
-    if (isDirectFileUrl(url)) {
-      const isMKV = url.includes('.mkv');
-      const videoType = isMKV? 'video/x-matroska' : 'video/mp4';
-      return `<video id="mainPlayer" controls playsinline preload="auto" data-src="${url}"><source src="${url}" type="${videoType}"></video>`;
+    // MP4 / MKV / other raw file links: try to play natively first.
+    // Some browsers (esp. Safari/iOS) CAN play HEVC-in-MKV directly, others can't —
+    // so we attempt playback and only show the "download instead" fallback if it
+    // actually errors out at runtime (handled by attachVideoFallback() below).
+    if (isDirectFileUrl(url) || url.includes('.mp4')) {
+      return `<video src="${url}" controls playsinline preload="auto" data-fallback-url="${url}"></video>`;
     }
+
+    // anith ewa iframe
     return `<iframe src="${url}" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>`;
   }
 
-  // CHANGE 2: Fallback logic + MKV error message for Safari
+  // If native <video> playback fails (unsupported codec/container/network
+  // issue), swap in a simple generic error message instead.
   function attachVideoFallback(playerBox) {
-    const videoEl = playerBox.querySelector('video#mainPlayer');
+    const videoEl = playerBox.querySelector('video[data-fallback-url]');
     if (!videoEl) return;
-    const src = videoEl.dataset.src;
-
-    videoEl.muted = false;
-    videoEl.play().catch((err) => {
-      if (err && err.name === 'NotAllowedError') {
-        videoEl.muted = true; videoEl.play().catch(() => {});
-        videoEl.addEventListener('playing', () => { videoEl.muted = false; }, { once: true });
-      }
-    });
-
     videoEl.addEventListener('error', () => {
-      if (Hls.isSupported() && src.includes('.m3u8')) {
-        const hls = new Hls(); hls.loadSource(src); hls.attachMedia(videoEl);
-      } else if (src.includes('.mkv')) {
-        playerBox.innerHTML = `
-          <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; color:#fff; text-align:center; padding:20px; background:#000;">
-            <i class="fa fa-exclamation-triangle" style="font-size:32px; margin-bottom:10px; color:#ff2d95;"></i>
-            <b>Browser eka MKV play karanne na</b>
-            <p style="font-size:12px; margin-top:8px;">Chrome/Android/PC walin try karanna. iPhone/Safari walin wada na</p>
-            <a href="${src}" target="_blank" class="btn btn-primary" style="margin-top:12px;"><i class="fa fa-download"></i> Download to Watch</a>
-          </div>`;
-      } else {
-        playerBox.innerHTML = `<div style="display:flex; align-items:center; justify-content:center; height:100%; color:#fff; background:#000;"><b>Error : Refresh Page or Check Your Network.</b></div>`;
-      }
+      playerBox.innerHTML = `
+        <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; color:#fff; text-align:center; padding:20px; background:#000;">
+          <b>Error : Refresh Page or Check Your Network.</b>
+        </div>`;
     }, { once: true });
+  }
+
+  function buildCastHTML(m) {
+    let members = Array.isArray(m.castMembers) ? m.castMembers.filter(c => c && c.name) : [];
+    if (members.length === 0 && m.cast) {
+      members = m.cast.split(',').map(c => c.trim()).filter(Boolean).map(name => ({ name, character: '', photo: '' }));
+    }
+    if (members.length === 0) return '';
+    return `
+      <div class="cast-wrap">
+        <div class="cast-title"><span class="cast-bar"></span> Cast</div>
+        <div class="cast-scroll">
+          ${members.map(c => {
+            const initial = (c.name || '?').trim().charAt(0).toUpperCase();
+            const photo = c.photo || `https://via.placeholder.com/80x80/222/fff?text=${encodeURIComponent(initial)}`;
+            return `
+              <div class="cast-item">
+                <img class="cast-photo" src="${photo}" alt="${c.name || ''}" loading="lazy">
+                <div class="cast-name">${c.name || ''}</div>
+                ${c.character ? `<div class="cast-role">${c.character}</div>` : ''}
+              </div>
+            `;
+          }).join('')}
+        </div>
+      </div>
+    `;
+  }
+
+  // A URL is "directly downloadable" if it's a raw file (mp4, mkv, etc).
+  // YouTube links and generic third-party iframe embeds can't be downloaded
+  // directly (cross-origin / ToS restrictions), so we don't offer those.
+  function isDirectFileUrl(url) {
+    if (!url) return false;
+    if (url.includes('youtube.com') || url.includes('youtu.be')) return false;
+    return /\.(mp4|mkv|webm|mov|m4v)(\?|$)/i.test(url) || url.includes('r2.dev') || url.includes('r2.cloudflarestorage.com');
+  }
+
+  function buildDownloadHTML(m) {
+    const series = isSeries(m);
+
+    // ---- TV Series: list a direct download link for EVERY episode ----
+    if (series) {
+      const episodeLinks = (Array.isArray(m.episodes) ? m.episodes : [])
+        .slice()
+        .sort((a, b) => (a.season||1) - (b.season||1) || (a.episode||0) - (b.episode||0))
+        .map(e => ({
+          url: e.downloadUrl || e.videoUrl,
+          label: e.title ? `S${e.season||1} · E${String(e.episode||0).padStart(2,'0')} — ${e.title}` : `S${e.season||1} · Episode ${String(e.episode||0).padStart(2,'0')}`
+        }))
+        .filter(e => e.url && isDirectFileUrl(e.url));
+
+      if (episodeLinks.length === 0 && !m.telegramDownloadUrl) return '';
+
+      return `
+        <div class="download-wrap" id="downloadWrap" style="display:none;">
+          <div class="download-title"><span class="download-bar"></span> Direct Download Links</div>
+          <div class="download-countdown-box" id="downloadCountdownBox">
+            <div class="download-countdown-num" id="downloadCountdownNum">5</div>
+            <div class="download-countdown-text">Your high-speed link is being prepared...</div>
+          </div>
+          <div class="download-links" id="downloadLinksBox">
+            ${episodeLinks.map(e => `
+            <div class="download-link-item" onclick="window.open('${e.url}','_blank')">
+              <div class="download-link-icon"><i class="fa fa-download"></i></div>
+              <div class="download-link-info">
+                <div class="download-link-title">${e.label}</div>
+                <div class="download-link-sub">Cloudflare R2 • High Speed Direct Access</div>
+              </div>
+            </div>`).join('')}
+            ${m.telegramDownloadUrl ? `
+            <div class="download-link-item" onclick="window.open('${m.telegramDownloadUrl}','_blank')">
+              <div class="download-link-icon"><i class="fa-brands fa-telegram"></i></div>
+              <div class="download-link-info">
+                <div class="download-link-title">Telegram Download Link</div>
+                <div class="download-link-sub">Join our channel • Easy Mobile Download</div>
+              </div>
+            </div>` : ''}
+          </div>
+        </div>
+      `;
+    }
+
+    // ---- Movie: single direct link (unchanged behavior) ----
+    const autoDownloadUrl = !m.downloadUrl && isDirectFileUrl(m.videoUrl) ? m.videoUrl : '';
+    const directUrl = m.downloadUrl || autoDownloadUrl;
+
+    if (!directUrl && !m.telegramDownloadUrl) return '';
+
+    return `
+      <div class="download-wrap" id="downloadWrap" style="display:none;">
+        <div class="download-title"><span class="download-bar"></span> Direct Download Links</div>
+        <div class="download-countdown-box" id="downloadCountdownBox">
+          <div class="download-countdown-num" id="downloadCountdownNum">5</div>
+          <div class="download-countdown-text">Your high-speed link is being prepared...</div>
+        </div>
+        <div class="download-links" id="downloadLinksBox">
+          ${directUrl ? `
+          <div class="download-link-item" onclick="window.open('${directUrl}','_blank')">
+            <div class="download-link-icon"><i class="fa fa-download"></i></div>
+            <div class="download-link-info">
+              <div class="download-link-title">Direct Download Link</div>
+              <div class="download-link-sub">Cloudflare R2 • High Speed Direct Access</div>
+            </div>
+          </div>` : ''}
+          ${m.telegramDownloadUrl ? `
+          <div class="download-link-item" onclick="window.open('${m.telegramDownloadUrl}','_blank')">
+            <div class="download-link-icon"><i class="fa-brands fa-telegram"></i></div>
+            <div class="download-link-info">
+              <div class="download-link-title">Telegram Download Link</div>
+              <div class="download-link-sub">Join our channel • Easy Mobile Download</div>
+            </div>
+          </div>` : ''}
+        </div>
+      </div>
+    `;
+  }
+
+  function renderNotFound() {
+    document.getElementById('detailsRoot').innerHTML = `
+      <div class="details-skeleton">
+        <i class="fa fa-ghost" style="font-size:34px; display:block; margin-bottom:10px;"></i>
+        Movie / TV Show එක හමු නොවීය.<br>
+        <a href="index.html" style="color:#ff2d95; font-weight:600;">← Back to Home</a>
+      </div>`;
   }
 
   async function initWatch(id) {
     const root = document.getElementById('detailsRoot');
-    if (!id) { root.innerHTML = `<div class="details-skeleton">Movie එක හමු නොවීය.</div>`; return; }
+
+    if (!id) { renderNotFound(); return; }
+
     try {
       const snap = await getDoc(doc(db, "movies", id));
-      if (!snap.exists()) { root.innerHTML = `<div class="details-skeleton">Movie එක හමු නොවීය.</div>`; return; }
+      if (!snap.exists()) { renderNotFound(); return; }
+
       const m = snap.data();
+      m.id = snap.id;
       document.title = (m.title || 'Watch') + ' - MAGICAL MOVIE LAND';
+
+      const series = isSeries(m);
       const backdrop = m.backdrop || m.poster || '';
       const poster = m.poster || 'https://via.placeholder.com/150x220/222/fff';
+      const genreTags = (m.genre || '').split(',').map(g => g.trim()).filter(Boolean);
+
+      let metaHTML = `<span>${m.year || 'N/A'}</span>`;
+      if (m.rating) metaHTML += `<span class="rating"><i class="fa fa-star"></i> ${m.rating}</span>`;
+      if (m.duration && !series) metaHTML += `<span>${m.duration}</span>`;
+      if (series) metaHTML += `<span>TV Series</span>`;
+      genreTags.forEach(g => metaHTML += `<span>${g}</span>`);
+
+      let episodesHTML = '';
+      if (series && Array.isArray(m.episodes) && m.episodes.length > 0) {
+        const seasons = [...new Set(m.episodes.map(e => e.season || 1))].sort((a,b)=>a-b);
+        // Episode list eka default widiyata hide karala thiyenne — "Watch Now"
+        // click kalothin methana display eka toggle karanawa.
+        episodesHTML = `
+          <section class="episodes-wrap" id="episodesSection" style="display:none;">
+            <div class="episodes-title"><span class="cast-bar"></span> Select Episode to Watch</div>
+            ${seasons.length > 1 ? `<select class="season-select" id="seasonSelect">${seasons.map(s => `<option value="${s}">Season ${s}</option>`).join('')}</select>` : ''}
+            <div id="episodeList"></div>
+          </section>
+        `;
+      }
 
       root.innerHTML = `
         <div class="details-hero" style="background-image:url('${backdrop}');">
           <div class="details-hero-inner">
             <img class="details-poster" src="${poster}" alt="${m.title}">
-            <div class="details-title-block"><div class="details-title">${m.title || 'Untitled'}</div></div>
+            <div class="details-title-block">
+              <div class="details-title">${m.title || 'Untitled'}</div>
+              <div class="details-meta">${metaHTML}</div>
+            </div>
           </div>
         </div>
         <div class="details-body">
           <div class="details-actions">
             <button class="btn btn-primary" id="watchNowBtn"><i class="fa fa-play"></i> Watch Now</button>
+            ${m.trailer ? `<button class="btn btn-secondary" id="trailerBtn"><i class="fa fa-film"></i> Trailer</button>` : ''}
+            ${(() => {
+              const hasDownload = series
+                ? (m.telegramDownloadUrl || (Array.isArray(m.episodes) && m.episodes.some(e => isDirectFileUrl(e.downloadUrl || e.videoUrl))))
+                : (m.downloadUrl || m.telegramDownloadUrl || isDirectFileUrl(m.videoUrl));
+              return hasDownload ? `<button class="btn btn-outline" id="downloadBtn"><i class="fa fa-download"></i> Download</button>` : '';
+            })()}
           </div>
         </div>
-        <div class="player-wrap" id="playerWrap"><div class="player-container" id="playerBox"></div><div class="now-playing-label" id="nowPlayingLabel"></div></div>
-        <div class="details-body"><div class="details-desc-label">Overview</div><p class="details-desc">${m.description || 'Description එකක් නෑ.'}</p></div>
+        <div class="player-wrap" id="playerWrap">
+          <div class="player-container" id="playerBox"></div>
+          <div class="now-playing-label" id="nowPlayingLabel"></div>
+        </div>
+        <div class="details-body">
+          <div class="details-desc-label">Overview</div>
+          <p class="details-desc">${m.description || 'Description එකක් නෑ.'}</p>
+        </div>
+        ${episodesHTML}
+        ${buildCastHTML(m)}
+        ${buildDownloadHTML(m)}
       `;
 
       const playerWrap = document.getElementById('playerWrap');
       const playerBox = document.getElementById('playerBox');
       const nowPlayingLabel = document.getElementById('nowPlayingLabel');
+      const episodesSection = document.getElementById('episodesSection');
+
+      // Player-open state saha episode-list-visible state dekama wenama
+      // boolean dekakin track karanawa — Back click kalama dekama ekapara
+      // reset wenna one (player close + episode list hide) ekama widiyata.
+      let playerIsOpen = false;
+      let episodesVisible = false;
+
+      function updateWatchBtnLabel() {
+        const showBack = playerIsOpen || episodesVisible;
+        if (showBack) {
+          watchNowBtn.classList.remove('btn-primary');
+          watchNowBtn.classList.add('btn-back');
+          watchNowBtn.innerHTML = '<i class="fa fa-arrow-left"></i> Back';
+        } else {
+          watchNowBtn.classList.remove('btn-back');
+          watchNowBtn.classList.add('btn-primary');
+          watchNowBtn.innerHTML = '<i class="fa fa-play"></i> Watch Now';
+        }
+      }
+
+      function playUrl(url, label, posterImg) {
+        nowPlayingLabel.textContent = label || '';
+        playerWrap.classList.add('active');
+        playerBox.innerHTML = `
+          <div class="player-poster" style="background-image:url('${(posterImg || '').replace(/'/g, "\\'")}')">
+            <div class="player-play-btn"><i class="fa fa-play"></i></div>
+          </div>
+        `;
+        const posterEl = playerBox.querySelector('.player-poster');
+        posterEl.addEventListener('click', () => {
+          playerBox.innerHTML = buildPlayerHTML(url);
+          attachVideoFallback(playerBox);
+          const videoEl = playerBox.querySelector('video');
+          if (videoEl) {
+            // Keep the video unmuted for as long as this player instance lives —
+            // guards against anything else ever flipping it back to muted.
+            videoEl.addEventListener('playing', () => { videoEl.muted = false; });
+
+            videoEl.muted = false;
+            videoEl.play().catch((err) => {
+              // Only fall back to muted playback if the browser genuinely
+              // blocked unmuted autoplay (NotAllowedError). Ignore AbortError
+              // (happens if the request gets superseded/interrupted) and any
+              // other transient errors — don't mute the video for those.
+              if (err && err.name === 'NotAllowedError') {
+                videoEl.muted = true;
+                videoEl.play().catch(() => {});
+                videoEl.addEventListener('playing', () => { videoEl.muted = false; }, { once: true });
+              }
+            });
+          }
+        }, { once: true });
+        playerWrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+
       const watchNowBtn = document.getElementById('watchNowBtn');
 
+      function closePlayer() {
+        playerWrap.classList.remove('active');
+        playerBox.innerHTML = '';
+        nowPlayingLabel.textContent = '';
+        playerIsOpen = false;
+      }
+
+      function showEpisodes() {
+        if (!episodesSection) return;
+        episodesVisible = true;
+        episodesSection.style.display = '';
+        updateWatchBtnLabel();
+        episodesSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+
+      function hideEpisodes() {
+        if (!episodesSection) return;
+        episodesVisible = false;
+        episodesSection.style.display = 'none';
+      }
+
       watchNowBtn.addEventListener('click', () => {
-        playerWrap.classList.add('active');
-        nowPlayingLabel.textContent = m.title;
-        playerBox.innerHTML = `<div class="player-poster" style="background-image:url('${backdrop}')"><div class="player-play-btn"><i class="fa fa-play"></i></div></div>`;
-        playerBox.querySelector('.player-poster').addEventListener('click', () => {
-          playerBox.innerHTML = buildPlayerHTML(m.videoUrl);
-          attachVideoFallback(playerBox);
-        }, { once: true });
-        playerWrap.scrollIntoView({ behavior: 'smooth' });
+        // Back button ekak widiyata penei nam (player open wela, or
+        // episode list eka penichcha nam) — dekama ekapara reset karanawa,
+        // "Watch Now" tanivama sudusu tatvayata yanawa.
+        if (playerIsOpen || episodesVisible) {
+          closePlayer();
+          hideEpisodes();
+          updateWatchBtnLabel();
+          return;
+        }
+
+        if (series) {
+          // Episode list eka penawanawa — episode ekak select karana thuru
+          // player eka open wenne na.
+          showEpisodes();
+        } else {
+          playUrl(m.videoUrl, m.title, backdrop || poster);
+          playerIsOpen = true;
+          updateWatchBtnLabel();
+        }
       });
 
-    } catch (err) { console.error(err); root.innerHTML = `<div class="details-skeleton">⚠️ දෝෂයක් සිදු විය.</div>`; }
+      function renderEpisodes(season) {
+        const list = document.getElementById('episodeList');
+        if (!list) return;
+        const eps = m.episodes.filter(e => (e.season || 1) === Number(season)).sort((a,b) => (a.episode||0) - (b.episode||0));
+        list.innerHTML = eps.map(e => `
+          <div class="episode-item" data-video="${e.videoUrl}" data-label="S${e.season||1} · E${e.episode||1} — ${e.title||''}">
+            <div class="episode-num">${String(e.episode || 0).padStart(2,'0')}</div>
+            <div class="episode-info">
+              <div class="episode-title">${e.title || 'Episode ' + String(e.episode||0).padStart(2,'0')}</div>
+              <div class="episode-sub">Season ${e.season || 1}</div>
+            </div>
+            <i class="fa fa-play episode-play-icon"></i>
+          </div>
+        `).join('');
+        list.querySelectorAll('.episode-item').forEach(item => {
+          item.addEventListener('click', () => {
+            list.querySelectorAll('.episode-item').forEach(i => i.classList.remove('playing'));
+            item.classList.add('playing');
+            playUrl(item.dataset.video, item.dataset.label, backdrop || poster);
+            playerIsOpen = true;
+            updateWatchBtnLabel();
+          });
+        });
+      }
+
+      if (series && Array.isArray(m.episodes) && m.episodes.length > 0) {
+        renderEpisodes(m.episodes[0].season || 1);
+        document.getElementById('seasonSelect')?.addEventListener('change', (e) => renderEpisodes(e.target.value));
+      }
+
+      if (m.trailer) {
+        const trailerModal = document.getElementById('trailerModal');
+        const trailerPlayerBox = document.getElementById('trailerPlayerBox');
+        document.getElementById('trailerBtn').addEventListener('click', () => {
+          const ytId = ytIdFromUrl(m.trailer);
+          trailerPlayerBox.innerHTML = ytId
+            ? `<iframe src="https://www.youtube.com/embed/${ytId}?autoplay=1" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>`
+            : buildPlayerHTML(m.trailer);
+          attachVideoFallback(trailerPlayerBox);
+          trailerModal.classList.add('active');
+        });
+        document.getElementById('trailerClose').addEventListener('click', () => {
+          trailerModal.classList.remove('active');
+          trailerPlayerBox.innerHTML = '';
+        });
+        trailerModal.addEventListener('click', (e) => {
+          if (e.target === trailerModal) { trailerModal.classList.remove('active'); trailerPlayerBox.innerHTML = ''; }
+        });
+      }
+
+      // ===================== DOWNLOAD BUTTON: countdown then reveal links,
+      // then button itself becomes "Back" to collapse the list again =====================
+      const downloadBtn = document.getElementById('downloadBtn');
+      if (downloadBtn) {
+        let downloadVisible = false;
+
+        function setDownloadBtnState(isOpen) {
+          downloadVisible = isOpen;
+          if (isOpen) {
+            downloadBtn.classList.remove('btn-outline');
+            downloadBtn.classList.add('btn-back');
+            downloadBtn.innerHTML = '<i class="fa fa-arrow-left"></i> Back';
+          } else {
+            downloadBtn.classList.remove('btn-back');
+            downloadBtn.classList.add('btn-outline');
+            downloadBtn.innerHTML = '<i class="fa fa-download"></i> Download';
+          }
+        }
+
+        downloadBtn.addEventListener('click', () => {
+          const wrap = document.getElementById('downloadWrap');
+          const countdownBox = document.getElementById('downloadCountdownBox');
+          const countdownNum = document.getElementById('downloadCountdownNum');
+          const linksBox = document.getElementById('downloadLinksBox');
+          if (!wrap || !countdownBox || !countdownNum || !linksBox) return;
+
+          // Already showing — this click is now the "Back" action, collapse it.
+          if (downloadVisible) {
+            wrap.style.display = 'none';
+            countdownBox.style.display = '';
+            linksBox.classList.remove('active');
+            setDownloadBtnState(false);
+            return;
+          }
+
+          downloadBtn.disabled = true;
+          wrap.style.display = '';
+          countdownBox.style.display = '';
+          linksBox.classList.remove('active');
+          wrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+          let count = 5;
+          countdownNum.textContent = count;
+          const timer = setInterval(() => {
+            count--;
+            if (count <= 0) {
+              clearInterval(timer);
+              countdownBox.style.display = 'none';
+              linksBox.classList.add('active');
+              downloadBtn.disabled = false;
+              setDownloadBtnState(true);
+            } else {
+              countdownNum.textContent = count;
+            }
+          }, 1000);
+        });
+      }
+
+    } catch (err) {
+      console.error("❌ Firebase Error:", err);
+      root.innerHTML = `<div class="details-skeleton">⚠️ දෝෂයක් සිදු විය. නැවත උත්සාහ කරන්න.</div>`;
+    }
   }
 
   const params = new URLSearchParams(window.location.search);
@@ -222,3 +769,6 @@
   </script>
 </body>
 </html>
+
+
+
