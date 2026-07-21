@@ -49,8 +49,44 @@
   <header id="mainHeader"> <!-- 2. anith page wage structure -->
     <div class="header-left">
       <button class="menu-toggle" id="menuBtn" aria-label="Menu"><span></span><span></span><span></span></button>
-      <div class="logo">𝗠𝗔𝗚𝗜𝗖𝗔𝗟 <span>𝗠🍩𝗩𝗜𝗘 𝗟🌲𝗡𝗗</span></div>
-    </div>
+      <div class="logo">
+  <a href="index.html" aria-label="Movie Land">
+    <svg viewBox="0 0 246 64" role="img" aria-label="Movie Land">
+      <defs>
+        <linearGradient id="mlTicketGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#ff6fb0"/>
+          <stop offset="55%" stop-color="#ff2d95"/>
+          <stop offset="100%" stop-color="#b6178f"/>
+        </linearGradient>
+        <linearGradient id="mlLandGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#ff5fab"/>
+          <stop offset="100%" stop-color="#ff2d95"/>
+        </linearGradient>
+        <filter id="mlGlow" x="-60%" y="-60%" width="220%" height="220%">
+          <feGaussianBlur stdDeviation="2.4" result="blur"/>
+          <feMerge>
+            <feMergeNode in="blur"/>
+            <feMergeNode in="SourceGraphic"/>
+          </feMerge>
+        </filter>
+        <mask id="mlTicketMask">
+          <rect x="-26" y="-18" width="52" height="36" rx="7" fill="#fff"/>
+          <circle cx="-26" cy="0" r="5" fill="#000"/>
+          <circle cx="26" cy="0" r="5" fill="#000"/>
+        </mask>
+      </defs>
+      <g transform="translate(34,32) rotate(-8)" filter="url(#mlGlow)">
+        <rect x="-26" y="-18" width="52" height="36" rx="7" fill="url(#mlTicketGrad)" mask="url(#mlTicketMask)"/>
+        <line x1="0" y1="-13" x2="0" y2="13" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-dasharray="0.5 4.5" opacity="0.85"/>
+        <path d="M -19,-7 L -19,7 L -6,0 Z" fill="#fff" opacity="0.95"/>
+        <path d="M20,0 L14.77,1.77 L13,7 L11.23,1.77 L6,0 L11.23,-1.77 L13,-7 L14.77,-1.77 Z" fill="#fff" opacity="0.95"/>
+      </g>
+      <text x="74" y="41" font-family="'Poppins','Segoe UI',Arial,sans-serif" font-weight="800" font-size="27" letter-spacing="0.5" fill="#ffffff">MOVIE</text>
+      <text x="160" y="41" font-family="'Poppins','Segoe UI',Arial,sans-serif" font-weight="800" font-size="27" letter-spacing="0.5" fill="url(#mlLandGrad)">LAND</text>
+    </svg>
+  </a>
+</div>
+
     <div class="header-right">
       <i class="fa fa-search" id="searchBtn"></i>
     </div>
