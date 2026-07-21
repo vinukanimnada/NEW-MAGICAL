@@ -46,6 +46,50 @@ header {
 .header-left { display: flex; align-items: center; }
 .header-left i { font-size: 20px; margin-right: 14px; cursor: pointer; color: #fff; }
 
+/* ===== AUTH / LOGIN BUTTON =====
+   auth.js JS ekenma me button eka .header-right ekata (search icon
+   ekata passe) append karanawa — eth position/size/shape eka methanin
+   style.css eken podu widiyata siyalu pages walata therenawa. */
+.mml-auth-btn {
+  width: 38px;
+  height: 38px;
+  min-width: 38px;
+  border-radius: 50%;
+  background: #ff2d95;
+  color: #fff;
+  cursor: pointer;
+  border: none;
+  flex-shrink: 0;
+  margin-left: 12px;
+  padding: 0;
+  position: relative;
+  overflow: hidden;
+}
+.mml-auth-btn i {
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  font-size: 16px !important;
+  line-height: 1 !important;
+}
+.mml-auth-btn:not(:has(i)) {
+  font-size: 15px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.mml-auth-btn img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: 50%;
+}
+
 /* ===== HAMBURGER TO X ANIMATION ===== */
 .menu-toggle {
   background: none; 
