@@ -64,13 +64,13 @@
 
 .profile-avatar-wrap {
   position: relative;
-  width: 92px;
-  height: 92px;
+  width: 96px;
+  height: 96px;
   margin: 0 auto 16px;
 }
 .profile-avatar {
-  width: 92px;
-  height: 92px;
+  width: 96px;
+  height: 96px;
   border-radius: 50%;
   background: linear-gradient(135deg, #ff2d95, #b6178f);
   color: #fff;
@@ -81,24 +81,29 @@
   justify-content: center;
   overflow: hidden;
 }
-.profile-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.profile-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
+/* Edit badge — repositioned flush to the avatar's own edge (bottom:0;
+   right:0;) instead of a negative offset, so it sits cleanly inside the
+   avatar-wrap without spilling out / looking clipped on small screens. */
 .profile-edit-badge {
   position: absolute;
-  bottom: -2px;
-  right: -2px;
-  width: 30px;
-  height: 30px;
+  bottom: 0;
+  right: 0;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
   background: #ff2d95;
   color: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 12.5px;
+  font-size: 12px;
   cursor: pointer;
   border: 3px solid var(--card);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.4);
 }
+.profile-edit-badge:active { transform: scale(0.94); }
 
 .profile-name {
   font-size: 21px;
@@ -299,8 +304,11 @@
     <div class="profile-card">
       <div class="profile-avatar-wrap">
         <div class="profile-avatar" id="profileAvatar">?</div>
-        <div class="profile-edit-badge" id="profileEditBadge"><i class="fa fa-pen"></i></div>
+        <div class="profile-edit-badge" id="profileEditBadge" title="Change profile photo"><i class="fa fa-pen"></i></div>
       </div>
+      <!-- Hidden file input — opened by the pencil badge. accept="image/*"
+           lets the OS gallery/camera picker show up on mobile. -->
+      <input type="file" id="avatarFileInput" accept="image/*" style="display:none">
 
       <!-- Display mode -->
       <div id="profileDisplayMode">
@@ -409,6 +417,7 @@ const loggedInView = document.getElementById('profileLoggedIn');
 const displayMode = document.getElementById('profileDisplayMode');
 const editForm = document.getElementById('profileEditForm');
 const editError = document.getElementById('profileEditError');
+const avatarEl = document.getElementById('profileAvatar');
 
 let currentUser = null;
 let currentData = {};
@@ -422,11 +431,21 @@ function initials(label) {
   return (label || '?').trim().charAt(0).toUpperCase() || '?';
 }
 
+// Photo eka thiyenawa nam <img> ekak pennanawa; nathnam mula akura
+// (initials) fallback widiyata pennanawa.
+function renderAvatar(label, photoURL) {
+  if (photoURL) {
+    avatarEl.innerHTML = `<img src="${photoURL}" alt="">`;
+  } else {
+    avatarEl.textContent = initials(label);
+  }
+}
+
 function renderDisplay(user, data) {
   const label = data.username || user.displayName || (user.email || '').split('@')[0] || '?';
   const fullName = [data.firstName, data.lastName].filter(Boolean).join(' ');
 
-  document.getElementById('profileAvatar').textContent = initials(label);
+  renderAvatar(label, data.photoURL);
   document.getElementById('profileDisplayName').textContent = fullName || label;
 
   let joinedText = '';
@@ -490,7 +509,78 @@ onAuthStateChanged(auth, (user) => {
   });
 });
 
-/* ---------------- Edit Profile toggle ---------------- */
+/* =========================================================
+   PROFILE PHOTO — pencil badge opens the device gallery picker.
+   Picked image eka canvas ekaka draw karala 240x240 square ekakata
+   crop+resize karala, JPEG widiyata compress karala (Firestore
+   document 1MB limit ekata safe widiyata), users/{uid}.photoURL
+   widiyata save karanawa. Save unaama header account button eka
+   ekamama (page reload ekak nathuwama) update wenawa.
+   ========================================================= */
+function resizeImageToDataURL(file, size = 240, quality = 0.82) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = () => reject(new Error('Image එක read කරගන්න බැරි උනා'));
+    reader.onload = () => {
+      const img = new Image();
+      img.onerror = () => reject(new Error('Image file එක invalid'));
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        canvas.width = size;
+        canvas.height = size;
+        const ctx = canvas.getContext('2d');
+        // Cover-crop: shorter side eka `size` ekata fill wena widiyata
+        // scale karala, center eken crop karanawa (square avatar ekak
+        // widiyata, stretch wenne nathuwa).
+        const scale = Math.max(size / img.width, size / img.height);
+        const w = img.width * scale;
+        const h = img.height * scale;
+        const x = (size - w) / 2;
+        const y = (size - h) / 2;
+        ctx.drawImage(img, x, y, w, h);
+        resolve(canvas.toDataURL('image/jpeg', quality));
+      };
+      img.src = reader.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+document.getElementById('profileEditBadge').addEventListener('click', () => {
+  document.getElementById('avatarFileInput').click();
+});
+
+document.getElementById('avatarFileInput').addEventListener('change', async (e) => {
+  const file = e.target.files[0];
+  e.target.value = ''; // aluth photo ekakma pass karama wath, e-ma file eka select karanna puluwan widiyata clear karanawa
+  if (!file || !currentUser) return;
+
+  if (!file.type.startsWith('image/')) {
+    alert('කරුණාකර Image file එකක් තෝරන්න');
+    return;
+  }
+
+  const original = avatarEl.innerHTML;
+  avatarEl.innerHTML = '<i class="fa fa-spinner fa-spin"></i>';
+
+  try {
+    const dataUrl = await resizeImageToDataURL(file);
+    await setDoc(doc(db, 'users', currentUser.uid), { photoURL: dataUrl }, { merge: true });
+    currentData = { ...currentData, photoURL: dataUrl };
+    renderDisplay(currentUser, currentData);
+
+    // Header eke account button ekath ekamama update karanawa —
+    // auth.js eken expose karapu helper eka.
+    if (window.MMLAuth && window.MMLAuth.refreshAvatar) window.MMLAuth.refreshAvatar(dataUrl);
+  } catch (err) {
+    console.error(err);
+    alert('Error: ' + err.message);
+    avatarEl.innerHTML = original;
+  }
+});
+
+/* ---------------- Edit Profile toggle (name only — photo eka
+   pencil badge eken witharak wenama widiyata handle wenawa) ---------------- */
 function openEdit() {
   editError.textContent = '';
   document.getElementById('editUsernameStatic').textContent = currentData.username || currentUser.displayName || '—';
@@ -506,7 +596,6 @@ function closeEdit() {
 }
 
 document.getElementById('profileEditBtn').addEventListener('click', openEdit);
-document.getElementById('profileEditBadge').addEventListener('click', openEdit);
 document.getElementById('profileCancelBtn').addEventListener('click', closeEdit);
 
 document.getElementById('profileSaveBtn').addEventListener('click', async () => {
