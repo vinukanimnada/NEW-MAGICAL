@@ -22,6 +22,11 @@
       page ekaka nam, <header> tag ekatama button eka append
       wenawa (fallback).
 
+   NOTE: ".mml-auth-btn" button eke POSITION/SIZE/SHAPE CSS eka
+   dan style.css ekata move karala thiyenawa (siyalu pages walata
+   podu widiyata therenna). Methana inject wenne modal/menu/form
+   walata witharak — header button eke layout eka nemei.
+
    ---------------- PROFILE PAGE ----------------
    Header eke account icon eken "Profile" select kalama, dan
    full "profile.html" page ekata navigate wenawa — My List /
@@ -87,13 +92,12 @@ async function emailForUsername(username) {
 
 /* =========================================================
    Inject CSS (scoped, won't clash with site styles)
+   NOTE: .mml-auth-btn (header button) position/size/shape CSS
+   eka dan style.css ekata move karala — methanin ain kara.
+   Methana thiyenne modal / menu / form walata witharai.
    ========================================================= */
 const style = document.createElement('style');
 style.textContent = `
-.mml-auth-btn { width:38px; height:38px; min-width:38px; border-radius:50%; background:#ff2d95; color:#fff; cursor:pointer; border:none; flex-shrink:0; margin-left:12px; padding:0; position:relative; overflow:hidden; }
-.mml-auth-btn i { position:absolute !important; top:50% !important; left:50% !important; transform:translate(-50%,-50%) !important; margin:0 !important; padding:0 !important; font-size:16px !important; line-height:1 !important; }
-.mml-auth-btn:not(:has(i)) { font-size:15px; font-weight:700; display:flex; align-items:center; justify-content:center; }
-.mml-auth-btn img { width:100%; height:100%; object-fit:cover; display:block; border-radius:50%; }
 .mml-auth-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:5000; display:none; align-items:center; justify-content:center; padding:20px; }
 .mml-auth-overlay.active { display:flex; }
 .mml-auth-card { background:#111; border:1px solid #222; border-radius:14px; padding:28px 24px; max-width:380px; width:100%; max-height:88vh; overflow-y:auto; position:relative; }
