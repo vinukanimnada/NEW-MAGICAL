@@ -49,6 +49,12 @@
      mewa okkoma style.css ekenma enawa (movies.html wage podu/common style).
      Duplicate wenna one nisa methanin ain kara. */
 
+  /* Header logo image — SVG mark eka header height ekata match wena widiyata
+     size karanawa, .logo link/anchor eka flex ekak widiyata pennawa image
+     eka vertically center wena widiyata. */
+  .logo a { display: flex; align-items: center; }
+  .logo img { height: 36px; width: auto; display: block; }
+
   /* Hero */
   .hero { position: relative; width: auto; height: 180px; overflow: hidden; background: var(--card); margin: 12px 15px; border-radius: 16px; }
   .hero-slide { position: absolute; inset: 0; opacity: 0; transition: opacity 0.6s ease; cursor: pointer; background: #111; }
@@ -98,7 +104,7 @@
   <header id="mainHeader">
     <div class="header-left">
       <button class="menu-toggle" id="menuBtn" aria-label="Menu"><span></span><span></span><span></span></button>
-      <div class="logo"><a href="index.html">𝗠🍩𝗩𝗜𝗘 <span>𝗟🌲𝗡𝗗</span></a></div>
+      <div class="logo"><a href="index.html"><img src="logo.svg" alt="Movie Land"></a></div>
     </div>
     <div class="header-right">
       <i class="fa fa-search" id="searchBtn"></i>
