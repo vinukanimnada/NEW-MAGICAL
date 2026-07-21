@@ -24,10 +24,17 @@
 
    ---------------- PROFILE PAGE ----------------
    Header eke account icon eken "Profile" select kalama, dan
-   full "profile.html" page ekata navigate wenawa (kalinviye
-   modal ekema tiny profile view ekakata giya, dan wenas kala —
-   My List / Seen List / Shared Links / Comments stats + tabs
-   thiyena dedicated page ekak profile.html eke thiyenawa).
+   full "profile.html" page ekata navigate wenawa — My List /
+   Seen List / Shared Links / Comments stats + tabs thiyena
+   dedicated page ekak.
+
+   ---------------- PROFILE PHOTO ----------------
+   User kenek profile.html eke pencil badge eken photo ekak upload
+   kalama, e photo eka "users/{uid}.photoURL" widiyata Firestore
+   ekata save wenawa. Methana (auth.js) header account button eka
+   dan e photo eka thiyenawa nam circle widiyata pennanawa (photo
+   nathnam kalinviye widiyatama name eke mula akura). Button eka
+   dan fully round (border-radius:50%) — koyu naethuwa.
    ============================================================ */
 
 import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -83,9 +90,10 @@ async function emailForUsername(username) {
    ========================================================= */
 const style = document.createElement('style');
 style.textContent = `
-.mml-auth-btn { width:38px; height:38px; min-width:38px; border-radius:8px; background:#ff2d95; color:#fff; cursor:pointer; border:none; flex-shrink:0; margin-left:12px; padding:0; position:relative; }
+.mml-auth-btn { width:38px; height:38px; min-width:38px; border-radius:50%; background:#ff2d95; color:#fff; cursor:pointer; border:none; flex-shrink:0; margin-left:12px; padding:0; position:relative; overflow:hidden; }
 .mml-auth-btn i { position:absolute !important; top:50% !important; left:50% !important; transform:translate(-50%,-50%) !important; margin:0 !important; padding:0 !important; font-size:16px !important; line-height:1 !important; }
 .mml-auth-btn:not(:has(i)) { font-size:15px; font-weight:700; display:flex; align-items:center; justify-content:center; }
+.mml-auth-btn img { width:100%; height:100%; object-fit:cover; display:block; border-radius:50%; }
 .mml-auth-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:5000; display:none; align-items:center; justify-content:center; padding:20px; }
 .mml-auth-overlay.active { display:flex; }
 .mml-auth-card { background:#111; border:1px solid #222; border-radius:14px; padding:28px 24px; max-width:380px; width:100%; max-height:88vh; overflow-y:auto; position:relative; }
@@ -180,6 +188,16 @@ if (headerRight) {
 } else {
   const header = document.querySelector('header');
   if (header) header.appendChild(authBtn);
+}
+
+// Header account button eke avatar eka render karana helper — photoURL
+// thiyenawa nam <img> ekak (round, cover), nathnam mula akura pennanawa.
+function renderAuthBtnAvatar(label, photoURL) {
+  if (photoURL) {
+    authBtn.innerHTML = `<img src="${photoURL}" alt="">`;
+  } else {
+    authBtn.textContent = (label || '?').trim().charAt(0).toUpperCase() || '?';
+  }
 }
 
 /* =========================================================
@@ -380,14 +398,25 @@ document.getElementById('mmlForgotBtn').addEventListener('click', async () => {
 });
 
 /* =========================================================
-   AUTH STATE — keep the header button in sync with login state
+   AUTH STATE — keep the header button in sync with login state.
+   Login unaama Firestore eken users/{uid} document eka fetch karala
+   photoURL thiyenawa nam e photo eka header button ekata danawa
+   (nathnam kalinviyema mula akura).
    ========================================================= */
-onAuthStateChanged(auth, (user) => {
+onAuthStateChanged(auth, async (user) => {
   currentUser = user;
   if (user) {
     const label = user.displayName || (user.email || '').split('@')[0];
-    authBtn.innerHTML = label.charAt(0).toUpperCase();
     document.getElementById('mmlMenuUsername').textContent = label;
+
+    let photoURL = null;
+    try {
+      const snap = await getDoc(doc(db, 'users', user.uid));
+      if (snap.exists()) photoURL = snap.data().photoURL || null;
+    } catch (err) {
+      console.error(err);
+    }
+    renderAuthBtnAvatar(label, photoURL);
   } else {
     authBtn.innerHTML = '<i class="fa fa-user"></i>';
     menu.classList.remove('active');
@@ -400,5 +429,13 @@ window.MMLAuth = {
   get user() { return currentUser; },
   openLogin: () => openModal('login'),
   openSignup: () => openModal('signup'),
-  logout: () => signOut(auth)
+  logout: () => signOut(auth),
+  // profile.html eken photo upload eka success unaama methana call
+  // karala header button eka page reload ekak nathuwama update
+  // karanna puluwan.
+  refreshAvatar: (photoURL) => {
+    if (!currentUser) return;
+    const label = currentUser.displayName || (currentUser.email || '').split('@')[0];
+    renderAuthBtnAvatar(label, photoURL);
+  }
 };
