@@ -33,6 +33,14 @@ header {
 .logo { font-size: 22px; font-weight: 700; white-space: nowrap; color: #fff; }
 .logo.small { font-size: 17px; }
 .logo span { color: #ff2d95; }
+
+/* Header logo image — SVG mark eka header height ekata match wena widiyata
+   size karanawa, .logo link/anchor eka flex ekak widiyata pennawa image
+   eka vertically center wena widiyata. (index.html eke aluth SVG logo eka —
+   methanin danna one nisa siyalu pages walatama podu widiyata therenawa) */
+.logo a { display: flex; align-items: center; }
+.logo svg { height: 46px; width: auto; display: block; }
+
 .header-right { display: flex; align-items: center; }
 .header-right i { font-size: 20px; margin-left: 20px; cursor: pointer; color: #fff; }
 .header-left { display: flex; align-items: center; }
