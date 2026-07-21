@@ -312,8 +312,13 @@ async function loadMovies() {
   }
 }
 
+// FIX: kalinviye "index.html?id=" ekata yawwe — eth index.html dan home
+// page ekama witharai, ?id= param ekak handle karanne na, e nisa movie
+// card ekak click kalama home page ekatama yanawa witharak (watch page
+// ekata yanne na). Watch page eka watch.html — anithi hama pages ekakama
+// (movies.html, series.html) widiyatama methanath fix kala.
 window.openMovie = function (id) {
-  window.location.href = `index.html?id=${id}`;
+  window.location.href = `watch.html?id=${id}`;
 };
 
 function searchMovies(query) {
