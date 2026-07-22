@@ -18,7 +18,7 @@ img { display: block; }
 /* ===== HEADER ===== */
 header {
   background: #111;
-  padding: 12px 15px;
+  padding: 12px 8px 12px 15px; /* dakunu padding eka 15px -> 8px, icons tika edge ekata langa */
   display: flex;
   justify-content: space-between;
   align-items: center;
