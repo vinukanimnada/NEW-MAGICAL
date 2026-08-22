@@ -215,6 +215,7 @@
     <ul>
       <li><a href="index.html"><i class="fa fa-home"></i> Home</a></li>
       <li><a href="movies.html"><i class="fa fa-film"></i> All Movies</a></li>
+      <li><a href="lkcinema.html"><i class="fa-solid fa-clapperboard"></i> LK Cinema</a></li>
       <li><a href="anime.html"><i class="fa-solid fa-dragon"></i> Anime</a></li>
       <li><a href="series.html"><i class="fa fa-tv"></i> TV Shows</a></li>
       <li><a href="request.html"><i class="fa fa-plus-circle"></i> Requests</a></li>
@@ -227,9 +228,7 @@
   <div class="overlay" id="overlay"></div>
 
   <!-- ===================== WATCH / DETAILS VIEW ===================== -->
-  <div id="detailsRoot">
-    <div class="details-skeleton"><i class="fa fa-spinner fa-spin"></i> Loading...</div>
-  </div>
+  <div id="detailsRoot"></div>
 
   <div class="trailer-modal" id="trailerModal">
     <div class="trailer-modal-inner">
@@ -314,15 +313,34 @@
   document.getElementById('menuBtn')?.addEventListener('click', toggleSidebar);
 
   document.getElementById('backBtn')?.addEventListener('click', () => {
-    // Dan card click ekedi window.location.href use karana nisa (aluth tab
-    // ekak open wenne na), same-tab history eka thiyenawa hariyata — e nisa
-    // browser eke sadharana history.back() ekma use karanna puluwan.
     if (window.history.length > 1) {
       window.history.back();
     } else {
       window.location.href = 'index.html';
     }
   });
+
+  /* =========================================================
+     CACHE — mema movie eka mulinma load kala nam, ekage data
+     localStorage ekata id eken save wenawa. Ithin ipita mekama
+     movie ekata (mekama link ekatama) yaddi, instant widiyata
+     pennanawa — spinner/welawak nathuwama. Background ekedi
+     Firestore eken fresh data silent widiyata gena update
+     karanawa. Doc eka THOROWMA nathi welawata witharak (genuine
+     "not found") — network error ekakata newei — "not found"
+     message eka pennanne.
+     ========================================================= */
+  const MOVIE_CACHE_PREFIX = 'mml_movie_';
+  function readMovieCache(id) {
+    try {
+      const raw = localStorage.getItem(MOVIE_CACHE_PREFIX + id);
+      if (!raw) return null;
+      return JSON.parse(raw);
+    } catch (e) { return null; }
+  }
+  function writeMovieCache(id, m) {
+    try { localStorage.setItem(MOVIE_CACHE_PREFIX + id, JSON.stringify(m)); } catch (e) {}
+  }
 
   /* =========================================================
      WATCH / DETAILS VIEW LOGIC
@@ -340,8 +358,6 @@
   }
 
   function withAutoplayParams(url) {
-    // Best-effort: tell third-party embed players to autoplay muted, since
-    // we can't reach inside a cross-origin iframe to call play() ourselves.
     try {
       const u = new URL(url, window.location.href);
       if (!u.searchParams.has('autoplay')) u.searchParams.set('autoplay', '1');
@@ -359,20 +375,13 @@
     const ytId = (url.includes('youtube.com') || url.includes('youtu.be')) ? ytIdFromUrl(url) : null;
     if (ytId) return `<iframe src="https://www.youtube.com/embed/${ytId}?autoplay=1" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>`;
 
-    // MP4 / MKV / other raw file links: try to play natively first.
-    // Some browsers (esp. Safari/iOS) CAN play HEVC-in-MKV directly, others can't —
-    // so we attempt playback and only show the "download instead" fallback if it
-    // actually errors out at runtime (handled by attachVideoFallback() below).
     if (isDirectFileUrl(url) || url.includes('.mp4')) {
       return `<video src="${url}" controls playsinline preload="auto" data-fallback-url="${url}"></video>`;
     }
 
-    // anith ewa iframe
     return `<iframe src="${url}" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>`;
   }
 
-  // If native <video> playback fails (unsupported codec/container/network
-  // issue), swap in a simple generic error message instead.
   function attachVideoFallback(playerBox) {
     const videoEl = playerBox.querySelector('video[data-fallback-url]');
     if (!videoEl) return;
@@ -410,9 +419,6 @@
     `;
   }
 
-  // A URL is "directly downloadable" if it's a raw file (mp4, mkv, etc).
-  // YouTube links and generic third-party iframe embeds can't be downloaded
-  // directly (cross-origin / ToS restrictions), so we don't offer those.
   function isDirectFileUrl(url) {
     if (!url) return false;
     if (url.includes('youtube.com') || url.includes('youtu.be')) return false;
@@ -422,7 +428,6 @@
   function buildDownloadHTML(m) {
     const series = isSeries(m);
 
-    // ---- TV Series: list a direct download link for EVERY episode ----
     if (series) {
       const episodeLinks = (Array.isArray(m.episodes) ? m.episodes : [])
         .slice()
@@ -464,7 +469,6 @@
       `;
     }
 
-    // ---- Movie: single direct link (unchanged behavior) ----
     const autoDownloadUrl = !m.downloadUrl && isDirectFileUrl(m.videoUrl) ? m.videoUrl : '';
     const directUrl = m.downloadUrl || autoDownloadUrl;
 
@@ -508,294 +512,334 @@
       </div>`;
   }
 
-  async function initWatch(id) {
+  /* =========================================================
+     renderMovie(m) — mulinma detailsRoot ekata data pennana
+     saha okkoma event listeners wire karana function eka.
+     Cache eken instant render ekakata, saha fresh fetch ekakin
+     passe update ekakatath dekatama use karanawa (widiyakatama
+     dedaka call unath, listeners duplicate wenne na — mokada
+     hama welawakama innerHTML eka aluthin hadala listeners
+     aluthin attach karana nisa).
+     ========================================================= */
+  function renderMovie(m, id) {
     const root = document.getElementById('detailsRoot');
+    document.title = (m.title || 'Watch') + ' - MAGICAL MOVIE LAND';
 
-    if (!id) { renderNotFound(); return; }
+    const series = isSeries(m);
+    const backdrop = m.backdrop || m.poster || '';
+    const poster = m.poster || 'https://via.placeholder.com/150x220/222/fff';
+    const genreTags = (m.genre || '').split(',').map(g => g.trim()).filter(Boolean);
 
-    try {
-      const snap = await getDoc(doc(db, "movies", id));
-      if (!snap.exists()) { renderNotFound(); return; }
+    let metaHTML = `<span>${m.year || 'N/A'}</span>`;
+    if (m.rating) metaHTML += `<span class="rating"><i class="fa fa-star"></i> ${m.rating}</span>`;
+    if (m.duration && !series) metaHTML += `<span>${m.duration}</span>`;
+    if (series) metaHTML += `<span>TV Series</span>`;
+    genreTags.forEach(g => metaHTML += `<span>${g}</span>`);
 
-      const m = snap.data();
-      m.id = snap.id;
-      document.title = (m.title || 'Watch') + ' - MAGICAL MOVIE LAND';
+    let episodesHTML = '';
+    if (series && Array.isArray(m.episodes) && m.episodes.length > 0) {
+      const seasons = [...new Set(m.episodes.map(e => e.season || 1))].sort((a,b)=>a-b);
+      episodesHTML = `
+        <section class="episodes-wrap" id="episodesSection" style="display:none;">
+          <div class="episodes-title"><span class="cast-bar"></span> Select Episode to Watch</div>
+          ${seasons.length > 1 ? `<select class="season-select" id="seasonSelect">${seasons.map(s => `<option value="${s}">Season ${s}</option>`).join('')}</select>` : ''}
+          <div id="episodeList"></div>
+        </section>
+      `;
+    }
 
-      const series = isSeries(m);
-      const backdrop = m.backdrop || m.poster || '';
-      const poster = m.poster || 'https://via.placeholder.com/150x220/222/fff';
-      const genreTags = (m.genre || '').split(',').map(g => g.trim()).filter(Boolean);
+    root.innerHTML = `
+      <div class="details-hero" style="background-image:url('${backdrop}');">
+        <div class="details-hero-inner">
+          <img class="details-poster" src="${poster}" alt="${m.title}">
+          <div class="details-title-block">
+            <div class="details-title">${m.title || 'Untitled'}</div>
+            <div class="details-meta">${metaHTML}</div>
+          </div>
+        </div>
+      </div>
+      <div class="details-body">
+        <div class="details-actions">
+          <button class="btn btn-primary" id="watchNowBtn"><i class="fa fa-play"></i> Watch Now</button>
+          ${m.trailer ? `<button class="btn btn-secondary" id="trailerBtn"><i class="fa fa-film"></i> Trailer</button>` : ''}
+          ${(() => {
+            const hasDownload = series
+              ? (m.telegramDownloadUrl || (Array.isArray(m.episodes) && m.episodes.some(e => isDirectFileUrl(e.downloadUrl || e.videoUrl))))
+              : (m.downloadUrl || m.telegramDownloadUrl || isDirectFileUrl(m.videoUrl));
+            return hasDownload ? `<button class="btn btn-outline" id="downloadBtn"><i class="fa fa-download"></i> Download</button>` : '';
+          })()}
+        </div>
+      </div>
+      <div class="player-wrap" id="playerWrap">
+        <div class="player-container" id="playerBox"></div>
+        <div class="now-playing-label" id="nowPlayingLabel"></div>
+      </div>
+      <div class="details-body">
+        <div class="details-desc-label">Overview</div>
+        <p class="details-desc">${m.description || 'Description එකක් නෑ.'}</p>
+      </div>
+      ${episodesHTML}
+      ${buildCastHTML(m)}
+      ${buildDownloadHTML(m)}
+    `;
 
-      let metaHTML = `<span>${m.year || 'N/A'}</span>`;
-      if (m.rating) metaHTML += `<span class="rating"><i class="fa fa-star"></i> ${m.rating}</span>`;
-      if (m.duration && !series) metaHTML += `<span>${m.duration}</span>`;
-      if (series) metaHTML += `<span>TV Series</span>`;
-      genreTags.forEach(g => metaHTML += `<span>${g}</span>`);
+    const playerWrap = document.getElementById('playerWrap');
+    const playerBox = document.getElementById('playerBox');
+    const nowPlayingLabel = document.getElementById('nowPlayingLabel');
+    const episodesSection = document.getElementById('episodesSection');
 
-      let episodesHTML = '';
-      if (series && Array.isArray(m.episodes) && m.episodes.length > 0) {
-        const seasons = [...new Set(m.episodes.map(e => e.season || 1))].sort((a,b)=>a-b);
-        // Episode list eka default widiyata hide karala thiyenne — "Watch Now"
-        // click kalothin methana display eka toggle karanawa.
-        episodesHTML = `
-          <section class="episodes-wrap" id="episodesSection" style="display:none;">
-            <div class="episodes-title"><span class="cast-bar"></span> Select Episode to Watch</div>
-            ${seasons.length > 1 ? `<select class="season-select" id="seasonSelect">${seasons.map(s => `<option value="${s}">Season ${s}</option>`).join('')}</select>` : ''}
-            <div id="episodeList"></div>
-          </section>
-        `;
+    let playerIsOpen = false;
+    let episodesVisible = false;
+
+    const watchNowBtn = document.getElementById('watchNowBtn');
+
+    function updateWatchBtnLabel() {
+      const showBack = playerIsOpen || episodesVisible;
+      if (showBack) {
+        watchNowBtn.classList.remove('btn-primary');
+        watchNowBtn.classList.add('btn-back');
+        watchNowBtn.innerHTML = '<i class="fa fa-arrow-left"></i> Back';
+      } else {
+        watchNowBtn.classList.remove('btn-back');
+        watchNowBtn.classList.add('btn-primary');
+        watchNowBtn.innerHTML = '<i class="fa fa-play"></i> Watch Now';
+      }
+    }
+
+    function playUrl(url, label, posterImg) {
+      nowPlayingLabel.textContent = label || '';
+      playerWrap.classList.add('active');
+      playerBox.innerHTML = `
+        <div class="player-poster" style="background-image:url('${(posterImg || '').replace(/'/g, "\\'")}')">
+          <div class="player-play-btn"><i class="fa fa-play"></i></div>
+        </div>
+      `;
+      const posterEl = playerBox.querySelector('.player-poster');
+      posterEl.addEventListener('click', () => {
+        playerBox.innerHTML = buildPlayerHTML(url);
+        attachVideoFallback(playerBox);
+        const videoEl = playerBox.querySelector('video');
+        if (videoEl) {
+          videoEl.addEventListener('playing', () => { videoEl.muted = false; });
+
+          videoEl.muted = false;
+          videoEl.play().catch((err) => {
+            if (err && err.name === 'NotAllowedError') {
+              videoEl.muted = true;
+              videoEl.play().catch(() => {});
+              videoEl.addEventListener('playing', () => { videoEl.muted = false; }, { once: true });
+            }
+          });
+        }
+      }, { once: true });
+      playerWrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function closePlayer() {
+      playerWrap.classList.remove('active');
+      playerBox.innerHTML = '';
+      nowPlayingLabel.textContent = '';
+      playerIsOpen = false;
+    }
+
+    function showEpisodes() {
+      if (!episodesSection) return;
+      episodesVisible = true;
+      episodesSection.style.display = '';
+      updateWatchBtnLabel();
+      episodesSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function hideEpisodes() {
+      if (!episodesSection) return;
+      episodesVisible = false;
+      episodesSection.style.display = 'none';
+    }
+
+    watchNowBtn.addEventListener('click', () => {
+      if (playerIsOpen || episodesVisible) {
+        closePlayer();
+        hideEpisodes();
+        updateWatchBtnLabel();
+        return;
       }
 
-      root.innerHTML = `
-        <div class="details-hero" style="background-image:url('${backdrop}');">
-          <div class="details-hero-inner">
-            <img class="details-poster" src="${poster}" alt="${m.title}">
-            <div class="details-title-block">
-              <div class="details-title">${m.title || 'Untitled'}</div>
-              <div class="details-meta">${metaHTML}</div>
-            </div>
+      if (series) {
+        showEpisodes();
+      } else {
+        playUrl(m.videoUrl, m.title, backdrop || poster);
+        playerIsOpen = true;
+        updateWatchBtnLabel();
+      }
+    });
+
+    function renderEpisodes(season) {
+      const list = document.getElementById('episodeList');
+      if (!list) return;
+      const eps = m.episodes.filter(e => (e.season || 1) === Number(season)).sort((a,b) => (a.episode||0) - (b.episode||0));
+      list.innerHTML = eps.map(e => `
+        <div class="episode-item" data-video="${e.videoUrl}" data-label="S${e.season||1} · E${e.episode||1} — ${e.title||''}">
+          <div class="episode-num">${String(e.episode || 0).padStart(2,'0')}</div>
+          <div class="episode-info">
+            <div class="episode-title">${e.title || 'Episode ' + String(e.episode||0).padStart(2,'0')}</div>
+            <div class="episode-sub">Season ${e.season || 1}</div>
           </div>
+          <i class="fa fa-play episode-play-icon"></i>
         </div>
-        <div class="details-body">
-          <div class="details-actions">
-            <button class="btn btn-primary" id="watchNowBtn"><i class="fa fa-play"></i> Watch Now</button>
-            ${m.trailer ? `<button class="btn btn-secondary" id="trailerBtn"><i class="fa fa-film"></i> Trailer</button>` : ''}
-            ${(() => {
-              const hasDownload = series
-                ? (m.telegramDownloadUrl || (Array.isArray(m.episodes) && m.episodes.some(e => isDirectFileUrl(e.downloadUrl || e.videoUrl))))
-                : (m.downloadUrl || m.telegramDownloadUrl || isDirectFileUrl(m.videoUrl));
-              return hasDownload ? `<button class="btn btn-outline" id="downloadBtn"><i class="fa fa-download"></i> Download</button>` : '';
-            })()}
-          </div>
-        </div>
-        <div class="player-wrap" id="playerWrap">
-          <div class="player-container" id="playerBox"></div>
-          <div class="now-playing-label" id="nowPlayingLabel"></div>
-        </div>
-        <div class="details-body">
-          <div class="details-desc-label">Overview</div>
-          <p class="details-desc">${m.description || 'Description එකක් නෑ.'}</p>
-        </div>
-        ${episodesHTML}
-        ${buildCastHTML(m)}
-        ${buildDownloadHTML(m)}
-      `;
+      `).join('');
+      list.querySelectorAll('.episode-item').forEach(item => {
+        item.addEventListener('click', () => {
+          list.querySelectorAll('.episode-item').forEach(i => i.classList.remove('playing'));
+          item.classList.add('playing');
+          playUrl(item.dataset.video, item.dataset.label, backdrop || poster);
+          playerIsOpen = true;
+          updateWatchBtnLabel();
+        });
+      });
+    }
 
-      const playerWrap = document.getElementById('playerWrap');
-      const playerBox = document.getElementById('playerBox');
-      const nowPlayingLabel = document.getElementById('nowPlayingLabel');
-      const episodesSection = document.getElementById('episodesSection');
+    if (series && Array.isArray(m.episodes) && m.episodes.length > 0) {
+      renderEpisodes(m.episodes[0].season || 1);
+      document.getElementById('seasonSelect')?.addEventListener('change', (e) => renderEpisodes(e.target.value));
+    }
 
-      // Player-open state saha episode-list-visible state dekama wenama
-      // boolean dekakin track karanawa — Back click kalama dekama ekapara
-      // reset wenna one (player close + episode list hide) ekama widiyata.
-      let playerIsOpen = false;
-      let episodesVisible = false;
+    if (m.trailer) {
+      const trailerModal = document.getElementById('trailerModal');
+      const trailerPlayerBox = document.getElementById('trailerPlayerBox');
+      document.getElementById('trailerBtn').addEventListener('click', () => {
+        const ytId = ytIdFromUrl(m.trailer);
+        trailerPlayerBox.innerHTML = ytId
+          ? `<iframe src="https://www.youtube.com/embed/${ytId}?autoplay=1" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>`
+          : buildPlayerHTML(m.trailer);
+        attachVideoFallback(trailerPlayerBox);
+        trailerModal.classList.add('active');
+      });
+      document.getElementById('trailerClose').addEventListener('click', () => {
+        trailerModal.classList.remove('active');
+        trailerPlayerBox.innerHTML = '';
+      });
+      trailerModal.addEventListener('click', (e) => {
+        if (e.target === trailerModal) { trailerModal.classList.remove('active'); trailerPlayerBox.innerHTML = ''; }
+      });
+    }
 
-      function updateWatchBtnLabel() {
-        const showBack = playerIsOpen || episodesVisible;
-        if (showBack) {
-          watchNowBtn.classList.remove('btn-primary');
-          watchNowBtn.classList.add('btn-back');
-          watchNowBtn.innerHTML = '<i class="fa fa-arrow-left"></i> Back';
+    const downloadBtn = document.getElementById('downloadBtn');
+    if (downloadBtn) {
+      let downloadVisible = false;
+
+      function setDownloadBtnState(isOpen) {
+        downloadVisible = isOpen;
+        if (isOpen) {
+          downloadBtn.classList.remove('btn-outline');
+          downloadBtn.classList.add('btn-back');
+          downloadBtn.innerHTML = '<i class="fa fa-arrow-left"></i> Back';
         } else {
-          watchNowBtn.classList.remove('btn-back');
-          watchNowBtn.classList.add('btn-primary');
-          watchNowBtn.innerHTML = '<i class="fa fa-play"></i> Watch Now';
+          downloadBtn.classList.remove('btn-back');
+          downloadBtn.classList.add('btn-outline');
+          downloadBtn.innerHTML = '<i class="fa fa-download"></i> Download';
         }
       }
 
-      function playUrl(url, label, posterImg) {
-        nowPlayingLabel.textContent = label || '';
-        playerWrap.classList.add('active');
-        playerBox.innerHTML = `
-          <div class="player-poster" style="background-image:url('${(posterImg || '').replace(/'/g, "\\'")}')">
-            <div class="player-play-btn"><i class="fa fa-play"></i></div>
-          </div>
-        `;
-        const posterEl = playerBox.querySelector('.player-poster');
-        posterEl.addEventListener('click', () => {
-          playerBox.innerHTML = buildPlayerHTML(url);
-          attachVideoFallback(playerBox);
-          const videoEl = playerBox.querySelector('video');
-          if (videoEl) {
-            // Keep the video unmuted for as long as this player instance lives —
-            // guards against anything else ever flipping it back to muted.
-            videoEl.addEventListener('playing', () => { videoEl.muted = false; });
+      downloadBtn.addEventListener('click', () => {
+        const wrap = document.getElementById('downloadWrap');
+        const countdownBox = document.getElementById('downloadCountdownBox');
+        const countdownNum = document.getElementById('downloadCountdownNum');
+        const linksBox = document.getElementById('downloadLinksBox');
+        if (!wrap || !countdownBox || !countdownNum || !linksBox) return;
 
-            videoEl.muted = false;
-            videoEl.play().catch((err) => {
-              // Only fall back to muted playback if the browser genuinely
-              // blocked unmuted autoplay (NotAllowedError). Ignore AbortError
-              // (happens if the request gets superseded/interrupted) and any
-              // other transient errors — don't mute the video for those.
-              if (err && err.name === 'NotAllowedError') {
-                videoEl.muted = true;
-                videoEl.play().catch(() => {});
-                videoEl.addEventListener('playing', () => { videoEl.muted = false; }, { once: true });
-              }
-            });
-          }
-        }, { once: true });
-        playerWrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-
-      const watchNowBtn = document.getElementById('watchNowBtn');
-
-      function closePlayer() {
-        playerWrap.classList.remove('active');
-        playerBox.innerHTML = '';
-        nowPlayingLabel.textContent = '';
-        playerIsOpen = false;
-      }
-
-      function showEpisodes() {
-        if (!episodesSection) return;
-        episodesVisible = true;
-        episodesSection.style.display = '';
-        updateWatchBtnLabel();
-        episodesSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-
-      function hideEpisodes() {
-        if (!episodesSection) return;
-        episodesVisible = false;
-        episodesSection.style.display = 'none';
-      }
-
-      watchNowBtn.addEventListener('click', () => {
-        // Back button ekak widiyata penei nam (player open wela, or
-        // episode list eka penichcha nam) — dekama ekapara reset karanawa,
-        // "Watch Now" tanivama sudusu tatvayata yanawa.
-        if (playerIsOpen || episodesVisible) {
-          closePlayer();
-          hideEpisodes();
-          updateWatchBtnLabel();
+        if (downloadVisible) {
+          wrap.style.display = 'none';
+          countdownBox.style.display = '';
+          linksBox.classList.remove('active');
+          setDownloadBtnState(false);
           return;
         }
 
-        if (series) {
-          // Episode list eka penawanawa — episode ekak select karana thuru
-          // player eka open wenne na.
-          showEpisodes();
-        } else {
-          playUrl(m.videoUrl, m.title, backdrop || poster);
-          playerIsOpen = true;
-          updateWatchBtnLabel();
-        }
-      });
+        downloadBtn.disabled = true;
+        wrap.style.display = '';
+        countdownBox.style.display = '';
+        linksBox.classList.remove('active');
+        wrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-      function renderEpisodes(season) {
-        const list = document.getElementById('episodeList');
-        if (!list) return;
-        const eps = m.episodes.filter(e => (e.season || 1) === Number(season)).sort((a,b) => (a.episode||0) - (b.episode||0));
-        list.innerHTML = eps.map(e => `
-          <div class="episode-item" data-video="${e.videoUrl}" data-label="S${e.season||1} · E${e.episode||1} — ${e.title||''}">
-            <div class="episode-num">${String(e.episode || 0).padStart(2,'0')}</div>
-            <div class="episode-info">
-              <div class="episode-title">${e.title || 'Episode ' + String(e.episode||0).padStart(2,'0')}</div>
-              <div class="episode-sub">Season ${e.season || 1}</div>
-            </div>
-            <i class="fa fa-play episode-play-icon"></i>
-          </div>
-        `).join('');
-        list.querySelectorAll('.episode-item').forEach(item => {
-          item.addEventListener('click', () => {
-            list.querySelectorAll('.episode-item').forEach(i => i.classList.remove('playing'));
-            item.classList.add('playing');
-            playUrl(item.dataset.video, item.dataset.label, backdrop || poster);
-            playerIsOpen = true;
-            updateWatchBtnLabel();
-          });
-        });
-      }
-
-      if (series && Array.isArray(m.episodes) && m.episodes.length > 0) {
-        renderEpisodes(m.episodes[0].season || 1);
-        document.getElementById('seasonSelect')?.addEventListener('change', (e) => renderEpisodes(e.target.value));
-      }
-
-      if (m.trailer) {
-        const trailerModal = document.getElementById('trailerModal');
-        const trailerPlayerBox = document.getElementById('trailerPlayerBox');
-        document.getElementById('trailerBtn').addEventListener('click', () => {
-          const ytId = ytIdFromUrl(m.trailer);
-          trailerPlayerBox.innerHTML = ytId
-            ? `<iframe src="https://www.youtube.com/embed/${ytId}?autoplay=1" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>`
-            : buildPlayerHTML(m.trailer);
-          attachVideoFallback(trailerPlayerBox);
-          trailerModal.classList.add('active');
-        });
-        document.getElementById('trailerClose').addEventListener('click', () => {
-          trailerModal.classList.remove('active');
-          trailerPlayerBox.innerHTML = '';
-        });
-        trailerModal.addEventListener('click', (e) => {
-          if (e.target === trailerModal) { trailerModal.classList.remove('active'); trailerPlayerBox.innerHTML = ''; }
-        });
-      }
-
-      // ===================== DOWNLOAD BUTTON: countdown then reveal links,
-      // then button itself becomes "Back" to collapse the list again =====================
-      const downloadBtn = document.getElementById('downloadBtn');
-      if (downloadBtn) {
-        let downloadVisible = false;
-
-        function setDownloadBtnState(isOpen) {
-          downloadVisible = isOpen;
-          if (isOpen) {
-            downloadBtn.classList.remove('btn-outline');
-            downloadBtn.classList.add('btn-back');
-            downloadBtn.innerHTML = '<i class="fa fa-arrow-left"></i> Back';
+        let count = 5;
+        countdownNum.textContent = count;
+        const timer = setInterval(() => {
+          count--;
+          if (count <= 0) {
+            clearInterval(timer);
+            countdownBox.style.display = 'none';
+            linksBox.classList.add('active');
+            downloadBtn.disabled = false;
+            setDownloadBtnState(true);
           } else {
-            downloadBtn.classList.remove('btn-back');
-            downloadBtn.classList.add('btn-outline');
-            downloadBtn.innerHTML = '<i class="fa fa-download"></i> Download';
+            countdownNum.textContent = count;
           }
-        }
+        }, 1000);
+      });
+    }
+  }
 
-        downloadBtn.addEventListener('click', () => {
-          const wrap = document.getElementById('downloadWrap');
-          const countdownBox = document.getElementById('downloadCountdownBox');
-          const countdownNum = document.getElementById('downloadCountdownNum');
-          const linksBox = document.getElementById('downloadLinksBox');
-          if (!wrap || !countdownBox || !countdownNum || !linksBox) return;
+  async function fetchMovieOnce(id) {
+    const snap = await getDoc(doc(db, "movies", id));
+    if (!snap.exists()) return { exists: false };
+    const m = snap.data();
+    m.id = snap.id;
+    return { exists: true, data: m };
+  }
 
-          // Already showing — this click is now the "Back" action, collapse it.
-          if (downloadVisible) {
-            wrap.style.display = 'none';
-            countdownBox.style.display = '';
-            linksBox.classList.remove('active');
-            setDownloadBtnState(false);
-            return;
-          }
+  /* =========================================================
+     initWatch — cache eken instant render ekak karala, passe
+     background ekedi fresh data silent widiyata gena update
+     karanawa. Network error ekak una nam kisima "Error" text
+     ekak pennanne na — cache eke content eka thiyenawa nam eka
+     penn thiyenawa, silent widiyata retry karanawa. Doc eka
+     THOROWMA nathi (delete karapu movie ekak) welawata witharak
+     "not found" message eka pennanne.
+     ========================================================= */
+  async function initWatch(id) {
+    if (!id) { renderNotFound(); return; }
 
-          downloadBtn.disabled = true;
-          wrap.style.display = '';
-          countdownBox.style.display = '';
-          linksBox.classList.remove('active');
-          wrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    // 1) Cache thibba nam instant widiyata render karanawa.
+    const cached = readMovieCache(id);
+    if (cached) {
+      renderMovie(cached, id);
+    }
 
-          let count = 5;
-          countdownNum.textContent = count;
-          const timer = setInterval(() => {
-            count--;
-            if (count <= 0) {
-              clearInterval(timer);
-              countdownBox.style.display = 'none';
-              linksBox.classList.add('active');
-              downloadBtn.disabled = false;
-              setDownloadBtnState(true);
-            } else {
-              countdownNum.textContent = count;
-            }
-          }, 1000);
-        });
+    // 2) Background ekedi fresh data ganna try karanawa.
+    const MAX_ATTEMPTS = 6;
+    const RETRY_DELAY_MS = 1500;
+    let result = null;
+
+    for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
+      try {
+        result = await fetchMovieOnce(id);
+        break; // success (exists true or false) — mekata retry one na
+      } catch (err) {
+        console.error(`❌ Firebase fetch error (attempt ${attempt}):`, err);
+        result = null;
+        if (attempt < MAX_ATTEMPTS) await new Promise(r => setTimeout(r, RETRY_DELAY_MS));
       }
+    }
 
-    } catch (err) {
-      console.error("❌ Firebase Error:", err);
-      root.innerHTML = `<div class="details-skeleton">⚠️ දෝෂයක් සිදු විය. නැවත උත්සාහ කරන්න.</div>`;
+    if (result && result.exists === false) {
+      // Genuine "not found" — cache ekath ain karala pennanawa not-found message eka.
+      try { localStorage.removeItem(MOVIE_CACHE_PREFIX + id); } catch (e) {}
+      renderNotFound();
+      return;
+    }
+
+    if (result && result.exists === true) {
+      writeMovieCache(id, result.data);
+      renderMovie(result.data, id);
+      return;
+    }
+
+    // result null unath (network fail wela, retries okkoma exhaust una)
+    // — cache thibba nam eka penn thiyenawa, "Error" message ekak penne na.
+    if (!cached) {
+      // Kisima cache ekakwath thibbe na, network eka fail una — silent
+      // widiyata blank screen ekak thiyenawa (spinner/error ekak nathuwa),
+      // mokada "error ennam ba" kiyana requirement eka anuwa.
     }
   }
 
@@ -804,6 +848,3 @@
   </script>
 </body>
 </html>
-
-
-
