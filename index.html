@@ -50,7 +50,8 @@
      Duplicate wenna one nisa methanin ain kara. */
 
   /* Hero */
-  .hero { position: relative; width: auto; height: 180px; overflow: hidden; background: var(--card); margin: 12px 15px; border-radius: 16px; }
+  .hero { position: relative; width: auto; height: 180px; overflow: hidden; background: var(--card); margin: 12px 15px; border-radius: 16px; display: none; }
+  .hero.has-banners { display: block; }
   .hero-slide { position: absolute; inset: 0; opacity: 0; transition: opacity 0.6s ease; cursor: pointer; background: #111; }
   .hero-slide.active { opacity: 1; }
   .hero-slide img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
@@ -60,12 +61,13 @@
 
   /* Sections */
   .trending { padding: 10px 0 5px; }
+  .trending.is-empty { display: none; } /* hori-tale: kisima movie nathi welawata section eka penna epa */
   .section-header { display: flex; align-items: center; justify-content: space-between; padding: 0 15px; margin-bottom: 10px; }
   .section-header h2 { font-size: 18px; color: var(--text); }
   .view-all { font-size: 11px; color: #fff; font-weight: 600; letter-spacing: 0.5px; background: #ff2d95; padding: 4px 10px; border-radius: 10px; display: inline-block; }
 
   /* Movie grid */
-  .movie-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; padding: 15px; min-height: 200px; }
+  .movie-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; padding: 15px; min-height: 0; }
   .movie-card { background: var(--card); border-radius: 8px; overflow: hidden; transition: transform 0.2s; cursor: pointer; }
   .movie-card:active { transform: scale(0.95); }
   .movie-card img { width: 100%; height: 220px; object-fit: cover; }
@@ -81,11 +83,6 @@
   .social-icons a:hover { color: #ff2d95; }
 
   html.light .movie-card h3 { color: #111; }
-
-  /* Loading spinner (shown while movies are being fetched) */
-  .loading-spinner-wrap { grid-column: 1 / -1; display: flex; justify-content: center; align-items: center; padding: 40px 0; }
-  .loading-spinner { width: 40px; height: 40px; border-radius: 50%; border: 4px solid rgba(255,45,149,0.2); border-top-color: #ff2d95; animation: spin 0.8s linear infinite; }
-  @keyframes spin { to { transform: rotate(360deg); } }
 
   @media (min-width: 700px) {
     .movie-grid { grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); }
@@ -160,7 +157,7 @@
       <li><a href="chanels.html"><i class="fa-solid fa-users"></i> Join Channels</a></li>
       <li><a href="about.html"><i class="fa fa-info-circle"></i> About</a></li>
       <li><a href="contact.html"><i class="fa fa-envelope"></i> Contact Us</a></li>
-      
+      <li><a href="settings.html"><i class="fa fa-cog"></i> Settings</a></li>
     </ul>
   </div>
   <div class="overlay" id="overlay"></div>
@@ -171,7 +168,7 @@
     <div class="hero-dots" id="heroDots"></div>
   </section>
 
-  <section class="trending">
+  <section class="trending is-empty" id="trendingSection">
     <div class="section-header">
       <h2 style="position:relative; padding-left:12px;">
         <span style="position:absolute; left:0; top:50%; transform:translateY(-50%); width:4px; height:28px; background:#ff2d95; border-radius:2px;"></span>
@@ -179,12 +176,10 @@
       </h2>
       <a href="movies.html" class="view-all">VIEW ALL</a>
     </div>
-    <div class="movie-grid" id="trendingMovies">
-      <div class="loading-spinner-wrap"><div class="loading-spinner"></div></div>
-    </div>
+    <div class="movie-grid" id="trendingMovies"></div>
   </section>
 
-  <section class="trending">
+  <section class="trending is-empty" id="latestSection">
     <div class="section-header">
       <h2 style="position:relative; padding-left:12px;">
         <span style="position:absolute; left:0; top:50%; transform:translateY(-50%); width:4px; height:28px; background:#ff2d95; border-radius:2px;"></span>
@@ -192,12 +187,10 @@
       </h2>
       <a href="movies.html" class="view-all">VIEW ALL</a>
     </div>
-    <div class="movie-grid" id="latestMovies">
-      <div class="loading-spinner-wrap"><div class="loading-spinner"></div></div>
-    </div>
+    <div class="movie-grid" id="latestMovies"></div>
   </section>
 
-  <section class="trending">
+  <section class="trending is-empty" id="tvShowsSection">
     <div class="section-header">
       <h2 style="position:relative; padding-left:12px;">
         <span style="position:absolute; left:0; top:50%; transform:translateY(-50%); width:4px; height:28px; background:#ff2d95; border-radius:2px;"></span>
@@ -205,9 +198,7 @@
       </h2>
       <a href="series.html" class="view-all">VIEW ALL</a>
     </div>
-    <div class="movie-grid" id="tvShowsMovies">
-      <div class="loading-spinner-wrap"><div class="loading-spinner"></div></div>
-    </div>
+    <div class="movie-grid" id="tvShowsMovies"></div>
   </section>
 
   <br><br><br>
@@ -307,6 +298,31 @@
   });
 
   /* =========================================================
+     CACHE — mulinma save karapu data eka localStorage ekata
+     danawa. Ithin ipita page ekata enakota (mekama page eka
+     wath, wena page ekak wath) cache eke data eka thiyenawa
+     nam, ekapara instant widiyata pennanawa (spinner ekak,
+     welawak nathuwama) — pasuwa Firestore eken fresh data
+     background ekedi silent widiyata gena update karanawa.
+     Kisima welawaka "Error" text ekak user ta penne na —
+     fetch eka fail una nam silent widiyata retry karanawa,
+     cache eke thiyena content eka penna wenne.
+     ========================================================= */
+  const CACHE_KEY = 'mml_movies_cache_v1';
+
+  function readCache() {
+    try {
+      const raw = localStorage.getItem(CACHE_KEY);
+      if (!raw) return null;
+      const arr = JSON.parse(raw);
+      return Array.isArray(arr) && arr.length ? arr : null;
+    } catch (e) { return null; }
+  }
+  function writeCache(items) {
+    try { localStorage.setItem(CACHE_KEY, JSON.stringify(items)); } catch (e) {}
+  }
+
+  /* =========================================================
      HOME VIEW LOGIC
      ========================================================= */
   let allContent = [];
@@ -314,6 +330,21 @@
 
   function hasSection(movie, sectionKey) {
     return Array.isArray(movie.sections) && movie.sections.includes(sectionKey);
+  }
+
+  // Ekama title eka thiyena documents kihipayak thibbath (wenawena
+  // pages/sections walata add karapu ekama movie eka), card dekak-thunak
+  // widiyata duplicate wenna epa — title eken dedupe karanawa.
+  function dedupeByTitle(list) {
+    const seen = new Set();
+    const out = [];
+    (list || []).forEach(m => {
+      const key = (m.title || '').trim().toLowerCase();
+      if (!key || seen.has(key)) return;
+      seen.add(key);
+      out.push(m);
+    });
+    return out;
   }
 
   function createMovieCard(movie) {
@@ -344,10 +375,14 @@
     }
 
     if (banners.length === 0) {
-      if (heroSection) heroSection.style.display = 'none';
+      heroSection?.classList.remove('has-banners');
       return;
     }
-    if (heroSection) heroSection.style.display = '';
+    heroSection?.classList.add('has-banners');
+
+    // Autoplay interval ekak dæneth thibba nam, ain karala aluthin hadanawa
+    // (page eke thiyena welawe dekaparak call kala nam duplicate wenna epa).
+    if (heroInterval) clearInterval(heroInterval);
 
     slidesBox.innerHTML = banners.map((b, i) => `
       <div class="hero-slide ${i === 0 ? 'active' : ''}">
@@ -386,48 +421,31 @@
     startAutoplay();
   }
 
-  function loadTrending() {
-    const trending = allContent
-      .filter(m => hasSection(m, 'trending_home'))
-      .sort((a,b) => new Date(b.date || 0) - new Date(a.date || 0))
+  function renderSection(sectionKey, gridId, sectionElId) {
+    const items = dedupeByTitle(allContent.filter(m => hasSection(m, sectionKey)))
+      .sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0))
       .slice(0, 8);
-    const container = document.getElementById('trendingMovies');
-    container.innerHTML = trending.length > 0 ? trending.map(createMovieCard).join('') : '<div class="home-no-result">Error:Check Your Internet Connection and Refresh the page...</div>';
+    const container = document.getElementById(gridId);
+    const sectionEl = document.getElementById(sectionElId);
+    if (!container) return;
+    if (items.length > 0) {
+      container.innerHTML = items.map(createMovieCard).join('');
+      sectionEl?.classList.remove('is-empty');
+    } else {
+      container.innerHTML = '';
+      sectionEl?.classList.add('is-empty'); // movies nathi section ekak penna epa
+    }
   }
 
-  function loadLatest() {
-    const latest = allContent
-      .filter(m => hasSection(m, 'latest_home'))
-      .sort((a,b) => new Date(b.date || 0) - new Date(a.date || 0))
-      .slice(0, 8);
-    const container = document.getElementById('latestMovies');
-    container.innerHTML = latest.length > 0 ? latest.map(createMovieCard).join('') : '<div class="home-no-result">Error:Check Your Internet Connection and Refresh the page...</div>';
+  function renderAllSections() {
+    renderSection('trending_home', 'trendingMovies', 'trendingSection');
+    renderSection('latest_home', 'latestMovies', 'latestSection');
+    renderSection('tvshows_home', 'tvShowsMovies', 'tvShowsSection');
   }
 
-  function loadTVShows() {
-    const shows = allContent
-      .filter(m => hasSection(m, 'tvshows_home'))
-      .sort((a,b) => new Date(b.date || 0) - new Date(a.date || 0))
-      .slice(0, 8);
-    const container = document.getElementById('tvShowsMovies');
-    container.innerHTML = shows.length > 0 ? shows.map(createMovieCard).join('') : '<div class="home-no-result">Error:Check Your Internet Connection and Refresh the page...</div>';
-  }
-
-  // Same title thiyena documents kihipayak thibbath (wenawena pages/sections
-  // walata add karapu ekama movie eka), search result eka dekak-thunak
-  // widiyata duplicate wenna epa — title eken dedupe karanawa.
-  function dedupeByTitle(list) {
-    const seen = new Set();
-    const out = [];
-    (list || []).forEach(m => {
-      const key = (m.title || '').trim().toLowerCase();
-      if (!key || seen.has(key)) return;
-      seen.add(key);
-      out.push(m);
-    });
-    return out;
-  }
-
+  /* =========================================================
+     Home search
+     ========================================================= */
   function homeSearch(query) {
     if (!query.trim()) { homeSearchResults.classList.remove('active'); return; }
     homeSearchResults.classList.add('active');
@@ -466,6 +484,12 @@
     if (e.key === 'Enter') homeSearch(e.target.value);
   });
 
+  /* =========================================================
+     Firestore fetch — mulin try ekakma karanawa. Fail una nam,
+     UI ekata kisima error ekak pennanne na — silent widiyata
+     background ekedi retry karanawa (cache eke content eka
+     thiyenawa nam eka penn genma thiyenawa).
+     ========================================================= */
   async function fetchMoviesOnce() {
     const snapshot = await getDocs(collection(db, "movies"));
     const items = [];
@@ -477,45 +501,43 @@
     return items;
   }
 
-  async function initHome() {
-    // Podi network hiccup ekaka Firestore eken kisima error ekak nathuwama
-    // hisi (empty) result ekak ennath puluwan (4G/unstable connection walata
-    // common). Eth wenne error na nisa catch block ekata welenne na, badu
-    // "Trending movies නෑ" wage state ekakma pennanawa — manual refresh ekakin
-    // witharak fix wenawa. Methanin retry kihipayak automatic karala e
-    // scenario eka handle karanawa.
-    const MAX_ATTEMPTS = 4;
-    const RETRY_DELAY_MS = 1200;
-
+  async function fetchFreshSilently() {
+    const MAX_ATTEMPTS = 6;
+    const RETRY_DELAY_MS = 1500;
     for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
       try {
         const items = await fetchMoviesOnce();
-        if (items.length > 0) {
-          allContent = items;
-          console.log(`✅ Loaded: ${allContent.length} items (attempt ${attempt})`);
-          loadHeroSlider();
-          loadTrending();
-          loadLatest();
-          loadTVShows();
-          return;
-        }
-        // Empty result but no error — likely a transient network glitch.
-        console.warn(`⚠️ Got 0 movies on attempt ${attempt}, retrying...`);
+        if (items.length > 0) return items;
+        console.warn(`⚠️ Got 0 movies on attempt ${attempt}, retrying silently...`);
       } catch (err) {
-        console.error(`❌ Firebase Error (attempt ${attempt}):`, err);
+        console.error(`❌ Firebase fetch error (attempt ${attempt}):`, err);
       }
-      if (attempt < MAX_ATTEMPTS) {
-        await new Promise(resolve => setTimeout(resolve, RETRY_DELAY_MS));
-      }
+      if (attempt < MAX_ATTEMPTS) await new Promise(r => setTimeout(r, RETRY_DELAY_MS));
+    }
+    return null; // silently give up this round — UI keeps showing cache/last state
+  }
+
+  async function initHome() {
+    // 1) Cache eke data thiyenawa nam, OKKOMA thattayakwath nathuwa
+    //    instant widiyata screen ekata dagenawa.
+    const cached = readCache();
+    if (cached) {
+      allContent = cached;
+      loadHeroSlider();
+      renderAllSections();
     }
 
-    // All attempts exhausted — genuinely no data or no connection.
-    const msg = !navigator.onLine
-      ? '<div class="home-no-result">Error:Check Your Internet Connection and Refresh the page...</div>'
-      : '<div class="home-no-result">Not Movies or Refresh this Page..</div>';
-    document.getElementById('trendingMovies').innerHTML = msg;
-    document.getElementById('latestMovies').innerHTML = msg;
-    document.getElementById('tvShowsMovies').innerHTML = msg;
+    // 2) Background ekedi fresh data ganna try karanawa — mekata
+    //    kisisema loading UI ekak pennanne na.
+    const fresh = await fetchFreshSilently();
+    if (fresh) {
+      allContent = fresh;
+      writeCache(fresh);
+      loadHeroSlider();
+      renderAllSections();
+    }
+    // fresh null unath, cached data thibba nam eka penn thiyenawa —
+    // kisima "Error" message ekak penne na.
   }
 
   initHome();
