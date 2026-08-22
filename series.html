@@ -115,9 +115,7 @@
   
   .home-no-result { text-align:center; color:var(--text-faint); padding:50px 0; grid-column: 1/-1; }
 
-  /* ===== Search Results List View (methanata mulinma add kala —
-     kalinma search input/button eka thibbath, results container ekakwath
-     JS wiring ekakwath thibbe na, e nisa search eka wada kale na) ===== */
+  /* ===== Search Results List View ===== */
   .search-results { display: none; padding: 10px; }
   .search-results.active { display: block; }
   .search-result-item {
@@ -193,8 +191,12 @@
     <ul>
       <li><a href="index.html"><i class="fa fa-home"></i> Home</a></li>
       <li><a href="movies.html"><i class="fa fa-film"></i> All Movies</a></li>
-      <li class="active"><a href="lkcinema.html"><i class="fa-solid fa-clapperboard"></i> LK Cinema</a></li>
-      <li><a href="series.html"><i class="fa fa-tv"></i> TV Shows</a></li>
+      <li><a href="lkcinema.html"><i class="fa-solid fa-clapperboard"></i> LK Cinema</a></li>
+      <li><a href="anime.html"><i class="fa-solid fa-dragon"></i> Anime</a></li>
+      <!-- BUG FIX: mulinma "LK Cinema" tamai active kalath, meka TV Shows
+           page eka nisa "active" class eka methanata gena, "Anime" link
+           eka wath issella thibbe na, eka add kala -->
+      <li class="active"><a href="series.html"><i class="fa fa-tv"></i> TV Shows</a></li>
       <li><a href="request.html"><i class="fa fa-plus-circle"></i> Requests</a></li>
       <li><a href="chanels.html"><i class="fa-solid fa-users"></i> Join Channels</a></li>
       <li><a href="about.html"><i class="fa fa-info-circle"></i> About</a></li>
@@ -207,17 +209,14 @@
   <div class="container">
     <h1>TV Shows</h1>
   </div>
-  <div class="movie-grid" id="tvShowsGrid">
-    <div class="home-no-result">Loading...</div>
-  </div>
+  <div class="movie-grid" id="tvShowsGrid"></div>
 
-
-  <!-- Search Results List (aluthin add kala) -->
+  <!-- Search Results List -->
   <div class="search-results" id="searchResults"></div>
 
   <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-  import { getFirestore, collection, getDocs, orderBy, query } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+  import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyCx0TEmgr3GCyvfeok9Y42yR1PTM4_8y9M",
@@ -230,6 +229,24 @@
 
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
+
+  // CACHE — mulinma save karapu data eka localStorage ekata danawa. Ithin
+  // ipita mekata enakota (wena page ekakin unath) ekapara instant widiyata
+  // pennanawa, spinner ekak/welawak nathuwama. Background ekedi Firestore
+  // eken fresh data silent widiyata gena update karanawa. Kisima welawaka
+  // "Error" text ekak user ta penne na.
+  const CACHE_KEY = 'mml_movies_cache_v1';
+  function readCache() {
+    try {
+      const raw = localStorage.getItem(CACHE_KEY);
+      if (!raw) return null;
+      const arr = JSON.parse(raw);
+      return Array.isArray(arr) && arr.length ? arr : null;
+    } catch (e) { return null; }
+  }
+  function writeCache(items) {
+    try { localStorage.setItem(CACHE_KEY, JSON.stringify(items)); } catch (e) {}
+  }
 
   // searchIndex — Firestore eke thiyena OKKOMA movies (section ekakata
   // witharak tag karapu ewath ethulath), title eken dedupe karala. Search
@@ -249,79 +266,105 @@
     return out;
   }
 
-  async function loadTVShows() {
-    const grid = document.getElementById('tvShowsGrid');
-    
-    try {
-      // Vinuka ge ඉල්ලීම: aluthinma save karapu movie eka LIST EKE
-      // ANTHIMATA yanna one (kalin "desc" nisa aluth ekama palaweniyata
-      // enawa) — ea nisa "asc" (oldest -> newest) widiyata badalu.
-      const q = query(collection(db, "movies"), orderBy("date", "asc"));
-      const snapshot = await getDocs(q);
-      
-      if(snapshot.empty) {
-        grid.innerHTML = '<div class="home-no-result">TV Shows නැත</div>';
-        return;
-      }
-
-      // Search index eka methanin hadanawa — snapshot eka okkoma dees ekama
-      // documents tika, section filter ekakwath nathuwa.
-      const allDocs = [];
-      snapshot.forEach(d => { const m = d.data(); m.id = d.id; if (m.title) allDocs.push(m); });
-      searchIndex = dedupeByTitle(allDocs);
-      
-      let html = '';
-      snapshot.forEach(doc => {
-        const m = doc.data();
-        
-        // FIX: admin panel eke "Show In Sections" list eke "TV Shows Page" (value="series")
-        // select kala documents witharak methanata ganna. m.type === 'series' fallback
-        // widiyata thiyenne pරanha (sections nathi) purana entries walata.
-        const sections = Array.isArray(m.sections) ? m.sections : [];
-        if(!sections.includes('series') && m.type !== 'series') return;
-        
-        const poster = m.poster || 'https://via.placeholder.com/300x450/222/fff?text=No+Image';
-        const title = m.title || 'Untitled';
-        const year = m.year || '';
-        const season = m.season || ''; // S01 EP05
-        let rating = m.rating? m.rating.toString().split('/')[0] : '';
-        if (rating && !rating.includes('.')) rating += '.0';
-        
-        let displayTitle = title;
-        if(year) displayTitle += ` (${year})`;
-        if (displayTitle.length > 20) displayTitle = displayTitle.substring(0, 20) + '...';
-        
-        // movies.html eke card style ekama — quality-badge (top-left) +
-        // rating-badge (top-right) + gradient title. Season text eka
-        // tibboth quality-badge ekema pennanawa (kalin tibba green/red
-        // season-badge design eka ain kara, ekama pink/red badge style eka).
-        html += `
-          <div class="movie-card" onclick="window.location.href='watch.html?id=${doc.id}'">
-            ${season ? `<span class="quality-badge">${season}</span>` : ''}
-            ${rating ? `<span class="rating-badge">★ ${rating}</span>` : ''}
-            <img src="${poster}" alt="${title}" loading="eager" decoding="async"
-                 onerror="this.onerror=null; this.src='https://via.placeholder.com/300x450/222/fff?text=No+Image';">
-            <div class="movie-title">${displayTitle}</div>
-          </div>
-        `;
-      });
-      
-      grid.innerHTML = html || '<div class="home-no-result">TV Shows නැත</div>';
-      
-    } catch(err) {
-      console.error("❌ Error:", err);
-      grid.innerHTML = '<p style="color:red;text-align:center;">Error: ' + err.message + '</p>';
-    }
+  // BUG FIX: mulinma query(collection(db,"movies"), orderBy("date","asc"))
+  // widiyata thibba — Firestore orderBy ekak use kalama, "date" field eka
+  // NATHI documents okkoma result eken WATANAWA (silent widiyata)! Ea nisa
+  // date field ekak nathi TV shows kohomawath penne na una. Dan wena
+  // pages walata widiyatama okkoma docs fetch karala, client side ekedi
+  // sort karanawa — meken "date" nathi shows watath issella penne na.
+  async function fetchAllMoviesOnce() {
+    const snapshot = await getDocs(collection(db, "movies"));
+    const items = [];
+    snapshot.forEach(d => {
+      const m = d.data();
+      m.id = d.id;
+      if (m.title) items.push(m);
+    });
+    return items;
   }
-  
+
+  async function fetchFreshSilently() {
+    const MAX_ATTEMPTS = 6;
+    const RETRY_DELAY_MS = 1500;
+    for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
+      try {
+        const items = await fetchAllMoviesOnce();
+        if (items.length > 0) return items;
+        console.warn(`⚠️ Got 0 items on attempt ${attempt}, retrying silently...`);
+      } catch (err) {
+        console.error(`❌ Firebase fetch error (attempt ${attempt}):`, err);
+      }
+      if (attempt < MAX_ATTEMPTS) await new Promise(r => setTimeout(r, RETRY_DELAY_MS));
+    }
+    return null; // silently give up this round — UI keeps showing cache/last state
+  }
+
+  function renderTVShows() {
+    const grid = document.getElementById('tvShowsGrid');
+    if (!grid) return;
+
+    // FIX: admin panel eke "Show In Sections" list eke "TV Shows Page"
+    // (value="series") select kala documents witharak methanata ganna.
+    // m.type === 'series' fallback widiyata thiyenne pරanha (sections
+    // nathi) purana entries walata.
+    const shows = dedupeByTitle(
+      searchIndex.filter(m => {
+        const sections = Array.isArray(m.sections) ? m.sections : [];
+        return sections.includes('series') || m.type === 'series';
+      })
+    ).sort((a, b) => new Date(a.date || 0) - new Date(b.date || 0)); // oldest -> newest (Vinuka ge ඉල්ලීම)
+
+    if (shows.length === 0) {
+      grid.innerHTML = '';
+      return;
+    }
+
+    grid.innerHTML = shows.map(m => {
+      const poster = m.poster || 'https://via.placeholder.com/300x450/222/fff?text=No+Image';
+      const title = m.title || 'Untitled';
+      const year = m.year || '';
+      const season = m.season || ''; // S01 EP05
+      let rating = m.rating ? m.rating.toString().split('/')[0] : '';
+      if (rating && !rating.includes('.')) rating += '.0';
+
+      let displayTitle = title;
+      if (year) displayTitle += ` (${year})`;
+      if (displayTitle.length > 20) displayTitle = displayTitle.substring(0, 20) + '...';
+
+      return `
+        <div class="movie-card" onclick="window.location.href='watch.html?id=${m.id}'">
+          ${season ? `<span class="quality-badge">${season}</span>` : ''}
+          ${rating ? `<span class="rating-badge">★ ${rating}</span>` : ''}
+          <img src="${poster}" alt="${title}" loading="eager" decoding="async"
+               onerror="this.onerror=null; this.src='https://via.placeholder.com/300x450/222/fff?text=No+Image';">
+          <div class="movie-title">${displayTitle}</div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  async function loadTVShows() {
+    // 1) Cache thibba nam ekapara instant widiyata pennanawa.
+    const cached = readCache();
+    if (cached) {
+      searchIndex = dedupeByTitle(cached);
+      renderTVShows();
+    }
+
+    // 2) Background ekedi fresh data ganna try karanawa — loading UI ekak nathuwa.
+    const fresh = await fetchFreshSilently();
+    if (fresh) {
+      searchIndex = dedupeByTitle(fresh);
+      writeCache(fresh);
+      renderTVShows();
+    }
+    // fresh null unath cached content eka penn thiyenawa — error message ekak penne na.
+  }
+
   loadTVShows();
 
   /* =========================================================
-     SEARCH — aluthin add kala. Kalin search input/button eka
-     header eke thibbath, mekata kisima JS wiring ekak thibbe na
-     (results container ekakwath thibbe na), e nisa search eka
-     kisisema wada kale na. Dan searchIndex (okkoma movies) eken
-     search karanawa.
+     SEARCH — searchIndex (okkoma movies) eken search karanawa.
      ========================================================= */
   function searchTVShows(qText) {
     const resultsDiv = document.getElementById('searchResults');
