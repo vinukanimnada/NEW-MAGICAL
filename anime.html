@@ -7,6 +7,9 @@
 <link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
+<link rel="icon" href="https://files.catbox.moe/nstkne.png" type="image/png">
+<link rel="apple-touch-icon" href="https://files.catbox.moe/nstkne.png">
+
 <style>
 /* body style eka ain kala. style.css eken wada */
 /* * { box-sizing: border-box; } witharak thiyanna */
@@ -237,8 +240,9 @@ h1 {
   <ul>
     <li><a href="index.html"><i class="fa fa-home"></i> Home</a></li>
     <li><a href="movies.html"><i class="fa fa-film"></i> All Movies</a></li>
-    <li><a href="series.html"><i class="fa fa-tv"></i> TV Shows</a></li>
+    <li><a href="lkcinema.html"><i class="fa-solid fa-clapperboard"></i> LK Cinema</a></li>
     <li class="active"><a href="anime.html"><i class="fa-solid fa-dragon"></i> Anime</a></li>
+    <li><a href="series.html"><i class="fa fa-tv"></i> TV Shows</a></li>
     <li><a href="request.html"><i class="fa fa-plus-circle"></i> Requests</a></li>
     <li><a href="chanels.html"><i class="fa-solid fa-users"></i> Join Channels</a></li>
     <li><a href="about.html"><i class="fa fa-info-circle"></i> About</a></li>
@@ -251,9 +255,7 @@ h1 {
 <h1>🎌 Anime</h1>
 
 <!-- Movie Grid -->
-<div class="movie-grid" id="movieGrid">
-  <div class="no-movies">Loading movies...</div>
-</div>
+<div class="movie-grid" id="movieGrid"></div>
 
 <!-- Search Results List -->
 <div class="search-results" id="searchResults"></div>
@@ -291,74 +293,135 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const grid = document.getElementById('movieGrid');
-let allMovies = [];
+
+// CACHE — movies.html/lkcinema.html/series.html eketh use karana SAME
+// cache key eka methanath use karanawa. Ea nisa e pages walin ekakawath
+// user visit kara nam, anime.html ekata enakota WATH data eka dhanetama
+// cache eke thiyenawa — instant widiyata pennanawa, spinner/welawak
+// nathuwama. Background ekedi fresh data silent widiyata gena update
+// karanawa. Kisima welawaka "Error" text ekak user ta penne na.
+const CACHE_KEY = 'mml_movies_cache_v1';
+function readCache() {
+  try {
+    const raw = localStorage.getItem(CACHE_KEY);
+    if (!raw) return null;
+    const arr = JSON.parse(raw);
+    return Array.isArray(arr) && arr.length ? arr : null;
+  } catch (e) { return null; }
+}
+function writeCache(items) {
+  try { localStorage.setItem(CACHE_KEY, JSON.stringify(items)); } catch (e) {}
+}
+
+// gridMovies: "Anime" section ekata tag karapu ewa witharak — grid eke
+// penei. searchIndex: Firestore eke thiyena OKKOMA movies (kohomath
+// section ekakata tag karala thibbath) — search ekata witharak use
+// karanawa.
+//
+// BUG FIX: mulinma search eka `allMovies` (anime section ekatama
+// filter karapu list eka) use kala — eka nisa title eka match unath,
+// "anime" section ekata tag karala nathi movie ekak search result
+// ekedi penne na una. Dan movies.html/lkcinema.html widiyatama
+// searchIndex eka OKKOMA documents walin hadanawa.
+let gridMovies = [];
+let searchIndex = [];
 
 function hasSection(movie, sectionKey) {
   return Array.isArray(movie.sections) && movie.sections.includes(sectionKey);
 }
 
-async function loadMovies() {
-  try {
-    const snapshot = await getDocs(collection(db, "movies"));
-
-    if (snapshot.empty) {
-      grid.innerHTML = '<div class="no-movies">Movies නැත.</div>';
-      return;
-    }
-
-    allMovies = [];
-    snapshot.forEach(docSnap => {
-      const m = docSnap.data();
-      m.id = docSnap.id;
-      if (m.title && m.poster && hasSection(m, 'anime')) {
-        allMovies.push(m);
-      }
-    });
-
-    // FIX: Vinuka ge ඉල්ලීම anuwa — aluthinma save karapu movie eka LIST
-    // EKE ANTHIMATA yanna one (kalin "descending/aluth udin" widiyata
-    // thibba) — ea nisa ascending (oldest -> newest) widiyata sort kala.
-    // Meka wada karanne admin.html eke "date" field eka edit karaddi wath
-    // wenas wenne nathuwa mula date ekama retain karana fix ekath ekka
-    // ekathuwa — dan edit karapu movie ekaka position eka wenas wenne na.
-    allMovies.sort((a, b) => new Date(a.date || 0) - new Date(b.date || 0));
-
-    if (allMovies.length === 0) {
-      grid.innerHTML = '<div class="no-movies">Anime නැත. Admin panel එකෙන් "Show In Sections" එකේ "Anime" select කරලා add කරන්න.</div>';
-      return;
-    }
-
-    // Same fix as movies.html — build the HTML once and set innerHTML a
-    // single time instead of "+=" in a loop (which was destroying and
-    // re-fetching every already-added image on each iteration).
-    grid.innerHTML = allMovies.map(m => {
-      const poster = m.poster || 'https://via.placeholder.com/300x450/222/fff?text=No+Image';
-      let rating = m.rating? m.rating.toString().split('/')[0] : '';
-      if (rating &&!rating.includes('.')) rating += '.0';
-      const quality = (m.quality || 'HD').toUpperCase();
-      let title = m.title || 'Untitled';
-      if (title.length > 20) title = title.substring(0, 20) + '...';
-
-      return `
-        <div class="movie-card" onclick="openMovie('${m.id}')">
-          <span class="quality-badge">${quality}</span>
-          ${rating? `<span class="rating-badge">★ ${rating}</span>` : ''}
-          <img src="${poster}" alt="${m.title}" loading="lazy">
-          <div class="movie-title">${title}</div>
-        </div>
-      `;
-    }).join('');
-  } catch (err) {
-    console.error(err);
-    grid.innerHTML = `<div class="no-movies">Error: ${err.message}</div>`;
-  }
+// Same title thiyena documents kihipayak thibbath (wenawena pages/sections
+// walata add karapu ekama movie eka), grid/search result eka dekak-thunak
+// widiyata duplicate wenna epa — title eken dedupe karanawa.
+function dedupeByTitle(list) {
+  const seen = new Set();
+  const out = [];
+  (list || []).forEach(m => {
+    const key = (m.title || '').trim().toLowerCase();
+    if (!key || seen.has(key)) return;
+    seen.add(key);
+    out.push(m);
+  });
+  return out;
 }
 
-// FIX: kalinviye "index.html?id=" ekata yawwe — eth index.html dan home
-// page ekama witharai, ?id= param ekak handle karanne na, e nisa movie
-// card ekak click kalama home page ekatama yanawa witharak (watch page
-// ekata yanne na). Watch page eka watch.html — anithi hama pages ekakama
-// (movies.html, series.html) widiyatama methanath fix kala.
+function renderGrid() {
+  gridMovies = dedupeByTitle(searchIndex.filter(m => hasSection(m, 'anime')));
+
+  // Vinuka ge ඉල්ලීම: aluthinma save karapu movie eka LIST EKE ANTHIMATA
+  // yanna one — ea nisa ascending (oldest -> newest) widiyata sort karanawa.
+  gridMovies.sort((a, b) => new Date(a.date || 0) - new Date(b.date || 0));
+
+  if (gridMovies.length === 0) {
+    grid.innerHTML = '';
+    return;
+  }
+
+  grid.innerHTML = gridMovies.map(m => {
+    const poster = m.poster || 'https://via.placeholder.com/300x450/222/fff?text=No+Image';
+    let rating = m.rating ? m.rating.toString().split('/')[0] : '';
+    if (rating && !rating.includes('.')) rating += '.0';
+    const quality = (m.quality || 'HD').toUpperCase();
+    let title = m.title || 'Untitled';
+    if (title.length > 20) title = title.substring(0, 20) + '...';
+
+    return `
+      <div class="movie-card" onclick="openMovie('${m.id}')">
+        <span class="quality-badge">${quality}</span>
+        ${rating ? `<span class="rating-badge">★ ${rating}</span>` : ''}
+        <img src="${poster}" alt="${m.title}" loading="eager" decoding="async"
+             onerror="this.onerror=null; this.src='https://via.placeholder.com/300x450/222/fff?text=No+Image';">
+        <div class="movie-title">${title}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+async function fetchAllMoviesOnce() {
+  const snapshot = await getDocs(collection(db, "movies"));
+  const items = [];
+  snapshot.forEach(docSnap => {
+    const m = docSnap.data();
+    m.id = docSnap.id;
+    if (m.title && m.poster) items.push(m);
+  });
+  return items;
+}
+
+async function fetchFreshSilently() {
+  const MAX_ATTEMPTS = 6;
+  const RETRY_DELAY_MS = 1500;
+  for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
+    try {
+      const items = await fetchAllMoviesOnce();
+      if (items.length > 0) return items;
+      console.warn(`⚠️ Got 0 movies on attempt ${attempt}, retrying silently...`);
+    } catch (err) {
+      console.error(`❌ Firebase fetch error (attempt ${attempt}):`, err);
+    }
+    if (attempt < MAX_ATTEMPTS) await new Promise(r => setTimeout(r, RETRY_DELAY_MS));
+  }
+  return null; // silently give up this round — UI keeps showing cache/last state
+}
+
+async function loadMovies() {
+  // 1) Cache thibba nam ekapara instant widiyata pennanawa.
+  const cached = readCache();
+  if (cached) {
+    searchIndex = dedupeByTitle(cached);
+    renderGrid();
+  }
+
+  // 2) Background ekedi fresh data ganna try karanawa — loading UI ekak nathuwa.
+  const fresh = await fetchFreshSilently();
+  if (fresh) {
+    searchIndex = dedupeByTitle(fresh);
+    writeCache(fresh);
+    renderGrid();
+  }
+  // fresh null unath cached content eka penn thiyenawa — error message ekak penne na.
+}
+
 window.openMovie = function (id) {
   window.location.href = `watch.html?id=${id}`;
 };
@@ -376,7 +439,9 @@ function searchMovies(query) {
   gridDiv.style.display = 'none';
   resultsDiv.classList.add('active');
 
-  const filtered = allMovies.filter(m =>
+  // BUG FIX: searchIndex (OKKOMA movies, dedupe karapu) eken search
+  // karanawa — anime section ekata witharak tag karapu movies wenuwata.
+  const filtered = searchIndex.filter(m =>
     m.title && m.title.toLowerCase().includes(query.toLowerCase())
   );
 
@@ -399,7 +464,7 @@ function searchMovies(query) {
         <div class="search-result-info">
           <div class="search-result-title">${title}</div>
           <div class="search-result-meta">
-            ${year}${duration? ' • ' + duration : ''}<br>
+            ${year}${duration ? ' • ' + duration : ''}<br>
             ${genre}
           </div>
         </div>
@@ -435,6 +500,7 @@ document.getElementById('searchInput')?.addEventListener('keypress', (e) => {
 </script>
 
 <script src="script.js"></script> <!-- sidebar/menu/search okkoma meken -->
+<script type="module" src="auth.js"></script>
 
 </body>
 </html>
