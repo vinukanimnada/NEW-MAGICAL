@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python Complete Cheat Sheet</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Sinhala:wght@400;700&family=JetBrains+Mono:wght@400;700&display=swap');
+  *{box-sizing:border-box}
+  body{font-family:'Noto Sans Sinhala',sans-serif; background: linear-gradient(135deg, #306998 0%, #FFD43B 100%); margin:0; padding:15px; -webkit-print-color-adjust: exact; print-color-adjust: exact;}
+  .page{max-width:900px; margin:auto; background:white; border-radius:20px; overflow:hidden; box-shadow:0 20px 60px rgba(0,0,0,0.3)}
+  .hero{background: linear-gradient(135deg, #0d1117, #306998); color:white; padding:40px 30px; text-align:center}
+  .hero h1{font-size:32px; margin:0; color:#FFD43B}
+  .hero h1 span{color:white}
+  .hero p{opacity:0.8; margin:10px 0 0 0}
+  .badge{display:inline-block; background:#FFD43B; color:#111; padding:6px 16px; border-radius:20px; font-weight:700; margin-top:15px; font-size:13px}
+  .content{padding:20px}
+  .category{margin-bottom:28px; break-inside: avoid;}
+  .cat-header{display:flex; align-items:center; gap:12px; padding:12px 16px; border-radius:12px; color:white; margin-bottom:12px}
+  .cat-header .icon{font-size:26px; background:rgba(255,255,255,0.25); width:48px; height:48px; display:grid; place-items:center; border-radius:10px}
+  .cat-header h2{margin:0; font-size:17px}
+  .cat-header span{margin-left:auto; background:rgba(0,0,0,0.2); padding:4px 10px; border-radius:20px; font-size:12px}
+  .c1{background: linear-gradient(135deg, #306998, #4B8BBE)}
+  .c2{background: linear-gradient(135deg, #FFD43B, #FFE873); color:#111 !important}
+  .c2 h2, .c2 span{color:#111}
+  .c3{background: linear-gradient(135deg, #11998e, #38ef7d)}
+  .c4{background: linear-gradient(135deg, #fc4a1a, #f7b733)}
+  .c5{background: linear-gradient(135deg, #8e2de2, #4a00e0)}
+  .c6{background: linear-gradient(135deg, #f857a6, #ff5858)}
+  .c7{background: linear-gradient(135deg, #00c6ff, #0072ff)}
+  .c8{background: linear-gradient(135deg, #232526, #414345)}
+  .grid{display:grid; grid-template-columns:1fr; gap:10px}
+  .card{border:1px solid #eef2f7; border-radius:12px; padding:12px 14px; display:flex; align-items:flex-start; gap:12px; background:#fffdf0}
+  .card .num{background:#306998; color:white; min-width:30px; height:30px; border-radius:50%; display:grid; place-items:center; font-size:11px; font-weight:700; margin-top:2px}
+  .card .tag{font-family:'JetBrains Mono',monospace; font-weight:700; color:#111; font-size:12.5px; min-width:170px; background:#FFD43B; padding:5px 8px; border-radius:6px; line-height:1.3}
+  .card .desc{font-size:12.5px; color:#4b5563; line-height:1.4}
+  .code{font-family:'JetBrains Mono',monospace; background:#0d1117; color:#FFD43B; padding:3px 7px; border-radius:5px; font-size:11px; display:inline-block; margin-top:4px; max-width:100%; overflow-wrap:break-word}
+  .footer{background:#f9fafb; text-align:center; padding:18px; font-size:12px; color:#9ca3af}
+  .btn{position:fixed; bottom:20px; right:20px; background:#0d1117; color:#FFD43B; border:none; padding:14px 22px; border-radius:50px; font-weight:700; box-shadow:0 8px 20px rgba(0,0,0,0.3); cursor:pointer; z-index:99}
+  @media print{ .btn{display:none} body{background:white; padding:0} .page{box-shadow:none} }
+</style>
+</head>
+<body>
+<button class="btn" onclick="window.print()">🖨️ Print / Save PDF</button>
+<div class="page">
+<div class="hero">
+<h1>🐍 Python <span>70+</span></h1>
+<p>සම්පූර්ණ Cheat Sheet - Code උදාහරණ එක්ක</p>
+<div class="badge">🐍 PYTHON PREMIUM EDITION 🐍</div>
+</div>
+<div class="content">
+
+<div class="category">
+<div class="cat-header c1"><div class="icon">📦</div><h2>1. Basics / මුලික</h2><span>8</span></div>
+<div class="grid">
+<div class="card"><div class="num">1</div><div class="tag">print() / input()</div><div class="desc">පෙන්නනවා / ගන්නවා <div class="code">print("Hi")<br>name = input("Name: ")</div></div></div>
+<div class="card"><div class="num">2</div><div class="tag">Variables</div><div class="desc">type ලියන්න ඕන නෑ <div class="code">x = 5<br>name = "Amal"</div></div></div>
+<div class="card"><div class="num">3</div><div class="tag"># Comment</div><div class="desc">විස්තර ලියනවා <div class="code"># me comment ekak</div></div></div>
+<div class="card"><div class="num">4</div><div class="tag">type() / len()</div><div class="desc">වර්ගය / දිග බලනවා</div></div>
+</div>
+</div>
+
+<div class="category">
+<div class="cat-header c2"><div class="icon">🔢</div><h2>2. Data Types / දත්ත</h2><span>8</span></div>
+<div class="grid">
+<div class="card"><div class="num">5</div><div class="tag">int, float, str, bool</div><div class="desc"><div class="code">5, 3.14, "hi", True</div></div></div>
+<div class="card"><div class="num">6</div><div class="tag">List []</div><div class="desc">වෙනස් කරන්න පුළුවන් ලැයිස්තුව <div class="code">a = [1,2,3]<br>a.append(4)</div></div></div>
+<div class="card"><div class="num">7</div><div class="tag">Tuple ()</div><div class="desc">වෙනස් කරන්න බැරි <div class="code">t = (1,2,3)</div></div></div>
+<div class="card"><div class="num">8</div><div class="tag">Dict {}</div><div class="desc">Key: Value <div class="code">d = {"name":"Amal", "age":20}</div></div></div>
+<div class="card"><div class="num">9</div><div class="tag">Set {}</div><div class="desc">ආවර්තන නැති ලැයිස්තුව <div class="code">s = {1,2,3}</div></div></div>
+</div>
+</div>
+
+<div class="category">
+<div class="cat-header c3"><div class="icon">➕</div><h2>3. Operators / ගණන්</h2><span>6</span></div>
+<div class="grid">
+<div class="card"><div class="num">10</div><div class="tag">+ - * / % ** //</div><div class="desc"><div class="code">** බලය (2**3=8)<br>// කොටස (5//2=2)</div></div></div>
+<div class="card"><div class="num">11</div><div class="tag">== != > < >= <=</div><div class="desc">සසඳනවා</div></div>
+<div class="card"><div class="num">12</div><div class="tag">and or not</div><div class="desc"><div class="code">if x>5 and y<10:</div></div></div>
+<div class="card"><div class="num">13</div><div class="tag">f-string f"{}"</div><div class="desc">ලස්සනට String හදනවා <div class="code">f"Hi {name}, age {age}"</div></div></div>
+</div>
+</div>
+
+<div class="category">
+<div class="cat-header c4"><div class="icon">🔀</div><h2>4. Conditions / තීරණ</h2><span>5</span></div>
+<div class="grid">
+<div class="card"><div class="num">14</div><div class="tag">if elif else</div><div class="desc"><div class="code">if x>10:<br>  print("Loku")<br>elif x==10:<br>  print("Sama")<br>else:<br>  print("Podi")</div></div></div>
+<div class="card"><div class="num">15</div><div class="tag">Ternary</div><div class="desc">කෙටි if <div class="code">a = "Loku" if x>10 else "Podi"</div></div></div>
+</div>
+</div>
+
+<div class="category">
+<div class="cat-header c5"><div class="icon">🔁</div><h2>5. Loops / නැවත නැවත</h2><span>7</span></div>
+<div class="grid">
+<div class="card"><div class="num">16</div><div class="tag">for loop</div><div class="desc"><div class="code">for i in range(5):<br>  print(i) # 0-4</div></div></div>
+<div class="card"><div class="num">17</div><div class="tag">for in list</div><div class="desc"><div class="code">for name in ["Amal","Kamal"]:<br>  print(name)</div></div></div>
+<div class="card"><div class="num">18</div><div class="tag">while loop</div><div class="desc"><div class="code">while x<10:<br>  x+=1</div></div></div>
+<div class="card"><div class="num">19</div><div class="tag">break / continue / pass</div><div class="desc">නවත්තනවා / skip / හිස්</div></div>
+<div class="card"><div class="num">20</div><div class="tag">range()</div><div class="desc"><div class="code">range(5) -> 0-4<br>range(1,10,2) -> 1,3,5,7,9</div></div></div>
+</div>
+</div>
+
+<div class="category">
+<div class="cat-header c6"><div class="icon">🧩</div><h2>6. Functions / කාර්යයන්</h2><span>6</span></div>
+<div class="grid">
+<div class="card"><div class="num">21</div><div class="tag">def function():</div><div class="desc"><div class="code">def hi(name):<br>  return f"Hi {name}"<br><br>print(hi("Amal"))</div></div></div>
+<div class="card"><div class="num">22</div><div class="tag">*args, **kwargs</div><div class="desc">බොහෝ අගයන් ගන්නවා <div class="code">def sum(*nums):</div></div></div>
+<div class="card"><div class="num">23</div><div class="tag">lambda</div><div class="desc">පොඩි function <div class="code">add = lambda a,b: a+b</div></div></div>
+</div>
+</div>
+
+<div class="category">
+<div class="cat-header c7"><div class="icon">📚</div><h2>7. List / String Methods - වැඩියෙන්ම ඕන!</h2><span>15</span></div>
+<div class="grid">
+<div class="card"><div class="num">24</div><div class="tag">list.append() / pop()</div><div class="desc"><div class="code">a.append(5) # අගට දානවා<br>a.pop() # අගින් අයින්</div></div></div>
+<div class="card"><div class="num">25</div><div class="tag">list.sort() / reverse()</div><div class="desc">පිළිවෙලට / අනිත් පැත්තට</div></div>
+<div class="card"><div class="num">26</div><div class="tag">len() / sum() / max() / min()</div><div class="desc"><div class="code">len([1,2,3]) # 3</div></div></div>
+<div class="card"><div class="num">27</div><div class="tag">Slicing [start:end]</div><div class="desc"><div class="code">a[0:3] # 0,1,2<br>a[::-1] # අනිත් පැත්තට</div></div></div>
+<div class="card"><div class="num">28</div><div class="tag">str.upper() / lower()</div><div class="desc">ලොකු / පොඩි</div></div>
+<div class="card"><div class="num">29</div><div class="tag">str.strip() / replace()</div><div class="desc"><div class="code">" hi ".strip() # "hi"<br>"hi".replace("i","o")</div></div></div>
+<div class="card"><div class="num">30</div><div class="tag">str.split() / join()</div><div class="desc"><div class="code">"a,b".split(",") # ["a","b"]<br>",".join(["a","b"])</div></div></div>
+<div class="card"><div class="num">31</div><div class="tag">in / not in</div><div class="desc"><div class="code">"a" in "cat" # True</div></div></div>
+</div>
+</div>
+
+<div class="category">
+<div class="cat-header c8"><div class="icon">📂</div><h2>8. Dict / File / අමතර සුපිරි</h2><span>12</span></div>
+<div class="grid">
+<div class="card"><div class="num">32</div><div class="tag">dict.get() / keys() / values()</div><div class="desc"><div class="code">d.get("name")<br>d.keys() # ඔක්කොම keys</div></div></div>
+<div class="card"><div class="num">33</div><div class="tag">File open</div><div class="desc"><div class="code">with open("file.txt","r") as f:<br>  data = f.read()</div></div></div>
+<div class="card"><div class="num">34</div><div class="tag">try / except</div><div class="desc">Error අල්ලනවා <div class="code">try:<br>  x=1/0<br>except:<br>  print("Error")</div></div></div>
+<div class="card"><div class="num">35</div><div class="tag">import</div><div class="desc"><div class="code">import math<br>import random<br>from datetime import date</div></div></div>
+<div class="card"><div class="num">36</div><div class="tag">List Comprehension</div><div class="desc">කෙටිම for එක <div class="code">[x*2 for x in range(5)]<br># [0,2,4,6,8]</div></div></div>
+<div class="card"><div class="num">37</div><div class="tag">if __name__ == "__main__":</div><div class="desc">main program එක පටන් ගන්න තැන</div></div>
+<div class="card"><div class="num">38</div><div class="tag">pip install</div><div class="desc">library දාගන්නවා <div class="code">pip install requests</div></div></div>
+</div>
+</div>
+
+</div>
+<div class="footer">Python 38 Most Used | මේ ටික හොඳට පුළුවන් නම් ඔයාට ඕනෑම දෙයක් හදන්න පුළුවන්! | Print කරලා බිත්තියේ ගහගන්න! 🐍</div>
+</div>
+</body>
+</html>
