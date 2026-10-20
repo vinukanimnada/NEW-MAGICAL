@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MEGA CODE BOOK - Learn By Doing</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Sinhala:wght@400;700&family=JetBrains+Mono:wght@400;700&display=swap');
+*{box-sizing:border-box}
+body{font-family:'Noto Sans Sinhala',sans-serif; background:#0f172a; margin:0; padding:0; -webkit-print-color-adjust: exact; print-color-adjust: exact;}
+.btn{position:fixed; bottom:20px; right:20px; background:#facc15; color:#111; border:none; padding:16px 28px; border-radius:50px; font-weight:800; font-size:16px; box-shadow:0 10px 30px rgba(0,0,0,0.5); cursor:pointer; z-index:999}
+.cover{min-height:100vh; background: radial-gradient(circle at top, #1e3a8a, #0f172a 70%); color:white; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:40px; page-break-after: always;}
+.cover h1{font-size:56px; line-height:1; margin:0; letter-spacing:-1px}
+.cover h1 span{background: linear-gradient(90deg, #facc15, #38bdf8, #f472b6, #34d399); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text}
+.cover .sub{font-size:20px; opacity:0.6; margin:20px 0}
+.code-cover{background:#111827; color:#e5e7eb; font-family:'JetBrains Mono',monospace; padding:20px; border-radius:16px; text-align:left; margin-top:30px; border:1px solid #374151; width:100%; max-width:500px; font-size:13px; line-height:1.6}
+.page{max-width:900px; margin:25px auto; background:white; border-radius:20px; overflow:hidden; box-shadow:0 20px 60px rgba(0,0,0,0.3); page-break-inside: avoid; page-break-after: always;}
+.hero{padding:28px; color:white; display:flex; align-items:center; gap:16px}
+.hero .ic{width:56px; height:56px; background:rgba(255,255,255,0.2); display:grid; place-items:center; border-radius:14px; font-size:28px}
+.hero h2{margin:0; font-size:22px} .hero p{margin:4px 0 0 0; opacity:0.85; font-size:13px}
+.content{padding:22px}
+.lesson{margin-bottom:28px; border:1px solid #e2e8f0; border-radius:16px; overflow:hidden}
+.lesson-head{background:#f8fafc; padding:14px 18px; display:flex; align-items:center; gap:10px; border-bottom:1px solid #e2e8f0}
+.lesson-head .no{background:#0f172a; color:white; width:28px; height:28px; border-radius:50%; display:grid; place-items:center; font-size:12px; font-weight:700}
+.lesson-head b{font-size:15px}
+.lesson-body{padding:16px 18px}
+.explain{font-size:13px; color:#475569; background:#f0f9ff; padding:10px 12px; border-radius:8px; border-left:4px solid #38bdf8; margin-bottom:12px}
+.code-block{background:#0d1117; color:#e6edf3; font-family:'JetBrains Mono',monospace; padding:14px; border-radius:10px; font-size:12px; line-height:1.6; overflow-x:auto; margin:10px 0; white-space:pre-wrap}
+.code-block .c{color:#8b949e} .code-block .k{color:#ff7b72} .code-block .s{color:#a5d6ff} .code-block .f{color:#d2a8ff} .code-block .t{color:#7ee787}
+.result{background:white; border:1px dashed #cbd5e1; padding:12px; border-radius:8px; font-size:13px; margin-top:10px}
+.tip{background:#fefce8; border-left:4px solid #facc15; padding:10px 12px; border-radius:8px; font-size:12px; margin-top:10px}
+@media print{ .btn{display:none} body{background:white} .page{box-shadow:none; margin:0; border-radius:0} .cover{min-height:auto; padding:60px 30px} }
+</style>
+</head>
+<body>
+<button class="btn" onclick="window.print()">📚 MEGA BOOK PDF කරන්න</button>
+
+<div class="cover">
+<h1><span>MEGA<br>CODE BOOK</span></h1>
+<div class="sub">Code කරන හැටි - 0 සිට 100 දක්වා<br>HTML + CSS + JS + Python + Network</div>
+<div class="code-cover">
+<span class="c">// ඔයාගේ පළවෙනි code එක</span><br>
+<span class="k">print</span>(<span class="s">"Hello World! මම Developer කෙනෙක්!"</span>)<br><br>
+<span class="k">if</span> you == <span class="s">"උත්සහ කරනවා"</span>:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;future = <span class="s">"Bright 🌟"</span>
+</div>
+<p style="margin-top:25px; opacity:0.4; font-size:12px">300+ Code Examples | Copy Paste කරලා Run කරන්න පුළුවන් | 2026 Edition</p>
+</div>
+
+<!-- HTML SECTION -->
+<div class="page">
+<div class="hero" style="background: linear-gradient(135deg, #ff6a00, #ee0979)"><div class="ic">🌈</div><div><h2>PART 1: HTML - Code කරන හැටි</h2><p>වෙබ් එකේ ඇටසැකිල්ල - පළවෙනි දවස</p></div></div>
+<div class="content">
+
+<div class="lesson">
+<div class="lesson-head"><div class="no">1</div><b>ඔයාගේ පළවෙනි වෙබ් පිටුව</b></div>
+<div class="lesson-body">
+<div class="explain">💡 මේක තමයි මුලිකම. හැම වෙබ් එකක්ම මේකෙන් තමයි පටන් ගන්නේ.</div>
+<div class="code-block">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;title&gt;මගේ පළවෙනි වෙබ් එක&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;ආයුබෝවන්!&lt;/h1&gt;
+  &lt;p&gt;මම HTML ඉගෙන ගන්නවා.&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</div>
+<div class="tip">📝 Notepad එකේ මේක paste කරලා index.html කියලා save කරලා double-click කරන්න.</div>
+</div>
+</div>
+
+<div class="lesson">
+<div class="lesson-head"><div class="no">2</div><b>Image, Link, List එකක් හදන හැටි</b></div>
+<div class="lesson-body">
+<div class="code-block">&lt;!-- Link එකක් --&gt;
+&lt;a href="https://google.com"&gt;Google යන්න&lt;/a&gt;
+
+&lt;!-- පින්තූරයක් --&gt;
+&lt;img src="myphoto.jpg" width="200"&gt;
+
+&lt;!-- ලැයිස්තුව --&gt;
+&lt;ul&gt;
+  &lt;li&gt;Rice&lt;/li&gt;
+  &lt;li&gt;Chicken&lt;/li&gt;
+  &lt;li&gt;Fish&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;!-- Button --&gt;
+&lt;button&gt;Click Me&lt;/button&gt;</div>
+</div>
+</div>
+
+<div class="lesson">
+<div class="lesson-head"><div class="no">3</div><b>Form එකක් - Login Page එකක් හදමු</b></div>
+<div class="lesson-body">
+<div class="code-block">&lt;form&gt;
+  &lt;label&gt;Name:&lt;/label&gt;
+  &lt;input type="text" placeholder="ඔයාගේ නම"&gt;
+  &lt;br&gt;&lt;br&gt;
+  &lt;label&gt;Password:&lt;/label&gt;
+  &lt;input type="password"&gt;
+  &lt;br&gt;&lt;br&gt;
+  &lt;button type="submit"&gt;Login&lt;/button&gt;
+&lt;/form&gt;</div>
+</div>
+</div>
+
+</div>
+</div>
+
+<!-- CSS SECTION -->
+<div class="page">
+<div class="hero" style="background: linear-gradient(135deg, #36d1dc, #5b86e5)"><div class="ic">🎨</div><div><h2>PART 2: CSS - ලස්සන කරන හැටි</h2><p>HTML එකට පාට දාමු</p></div></div>
+<div class="content">
+
+<div class="lesson">
+<div class="lesson-head"><div class="no">1</div><b>CSS දාන්නේ කොහොමද? 3 විදිහ</b></div>
+<div class="lesson-body">
+<div class="code-block"><span class="c">/* 1. HTML එක ඇතුලෙම (Inline) */</span>
+&lt;h1 style="color:red;"&gt;රතු පාට&lt;/h1&gt;
+
+<span class="c">/* 2. Head එක ඇතුලේ (Internal) */</span>
+&lt;style&gt;
+  h1 { color: blue; font-size: 30px; }
+  p { color: green; }
+&lt;/style&gt;
+
+<span class="c">/* 3. වෙනම file එකක් (Best) */</span>
+&lt;link rel="stylesheet" href="style.css"&gt;</div>
+</div>
+</div>
+
+<div class="lesson">
+<div class="lesson-head"><div class="no">2</div><b>Box එකක් ලස්සන කරන හැටි - Card එකක්</b></div>
+<div class="lesson-body">
+<div class="code-block">.card {
+  width: 300px;
+  background: white;
+  padding: 20px;
+  margin: 20px auto;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+.card img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.card button {
+  background: #3b82f6;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+.card button:hover {
+  background: #1d4ed8;
+  transform: scale(1.05);
+}</div>
+<div class="explain">💡 මේ CSS එක දාලා ඔයාට Facebook Profile Card එකක් වගේ එකක් හදන්න පුළුවන්!</div>
+</div>
+</div>
+
+<div class="lesson">
+<div class="lesson-head"><div class="no">3</div><b>Flexbox - මැදට ගන්න සුපිරිම විදිහ</b></div>
+<div class="lesson-body">
+<div class="code-block"><span class="c">/* හැමදේම මැදට ගන්න - එක line එකෙන්! */</span>
+.container {
+  display: flex;
+  justify-content: center; <span class="c">/* තිරස් මැද */</span>
+  align-items: center;     <span class="c">/* සිරස් මැද */</span>
+  height: 100vh;
+  gap: 20px;
+}</div>
+<div class="tip">⚡ මේක තමයි 90% වෙලාවට භාවිතා වෙන්නේ. මේක මතක තියාගන්න!</div>
+</div>
+</div>
+
+</div>
+</div>
+
+<!-- JS SECTION -->
+<div class="page">
+<div class="hero" style="background: linear-gradient(135deg, #f7b733, #fc4a1a)"><div class="ic">⚡</div><div><h2>PART 3: JavaScript - පණ දෙන හැටි</h2><p>Button එක click කරාම දෙයක් වෙන හැටි</p></div></div>
+<div class="content">
+
+<div class="lesson">
+<div class="lesson-head"><div class="no">1</div><b>Button එක Click කරාම Hello කියන හැටි</b></div>
+<div class="lesson-body">
+<div class="code-block">&lt;button id="myBtn"&gt;Click Me&lt;/button&gt;
+&lt;p id="text"&gt;&lt;/p&gt;
+
+&lt;script&gt;
+  const btn = document.getElementById("myBtn");
+  const text = document.getElementById("text");
+
+  btn.addEventListener("click", function(){
+    text.innerHTML = "ආයුබෝවන්! ඔයා Click කළා! 🎉";
+    text.style.color = "green";
+    text.style.fontSize = "24px";
+  });
+&lt;/script&gt;</div>
+</div>
+</div>
+
+<div class="lesson">
+<div class="lesson-head"><div class="no">2</div><b>Calculator එකක් හදමු - Mini Project</b></div>
+<div class="lesson-body">
+<div class="code-block">&lt;input id="num1" type="number" placeholder="අංක 1"&gt;
+&lt;input id="num2" type="number" placeholder="අංක 2"&gt;
+&lt;button onclick="add()"&gt;එකතු කරන්න&lt;/button&gt;
+&lt;p id="result"&gt;&lt;/p&gt;
+
+&lt;script&gt;
+function add(){
+  let a = Number(document.getElementById("num1").value);
+  let b = Number(document.getElementById("num2").value);
+  let sum = a + b;
+  document.getElementById("result").innerHTML = "උත්තරය: " + sum;
+}
+&lt;/script&gt;</div>
+</div>
+</div>
+
+<div class="lesson">
+<div class="lesson-head"><div class="no">3</div><b>Array එකෙන් වැඩ - To-Do List එකක්</b></div>
+<div class="lesson-body">
+<div class="code-block">let todos = ["Rice ගන්න", "Code කරන්න", "Gym යන්න"];
+
+// අලුතෙන් එකක් දාමු
+todos.push("Book එකක් කියවන්න");
+
+// ඔක්කොම print කරමු
+todos.forEach(function(item, index){
+  console.log(index + 1 + ". " + item);
+});
+
+// Filter කරමු - "Code" තියෙන ඒවා විතරක්
+let codeTasks = todos.filter(t => t.includes("Code"));
+console.log(codeTasks);</div>
+</div>
+</div>
+
+</div>
+</div>
+
+<!-- PYTHON SECTION -->
+<div class="page">
+<div class="hero" style="background: linear-gradient(135deg, #306998, #FFD43B)"><div class="ic">🐍</div><div><h2>PART 4: Python - Code කරන හැටි</h2><p>ලේසියෙන්ම, බලවත්ම භාෂාව</p></div></div>
+<div class="content">
+
+<div class="lesson">
+<div class="lesson-head"><div class="no">1</div><b>Python පළවෙනි දවස</b></div>
+<div class="lesson-body">
+<div class="code-block"><span class="c"># 1. Print</span>
+print("Hello World!")
+
+<span class="c"># 2. Input ගන්නවා</span>
+name = input("ඔයාගේ නම: ")
+print(f"ආයුබෝවන් {name}!")
+
+<span class="c"># 3. ගණන් හදනවා</span>
+a = int(input("අංක 1: "))
+b = int(input("අංක 2: "))
+print(f"එකතුව: {a+b}")</div>
+</div>
+</div>
+
+<div class="lesson">
+<div class="lesson-head"><div class="no">2</div><b>Mini Project - Mark Calculator</b></div>
+<div class="lesson-body">
+<div class="code-block">marks = int(input("Marks දාන්න: "))
+
+if marks >= 75:
+    print("A - සුපිරි! 🌟")
+elif marks >= 65:
+    print("B - හොඳයි!")
+elif marks >= 55:
+    print("C - සාමාන්‍ය")
+elif marks >= 35:
+    print("S - පාස්")
+else:
+    print("F - Fail - ආපහු උත්සහ කරන්න")</div>
+</div>
+</div>
+
+<div class="lesson">
+<div class="lesson-head"><div class="no">3</div><b>Loop එකෙන් - Numbers Game එකක්</b></div>
+<div class="lesson-body">
+<div class="code-block">import random
+
+secret = random.randint(1, 100)
+print("1-100 අතර අංකයක් හිතුවා!")
+
+while True:
+    guess = int(input("Guess එක: "))
+    if guess == secret:
+        print("🎉 හරි! ඔයා දිනුවා!")
+        break
+    elif guess > secret:
+        print("⬇️ ටිකක් අඩු අංකයක්")
+    else:
+        print("⬆️ ටිකක් වැඩි අංකයක්")</div>
+</div>
+</div>
+
+<div class="lesson">
+<div class="lesson-head"><div class="no">4</div><b>File එකකට Save කරන හැටි</b></div>
+<div class="lesson-body">
+<div class="code-block"><span class="c"># List එකක් file එකකට දාමු</span>
+todos = ["Rice", "Code", "Gym"]
+
+with open("mylist.txt", "w") as f:
+    for item in todos:
+        f.write(item + "\n")
+
+print("File එක Save කළා!")
+
+<span class="c"># ආපහු කියවමු</span>
+with open("mylist.txt", "r") as f:
+    data = f.read()
+    print(data)</div>
+</div>
+</div>
+
+</div>
+</div>
+
+<!-- NETWORK SECTION -->
+<div class="page">
+<div class="hero" style="background: linear-gradient(135deg, #0ea5e9, #2563eb)"><div class="ic">🌐</div><div><h2>PART 5: Networking - Internet වැඩ කරන හැටි + Code</h2><p>Python එකෙන් Network බලන හැටි</p></div></div>
+<div class="content">
+
+<div class="lesson">
+<div class="lesson-head"><div class="no">1</div><b>IP Address එක බලන හැටි - Python වලින්</b></div>
+<div class="lesson-body">
+<div class="code-block">import socket
+
+<span class="c"># ඔයාගේ Computer එකේ IP එක</span>
+hostname = socket.gethostname()
+ip = socket.gethostbyname(hostname)
+print(f"ඔයාගේ IP: {ip}")
+
+<span class="c"># Google එකේ IP එක (DNS)</span>
+google_ip = socket.gethostbyname("google.com")
+print(f"Google IP: {google_ip}")</div>
+</div>
+</div>
+
+<div class="lesson">
+<div class="lesson-head"><div class="no">2</div><b>Website එකක් වැඩ කරනවද බලන්න - Ping Tool එකක්</b></div>
+<div class="lesson-body">
+<div class="code-block">import requests
+
+websites = ["https://google.com", "https://facebook.com", "https://youtube.com"]
+
+for site in websites:
+    try:
+        r = requests.get(site, timeout=3)
+        if r.status_code == 200:
+            print(f"✅ {site} - වැඩ!")
+        else:
+            print(f"⚠️ {site} - {r.status_code}")
+    except:
+        print(f"❌ {site} - වැඩ නෑ")</div>
+<div class="tip">📦 මේකට `pip install requests` කරන්න ඕන</div>
+</div>
+</div>
+
+<div class="lesson">
+<div class="lesson-head"><div class="no">3</div><b>Port Scanner - Mini Hacker Tool 😎</b></div>
+<div class="lesson-body">
+<div class="code-block">import socket
+
+target = "127.0.0.1" <span class="c"># ඔයාගේම PC එක</span>
+print(f"Scanning {target}...")
+
+for port in [22, 80, 443, 3306, 8080]:
+    s = socket.socket()
+    s.settimeout(1)
+    result = s.connect_ex((target, port))
+    if result == 0:
+        print(f"🟢 Port {port} - Open")
+    else:
+        print(f"🔴 Port {port} - Closed")
+    s.close()</div>
+</div>
+</div>
+
+<div class="lesson">
+<div class="lesson-head"><div class="no">4</div><b>Final Project - Full Stack Mini Website</b></div>
+<div class="lesson-body">
+<div class="explain">💡 මේක තමයි ඔක්කොම එකතු කරලා හදන එකම වෙබ් එක! HTML+CSS+JS</div>
+<div class="code-block">&lt;!-- index.html --&gt;
+&lt;style&gt;
+  body{font-family:sans-serif; text-align:center; padding:50px; background:#f0f9ff}
+  .box{background:white; padding:30px; border-radius:20px; max-width:400px; margin:auto; box-shadow:0 10px 30px rgba(0,0,0,0.1)}
+  input{padding:10px; width:80%; border-radius:10px; border:1px solid #ddd; margin:10px}
+  button{background:#0ea5e9; color:white; border:none; padding:12px 30px; border-radius:20px; cursor:pointer}
+&lt;/style&gt;
+
+&lt;div class="box"&gt;
+  &lt;h2&gt;🌐 My First Full Stack App&lt;/h2&gt;
+  &lt;input id="name" placeholder="ඔයාගේ නම"&gt;
+  &lt;button onclick="greet()"&gt;Say Hi&lt;/button&gt;
+  &lt;p id="out"&gt;&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;script&gt;
+function greet(){
+  let n = document.getElementById("name").value;
+  if(n==""){ alert("නමක් දාන්න!"); return; }
+  document.getElementById("out").innerHTML = "🚀 ආයුබෝවන් " + n + "! ඔයා දැන් Developer කෙනෙක්!";
+  
+  <span class="c">// LocalStorage එකේ Save කරනවා (Python වගේ)</span>
+  localStorage.setItem("username", n);
+}
+&lt;/script&gt;</div>
+<div class="result">✅ මේක තමයි ඔයාගේ පළවෙනි Full Stack Project එක! මේක හදලා ඔයාගේ නම දාලා screenshot එකක් ගන්න!</div>
+</div>
+</div>
+
+<div style="margin-top:20px; padding:24px; background: linear-gradient(135deg, #0f172a, #1e3a8a); border-radius:16px; color:white; text-align:center">
+<h3 style="margin:0; color:#facc15">🎓 සුභ පැතුම්! ඔයා MEGA BOOK එක ඉවර කළා! 🎓</h3>
+<p style="font-size:13px; opacity:0.8; margin-top:10px">දැන් ඔයාට පුළුවන්:<br>✅ වෙබ් එකක් හදන්න (HTML+CSS+JS)<br>✅ Python එකෙන් Tool හදන්න<br>✅ Network එක තේරුම් ගන්න<br><br><b style="color:#38bdf8">ඊළඟ පියවර:</b> මේ code ටික type කරලා හදලා බලන්න. Copy නෙවෙයි, type කරන්න!</p>
+</div>
+
+</div>
+</div>
+
+</body>
+</html>
