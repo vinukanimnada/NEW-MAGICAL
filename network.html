@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Computer Networking Complete Cheat Sheet</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Sinhala:wght@400;700&family=JetBrains+Mono:wght@400;700&display=swap');
+  *{box-sizing:border-box}
+  body{font-family:'Noto Sans Sinhala',sans-serif; background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%); margin:0; padding:15px; -webkit-print-color-adjust: exact; print-color-adjust: exact;}
+  .page{max-width:900px; margin:auto; background:white; border-radius:20px; overflow:hidden; box-shadow:0 20px 60px rgba(0,0,0,0.4)}
+  .hero{background: linear-gradient(135deg, #000000, #0f172a, #1e40af); color:white; padding:40px 30px; text-align:center}
+  .hero h1{font-size:32px; margin:0; color:#38bdf8}
+  .hero p{opacity:0.8; margin:10px 0 0 0}
+  .badge{display:inline-block; background:#38bdf8; color:#111; padding:6px 16px; border-radius:20px; font-weight:700; margin-top:15px; font-size:13px}
+  .content{padding:20px}
+  .category{margin-bottom:28px; break-inside: avoid;}
+  .cat-header{display:flex; align-items:center; gap:12px; padding:12px 16px; border-radius:12px; color:white; margin-bottom:12px}
+  .cat-header .icon{font-size:26px; background:rgba(255,255,255,0.2); width:48px; height:48px; display:grid; place-items:center; border-radius:10px}
+  .cat-header h2{margin:0; font-size:17px}
+  .cat-header span{margin-left:auto; background:rgba(0,0,0,0.25); padding:4px 10px; border-radius:20px; font-size:12px}
+  .c1{background: linear-gradient(135deg, #0ea5e9, #2563eb)}
+  .c2{background: linear-gradient(135deg, #10b981, #059669)}
+  .c3{background: linear-gradient(135deg, #f59e0b, #ef4444)}
+  .c4{background: linear-gradient(135deg, #8b5cf6, #ec4899)}
+  .c5{background: linear-gradient(135deg, #06b6d4, #3b82f6)}
+  .c6{background: linear-gradient(135deg, #f97316, #eab308)}
+  .c7{background: linear-gradient(135deg, #6366f1, #8b5cf6)}
+  .c8{background: linear-gradient(135deg, #14b8a6, #06b6d4)}
+  .grid{display:grid; grid-template-columns:1fr; gap:10px}
+  .card{border:1px solid #e2e8f0; border-radius:12px; padding:12px 14px; display:flex; align-items:flex-start; gap:12px; background:#f8fbff}
+  .card .num{background:#0f172a; color:#38bdf8; min-width:30px; height:30px; border-radius:50%; display:grid; place-items:center; font-size:11px; font-weight:700; margin-top:2px}
+  .card .tag{font-family:'JetBrains Mono',monospace; font-weight:700; color:#0f172a; font-size:12.5px; min-width:155px; background:#e0f2fe; padding:5px 8px; border-radius:6px; border:1px solid #bae6fd}
+  .card .desc{font-size:12.5px; color:#475569; line-height:1.4}
+  .code{font-family:'JetBrains Mono',monospace; background:#0f172a; color:#38bdf8; padding:3px 7px; border-radius:5px; font-size:11px; display:inline-block; margin-top:4px}
+  .layer{display:inline-block; padding:2px 8px; border-radius:20px; font-size:10px; font-weight:700; color:white; margin-right:4px}
+  .l7{background:#ef4444} .l4{background:#f59e0b} .l3{background:#10b981} .l2{background:#3b82f6} .l1{background:#8b5cf6}
+  .footer{background:#f1f5f9; text-align:center; padding:18px; font-size:12px; color:#94a3b8}
+  .btn{position:fixed; bottom:20px; right:20px; background:#0f172a; color:#38bdf8; border:none; padding:14px 22px; border-radius:50px; font-weight:700; box-shadow:0 8px 20px rgba(0,0,0,0.3); cursor:pointer; z-index:99}
+  @media print{ .btn{display:none} body{background:white; padding:0} .page{box-shadow:none} }
+</style>
+</head>
+<body>
+<button class="btn" onclick="window.print()">🖨️ Print / Save PDF</button>
+<div class="page">
+<div class="hero">
+<h1>🌐 Networking 60+</h1>
+<p>OSI, IP, Ports, DNS, HTTP - සම්පූර්ණ Cheat Sheet</p>
+<div class="badge">🌐 NETWORK PREMIUM EDITION 🌐</div>
+</div>
+<div class="content">
+
+<div class="category">
+<div class="cat-header c1"><div class="icon">🏗️</div><h2>1. OSI Model - ස්ථර 7 (අනිවාර්ය!)</h2><span>7 Layers</span></div>
+<div class="grid">
+<div class="card"><div class="num">1</div><div class="tag"><span class="layer l7">L7</span> Application</div><div class="desc">User ට පේන තැන - HTTP, DNS, FTP, Email <div class="code">Browser, Gmail</div></div></div>
+<div class="card"><div class="num">2</div><div class="tag"><span class="layer l7">L6</span> Presentation</div><div class="desc">Data පරිවර්තනය - Encryption, Compression <div class="code">SSL, JPEG</div></div></div>
+<div class="card"><div class="num">3</div><div class="tag"><span class="layer l7">L5</span> Session</div><div class="desc">Connection එක පවත්වාගෙන යනවා</div></div>
+<div class="card"><div class="num">4</div><div class="tag"><span class="layer l4">L4</span> Transport</div><div class="desc">TCP / UDP - විශ්වාසවන්තද / වේගවත්ද <div class="code">Port Number තීරණය වෙනවා</div></div></div>
+<div class="card"><div class="num">5</div><div class="tag"><span class="layer l3">L3</span> Network</div><div class="desc">IP - Router - ගමන හොයනවා <div class="code">IP Address (192.168.1.1)</div></div></div>
+<div class="card"><div class="num">6</div><div class="tag"><span class="layer l2">L2</span> Data Link</div><div class="desc">Switch, MAC Address <div class="code">MAC: AA:BB:CC:DD:EE:FF</div></div></div>
+<div class="card"><div class="num">7</div><div class="tag"><span class="layer l1">L1</span> Physical</div><div class="desc">Wire, Cable, Signal</div></div>
+</div>
+</div>
+
+<div class="category">
+<div class="cat-header c2"><div class="icon">🔢</div><h2>2. IP Address / IP ලිපිනය</h2><span>10</span></div>
+<div class="grid">
+<div class="card"><div class="num">8</div><div class="tag">IPv4: 192.168.1.1</div><div class="desc">32 bit, 4 කොටස්, 0-255 <div class="code">2^32 = 4.3 Billion IP</div></div></div>
+<div class="card"><div class="num">9</div><div class="tag">IPv6: 2001:db8::1</div><div class="desc">128 bit, අලුත්, ලොකුයි</div></div>
+<div class="card"><div class="num">10</div><div class="tag">Public vs Private</div><div class="desc"><div class="code">Private: 192.168.x.x , 10.x.x.x<br>Public: Internet එකේ පේන IP</div></div></div>
+<div class="card"><div class="num">11</div><div class="tag">Subnet Mask</div><div class="desc">Network එකේ size එක <div class="code">/24 = 255.255.255.0 = 254 devices</div></div></div>
+<div class="card"><div class="num">12</div><div class="tag">Gateway: 192.168.1.1</div><div class="desc">Router එකේ IP එක, එළියට යන දොර</div></div>
+<div class="card"><div class="num">13</div><div class="tag">DHCP</div><div class="desc">IP auto දෙනවා - Router එකෙන්</div></div>
+<div class="card"><div class="num">14</div><div class="tag">Static vs Dynamic</div><div class="desc">Static=අතින් දානවා, Dynamic=auto වෙනස් වෙනවා</div></div>
+</div>
+</div>
+
+<div class="category">
+<div class="cat-header c3"><div class="icon">🚪</div><h2>3. Ports / දොරවල් - වැදගත්ම 10!</h2><span>10 Ports</span></div>
+<div class="grid">
+<div class="card"><div class="num">15</div><div class="tag">Port 80 - HTTP</div><div class="desc">සාමාන්‍ය වෙබ් - ආරක්ෂිත නෑ</div></div>
+<div class="card"><div class="num">16</div><div class="tag">Port 443 - HTTPS</div><div class="desc">ආරක්ෂිත වෙබ් 🔒 - SSL/TLS</div></div>
+<div class="card"><div class="num">17</div><div class="tag">Port 53 - DNS</div><div class="desc">නම -> IP හරවනවා (google.com -> 142.250...)</div></div>
+<div class="card"><div class="num">18</div><div class="tag">Port 22 - SSH</div><div class="desc">Server එකට remote යන්න</div></div>
+<div class="card"><div class="num">19</div><div class="tag">Port 21 - FTP</div><div class="desc">File Transfer</div></div>
+<div class="card"><div class="num">20</div><div class="tag">Port 25, 587 - SMTP</div><div class="desc">Email යවන්න</div></div>
+<div class="card"><div class="num">21</div><div class="tag">Port 110, 993 - POP/IMAP</div><div class="desc">Email ගන්න</div></div>
+<div class="card"><div class="num">22</div><div class="tag">Port 3306 - MySQL</div><div class="desc">Database</div></div>
+<div class="card"><div class="num">23</div><div class="tag">0-1023 Well Known</div><div class="desc">System Ports - 1024-49151 User - 49152+ Private</div></div>
+</div>
+</div>
+
+<div class="category">
+<div class="cat-header c4"><div class="icon">🔄</div><h2>4. TCP vs UDP / DNS</h2><span>8</span></div>
+<div class="grid">
+<div class="card"><div class="num">24</div><div class="tag">TCP - විශ්වාසවන්ත</div><div class="desc">3-way handshake, නැතිවුණොත් ආපහු යවනවා <div class="code">Web, Email, File - හෙමින්, හරියටම යනවා</div></div></div>
+<div class="card"><div class="num">25</div><div class="tag">UDP - වේගවත්</div><div class="desc">Handshake නෑ, නැතිවුණොත් ඉවරයි <div class="code">Video, Game, DNS, Live - වේගවත්</div></div></div>
+<div class="card"><div class="num">26</div><div class="tag">DNS - Phone Book</div><div class="desc">google.com -> 142.250.190.14 <div class="code">nslookup google.com</div></div></div>
+<div class="card"><div class="num">27</div><div class="tag">DNS Record Types</div><div class="desc"><div class="code">A=IPv4, AAAA=IPv6, CNAME=Alias, MX=Mail</div></div></div>
+<div class="card"><div class="num">28</div><div class="tag">ping / traceroute</div><div class="desc"><div class="code">ping 8.8.8.8<br>traceroute google.com</div></div></div>
+</div>
+</div>
+
+<div class="category">
+<div class="cat-header c5"><div class="icon">🌍</div><h2>5. HTTP / HTTPS / Methods</h2><span>8</span></div>
+<div class="grid">
+<div class="card"><div class="num">29</div><div class="tag">HTTP Status Codes</div><div class="desc"><div class="code">200 OK<br>301 Moved<br>404 Not Found<br>500 Server Error</div></div></div>
+<div class="card"><div class="num">30</div><div class="tag">GET / POST / PUT / DELETE</div><div class="desc"><div class="code">GET=ගන්න, POST=යවන්න, PUT=Update, DELETE=අයින්</div></div></div>
+<div class="card"><div class="num">31</div><div class="tag">HTTPS = HTTP + SSL/TLS</div><div class="desc">Encrypt කරලා යවනවා, Port 443</div></div>
+<div class="card"><div class="num">32</div><div class="tag">Cookie vs Session vs Token</div><div class="desc">Cookie=Browser එකේ, Session=Server එකේ, Token=JWT</div></div>
+</div>
+</div>
+
+<div class="category">
+<div class="cat-header c6"><div class="icon">🛡️</div><h2>6. Devices / WiFi / Security</h2><span>12</span></div>
+<div class="grid">
+<div class="card"><div class="num">33</div><div class="tag">Hub vs Switch vs Router</div><div class="desc"><div class="code">Hub=ඔක්කොටම යවනවා (පරණ)<br>Switch=හරි කෙනාට විතරක් (MAC)<br>Router=Network 2ක් සම්බන්ධ කරනවා (IP)</div></div></div>
+<div class="card"><div class="num">34</div><div class="tag">MAC Address</div><div class="desc">Device එකේ ස්ථිර ID එක <div class="code">AA:BB:CC:DD:EE:FF</div></div></div>
+<div class="card"><div class="num">35</div><div class="tag">WiFi 2.4GHz vs 5GHz</div><div class="desc"><div class="code">2.4GHz=දුර යනවා, හෙමින්<br>5GHz=ළඟට වේගවත්</div></div></div>
+<div class="card"><div class="num">36</div><div class="tag">SSID / WPA2 / WPA3</div><div class="desc">WiFi නම / Password ආරක්ෂාව</div></div>
+<div class="card"><div class="num">37</div><div class="tag">Firewall / NAT</div><div class="desc">Firewall=ආරක්ෂක බිත්තිය, NAT=Private IP -> Public IP</div></div>
+<div class="card"><div class="num">38</div><div class="tag">VPN</div><div class="desc">ආරක්ෂිත උමගක් හරහා යනවා</div></div>
+<div class="card"><div class="num">39</div><div class="tag">LAN / WAN / MAN</div><div class="desc"><div class="code">LAN=ගෙදර/Office, WAN=Internet, MAN=City</div></div></div>
+</div>
+</div>
+
+<div class="category">
+<div class="cat-header c7"><div class="icon">⌨️</div><h2>7. Commands / IP ගණන්</h2><span>10</span></div>
+<div class="grid">
+<div class="card"><div class="num">40</div><div class="tag">ipconfig / ifconfig / ip a</div><div class="desc">IP බලන්න <div class="code">Windows: ipconfig<br>Linux: ip a</div></div></div>
+<div class="card"><div class="num">41</div><div class="tag">Subnetting /24 /16 /8</div><div class="desc"><div class="code">/24 = 254 hosts<br>/16 = 65534 hosts<br>/8 = 16M hosts</div></div></div>
+<div class="card"><div class="num">42</div><div class="tag">CIDR Calculation</div><div class="desc"><div class="code">192.168.1.0/24<br>Network: 192.168.1.0<br>Broadcast: 192.168.1.255</div></div></div>
+<div class="card"><div class="num">43</div><div class="tag">Useful Tools</div><div class="desc"><div class="code">ping, traceroute, nslookup, netstat, nmap, wireshark</div></div></div>
+</div>
+</div>
+
+</div>
+<div class="footer">Networking 43 Most Important | OSI 7 Layer + IP + Ports + HTTP - මේ ටික ඇති Exam එකට! | Print කරලා බිත්තියේ ගහගන්න! 🌐</div>
+</div>
+</body>
+</html>
