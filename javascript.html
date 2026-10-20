@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JavaScript Complete Cheat Sheet</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Sinhala:wght@400;700&family=JetBrains+Mono:wght@400;700&display=swap');
+  *{box-sizing:border-box}
+  body{font-family:'Noto Sans Sinhala',sans-serif; background: linear-gradient(135deg, #f7b733 0%, #fc4a1a 100%); margin:0; padding:15px; -webkit-print-color-adjust: exact; print-color-adjust: exact;}
+  .page{max-width:900px; margin:auto; background:white; border-radius:20px; overflow:hidden; box-shadow:0 20px 60px rgba(0,0,0,0.3)}
+  .hero{background: linear-gradient(135deg, #000000, #434343); color:#f7df1e; padding:40px 30px; text-align:center}
+  .hero h1{font-size:32px; margin:0; color:#f7df1e}
+  .hero p{color:white; opacity:0.8; margin:10px 0 0 0}
+  .badge{display:inline-block; background:#f7df1e; color:#111; padding:6px 16px; border-radius:20px; font-weight:700; margin-top:15px; font-size:13px}
+  .content{padding:20px}
+  .category{margin-bottom:28px; break-inside: avoid;}
+  .cat-header{display:flex; align-items:center; gap:12px; padding:12px 16px; border-radius:12px; color:white; margin-bottom:12px}
+  .cat-header .icon{font-size:26px; background:rgba(255,255,255,0.25); width:48px; height:48px; display:grid; place-items:center; border-radius:10px}
+  .cat-header h2{margin:0; font-size:17px}
+  .cat-header span{margin-left:auto; background:rgba(0,0,0,0.2); padding:4px 10px; border-radius:20px; font-size:12px}
+  .c1{background: linear-gradient(135deg, #ff6a00, #ee0979)}
+  .c2{background: linear-gradient(135deg, #36d1dc, #5b86e5)}
+  .c3{background: linear-gradient(135deg, #11998e, #38ef7d)}
+  .c4{background: linear-gradient(135deg, #fc4a1a, #f7b733)}
+  .c5{background: linear-gradient(135deg, #8e2de2, #4a00e0)}
+  .c6{background: linear-gradient(135deg, #f857a6, #ff5858)}
+  .c7{background: linear-gradient(135deg, #00c6ff, #0072ff)}
+  .c8{background: linear-gradient(135deg, #834d9b, #d04ed6)}
+  .grid{display:grid; grid-template-columns:1fr; gap:10px}
+  .card{border:1px solid #eef2f7; border-radius:12px; padding:12px 14px; display:flex; align-items:flex-start; gap:12px; background:#fffef5}
+  .card .num{background:#111; color:#f7df1e; min-width:30px; height:30px; border-radius:50%; display:grid; place-items:center; font-size:11px; font-weight:700; margin-top:2px}
+  .card .tag{font-family:'JetBrains Mono',monospace; font-weight:700; color:#111; font-size:13px; min-width:160px; background:#f7df1e; padding:4px 8px; border-radius:6px}
+  .card .desc{font-size:12.5px; color:#4b5563; line-height:1.4}
+  .code{font-family:'JetBrains Mono',monospace; background:#111827; color:#e5e7eb; padding:2px 6px; border-radius:4px; font-size:11px; display:inline-block; margin-top:4px}
+  .footer{background:#f9fafb; text-align:center; padding:18px; font-size:12px; color:#9ca3af}
+  .btn{position:fixed; bottom:20px; right:20px; background:#111; color:#f7df1e; border:none; padding:14px 22px; border-radius:50px; font-weight:700; box-shadow:0 8px 20px rgba(0,0,0,0.3); cursor:pointer; z-index:99}
+  @media print{ .btn{display:none} body{background:white; padding:0} .page{box-shadow:none} }
+</style>
+</head>
+<body>
+<button class="btn" onclick="window.print()">🖨️ Print / Save PDF</button>
+<div class="page">
+<div class="hero">
+<h1>⚡ JavaScript 70+</h1>
+<p>සම්පූර්ණ Cheat Sheet - Code උදාහරණ එක්ක</p>
+<div class="badge">🚀 JS PREMIUM EDITION 🚀</div>
+</div>
+<div class="content">
+
+<div class="category">
+<div class="cat-header c1"><div class="icon">📦</div><h2>1. Variables / විචල්‍ය</h2><span>5</span></div>
+<div class="grid">
+<div class="card"><div class="num">1</div><div class="tag">let x = 5</div><div class="desc">වෙනස් වෙන අගයක් <div class="code">let name = "Amal"</div></div></div>
+<div class="card"><div class="num">2</div><div class="tag">const y = 10</div><div class="desc">වෙනස් නොවෙන අගයක් <div class="code">const PI = 3.14</div></div></div>
+<div class="card"><div class="num">3</div><div class="tag">var (පරණ)</div><div class="desc">දැන් භාවිතා කරන්නේ නෑ, let භාවිතා කරන්න</div></div>
+<div class="card"><div class="num">4</div><div class="tag">typeof</div><div class="desc">වර්ගය බලන්න <div class="code">typeof 5 // "number"</div></div></div>
+</div>
+</div>
+
+<div class="category">
+<div class="cat-header c2"><div class="icon">🔢</div><h2>2. Data Types / දත්ත වර්ග</h2><span>6</span></div>
+<div class="grid">
+<div class="card"><div class="num">5</div><div class="tag">String</div><div class="desc">අකුරු <div class="code">"hello", 'hi'</div></div></div>
+<div class="card"><div class="num">6</div><div class="tag">Number</div><div class="desc">අංක <div class="code">5, 3.14</div></div></div>
+<div class="card"><div class="num">7</div><div class="tag">Boolean</div><div class="desc">true / false</div></div>
+<div class="card"><div class="num">8</div><div class="tag">Array</div><div class="desc">ලැයිස්තුව <div class="code">[1,2,3]</div></div></div>
+<div class="card"><div class="num">9</div><div class="tag">Object</div><div class="desc">වස්තුව <div class="code">{name:"Amal", age:20}</div></div></div>
+<div class="card"><div class="num">10</div><div class="tag">null / undefined</div><div class="desc">හිස් / නොදන්නා</div></div>
+</div>
+</div>
+
+<div class="category">
+<div class="cat-header c3"><div class="icon">➕</div><h2>3. Operators / ගණන් හදන ඒවා</h2><span>7</span></div>
+<div class="grid">
+<div class="card"><div class="num">11</div><div class="tag">+ - * / %</div><div class="desc">ගණිත <div class="code">5 % 2 = 1 (ඉතිරිය)</div></div></div>
+<div class="card"><div class="num">12</div><div class="tag">== vs ===</div><div class="desc">=== තමයි හරි, වර්ගයත් බලනවා</div></div>
+<div class="card"><div class="num">13</div><div class="tag">&& || !</div><div class="desc">සහ / හෝ / නැත <div class="code">if(a && b)</div></div></div>
+<div class="card"><div class="num">14</div><div class="tag">++ --</div><div class="desc">එක එක වැඩි/අඩු කරනවා <div class="code">x++</div></div></div>
+<div class="card"><div class="num">15</div><div class="tag">Template ` ${}`</div><div class="desc">String එක ඇතුලේ variable <div class="code">`Hi ${name}`</div></div></div>
+</div>
+</div>
+
+<div class="category">
+<div class="cat-header c4"><div class="icon">🔀</div><h2>4. Conditions / තීරණ</h2><span>5</span></div>
+<div class="grid">
+<div class="card"><div class="num">16</div><div class="tag">if / else if / else</div><div class="desc"><div class="code">if(x>10){...} else{...}</div></div></div>
+<div class="card"><div class="num">17</div><div class="tag">switch</div><div class="desc">බොහෝ තේරීම් <div class="code">switch(day){ case 1: ...}</div></div></div>
+<div class="card"><div class="num">18</div><div class="tag">? : (ternary)</div><div class="desc">කෙටි if එක <div class="code">x>10 ? "Loku" : "Podi"</div></div></div>
+</div>
+</div>
+
+<div class="category">
+<div class="cat-header c5"><div class="icon">🔁</div><h2>5. Loops / නැවත නැවත</h2><span>6</span></div>
+<div class="grid">
+<div class="card"><div class="num">19</div><div class="tag">for loop</div><div class="desc"><div class="code">for(let i=0; i<5; i++){...}</div></div></div>
+<div class="card"><div class="num">20</div><div class="tag">for...of</div><div class="desc">Array එකේ ඇවිදින්න <div class="code">for(let x of arr)</div></div></div>
+<div class="card"><div class="num">21</div><div class="tag">for...in</div><div class="desc">Object එකේ ඇවිදින්න</div></div>
+<div class="card"><div class="num">22</div><div class="tag">while</div><div class="desc"><div class="code">while(x<10){...}</div></div></div>
+<div class="card"><div class="num">23</div><div class="tag">break / continue</div><div class="desc">නවත්තනවා / skip කරනවා</div></div>
+</div>
+</div>
+
+<div class="category">
+<div class="cat-header c6"><div class="icon">🧩</div><h2>6. Functions / කාර්යයන්</h2><span>6</span></div>
+<div class="grid">
+<div class="card"><div class="num">24</div><div class="tag">function</div><div class="desc"><div class="code">function hi(){ return "Hi" }</div></div></div>
+<div class="card"><div class="num">25</div><div class="tag">Arrow =></div><div class="desc">කෙටිම විදිහ <div class="code">const hi = () => "Hi"</div></div></div>
+<div class="card"><div class="num">26</div><div class="tag">Parameters</div><div class="desc"><div class="code">function sum(a,b){ return a+b }</div></div></div>
+<div class="card"><div class="num">27</div><div class="tag">return</div><div class="desc">උත්තරය ආපහු දෙනවා</div></div>
+</div>
+</div>
+
+<div class="category">
+<div class="cat-header c7"><div class="icon">📚</div><h2>7. Array / ලැයිස්තු - සුපිරි වැදගත්!</h2><span>12</span></div>
+<div class="grid">
+<div class="card"><div class="num">28</div><div class="tag">push() / pop()</div><div class="desc">අගට දානවා / අගින් අයින් කරනවා</div></div>
+<div class="card"><div class="num">29</div><div class="tag">shift() / unshift()</div><div class="desc">මුලින් අයින්/දානවා</div></div>
+<div class="card"><div class="num">30</div><div class="tag">length</div><div class="desc">දිග <div class="code">arr.length</div></div></div>
+<div class="card"><div class="num">31</div><div class="tag">map()</div><div class="desc">ඔක්කොම වෙනස් කරනවා <div class="code">arr.map(x=>x*2)</div></div></div>
+<div class="card"><div class="num">32</div><div class="tag">filter()</div><div class="desc">පෙරනවා <div class="code">arr.filter(x=>x>10)</div></div></div>
+<div class="card"><div class="num">33</div><div class="tag">find() / findIndex()</div><div class="desc">හොයනවා</div></div>
+<div class="card"><div class="num">34</div><div class="tag">forEach()</div><div class="desc">එකින් එක කරනවා</div></div>
+<div class="card"><div class="num">35</div><div class="tag">includes()</div><div class="desc">තියෙනවද බලනවා <div class="code">arr.includes(5)</div></div></div>
+<div class="card"><div class="num">36</div><div class="tag">join() / split()</div><div class="desc">String එකට / String එකෙන් Array එකට</div></div>
+<div class="card"><div class="num">37</div><div class="tag">sort() / reverse()</div><div class="desc">පිළිවෙලට / අනිත් පැත්තට</div></div>
+</div>
+</div>
+
+<div class="category">
+<div class="cat-header c1"><div class="icon">📄</div><h2>8. String / අකුරු වැඩ</h2><span>8</span></div>
+<div class="grid">
+<div class="card"><div class="num">38</div><div class="tag">length</div><div class="desc"><div class="code">"hi".length // 2</div></div></div>
+<div class="card"><div class="num">39</div><div class="tag">toUpperCase() / toLowerCase()</div><div class="desc">ලොකු / පොඩි කරනවා</div></div>
+<div class="card"><div class="num">40</div><div class="tag">trim()</div><div class="desc">ඉඩ අයින් කරනවා</div></div>
+<div class="card"><div class="num">41</div><div class="tag">slice() / substring()</div><div class="desc">කෑල්ලක් ගන්නවා <div class="code">"hello".slice(0,2) // "he"</div></div></div>
+<div class="card"><div class="num">42</div><div class="tag">replace()</div><div class="desc">මාරු කරනවා</div></div>
+</div>
+</div>
+
+<div class="category">
+<div class="cat-header c2"><div class="icon">🌐</div><h2>9. DOM / වෙබ් පිටුව හොල්ලන්න</h2><span>12 - වැඩියෙන්ම ඕන!</span></div>
+<div class="grid">
+<div class="card"><div class="num">43</div><div class="tag">getElementById()</div><div class="desc"><div class="code">document.getElementById("box")</div></div></div>
+<div class="card"><div class="num">44</div><div class="tag">querySelector()</div><div class="desc">CSS වගේ හොයනවා <div class="code">document.querySelector(".btn")</div></div></div>
+<div class="card"><div class="num">45</div><div class="tag">innerHTML / innerText</div><div class="desc">ඇතුලේ දේ වෙනස් කරනවා</div></div>
+<div class="card"><div class="num">46</div><div class="tag">style</div><div class="desc"><div class="code">el.style.color = "red"</div></div></div>
+<div class="card"><div class="num">47</div><div class="tag">classList.add/remove/toggle</div><div class="desc">Class දානවා/අයින් කරනවා</div></div>
+<div class="card"><div class="num">48</div><div class="tag">addEventListener()</div><div class="desc"><div class="code">btn.addEventListener("click", ()=>{})</div></div></div>
+<div class="card"><div class="num">49</div><div class="tag">createElement / append</div><div class="desc">අලුතෙන් හදනවා</div></div>
+</div>
+</div>
+
+<div class="category">
+<div class="cat-header c8"><div class="icon">⏰</div><h2>10. අමතර සුපිරි ඒවා</h2><span>10</span></div>
+<div class="grid">
+<div class="card"><div class="num">50</div><div class="tag">Math.random() / floor()</div><div class="desc">random අංක <div class="code">Math.floor(Math.random()*100)</div></div></div>
+<div class="card"><div class="num">51</div><div class="tag">Date()</div><div class="desc">දවස/වේලාව <div class="code">new Date()</div></div></div>
+<div class="card"><div class="num">52</div><div class="tag">setTimeout / setInterval</div><div class="desc">පරක්කු කරලා / නැවත නැවත</div></div>
+<div class="card"><div class="num">53</div><div class="tag">localStorage</div><div class="desc">save කරගන්නවා <div class="code">localStorage.setItem("name","Amal")</div></div></div>
+<div class="card"><div class="num">54</div><div class="tag">JSON.parse / stringify</div><div class="desc">Object <-> String</div></div>
+<div class="card"><div class="num">55</div><div class="tag">console.log()</div><div class="desc">බලන්න print කරනවා</div></div>
+<div class="card"><div class="num">56</div><div class="tag">alert() / prompt() / confirm()</div><div class="desc">Pop-up පණිවිඩ</div></div>
+</div>
+</div>
+
+</div>
+<div class="footer">JavaScript 56 Most Used | මේ ටික හොඳට පුළුවන් නම් ඔයා Developer කෙනෙක්! | Print කරලා බිත්තියේ ගහගන්න! ⚡</div>
+</div>
+</body>
+</html>
