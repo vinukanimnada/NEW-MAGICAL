@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FULL STACK DEVELOPER BOOK - 5 in 1</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Sinhala:wght@400;700&family=JetBrains+Mono:wght@400;700&display=swap');
+*{box-sizing:border-box}
+body{font-family:'Noto Sans Sinhala',sans-serif; background:#0f172a; margin:0; padding:0; -webkit-print-color-adjust: exact; print-color-adjust: exact;}
+.btn{position:fixed; bottom:20px; right:20px; background:#facc15; color:#111; border:none; padding:16px 28px; border-radius:50px; font-weight:800; font-size:16px; box-shadow:0 10px 30px rgba(0,0,0,0.4); cursor:pointer; z-index:999}
+.cover{height:100vh; background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%); color:white; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:30px; page-break-after: always;}
+.cover h1{font-size:52px; line-height:1.1; margin:0; background: linear-gradient(90deg, #facc15, #38bdf8, #f472b6); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text}
+.cover h2{font-size:20px; opacity:0.7; margin:20px 0; font-weight:400}
+.cover .meta{margin-top:30px; border:1px solid rgba(255,255,255,0.2); border-radius:16px; padding:20px; display:grid; grid-template-columns:1fr 1fr; gap:15px; text-align:left; min-width:300px}
+.cover .meta div{background:rgba(255,255,255,0.05); padding:12px; border-radius:10px}
+.cover .meta b{color:#facc15; display:block; font-size:13px} .cover .meta span{font-size:18px; font-weight:700}
+.toc{background:white; padding:40px; page-break-after: always;}
+.toc h2{font-size:28px; margin:0 0 20px 0}
+.toc .item{display:flex; align-items:center; gap:15px; padding:16px; border:1px solid #e2e8f0; border-radius:12px; margin-bottom:12px}
+.toc .item .ic{width:50px; height:50px; border-radius:12px; display:grid; place-items:center; font-size:24px; color:white}
+.page{max-width:900px; margin:20px auto; background:white; border-radius:20px; overflow:hidden; box-shadow:0 20px 60px rgba(0,0,0,0.3); page-break-after: always;}
+.hero{padding:30px; color:white; display:flex; align-items:center; gap:15px}
+.hero .icon{font-size:30px; width:60px; height:60px; background:rgba(255,255,255,0.2); display:grid; place-items:center; border-radius:14px}
+.hero h2{margin:0; font-size:22px} .hero p{margin:5px 0 0 0; opacity:0.8; font-size:14px}
+.content{padding:20px}
+.grid{display:grid; grid-template-columns:1fr 1fr; gap:10px}
+@media(max-width:600px){ .grid{grid-template-columns:1fr} }
+.card{border:1px solid #eef2f7; border-radius:10px; padding:10px 12px; display:flex; align-items:center; gap:10px; background:#fbfdff; font-size:12px}
+.card .num{background:#111827; color:white; min-width:26px; height:26px; border-radius:50%; display:grid; place-items:center; font-size:10px; font-weight:700}
+.card .tag{font-family:'JetBrains Mono',monospace; font-weight:700; font-size:12px; min-width:110px}
+.card .desc{color:#4b5563; font-size:11.5px}
+@media print{ .btn{display:none} body{background:white} .page{box-shadow:none; margin:0; border-radius:0} .cover{height:auto; padding:60px 30px} }
+</style>
+</head>
+<body>
+<button class="btn" onclick="window.print()">📚 මුළු පොතම PDF කරන්න</button>
+
+<div class="cover">
+<h1>FULL STACK<br>DEVELOPER<br>BOOK</h1>
+<h2>HTML + CSS + JavaScript + Python + Networking<br>5 in 1 Premium Cheat Sheets Collection</h2>
+<div class="meta">
+<div><b>📖 පිටු</b><span>~ 20 Pages</span></div>
+<div><b>🏷️ Tags</b><span>300+ Items</span></div>
+<div><b>🎯 Level</b><span>Beginner to Pro</span></div>
+<div><b>🖨️ Print</b><span>A4 Ready</span></div>
+</div>
+<p style="margin-top:30px; opacity:0.5; font-size:12px">Made for you - 2026 | Print කරලා බිත්තියේ ගහගන්න</p>
+</div>
+
+<div class="toc">
+<h2>📑 ඇතුළත් දේ - Table of Contents</h2>
+<div class="item"><div class="ic" style="background: linear-gradient(135deg,#ff6a00,#ee0979)">🌈</div><div><b>1. HTML - 89 Tags</b><br><span style="font-size:12px; color:#64748b">මුළු වෙබ් එකේම ඇටසැකිල්ල - මුලිකම එක</span></div><div style="margin-left:auto; font-weight:700">Page 1-4</div></div>
+<div class="item"><div class="ic" style="background: linear-gradient(135deg,#36d1dc,#5b86e5)">🎨</div><div><b>2. CSS - 58 Properties</b><br><span style="font-size:12px; color:#64748b">පාට, ලස්සන, පිළිවෙල - Design එක</span></div><div style="margin-left:auto; font-weight:700">Page 5-8</div></div>
+<div class="item"><div class="ic" style="background: linear-gradient(135deg,#f7b733,#fc4a1a)">⚡</div><div><b>3. JavaScript - 56 Concepts</b><br><span style="font-size:12px; color:#64748b">චලනය, බොත්තම් වැඩ කරන හැටි</span></div><div style="margin-left:auto; font-weight:700">Page 9-12</div></div>
+<div class="item"><div class="ic" style="background: linear-gradient(135deg,#306998,#FFD43B)">🐍</div><div><b>4. Python - 38 Concepts</b><br><span style="font-size:12px; color:#64748b">Backend, AI, Automation වලට</span></div><div style="margin-left:auto; font-weight:700">Page 13-16</div></div>
+<div class="item"><div class="ic" style="background: linear-gradient(135deg,#0ea5e9,#2563eb)">🌐</div><div><b>5. Networking - 43 Concepts</b><br><span style="font-size:12px; color:#64748b">IP, OSI, Ports, Internet වැඩ කරන හැටි</span></div><div style="margin-left:auto; font-weight:700">Page 17-20</div></div>
+</div>
+
+<!-- BOOK 1 HTML -->
+<div class="page">
+<div class="hero" style="background: linear-gradient(135deg, #ff6a00, #ee0979)"><div class="icon">🌈</div><div><h2>BOOK 1: HTML - 89 Tags</h2><p>වෙබ් එකේ ඇටසැකිල්ල - මුලිකම</p></div></div>
+<div class="content">
+<div class="grid">
+<div class="card"><div class="num">1</div><div class="tag" style="color:#1d4ed8">&lt;html&gt;</div><div class="desc">මුළු පිටුවම</div></div>
+<div class="card"><div class="num">2</div><div class="tag" style="color:#1d4ed8">&lt;head&gt;</div><div class="desc">හැංගිච්ච විස්තර</div></div>
+<div class="card"><div class="num">3</div><div class="tag" style="color:#1d4ed8">&lt;body&gt;</div><div class="desc">පේන ඔක්කොම</div></div>
+<div class="card"><div class="num">4</div><div class="tag" style="color:#1d4ed8">&lt;h1&gt;-&lt;h6&gt;</div><div class="desc">මාතෘකා</div></div>
+<div class="card"><div class="num">5</div><div class="tag" style="color:#1d4ed8">&lt;p&gt;</div><div class="desc">චේදයක්</div></div>
+<div class="card"><div class="num">6</div><div class="tag" style="color:#1d4ed8">&lt;a&gt;</div><div class="desc">ලින්ක් එක</div></div>
+<div class="card"><div class="num">7</div><div class="tag" style="color:#1d4ed8">&lt;img&gt;</div><div class="desc">පින්තූරය</div></div>
+<div class="card"><div class="num">8</div><div class="tag" style="color:#1d4ed8">&lt;div&gt;</div><div class="desc">ලොකු පෙට්ටිය</div></div>
+<div class="card"><div class="num">9</div><div class="tag" style="color:#1d4ed8">&lt;span&gt;</div><div class="desc">පොඩි පෙට්ටිය</div></div>
+<div class="card"><div class="num">10</div><div class="tag" style="color:#1d4ed8">&lt;ul&gt; &lt;ol&gt; &lt;li&gt;</div><div class="desc">ලැයිස්තු</div></div>
+<div class="card"><div class="num">11</div><div class="tag" style="color:#1d4ed8">&lt;table&gt; &lt;tr&gt; &lt;td&gt;</div><div class="desc">වගුව</div></div>
+<div class="card"><div class="num">12</div><div class="tag" style="color:#1d4ed8">&lt;form&gt; &lt;input&gt;</div><div class="desc">පෝරමය</div></div>
+<div class="card"><div class="num">13</div><div class="tag" style="color:#1d4ed8">&lt;button&gt;</div><div class="desc">බොත්තම</div></div>
+<div class="card"><div class="num">14</div><div class="tag" style="color:#1d4ed8">&lt;video&gt; &lt;audio&gt;</div><div class="desc">මීඩියා</div></div>
+</div>
+<p style="text-align:center; margin-top:15px; font-size:11px; color:#94a3b8">+ තව 75ක් Full HTML file එකේ තියෙනවා - මීට කලින් දුන්න premium file එක බලන්න</p>
+</div>
+</div>
+
+<!-- BOOK 2 CSS -->
+<div class="page">
+<div class="hero" style="background: linear-gradient(135deg, #36d1dc, #5b86e5)"><div class="icon">🎨</div><div><h2>BOOK 2: CSS - 58 Properties</h2><p>පාට, පිළිවෙල, ලස්සන</p></div></div>
+<div class="content">
+<div class="grid">
+<div class="card"><div class="num">1</div><div class="tag" style="color:#d946ef">color / background</div><div class="desc">පාට</div></div>
+<div class="card"><div class="num">2</div><div class="tag" style="color:#d946ef">font-size / family</div><div class="desc">අකුරු</div></div>
+<div class="card"><div class="num">3</div><div class="tag" style="color:#d946ef">margin / padding</div><div class="desc">ඉඩ</div></div>
+<div class="card"><div class="num">4</div><div class="tag" style="color:#d946ef">width / height</div><div class="desc">පළල උස</div></div>
+<div class="card"><div class="num">5</div><div class="tag" style="color:#d946ef">border / radius</div><div class="desc">මායිම රවුම්</div></div>
+<div class="card"><div class="num">6</div><div class="tag" style="color:#d946ef">display: flex</div><div class="desc">⚡ වැදගත්ම!</div></div>
+<div class="card"><div class="num">7</div><div class="tag" style="color:#d946ef">justify / align</div><div class="desc">මැදට ගන්න</div></div>
+<div class="card"><div class="num">8</div><div class="tag" style="color:#d946ef">position</div><div class="desc">තැන</div></div>
+<div class="card"><div class="num">9</div><div class="tag" style="color:#d946ef">transition / transform</div><div class="desc">චලනය</div></div>
+<div class="card"><div class="num">10</div><div class="tag" style="color:#d946ef">@media</div><div class="desc">Phone වලට</div></div>
+</div>
+<p style="text-align:center; margin-top:15px; font-size:11px; color:#94a3b8">+ Full CSS file එකේ 58ම තියෙනවා</p>
+</div>
+</div>
+
+<!-- BOOK 3 JS -->
+<div class="page">
+<div class="hero" style="background: linear-gradient(135deg, #f7b733, #fc4a1a)"><div class="icon">⚡</div><div><h2>BOOK 3: JavaScript - 56 Concepts</h2><p>වෙබ් එකට පණ දෙන හැටි</p></div></div>
+<div class="content">
+<div class="grid">
+<div class="card"><div class="num">1</div><div class="tag" style="background:#fde047">let / const</div><div class="desc">Variable</div></div>
+<div class="card"><div class="num">2</div><div class="tag" style="background:#fde047">if / else</div><div class="desc">තීරණ</div></div>
+<div class="card"><div class="num">3</div><div class="tag" style="background:#fde047">for / while</div><div class="desc">Loop</div></div>
+<div class="card"><div class="num">4</div><div class="tag" style="background:#fde047">function ()</div><div class="desc">කාර්යය</div></div>
+<div class="card"><div class="num">5</div><div class="tag" style="background:#fde047">array.map/filter</div><div class="desc">⚡ වැදගත්ම!</div></div>
+<div class="card"><div class="num">6</div><div class="tag" style="background:#fde047">getElementById</div><div class="desc">DOM</div></div>
+<div class="card"><div class="num">7</div><div class="tag" style="background:#fde047">addEventListener</div><div class="desc">Click</div></div>
+<div class="card"><div class="num">8</div><div class="tag" style="background:#fde047">localStorage</div><div class="desc">Save</div></div>
+</div>
+<p style="text-align:center; margin-top:15px; font-size:11px; color:#94a3b8">+ Full JS file එකේ 56ම තියෙනවා</p>
+</div>
+</div>
+
+<!-- BOOK 4 PYTHON -->
+<div class="page">
+<div class="hero" style="background: linear-gradient(135deg, #306998, #FFD43B)"><div class="icon">🐍</div><div><h2>BOOK 4: Python - 38 Concepts</h2><p>AI, Backend, Automation</p></div></div>
+<div class="content">
+<div class="grid">
+<div class="card"><div class="num">1</div><div class="tag" style="background:#FFD43B">print() / input()</div><div class="desc">මුලික</div></div>
+<div class="card"><div class="num">2</div><div class="tag" style="background:#FFD43B">List [] / Dict {}</div><div class="desc">දත්ත</div></div>
+<div class="card"><div class="num">3</div><div class="tag" style="background:#FFD43B">if / for / while</div><div class="desc">Control</div></div>
+<div class="card"><div class="num">4</div><div class="tag" style="background:#FFD43B">def function():</div><div class="desc">Function</div></div>
+<div class="card"><div class="num">5</div><div class="tag" style="background:#FFD43B">[x*2 for x in list]</div><div class="desc">⚡ Comprehension</div></div>
+<div class="card"><div class="num">6</div><div class="tag" style="background:#FFD43B">open() file</div><div class="desc">File</div></div>
+<div class="card"><div class="num">7</div><div class="tag" style="background:#FFD43B">try / except</div><div class="desc">Error</div></div>
+<div class="card"><div class="num">8</div><div class="tag" style="background:#FFD43B">pip install</div><div class="desc">Library</div></div>
+</div>
+<p style="text-align:center; margin-top:15px; font-size:11px; color:#94a3b8">+ Full Python file එකේ 38ම තියෙනවා</p>
+</div>
+</div>
+
+<!-- BOOK 5 NETWORK -->
+<div class="page">
+<div class="hero" style="background: linear-gradient(135deg, #0ea5e9, #2563eb)"><div class="icon">🌐</div><div><h2>BOOK 5: Networking - 43 Concepts</h2><p>Internet වැඩ කරන හැටි</p></div></div>
+<div class="content">
+<div class="grid">
+<div class="card"><div class="num">1</div><div class="tag" style="background:#e0f2fe">OSI 7 Layers</div><div class="desc">7 ස්ථර - අනිවාර්ය!</div></div>
+<div class="card"><div class="num">2</div><div class="tag" style="background:#e0f2fe">IPv4 / IPv6</div><div class="desc">IP Address</div></div>
+<div class="card"><div class="num">3</div><div class="tag" style="background:#e0f2fe">Port 80 / 443</div><div class="desc">HTTP / HTTPS</div></div>
+<div class="card"><div class="num">4</div><div class="tag" style="background:#e0f2fe">Port 53 DNS</div><div class="desc">google.com -> IP</div></div>
+<div class="card"><div class="num">5</div><div class="tag" style="background:#e0f2fe">TCP vs UDP</div><div class="desc">විශ්වාසවන්ත vs වේගවත්</div></div>
+<div class="card"><div class="num">6</div><div class="tag" style="background:#e0f2fe">HTTP Codes 200/404</div><div class="desc">Status</div></div>
+<div class="card"><div class="num">7</div><div class="tag" style="background:#e0f2fe">Router vs Switch</div><div class="desc">Device</div></div>
+<div class="card"><div class="num">8</div><div class="tag" style="background:#e0f2fe">ping / traceroute</div><div class="desc">Tools</div></div>
+</div>
+<p style="text-align:center; margin-top:15px; font-size:11px; color:#94a3b8">+ Full Network file එකේ 43ම තියෙනවා</p>
+<div style="margin-top:30px; padding:20px; background: linear-gradient(135deg, #0f172a, #1e40af); border-radius:16px; color:white; text-align:center">
+<h3 style="margin:0; color:#facc15">🎉 සුභ පැතුම්! Full Pack එක ඉවරයි! 🎉</h3>
+<p style="font-size:13px; opacity:0.8">මේ 5ම Print කරලා බිත්තියේ ගහගන්න. ඔයා දැන් Developer කෙනෙක් වෙන්න පළවෙනි පියවර තිබ්බා!</p>
+</div>
+</div>
+</div>
+
+</body>
+</html>
