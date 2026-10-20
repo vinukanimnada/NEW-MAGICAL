@@ -3,156 +3,191 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HTML Tags 110 - Complete List</title>
+<title>HTML 110 Tags - Premium Cheat Sheet</title>
 <style>
-  body { font-family: sans-serif; background: #f3f4f6; margin: 0; padding: 20px; }
-  .container { max-width: 800px; margin: auto; background: white; border-radius: 16px; padding: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
-  h1 { text-align: center; background: #111827; color: white; padding: 20px; border-radius: 12px; margin: -24px -24px 20px -24px; }
-  h2 { color: #111827; border-left: 6px solid #3b82f6; padding-left: 12px; margin-top: 30px; }
-  table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-  th { background: #e5e7eb; text-align: left; padding: 12px; }
-  td { padding: 10px 12px; border-bottom: 1px solid #e5e7eb; }
-  tr:nth-child(even) { background: #f9fafb; }
-  .num { color: #6b7280; width: 50px; text-align: center; }
-  .tag { font-family: monospace; font-weight: bold; color: #1d4ed8; }
-  .print-btn { display: block; width: 100%; padding: 14px; background: #3b82f6; color: white; border: none; border-radius: 10px; font-size: 16px; margin-top: 20px; cursor: pointer; }
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Sinhala:wght@400;700&display=swap');
+  *{box-sizing:border-box}
+  body{font-family:'Noto Sans Sinhala',sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); margin:0; padding: 15px; -webkit-print-color-adjust: exact; print-color-adjust: exact;}
+  .page{max-width:900px; margin:auto; background:white; border-radius:20px; overflow:hidden; box-shadow:0 20px 60px rgba(0,0,0,0.3)}
+  .hero{background: linear-gradient(135deg, #0f0c29, #302b63, #24243e); color:white; padding:40px 30px; text-align:center; position:relative;}
+  .hero h1{font-size:32px; margin:0; letter-spacing:1px}
+  .hero p{opacity:0.8; margin:10px 0 0 0; font-size:16px}
+  .hero .badge{display:inline-block; background:#ffd700; color:#111; padding:6px 16px; border-radius:20px; font-weight:700; margin-top:15px; font-size:13px}
+  .content{padding:20px}
+  .category{margin-bottom:28px; break-inside: avoid;}
+  .cat-header{display:flex; align-items:center; gap:12px; padding:12px 16px; border-radius:12px; color:white; margin-bottom:12px}
+  .cat-header .icon{font-size:26px; background:rgba(255,255,255,0.25); width:48px; height:48px; display:grid; place-items:center; border-radius:10px}
+  .cat-header h2{margin:0; font-size:18px}
+  .cat-header span{margin-left:auto; background:rgba(0,0,0,0.2); padding:4px 10px; border-radius:20px; font-size:12px}
+  
+  .c1{background: linear-gradient(135deg, #ff6a00, #ee0979)}
+  .c2{background: linear-gradient(135deg, #36d1dc, #5b86e5)}
+  .c3{background: linear-gradient(135deg, #11998e, #38ef7d)}
+  .c4{background: linear-gradient(135deg, #fc4a1a, #f7b733)}
+  .c5{background: linear-gradient(135deg, #8e2de2, #4a00e0)}
+  .c6{background: linear-gradient(135deg, #f857a6, #ff5858)}
+  .c7{background: linear-gradient(135deg, #00c6ff, #0072ff)}
+
+  .grid{display:grid; grid-template-columns:1fr 1fr; gap:10px}
+  @media(max-width:600px){ .grid{grid-template-columns:1fr} }
+  .card{border:1px solid #eef2f7; border-radius:12px; padding:12px 14px; display:flex; align-items:center; gap:12px; background:#fbfdff; transition:0.2s}
+  .card:hover{transform: translateY(-2px); box-shadow:0 6px 16px rgba(0,0,0,0.08)}
+  .card .num{background:#111827; color:white; min-width:32px; height:32px; border-radius:50%; display:grid; place-items:center; font-size:12px; font-weight:700}
+  .card .tag{font-family:monospace; font-weight:800; color:#1d4ed8; font-size:14px; min-width:110px}
+  .card .desc{font-size:13px; color:#4b5563; line-height:1.3}
+  .footer{background:#f9fafb; text-align:center; padding:18px; font-size:12px; color:#9ca3af; border-top:1px solid #eee}
+  .btn{position:fixed; bottom:20px; right:20px; background:#111827; color:white; border:none; padding:14px 22px; border-radius:50px; font-weight:700; box-shadow:0 8px 20px rgba(0,0,0,0.3); cursor:pointer; z-index:99}
+  @media print{ .btn{display:none} body{background:white; padding:0} .page{box-shadow:none; border-radius:0} }
 </style>
 </head>
 <body>
-<div class="container">
-<h1>HTML Tags 110 - සම්පූර්ණ ලැයිස්තුව</h1>
+<button class="btn" onclick="window.print()">🖨️ Print / Save PDF</button>
+<div class="page">
+  <div class="hero">
+    <h1>🌈 HTML Tags 110</h1>
+    <p>සම්පූර්ණම Cheat Sheet - අංක පිළිවෙලට, පාට එක්ක</p>
+    <div class="badge">✨ PREMIUM PRINT EDITION ✨</div>
+  </div>
+  <div class="content">
 
-<h2>1. මුලික ගොඩනැගිල්ල (8)</h2>
-<table>
-<tr><th class="num">No</th><th>Tag</th><th>වෙන්නේ මොකක්ද</th></tr>
-<tr><td class="num">1</td><td class="tag">&lt;html&gt;</td><td>මුළු පිටුවම</td></tr>
-<tr><td class="num">2</td><td class="tag">&lt;head&gt;</td><td>පිටුවේ හැංගිච්ච විස්තර</td></tr>
-<tr><td class="num">3</td><td class="tag">&lt;title&gt;</td><td>Browser උඩ පේන නම</td></tr>
-<tr><td class="num">4</td><td class="tag">&lt;body&gt;</td><td>පේන ඔක්කොම</td></tr>
-<tr><td class="num">5</td><td class="tag">&lt;meta&gt;</td><td>Google එකට විස්තර</td></tr>
-<tr><td class="num">6</td><td class="tag">&lt;link&gt;</td><td>CSS file එක සම්බන්ධ කරනවා</td></tr>
-<tr><td class="num">7</td><td class="tag">&lt;style&gt;</td><td>CSS ලියන තැන</td></tr>
-<tr><td class="num">8</td><td class="tag">&lt;script&gt;</td><td>JS ලියන තැන</td></tr>
-</table>
+    <!-- CAT 1 -->
+    <div class="category">
+      <div class="cat-header c1"><div class="icon">🏗️</div><h2>1. මුලික ගොඩනැගිල්ල</h2><span>8 Tags</span></div>
+      <div class="grid">
+        <div class="card"><div class="num">1</div><div class="tag">&lt;html&gt;</div><div class="desc">මුළු පිටුවම</div></div>
+        <div class="card"><div class="num">2</div><div class="tag">&lt;head&gt;</div><div class="desc">හැංගිච්ච විස්තර</div></div>
+        <div class="card"><div class="num">3</div><div class="tag">&lt;title&gt;</div><div class="desc">Browser නම</div></div>
+        <div class="card"><div class="num">4</div><div class="tag">&lt;body&gt;</div><div class="desc">පේන ඔක්කොම</div></div>
+        <div class="card"><div class="num">5</div><div class="tag">&lt;meta&gt;</div><div class="desc">Google විස්තර</div></div>
+        <div class="card"><div class="num">6</div><div class="tag">&lt;link&gt;</div><div class="desc">CSS සම්බන්ධ කරනවා</div></div>
+        <div class="card"><div class="num">7</div><div class="tag">&lt;style&gt;</div><div class="desc">CSS ලියන තැන</div></div>
+        <div class="card"><div class="num">8</div><div class="tag">&lt;script&gt;</div><div class="desc">JS ලියන තැන</div></div>
+      </div>
+    </div>
 
-<h2>2. Text / අකුරු (28)</h2>
-<table>
-<tr><th class="num">No</th><th>Tag</th><th>වෙන්නේ මොකක්ද</th></tr>
-<tr><td class="num">9</td><td class="tag">&lt;h1&gt; to &lt;h6&gt;</td><td>මාතෘකා (ලොකු සිට පොඩි)</td></tr>
-<tr><td class="num">10</td><td class="tag">&lt;p&gt;</td><td>චේදයක්</td></tr>
-<tr><td class="num">11</td><td class="tag">&lt;br&gt;</td><td>අලුත් පේලිය</td></tr>
-<tr><td class="num">12</td><td class="tag">&lt;hr&gt;</td><td>ඉරක්</td></tr>
-<tr><td class="num">13</td><td class="tag">&lt;b&gt; &lt;strong&gt;</td><td>තද අකුරු</td></tr>
-<tr><td class="num">14</td><td class="tag">&lt;i&gt; &lt;em&gt;</td><td>ඇල අකුරු</td></tr>
-<tr><td class="num">15</td><td class="tag">&lt;u&gt;</td><td>යටින් ඉර</td></tr>
-<tr><td class="num">16</td><td class="tag">&lt;s&gt;</td><td>හරස් ඉර</td></tr>
-<tr><td class="num">17</td><td class="tag">&lt;mark&gt;</td><td>කහ පාටින් හයිලයිට්</td></tr>
-<tr><td class="num">18</td><td class="tag">&lt;small&gt;</td><td>පොඩි අකුරු</td></tr>
-<tr><td class="num">19</td><td class="tag">&lt;sup&gt;</td><td>උඩට - x²</td></tr>
-<tr><td class="num">20</td><td class="tag">&lt;sub&gt;</td><td>යටට - H₂O</td></tr>
-<tr><td class="num">21</td><td class="tag">&lt;span&gt;</td><td>අකුරු ටිකකට පාට දාන්න</td></tr>
-<tr><td class="num">22</td><td class="tag">&lt;blockquote&gt;</td><td>ලොකු උපුටා ගැනීමක්</td></tr>
-<tr><td class="num">23</td><td class="tag">&lt;q&gt;</td><td>පොඩි "" උපුටා ගැනීමක්</td></tr>
-<tr><td class="num">24</td><td class="tag">&lt;cite&gt;</td><td>පොතක/ෆිල්ම් එකක නම</td></tr>
-<tr><td class="num">25</td><td class="tag">&lt;abbr&gt;</td><td>කෙටි යෙදුම</td></tr>
-<tr><td class="num">26</td><td class="tag">&lt;address&gt;</td><td>ලිපිනය / contact</td></tr>
-<tr><td class="num">27</td><td class="tag">&lt;code&gt;</td><td>code එකක්</td></tr>
-<tr><td class="num">28</td><td class="tag">&lt;pre&gt;</td><td>ටයිප් කරපු විදිහටම</td></tr>
-<tr><td class="num">29</td><td class="tag">&lt;kbd&gt;</td><td>Keyboard key</td></tr>
-<tr><td class="num">30</td><td class="tag">&lt;samp&gt;</td><td>Computer උත්තරයක්</td></tr>
-<tr><td class="num">31</td><td class="tag">&lt;var&gt;</td><td>ගණිත විචල්‍යයක්</td></tr>
-<tr><td class="num">32</td><td class="tag">&lt;time&gt;</td><td>දවස/වේලාව</td></tr>
-<tr><td class="num">33</td><td class="tag">&lt;data&gt;</td><td>යන්ත්‍රයට අංකයක්</td></tr>
-<tr><td class="num">34</td><td class="tag">&lt;wbr&gt;</td><td>ඕන නම් පේළිය කඩන්න</td></tr>
-<tr><td class="num">35</td><td class="tag">&lt;bdi&gt; &lt;bdo&gt;</td><td>අනිත් පැත්තට ලියන අකුරු</td></tr>
-<tr><td class="num">36</td><td class="tag">&lt;noscript&gt;</td><td>JS නැති අයට පණිවිඩයක්</td></tr>
-</table>
+    <!-- CAT 2 -->
+    <div class="category">
+      <div class="cat-header c2"><div class="icon">✍️</div><h2>2. Text / අකුරු</h2><span>28 Tags</span></div>
+      <div class="grid">
+        <div class="card"><div class="num">9</div><div class="tag">&lt;h1&gt;-&lt;h6&gt;</div><div class="desc">මාතෘකා</div></div>
+        <div class="card"><div class="num">10</div><div class="tag">&lt;p&gt;</div><div class="desc">චේදයක්</div></div>
+        <div class="card"><div class="num">11</div><div class="tag">&lt;br&gt;</div><div class="desc">අලුත් පේලිය</div></div>
+        <div class="card"><div class="num">12</div><div class="tag">&lt;hr&gt;</div><div class="desc">ඉරක්</div></div>
+        <div class="card"><div class="num">13</div><div class="tag">&lt;b&gt; &lt;strong&gt;</div><div class="desc">තද අකුරු</div></div>
+        <div class="card"><div class="num">14</div><div class="tag">&lt;i&gt; &lt;em&gt;</div><div class="desc">ඇල අකුරු</div></div>
+        <div class="card"><div class="num">15</div><div class="tag">&lt;u&gt;</div><div class="desc">යටින් ඉර</div></div>
+        <div class="card"><div class="num">16</div><div class="tag">&lt;s&gt;</div><div class="desc">හරස් ඉර</div></div>
+        <div class="card"><div class="num">17</div><div class="tag">&lt;mark&gt;</div><div class="desc">හයිලයිට්</div></div>
+        <div class="card"><div class="num">18</div><div class="tag">&lt;small&gt;</div><div class="desc">පොඩි අකුරු</div></div>
+        <div class="card"><div class="num">19</div><div class="tag">&lt;sup&gt;</div><div class="desc">x² උඩට</div></div>
+        <div class="card"><div class="num">20</div><div class="tag">&lt;sub&gt;</div><div class="desc">H₂O යටට</div></div>
+        <div class="card"><div class="num">21</div><div class="tag">&lt;span&gt;</div><div class="desc">පොඩි පෙට්ටිය</div></div>
+        <div class="card"><div class="num">22</div><div class="tag">&lt;blockquote&gt;</div><div class="desc">ලොකු උපුටා ගැනීම</div></div>
+        <div class="card"><div class="num">23</div><div class="tag">&lt;q&gt;</div><div class="desc">පොඩි ""</div></div>
+        <div class="card"><div class="num">24</div><div class="tag">&lt;cite&gt;</div><div class="desc">පොතක නම</div></div>
+        <div class="card"><div class="num">25</div><div class="tag">&lt;code&gt;</div><div class="desc">code</div></div>
+        <div class="card"><div class="num">26</div><div class="tag">&lt;pre&gt;</div><div class="desc">space එක්කම</div></div>
+        <div class="card"><div class="num">27</div><div class="tag">&lt;abbr&gt;</div><div class="desc">WHO වගේ</div></div>
+        <div class="card"><div class="num">28</div><div class="tag">&lt;address&gt;</div><div class="desc">ලිපිනය</div></div>
+        <div class="card"><div class="num">29</div><div class="tag">&lt;kbd&gt;</div><div class="desc">Ctrl වගේ</div></div>
+        <div class="card"><div class="num">30</div><div class="tag">&lt;time&gt;</div><div class="desc">වේලාව</div></div>
+        <div class="card"><div class="num">31</div><div class="tag">&lt;noscript&gt;</div><div class="desc">JS නැති අයට</div></div>
+        <div class="card"><div class="num">32</div><div class="tag">&lt;wbr&gt;</div><div class="desc">පේළිය කඩන්න</div></div>
+      </div>
+    </div>
 
-<h2>3. Layout / පෙට්ටි (14)</h2>
-<table>
-<tr><th class="num">No</th><th>Tag</th><th>වෙන්නේ මොකක්ද</th></tr>
-<tr><td class="num">37</td><td class="tag">&lt;div&gt;</td><td>ලොකු පෙට්ටිය</td></tr>
-<tr><td class="num">38</td><td class="tag">&lt;header&gt;</td><td>උඩම කොටස</td></tr>
-<tr><td class="num">39</td><td class="tag">&lt;nav&gt;</td><td>Menu එක</td></tr>
-<tr><td class="num">40</td><td class="tag">&lt;main&gt;</td><td>මැද ප්‍රධාන කොටස</td></tr>
-<tr><td class="num">41</td><td class="tag">&lt;section&gt;</td><td>එක මාතෘකාවක් ගැන කොටස</td></tr>
-<tr><td class="num">42</td><td class="tag">&lt;article&gt;</td><td>ස්වාධීන ලිපියක්</td></tr>
-<tr><td class="num">43</td><td class="tag">&lt;aside&gt;</td><td>පැත්තේ අමතර කොටස</td></tr>
-<tr><td class="num">44</td><td class="tag">&lt;footer&gt;</td><td>යටම කොටස</td></tr>
-<tr><td class="num">45</td><td class="tag">&lt;figure&gt;</td><td>පින්තූරය + විස්තරය</td></tr>
-<tr><td class="num">46</td><td class="tag">&lt;figcaption&gt;</td><td>පින්තූරය යට විස්තරය</td></tr>
-<tr><td class="num">47</td><td class="tag">&lt;details&gt;</td><td>click කරාම දිග හැරෙනවා</td></tr>
-<tr><td class="num">48</td><td class="tag">&lt;summary&gt;</td><td>details එකේ මාතෘකාව</td></tr>
-<tr><td class="num">49</td><td class="tag">&lt;dialog&gt;</td><td>Pop-up එක</td></tr>
-<tr><td class="num">50</td><td class="tag">&lt;hgroup&gt;</td><td>මාතෘකා ටික group කරනවා</td></tr>
-</table>
+    <!-- CAT 3 -->
+    <div class="category">
+      <div class="cat-header c3"><div class="icon">📦</div><h2>3. Layout / පෙට්ටි</h2><span>14 Tags</span></div>
+      <div class="grid">
+        <div class="card"><div class="num">33</div><div class="tag">&lt;div&gt;</div><div class="desc">ලොකු පෙට්ටිය</div></div>
+        <div class="card"><div class="num">34</div><div class="tag">&lt;header&gt;</div><div class="desc">උඩම කොටස</div></div>
+        <div class="card"><div class="num">35</div><div class="tag">&lt;nav&gt;</div><div class="desc">Menu</div></div>
+        <div class="card"><div class="num">36</div><div class="tag">&lt;main&gt;</div><div class="desc">මැද කොටස</div></div>
+        <div class="card"><div class="num">37</div><div class="tag">&lt;section&gt;</div><div class="desc">මාතෘකා කොටස</div></div>
+        <div class="card"><div class="num">38</div><div class="tag">&lt;article&gt;</div><div class="desc">ස්වාධීන ලිපිය</div></div>
+        <div class="card"><div class="num">39</div><div class="tag">&lt;aside&gt;</div><div class="desc">පැත්තේ කොටස</div></div>
+        <div class="card"><div class="num">40</div><div class="tag">&lt;footer&gt;</div><div class="desc">යටම කොටස</div></div>
+        <div class="card"><div class="num">41</div><div class="tag">&lt;figure&gt;</div><div class="desc">පින්තූර පෙට්ටිය</div></div>
+        <div class="card"><div class="num">42</div><div class="tag">&lt;figcaption&gt;</div><div class="desc">විස්තරය</div></div>
+        <div class="card"><div class="num">43</div><div class="tag">&lt;details&gt;</div><div class="desc">දිගහැරෙනවා</div></div>
+        <div class="card"><div class="num">44</div><div class="tag">&lt;summary&gt;</div><div class="desc">මාතෘකාව</div></div>
+        <div class="card"><div class="num">45</div><div class="tag">&lt;dialog&gt;</div><div class="desc">Pop-up</div></div>
+        <div class="card"><div class="num">46</div><div class="tag">&lt;hgroup&gt;</div><div class="desc">මාතෘකා group</div></div>
+      </div>
+    </div>
 
-<h2>4. Media / ලින්ක් (18)</h2>
-<table>
-<tr><th class="num">No</th><th>Tag</th><th>වෙන්නේ මොකක්ද</th></tr>
-<tr><td class="num">51</td><td class="tag">&lt;a&gt;</td><td>ලින්ක් එක</td></tr>
-<tr><td class="num">52</td><td class="tag">&lt;img&gt;</td><td>පින්තූරය</td></tr>
-<tr><td class="num">53</td><td class="tag">&lt;picture&gt;</td><td>වෙන වෙන size පින්තූර</td></tr>
-<tr><td class="num">54</td><td class="tag">&lt;source&gt;</td><td>video/audio file</td></tr>
-<tr><td class="num">55</td><td class="tag">&lt;video&gt;</td><td>වීඩියෝ</td></tr>
-<tr><td class="num">56</td><td class="tag">&lt;audio&gt;</td><td>සින්දුව</td></tr>
-<tr><td class="num">57</td><td class="tag">&lt;track&gt;</td><td>video subtitle</td></tr>
-<tr><td class="num">58</td><td class="tag">&lt;iframe&gt;</td><td>වෙන වෙබ් එකක් ඇතුලේ</td></tr>
-<tr><td class="num">59</td><td class="tag">&lt;canvas&gt;</td><td>ඇතුලේ चित्र / game</td></tr>
-<tr><td class="num">60</td><td class="tag">&lt;svg&gt;</td><td>icon/shape</td></tr>
-<tr><td class="num">61</td><td class="tag">&lt;map&gt;</td><td>පින්තූරයේ click ප්‍රදේශ</td></tr>
-<tr><td class="num">62</td><td class="tag">&lt;area&gt;</td><td>map එකේ එක ප්‍රදේශයක්</td></tr>
-<tr><td class="num">63</td><td class="tag">&lt;embed&gt;</td><td>PDF වගේ file දාන්න</td></tr>
-<tr><td class="num">64</td><td class="tag">&lt;object&gt;</td><td>වෙන file එකක් දාන්න</td></tr>
-<tr><td class="num">65</td><td class="tag">&lt;param&gt;</td><td>object එකේ සැකසුම</td></tr>
-</table>
+    <!-- CAT 4 -->
+    <div class="category">
+      <div class="cat-header c4"><div class="icon">🎬</div><h2>4. Media / ලින්ක්</h2><span>19 Tags</span></div>
+      <div class="grid">
+        <div class="card"><div class="num">47</div><div class="tag">&lt;a&gt;</div><div class="desc">ලින්ක් එක</div></div>
+        <div class="card"><div class="num">48</div><div class="tag">&lt;img&gt;</div><div class="desc">පින්තූරය 🖼️</div></div>
+        <div class="card"><div class="num">49</div><div class="tag">&lt;video&gt;</div><div class="desc">වීඩියෝ 🎥</div></div>
+        <div class="card"><div class="num">50</div><div class="tag">&lt;audio&gt;</div><div class="desc">සින්දුව 🎵</div></div>
+        <div class="card"><div class="num">51</div><div class="tag">&lt;iframe&gt;</div><div class="desc">YouTube දාන්න</div></div>
+        <div class="card"><div class="num">52</div><div class="tag">&lt;picture&gt;</div><div class="desc">size වෙනස්</div></div>
+        <div class="card"><div class="num">53</div><div class="tag">&lt;source&gt;</div><div class="desc">file source</div></div>
+        <div class="card"><div class="num">54</div><div class="tag">&lt;track&gt;</div><div class="desc">subtitle</div></div>
+        <div class="card"><div class="num">55</div><div class="tag">&lt;canvas&gt;</div><div class="desc">Game හදන්න 🎮</div></div>
+        <div class="card"><div class="num">56</div><div class="tag">&lt;svg&gt;</div><div class="desc">Icon 🎨</div></div>
+        <div class="card"><div class="num">57</div><div class="tag">&lt;map&gt;</div><div class="desc">Click ප්‍රදේශ</div></div>
+        <div class="card"><div class="num">58</div><div class="tag">&lt;area&gt;</div><div class="desc">එක ප්‍රදේශයක්</div></div>
+        <div class="card"><div class="num">59</div><div class="tag">&lt;embed&gt;</div><div class="desc">PDF දාන්න</div></div>
+      </div>
+    </div>
 
-<h2>5. ලැයිස්තු (6)</h2>
-<table>
-<tr><th class="num">No</th><th>Tag</th><th>වෙන්නේ මොකක්ද</th></tr>
-<tr><td class="num">66</td><td class="tag">&lt;ul&gt;</td><td>තිත් ලැයිස්තුව •</td></tr>
-<tr><td class="num">67</td><td class="tag">&lt;ol&gt;</td><td>අංක ලැයිස්තුව</td></tr>
-<tr><td class="num">68</td><td class="tag">&lt;li&gt;</td><td>ලැයිස්තුවේ එක අයිතමයක්</td></tr>
-<tr><td class="num">69</td><td class="tag">&lt;dl&gt;</td><td>Dictionary ලැයිස්තුව</td></tr>
-<tr><td class="num">70</td><td class="tag">&lt;dt&gt;</td><td>වචනය</td></tr>
-<tr><td class="num">71</td><td class="tag">&lt;dd&gt;</td><td>තේරුම</td></tr>
-</table>
+    <!-- CAT 5,6,7 -->
+    <div class="category">
+      <div class="cat-header c5"><div class="icon">📋</div><h2>5. ලැයිස්තු</h2><span>6 Tags</span></div>
+      <div class="grid">
+        <div class="card"><div class="num">60</div><div class="tag">&lt;ul&gt;</div><div class="desc">• තිත්</div></div>
+        <div class="card"><div class="num">61</div><div class="tag">&lt;ol&gt;</div><div class="desc">1,2,3 අංක</div></div>
+        <div class="card"><div class="num">62</div><div class="tag">&lt;li&gt;</div><div class="desc">එක අයිතමයක්</div></div>
+        <div class="card"><div class="num">63</div><div class="tag">&lt;dl&gt;</div><div class="desc">Dictionary</div></div>
+        <div class="card"><div class="num">64</div><div class="tag">&lt;dt&gt;</div><div class="desc">වචනය</div></div>
+        <div class="card"><div class="num">65</div><div class="tag">&lt;dd&gt;</div><div class="desc">තේරුම</div></div>
+      </div>
+    </div>
 
-<h2>6. Table / වගුව (10)</h2>
-<table>
-<tr><th class="num">No</th><th>Tag</th><th>වෙන්නේ මොකක්ද</th></tr>
-<tr><td class="num">72</td><td class="tag">&lt;table&gt;</td><td>වගුව</td></tr>
-<tr><td class="num">73</td><td class="tag">&lt;caption&gt;</td><td>වගුවේ මාතෘකාව</td></tr>
-<tr><td class="num">74</td><td class="tag">&lt;tr&gt;</td><td>වගුවේ පේළිය</td></tr>
-<tr><td class="num">75</td><td class="tag">&lt;th&gt;</td><td>මාතෘකා කොටුව</td></tr>
-<tr><td class="num">76</td><td class="tag">&lt;td&gt;</td><td>සාමාන්‍ය කොටුව</td></tr>
-<tr><td class="num">77</td><td class="tag">&lt;thead&gt;</td><td>වගුවේ උඩ කොටස</td></tr>
-<tr><td class="num">78</td><td class="tag">&lt;tbody&gt;</td><td>වගුවේ මැද කොටස</td></tr>
-<tr><td class="num">79</td><td class="tag">&lt;tfoot&gt;</td><td>වගුවේ යට කොටස</td></tr>
-<tr><td class="num">80</td><td class="tag">&lt;colgroup&gt;</td><td>කණු group කරනවා</td></tr>
-<tr><td class="num">81</td><td class="tag">&lt;col&gt;</td><td>එක කණුවක්</td></tr>
-</table>
+    <div class="category">
+      <div class="cat-header c6"><div class="icon">📊</div><h2>6. Table / වගුව</h2><span>10 Tags</span></div>
+      <div class="grid">
+        <div class="card"><div class="num">66</div><div class="tag">&lt;table&gt;</div><div class="desc">වගුව</div></div>
+        <div class="card"><div class="num">67</div><div class="tag">&lt;caption&gt;</div><div class="desc">මාතෘකාව</div></div>
+        <div class="card"><div class="num">68</div><div class="tag">&lt;tr&gt;</div><div class="desc">පේළිය</div></div>
+        <div class="card"><div class="num">69</div><div class="tag">&lt;th&gt;</div><div class="desc">මාතෘකා කොටුව</div></div>
+        <div class="card"><div class="num">70</div><div class="tag">&lt;td&gt;</div><div class="desc">සාමාන්‍ය කොටුව</div></div>
+        <div class="card"><div class="num">71</div><div class="tag">&lt;thead&gt;</div><div class="desc">උඩ</div></div>
+        <div class="card"><div class="num">72</div><div class="tag">&lt;tbody&gt;</div><div class="desc">මැද</div></div>
+        <div class="card"><div class="num">73</div><div class="tag">&lt;tfoot&gt;</div><div class="desc">යට</div></div>
+        <div class="card"><div class="num">74</div><div class="tag">&lt;colgroup&gt;</div><div class="desc">කණු group</div></div>
+        <div class="card"><div class="num">75</div><div class="tag">&lt;col&gt;</div><div class="desc">එක කණුව</div></div>
+      </div>
+    </div>
 
-<h2>7. Form / පෝරම (16)</h2>
-<table>
-<tr><th class="num">No</th><th>Tag</th><th>වෙන්නේ මොකක්ද</th></tr>
-<tr><td class="num">82</td><td class="tag">&lt;form&gt;</td><td>පෝරමය</td></tr>
-<tr><td class="num">83</td><td class="tag">&lt;input&gt;</td><td>ටයිප් කරන තැන</td></tr>
-<tr><td class="num">84</td><td class="tag">&lt;button&gt;</td><td>බොත්තම</td></tr>
-<tr><td class="num">85</td><td class="tag">&lt;label&gt;</td><td>input එකේ නම</td></tr>
-<tr><td class="num">86</td><td class="tag">&lt;textarea&gt;</td><td>ලොකු ලියන තැන</td></tr>
-<tr><td class="num">87</td><td class="tag">&lt;select&gt;</td><td>dropdown එක</td></tr>
-<tr><td class="num">88</td><td class="tag">&lt;option&gt;</td><td>dropdown එකේ choice</td></tr>
-<tr><td class="num">89</td><td class="tag">&lt;optgroup&gt;</td><td>option group</td></tr>
-<tr><td class="num">90</td><td class="tag">&lt;fieldset&gt;</td><td>form එකේ පොඩි පෙට්ටිය</td></tr>
-<tr><td class="num">91</td><td class="tag">&lt;legend&gt;</td><td>fieldset එකේ නම</td></tr>
-<tr><td class="num">92</td><td class="tag">&lt;datalist&gt;</td><td>ටයිප් කරද්දි යෝජනා</td></tr>
-<tr><td class="num">93</td><td class="tag">&lt;output&gt;</td><td>ගණනයක උත්තරය</td></tr>
-<tr><td class="num">94</td><td class="tag">&lt;progress&gt;</td><td>70% bar එක</td></tr>
-<tr><td class="num">95</td><td class="tag">&lt;meter&gt;</td><td>මිනුමක්</td></tr>
-</table>
+    <div class="category">
+      <div class="cat-header c7"><div class="icon">📝</div><h2>7. Form / පෝරම</h2><span>15 Tags</span></div>
+      <div class="grid">
+        <div class="card"><div class="num">76</div><div class="tag">&lt;form&gt;</div><div class="desc">පෝරමය</div></div>
+        <div class="card"><div class="num">77</div><div class="tag">&lt;input&gt;</div><div class="desc">ටයිප් කරන තැන</div></div>
+        <div class="card"><div class="num">78</div><div class="tag">&lt;button&gt;</div><div class="desc">බොත්තම 🔘</div></div>
+        <div class="card"><div class="num">79</div><div class="tag">&lt;label&gt;</div><div class="desc">නම</div></div>
+        <div class="card"><div class="num">80</div><div class="tag">&lt;textarea&gt;</div><div class="desc">ලොකු ලියන තැන</div></div>
+        <div class="card"><div class="num">81</div><div class="tag">&lt;select&gt;</div><div class="desc">Dropdown</div></div>
+        <div class="card"><div class="num">82</div><div class="tag">&lt;option&gt;</div><div class="desc">Choice</div></div>
+        <div class="card"><div class="num">83</div><div class="tag">&lt;optgroup&gt;</div><div class="desc">Group</div></div>
+        <div class="card"><div class="num">84</div><div class="tag">&lt;fieldset&gt;</div><div class="desc">පොඩි පෙට්ටිය</div></div>
+        <div class="card"><div class="num">85</div><div class="tag">&lt;legend&gt;</div><div class="desc">පෙට්ටියේ නම</div></div>
+        <div class="card"><div class="num">86</div><div class="tag">&lt;datalist&gt;</div><div class="desc">යෝජනා</div></div>
+        <div class="card"><div class="num">87</div><div class="tag">&lt;output&gt;</div><div class="desc">උත්තරය</div></div>
+        <div class="card"><div class="num">88</div><div class="tag">&lt;progress&gt;</div><div class="desc">70% bar 📊</div></div>
+        <div class="card"><div class="num">89</div><div class="tag">&lt;meter&gt;</div><div class="desc">මිනුම</div></div>
+      </div>
+    </div>
 
-<button class="print-btn" onclick="window.print()">📄 PDF විදිහට Save කරගන්න (Print කරන්න)</button>
+  </div>
+  <div class="footer">Made with ❤️ for you | Print කරලා බිත්තියේ ගහගන්න! | HTML 110 Tags Complete</div>
 </div>
 </body>
 </html>
