@@ -71,6 +71,19 @@
   .section-check { display: flex; align-items: center; gap: 8px; font-size: 13.5px; color: var(--text); cursor: pointer; padding: 6px; border-radius: 6px; }
   .section-check:hover { background: var(--card); }
   .section-check input[type="checkbox"] { width: 17px; height: 17px; accent-color: #ff2d95; flex-shrink: 0; cursor: pointer; }
+
+  /* Hero slider toggle switch (Backdrop URL යට) */
+  .hero-toggle { display: flex; align-items: center; justify-content: space-between; gap: 14px; background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; margin-top: 4px; }
+  .hero-toggle-text { min-width: 0; }
+  .hero-toggle-title { font-size: 14px; font-weight: 600; color: var(--text); }
+  .hero-toggle .form-hint { margin-top: 3px; }
+  .tgl { position: relative; width: 50px; height: 28px; flex-shrink: 0; display: inline-block; margin: 0 !important; }
+  .tgl input { position: absolute; opacity: 0; width: 0; height: 0; }
+  .tgl .tgl-track { position: absolute; inset: 0; background: #555; border-radius: 20px; transition: background 0.2s; cursor: pointer; }
+  .tgl .tgl-track::after { content: ''; position: absolute; top: 3px; left: 3px; width: 22px; height: 22px; background: #fff; border-radius: 50%; transition: transform 0.2s; box-shadow: 0 1px 4px rgba(0,0,0,0.4); }
+  .tgl input:checked + .tgl-track { background: #ff2d95; }
+  .tgl input:checked + .tgl-track::after { transform: translateX(22px); }
+  .hero-tag { color: #ff2d95; font-weight: 600; }
   </style>
 </head>
 <body>
@@ -192,6 +205,16 @@
       <div class="form-group">
         <label>Backdrop / Banner Image URL <span class="form-hint">(hero slider + details page)</span></label>
         <input type="text" class="admin-input" id="f_backdrop" placeholder="https://...">
+        <div class="hero-toggle">
+          <div class="hero-toggle-text">
+            <div class="hero-toggle-title"><i class="fa fa-images"></i> Show in Home Hero Slider</div>
+            <div class="form-hint">On කළොත් මේ Backdrop image එක Home page එකේ hero slider එකේ පෙන්නනවා. ඒක click කළාම මේ movie එකට යනවා. (Default: Off)</div>
+          </div>
+          <label class="tgl" aria-label="Show in Home Hero Slider">
+            <input type="checkbox" id="f_showInHero">
+            <span class="tgl-track"></span>
+          </label>
+        </div>
       </div>
 
       <div class="form-group">
@@ -421,6 +444,9 @@
       sectionsGrid.querySelectorAll('input[type="checkbox"]').forEach(cb => { cb.checked = sel.has(cb.value); });
     }
 
+    // ---- Hero slider toggle (Backdrop URL යට) ----
+    const showInHeroInput = document.getElementById('f_showInHero');
+
     let editingId = null;
     const saveBtn = document.getElementById('saveBtn');
     const formModeLabel = document.getElementById('formModeLabel');
@@ -438,6 +464,7 @@
       document.getElementById('f_genre').value = '';
       document.getElementById('f_poster').value = '';
       document.getElementById('f_backdrop').value = '';
+      showInHeroInput.checked = false; // Default: Off
       document.getElementById('f_description').value = '';
       document.getElementById('f_trailer').value = '';
       document.getElementById('f_videoUrl').value = '';
@@ -592,7 +619,7 @@
     window.__mmlAdminHelpers = {
       getSectionsFromForm, setSectionsInForm, getEpisodesFromForm, addEpisodeRow,
       clearEpisodeBuilder, getCastFromForm, addCastRow, clearCastBuilder,
-      resetForm, updateFieldVisibility,
+      resetForm, updateFieldVisibility, showInHeroInput,
       get editingId() { return editingId; }, set editingId(v) { editingId = v; },
       formModeLabel, editingTitle, saveBtn, tabs,
       heroImageInput, saveHeroBtn, heroFormModeLabel, resetHeroForm,
@@ -628,11 +655,14 @@
       H.saveBtn.addEventListener('click', async () => {
         const title = document.getElementById('f_title').value.trim();
         const poster = document.getElementById('f_poster').value.trim();
+        const backdrop = document.getElementById('f_backdrop').value.trim();
         const category = document.getElementById('f_category').value;
         const sections = H.getSectionsFromForm();
+        const showInHero = H.showInHeroInput.checked;
 
         if (!title || !poster) { showToast('Title සහ Poster URL අනිවාර්යයි'); return; }
         if (sections.length === 0) { showToast('අඩුම තරමින් Section එකක්වත් select කරන්න'); return; }
+        if (showInHero && !backdrop) { showToast('Hero slider එකට දාන්න Backdrop URL එකක් අනිවාර්යයි'); return; }
 
         // ---- FIX: "edit කරාම list එකේ අන්තිමට යනවා" bug -----------------
         // Kalin: data object eke "date: new Date().toISOString()" kiyala
@@ -655,7 +685,8 @@
           genre: document.getElementById('f_genre').value.trim(),
           castMembers: H.getCastFromForm(),
           poster,
-          backdrop: document.getElementById('f_backdrop').value.trim(),
+          backdrop,
+          showInHero,
           description: document.getElementById('f_description').value.trim(),
           trailer: document.getElementById('f_trailer').value.trim(),
           sections
@@ -719,7 +750,7 @@
             <img src="${m.poster || 'https://via.placeholder.com/46x66/222/fff'}" loading="lazy">
             <div class="admin-list-info">
               <div class="admin-list-title">${m.title}</div>
-              <div class="admin-list-meta">${m.category === 'series' ? 'TV Series' : 'Movie'} · ${m.year || 'N/A'} ${Array.isArray(m.sections) && m.sections.length ? '· ' + m.sections.join(', ') : ''}</div>
+              <div class="admin-list-meta">${m.category === 'series' ? 'TV Series' : 'Movie'} · ${m.year || 'N/A'} ${m.showInHero ? '· <span class="hero-tag"><i class="fa fa-images"></i> Hero</span>' : ''} ${Array.isArray(m.sections) && m.sections.length ? '· ' + m.sections.join(', ') : ''}</div>
             </div>
             <div class="admin-list-actions">
               <button class="admin-icon-btn edit" data-id="${m.id}"><i class="fa fa-pen"></i></button>
@@ -751,6 +782,7 @@
         document.getElementById('f_genre').value = m.genre || '';
         document.getElementById('f_poster').value = m.poster || '';
         document.getElementById('f_backdrop').value = m.backdrop || '';
+        H.showInHeroInput.checked = m.showInHero === true;
         document.getElementById('f_description').value = m.description || '';
         document.getElementById('f_trailer').value = m.trailer || '';
         document.getElementById('f_videoUrl').value = m.videoUrl || '';
@@ -881,4 +913,3 @@
   </script>
 </body>
 </html>
-
