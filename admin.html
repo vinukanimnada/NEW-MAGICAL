@@ -31,8 +31,9 @@
   .admin-panel.active { display: block; }
   .admin-topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
   .admin-topbar h1 { font-size: 19px; }
-  .admin-tabs { display: flex; gap: 8px; margin-bottom: 18px; border-bottom: 1px solid var(--border); }
-  .admin-tab { flex: 1; text-align: center; padding: 10px 4px; font-size: 13px; font-weight: 600; color: var(--text-faint); cursor: pointer; border-bottom: 2px solid transparent; }
+  .admin-tabs { display: flex; gap: 4px; margin-bottom: 18px; border-bottom: 1px solid var(--border); overflow-x: auto; scrollbar-width: none; }
+  .admin-tabs::-webkit-scrollbar { display: none; }
+  .admin-tab { flex: 0 0 auto; white-space: nowrap; text-align: center; padding: 10px 13px; font-size: 13.5px; font-weight: 600; color: var(--text-faint); cursor: pointer; border-bottom: 2px solid transparent; }
   .admin-tab.active { color: #ff2d95; border-color: #ff2d95; }
   .admin-form-section { display: none; }
   .admin-form-section.active { display: block; }
@@ -80,6 +81,38 @@
   .tgl input:checked + .tgl-track { background: #ff2d95; }
   .tgl input:checked + .tgl-track::after { transform: translateX(22px); }
   .hero-tag { color: #ff2d95; font-weight: 600; }
+
+  /* ===== Analytics ===== */
+  .an-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 14px; }
+  .an-chips { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; }
+  .an-chips::-webkit-scrollbar { display: none; }
+  .an-chip { flex: 0 0 auto; border: 1px solid var(--border); background: var(--card); color: var(--text-dim); padding: 7px 13px; border-radius: 20px; font-size: 13px; font-weight: 600; cursor: pointer; }
+  .an-chip.active { background: #ff2d95; border-color: #ff2d95; color: #fff; }
+  .an-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+  .an-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 14px; }
+  .an-card i { color: #ff2d95; font-size: 15px; margin-bottom: 8px; display: block; }
+  .an-num { font-size: 24px; font-weight: 700; line-height: 1.1; }
+  .an-label { font-size: 12px; color: var(--text-faint); margin-top: 3px; }
+  .an-section { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 14px; margin-bottom: 16px; }
+  .an-h { font-size: 14px; font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+  .an-h .an-chips { margin-left: auto; }
+  .an-legend { display: flex; gap: 14px; font-size: 12px; color: var(--text-dim); margin-top: 8px; }
+  .an-legend b { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 5px; vertical-align: -1px; }
+  .an-bar { height: 6px; background: var(--card-2); border-radius: 4px; overflow: hidden; margin-top: 7px; }
+  .an-bar > i { display: block; height: 100%; background: linear-gradient(90deg, #ff2d95, #ff6b9d); border-radius: 4px; }
+  .an-rank { width: 22px; text-align: center; font-weight: 700; color: var(--text-faint); flex-shrink: 0; }
+  .an-stats { display: flex; flex-wrap: wrap; gap: 2px 12px; font-size: 12px; color: var(--text-dim); margin-top: 3px; }
+  .an-stats i { color: var(--text-faint); margin-right: 3px; }
+  .an-split { display: flex; height: 12px; border-radius: 8px; overflow: hidden; background: var(--card-2); }
+  .an-split > span { display: block; height: 100%; }
+  .an-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .an-tag { background: var(--card-2); color: var(--text-dim); border-radius: 14px; padding: 5px 11px; font-size: 12.5px; }
+  .an-tag b { color: #ff2d95; margin-left: 4px; }
+  .an-row { display: flex; justify-content: space-between; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 13.5px; }
+  .an-row:last-child { border-bottom: none; }
+  .an-row b { color: #ff2d95; flex-shrink: 0; }
+  .an-pre { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 10px; font-size: 12px; overflow-x: auto; margin-top: 10px; white-space: pre; user-select: all; }
+  .an-chart { width: 100%; height: auto; display: block; }
   </style>
 </head>
 <body>
@@ -107,6 +140,7 @@
       <div class="admin-tab" data-tab="manage">Manage Content</div>
       <div class="admin-tab" data-tab="trending">Daily Trending</div>
       <div class="admin-tab" data-tab="hero">Hero Slider</div>
+      <div class="admin-tab" data-tab="analytics">Analytics</div>
     </div>
 
     <div class="admin-form-section active" id="tab-add">
@@ -253,6 +287,19 @@
       <div id="heroTitle" style="font-size:13px; font-weight:600; color:var(--text-dim); margin-bottom:10px;"></div>
       <div id="heroList"><div class="details-skeleton">Loading...</div></div>
     </div>
+
+    <div class="admin-form-section" id="tab-analytics">
+      <div class="an-toolbar">
+        <div class="an-chips" id="anRange">
+          <button class="an-chip active" data-r="1">Today</button>
+          <button class="an-chip" data-r="7">7 Days</button>
+          <button class="an-chip" data-r="30">30 Days</button>
+          <button class="an-chip" data-r="0">All Time</button>
+        </div>
+        <button class="admin-icon-btn" id="anRefresh" aria-label="Refresh"><i class="fa fa-rotate"></i></button>
+      </div>
+      <div id="anBody"><div class="details-skeleton">Loading...</div></div>
+    </div>
   </div>
 
   <div class="admin-toast" id="toast"></div>
@@ -328,6 +375,7 @@
         if (tab.dataset.tab === 'manage') callLoader('loadManageList');
         if (tab.dataset.tab === 'trending') callLoader('loadTrending');
         if (tab.dataset.tab === 'hero') callLoader('loadHero');
+        if (tab.dataset.tab === 'analytics') callLoader('loadAnalytics');
       });
     });
 
@@ -617,7 +665,7 @@
   <script type="module">
     try {
       const { initializeApp } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js");
-      const { getFirestore, collection, getDocs, doc, addDoc, updateDoc, deleteDoc, deleteField, arrayUnion, arrayRemove } =
+      const { getFirestore, collection, getDocs, doc, addDoc, updateDoc, deleteDoc, deleteField, arrayUnion, arrayRemove, query, orderBy, limit } =
         await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js");
 
       const firebaseConfig = {
@@ -981,11 +1029,194 @@
         }
       }
 
+      /* =========================================================
+         ANALYTICS — site එක (index.html) එකතු කරන counters කියවලා පෙන්නනවා
+         Collections: analytics (movie එකකට doc එකක්), analytics_daily (දවසකට), analytics_searches
+         ========================================================= */
+      const anBody = document.getElementById('anBody');
+      let anRange = 1, anSort = 'views', anShowAll = false, anData = null;
+
+      const slDate = (offset = 0) => new Date(Date.now() + 5.5 * 3600e3 - offset * 86400e3).toISOString().slice(0, 10);
+      const fmt = n => Number(n || 0).toLocaleString('en-US');
+      const N = v => Number(v) || 0;
+      const RULES = `match /analytics/{id} { allow read, write: if true; }
+match /analytics_daily/{id} { allow read, write: if true; }
+match /analytics_searches/{id} { allow read, write: if true; }`;
+
+      async function loadAnalytics() {
+        anBody.innerHTML = '<div class="details-skeleton"><i class="fa fa-spinner fa-spin"></i> Loading...</div>';
+        try {
+          const [mSnap, dSnap, sSnap] = await Promise.all([
+            getDocs(collection(db, 'analytics')),
+            getDocs(collection(db, 'analytics_daily')),
+            getDocs(query(collection(db, 'analytics_searches'), orderBy('count', 'desc'), limit(15)))
+          ]);
+          if (!contentLoaded) { try { await fetchContent(); } catch (e) {} }
+          let pendingReq = null;
+          try {
+            const rSnap = await getDocs(collection(db, 'requests'));
+            pendingReq = 0; rSnap.forEach(d => { if ((d.data().status || 'pending') === 'pending') pendingReq++; });
+          } catch (e) {}
+          anData = { movies: [], daily: {}, searches: [], pendingReq };
+          mSnap.forEach(d => anData.movies.push({ ...d.data(), id: d.id }));
+          dSnap.forEach(d => { anData.daily[d.id] = d.data(); });
+          sSnap.forEach(d => anData.searches.push(d.data()));
+          renderAnalytics();
+        } catch (err) {
+          console.error(err);
+          anBody.innerHTML = err && err.code === 'permission-denied'
+            ? `<div class="an-section"><div class="an-h">⚠️ Firestore permission නෑ</div><div class="form-hint">Firebase Console → Firestore → Rules වලට මේවා එකතු කරන්න (existing rules වල <b>match /databases/{database}/documents { ... }</b> ඇතුළට):</div><div class="an-pre">${esc(RULES)}</div></div>`
+            : '<div class="details-skeleton">⚠️ Load කරගන්න බැරි උනා</div>';
+        }
+      }
+      window.loadAnalytics = loadAnalytics;
+
+      const rangeDates = () => anRange === 0 ? null : Array.from({ length: anRange }, (_, i) => slDate(i));
+
+      function sumDaily() {
+        const t = { visits: 0, visitors: 0, views: 0, plays: 0, trailers: 0, saves: 0, shares: 0, mobile: 0, desktop: 0, hours: Array(24).fill(0) };
+        const dates = rangeDates();
+        const entries = dates ? dates.map(d => anData.daily[d]).filter(Boolean) : Object.values(anData.daily);
+        entries.forEach(e => {
+          ['visits', 'visitors', 'views', 'plays', 'trailers', 'saves', 'shares', 'mobile', 'desktop'].forEach(k => { t[k] += N(e[k]); });
+          if (e.hours) for (const h in e.hours) { const i = Number(h); if (i >= 0 && i < 24) t.hours[i] += N(e.hours[h]); }
+        });
+        return t;
+      }
+      function movieStat(m, kind) {
+        const dates = rangeDates();
+        if (!dates) return N(m[kind]);
+        return dates.reduce((s, d) => s + N(m.days && m.days[d] && m.days[d][kind]), 0);
+      }
+
+      // bars (+ optional line) SVG chart
+      function chartSVG(labels, bars, line, labelEvery) {
+        const W = 320, H = 140, pt = 10, pb = 22, n = labels.length;
+        const max = Math.max(1, ...bars, ...(line || []));
+        const bw = W / n, ch = H - pt - pb;
+        const y = v => pt + ch * (1 - v / max);
+        let out = `<svg class="an-chart" viewBox="0 0 ${W} ${H}" role="img">`;
+        [0, 0.5, 1].forEach(f => { const yy = pt + ch * (1 - f); out += `<line x1="0" x2="${W}" y1="${yy}" y2="${yy}" stroke="currentColor" stroke-opacity=".12"/>`; });
+        bars.forEach((v, i) => {
+          const h = Math.max(v > 0 ? 2 : 0, ch * v / max);
+          out += `<rect x="${(i * bw + bw * 0.15).toFixed(1)}" y="${(pt + ch - h).toFixed(1)}" width="${(bw * 0.7).toFixed(1)}" height="${h.toFixed(1)}" rx="2" fill="#ff2d95"/>`;
+        });
+        if (line) out += `<polyline fill="none" stroke="#4dc3ff" stroke-width="2" stroke-linejoin="round" points="${line.map((v, i) => `${(i * bw + bw / 2).toFixed(1)},${y(v).toFixed(1)}`).join(' ')}"/>`;
+        labels.forEach((l, i) => { if (i % labelEvery === 0 || i === n - 1) out += `<text x="${(i * bw + bw / 2).toFixed(1)}" y="${H - 6}" font-size="9" text-anchor="middle" fill="currentColor" fill-opacity=".55">${esc(l)}</text>`; });
+        return out + '</svg>';
+      }
+
+      function renderAnalytics() {
+        if (!anData) return;
+        const t = sumDaily();
+        const hasAny = anData.movies.length || Object.keys(anData.daily).length;
+        const byId = new Map(cachedContent.map(m => [m.id, m]));
+
+        // ---- movie rows (range අනුව) ----
+        const rows = anData.movies.map(a => {
+          const c = byId.get(a.id);
+          return {
+            id: a.id, title: (c && c.title) || a.title || '(deleted)', poster: (c && c.poster) || a.poster || '',
+            views: movieStat(a, 'views'), plays: movieStat(a, 'plays'), trailers: movieStat(a, 'trailers'),
+            saves: movieStat(a, 'saves'), shares: movieStat(a, 'shares')
+          };
+        });
+        const ranked = rows.filter(r => r[anSort] > 0).sort((a, b) => b[anSort] - a[anSort] || b.views - a.views);
+        const shown = anShowAll ? ranked : ranked.slice(0, 10);
+        const top = ranked.length ? ranked[0][anSort] : 1;
+        const watchedIds = new Set(rows.filter(r => r.views > 0).map(r => r.id));
+        const unwatched = cachedContent.filter(m => !watchedIds.has(m.id));
+
+        // ---- chart (දවස් 7 / 30) ----
+        const n = anRange === 30 || anRange === 0 ? 30 : 7;
+        const days = Array.from({ length: n }, (_, i) => slDate(n - 1 - i));
+        const dViews = days.map(d => N(anData.daily[d] && anData.daily[d].views));
+        const dVisits = days.map(d => N(anData.daily[d] && anData.daily[d].visits));
+        const dLabels = days.map(d => d.slice(5));
+
+        const dev = t.mobile + t.desktop;
+        const mPct = dev ? Math.round(t.mobile * 100 / dev) : 0;
+        const peak = t.hours.indexOf(Math.max(...t.hours));
+        const hLabels = t.hours.map((_, i) => String(i));
+
+        const card = (icon, num, label) => `<div class="an-card"><i class="fa ${icon}"></i><div class="an-num">${fmt(num)}</div><div class="an-label">${label}</div></div>`;
+        const sortChip = (k, label) => `<button class="an-chip ${anSort === k ? 'active' : ''}" data-sort="${k}">${label}</button>`;
+
+        let html = '';
+        if (!hasAny) {
+          html += `<div class="an-section"><div class="an-h">📊 තාම data නෑ</div><div class="form-hint">Site එකේ (index.html) update එක publish කරලා, movies බලද්දී analytics automatic එකතු වෙනවා. Firestore rules වලට මේවා එකතු කරලා තියෙන්න ඕන:</div><div class="an-pre">${esc(RULES)}</div></div>`;
+        }
+
+        html += '<div class="an-cards">'
+          + card('fa-door-open', t.visits, 'Visits (site එකට ආපු ගණන)')
+          + card('fa-users', t.visitors, 'Unique visitors (device)')
+          + card('fa-eye', t.views, 'Movie page views')
+          + card('fa-play', t.plays, 'Plays (බලන්න පටන් ගත්)')
+          + card('fa-film', t.trailers, 'Trailer plays')
+          + card('fa-bookmark', t.saves, 'My List saves')
+          + card('fa-share-nodes', t.shares, 'Shares')
+          + card('fa-inbox', anData.pendingReq == null ? 0 : anData.pendingReq, 'Pending requests')
+          + '</div>';
+
+        html += `<div class="an-section"><div class="an-h">📈 දවසින් දවස <span class="form-hint" style="margin:0">අන්තිම දවස් ${n}</span></div>${chartSVG(dLabels, dViews, dVisits, n > 7 ? 5 : 1)}
+          <div class="an-legend"><span><b style="background:#ff2d95"></b>Movie views</span><span><b style="background:#4dc3ff"></b>Visits</span></div></div>`;
+
+        html += `<div class="an-section"><div class="an-h">🏆 Top Movies
+            <div class="an-chips">${sortChip('views', 'Views')}${sortChip('plays', 'Plays')}${sortChip('saves', 'Saves')}${sortChip('shares', 'Shares')}</div></div>`;
+        if (!shown.length) html += '<div class="form-hint">මේ කාල සීමාවේ data නෑ</div>';
+        html += shown.map((r, i) => `
+          <div class="admin-list-item" style="align-items:flex-start;">
+            <div class="an-rank">${i + 1}</div>
+            <img src="${esc(r.poster) || PH}" loading="lazy" alt="">
+            <div class="admin-list-info">
+              <div class="admin-list-title">${esc(r.title)}</div>
+              <div class="an-stats">
+                <span><i class="fa fa-eye"></i>${fmt(r.views)}</span><span><i class="fa fa-play"></i>${fmt(r.plays)}</span>
+                <span><i class="fa fa-film"></i>${fmt(r.trailers)}</span><span><i class="fa fa-bookmark"></i>${fmt(r.saves)}</span><span><i class="fa fa-share-nodes"></i>${fmt(r.shares)}</span>
+              </div>
+              <div class="an-stats"><span>Play rate: ${r.views ? Math.min(100, Math.round(r.plays * 100 / r.views)) : 0}%</span></div>
+              <div class="an-bar"><i style="width:${Math.max(3, Math.round(r[anSort] * 100 / top))}%"></i></div>
+            </div>
+          </div>`).join('');
+        if (ranked.length > 10) html += `<button class="btn btn-secondary" id="anMore" style="width:100%; justify-content:center; margin-top:6px;">${anShowAll ? 'අඩුවෙන් පෙන්වන්න' : `සියල්ල බලන්න (${ranked.length})`}</button>`;
+        html += '</div>';
+
+        html += `<div class="an-section"><div class="an-h">🕒 Peak hours <span class="form-hint" style="margin:0">${t.visits ? `වැඩිම: ${String(peak).padStart(2, '0')}:00 (ලංකා වේලාව)` : ''}</span></div>${chartSVG(hLabels, t.hours, null, 3)}</div>`;
+
+        html += `<div class="an-section"><div class="an-h">📱 Devices</div>
+          <div class="an-split"><span style="width:${mPct}%; background:#ff2d95"></span><span style="width:${dev ? 100 - mPct : 0}%; background:#4dc3ff"></span></div>
+          <div class="an-legend"><span><b style="background:#ff2d95"></b>Mobile ${mPct}% (${fmt(t.mobile)})</span><span><b style="background:#4dc3ff"></b>Desktop ${dev ? 100 - mPct : 0}% (${fmt(t.desktop)})</span></div></div>`;
+
+        html += `<div class="an-section"><div class="an-h">🔍 හොයලා හම්බුනේ නැති ඒවා <span class="form-hint" style="margin:0">(All time)</span></div>`;
+        html += anData.searches.length
+          ? anData.searches.map(s => `<div class="an-row"><span>${esc(s.q)}</span><b>${fmt(s.count)}×</b></div>`).join('')
+          : '<div class="form-hint">තාම නෑ. Users search කරලා හම්බුනේ නැති නම් මෙතන පෙන්නනවා — ඒවා add කරන්න හොඳ ඒවා.</div>';
+        html += '</div>';
+
+        html += `<div class="an-section"><div class="an-h">😴 Views නැති movies <span class="form-hint" style="margin:0">${unwatched.length} ක්</span></div>`;
+        html += unwatched.length
+          ? `<div class="an-tags">${unwatched.slice(0, 15).map(m => `<span class="an-tag">${esc(m.title)}</span>`).join('')}${unwatched.length > 15 ? `<span class="an-tag">+${unwatched.length - 15}</span>` : ''}</div>`
+          : '<div class="form-hint">සියල්ලටම views තියෙනවා 🎉</div>';
+        html += '</div>';
+
+        anBody.innerHTML = html;
+        anBody.querySelectorAll('[data-sort]').forEach(b => b.addEventListener('click', () => { anSort = b.dataset.sort; anShowAll = false; renderAnalytics(); }));
+        document.getElementById('anMore')?.addEventListener('click', () => { anShowAll = !anShowAll; renderAnalytics(); });
+      }
+
+      document.querySelectorAll('#anRange .an-chip').forEach(b => b.addEventListener('click', () => {
+        anRange = Number(b.dataset.r); anShowAll = false;
+        document.querySelectorAll('#anRange .an-chip').forEach(x => x.classList.toggle('active', x === b));
+        if (anData) renderAnalytics(); else loadAnalytics();
+      }));
+      document.getElementById('anRefresh').addEventListener('click', () => loadAnalytics());
+
       // Firebase load වෙන්න කලින් tab එකක් open කළා නම් දැන් load කරනවා
       const pending = window.__pending || {};
       if (pending.loadManageList) loadManageList();
       if (pending.loadTrending) loadTrending();
       if (pending.loadHero) loadHero();
+      if (pending.loadAnalytics) loadAnalytics();
       window.__pending = {};
 
     } catch (err) {
