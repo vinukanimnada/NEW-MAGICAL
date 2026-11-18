@@ -32,7 +32,7 @@
   .admin-topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
   .admin-topbar h1 { font-size: 19px; }
   .admin-tabs { display: flex; gap: 8px; margin-bottom: 18px; border-bottom: 1px solid var(--border); }
-  .admin-tab { flex: 1; text-align: center; padding: 10px 6px; font-size: 14px; font-weight: 600; color: var(--text-faint); cursor: pointer; border-bottom: 2px solid transparent; }
+  .admin-tab { flex: 1; text-align: center; padding: 10px 4px; font-size: 13px; font-weight: 600; color: var(--text-faint); cursor: pointer; border-bottom: 2px solid transparent; }
   .admin-tab.active { color: #ff2d95; border-color: #ff2d95; }
   .admin-form-section { display: none; }
   .admin-form-section.active { display: block; }
@@ -106,6 +106,7 @@
       <div class="admin-tab active" data-tab="add">Add New</div>
       <div class="admin-tab" data-tab="manage">Manage Content</div>
       <div class="admin-tab" data-tab="trending">Daily Trending</div>
+      <div class="admin-tab" data-tab="hero">Hero Slider</div>
     </div>
 
     <div class="admin-form-section active" id="tab-add">
@@ -245,6 +246,13 @@
       <div id="trendingTitle" style="font-size:13px; font-weight:600; color:var(--text-dim); margin-bottom:10px;"></div>
       <div id="trendingList"><div class="details-skeleton">Loading...</div></div>
     </div>
+
+    <div class="admin-form-section" id="tab-hero">
+      <div class="form-hint" style="margin-bottom:10px;">Search කරලා කලින් add කරපු movie එකක් Home page එකේ <b>Hero Slider</b> එකට දාන්න. Switch එක On = Hero Slider එකේ පෙන්නනවා, Off = ඉවත් වෙනවා. (Backdrop image එකක් තියෙන ඒවා විතරයි On කරන්න පුළුවන්)</div>
+      <input type="text" class="admin-input admin-search" id="heroSearch" placeholder="🔍 Search කරලා Hero Slider එකට add කරන්න...">
+      <div id="heroTitle" style="font-size:13px; font-weight:600; color:var(--text-dim); margin-bottom:10px;"></div>
+      <div id="heroList"><div class="details-skeleton">Loading...</div></div>
+    </div>
   </div>
 
   <div class="admin-toast" id="toast"></div>
@@ -319,6 +327,7 @@
         document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
         if (tab.dataset.tab === 'manage') callLoader('loadManageList');
         if (tab.dataset.tab === 'trending') callLoader('loadTrending');
+        if (tab.dataset.tab === 'hero') callLoader('loadHero');
       });
     });
 
@@ -894,10 +903,89 @@
         }
       }
 
+      /* =========================================================
+         HERO SLIDER — movie එකක `showInHero` true / false
+         ========================================================= */
+      const heroSearch = document.getElementById('heroSearch');
+
+      async function loadHero() {
+        const box = document.getElementById('heroList');
+        box.innerHTML = '<div class="details-skeleton"><i class="fa fa-spinner fa-spin"></i> Loading...</div>';
+        try {
+          await fetchContent();
+          renderHero();
+        } catch (err) {
+          console.error(err);
+          box.innerHTML = '<div class="details-skeleton">⚠️ Load කරගන්න බැරි උනා</div>';
+        }
+      }
+      window.loadHero = loadHero;
+
+      function renderHero() {
+        const box = document.getElementById('heroList');
+        const titleEl = document.getElementById('heroTitle');
+        const q = heroSearch.value.trim().toLowerCase();
+        const items = q
+          ? cachedContent.filter(m => (m.title || '').toLowerCase().includes(q))
+          : cachedContent.filter(m => m.showInHero === true);
+        titleEl.textContent = q
+          ? `Search results (${items.length}) — switch එක On කළොත් Hero Slider එකට add වෙනවා`
+          : `🖼️ දැනට Hero Slider එකේ ඇති (${items.length})`;
+        if (!items.length) {
+          box.innerHTML = `<div class="details-skeleton">${q ? 'Match වෙන දෙයක් නෑ' : 'Hero Slider එකේ තාම කිසිවක් නෑ — උඩින් search කරලා add කරන්න'}</div>`;
+          return;
+        }
+        box.innerHTML = items.map(m => {
+          const hasBackdrop = isHttp(m.backdrop);
+          const on = m.showInHero === true;
+          return `
+          <div class="admin-list-item">
+            <img src="${esc(hasBackdrop ? m.backdrop : m.poster) || PH}" loading="lazy" alt="" style="${hasBackdrop ? 'width:80px; height:46px;' : ''}">
+            <div class="admin-list-info">
+              <div class="admin-list-title">${esc(m.title)}</div>
+              <div class="admin-list-meta">${m.category === 'series' ? 'TV Series' : 'Movie'} · ${esc(m.year || 'N/A')}${hasBackdrop ? '' : ' · ⚠️ Backdrop නෑ'}</div>
+            </div>
+            <label class="tgl" aria-label="Hero Slider">
+              <input type="checkbox" data-id="${esc(m.id)}" ${on ? 'checked' : ''} ${(!hasBackdrop && !on) ? 'disabled' : ''}>
+              <span class="tgl-track"></span>
+            </label>
+          </div>`;
+        }).join('');
+        box.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.addEventListener('change', () => toggleHero(cb)));
+      }
+      heroSearch.addEventListener('input', renderHero);
+
+      async function toggleHero(cb) {
+        const m = cachedContent.find(x => x.id === cb.dataset.id);
+        if (!m) return;
+        const on = cb.checked;
+        if (on && !isHttp(m.backdrop)) {
+          cb.checked = false;
+          showToast('Hero Slider එකට දාන්න Backdrop URL එකක් ඕන — Manage Content එකෙන් edit කරන්න');
+          return;
+        }
+        cb.disabled = true;
+        try {
+          await updateDoc(doc(db, "movies", m.id), { showInHero: on });
+          m.showInHero = on;
+          showToast(on ? '🖼️ Hero Slider එකට add කළා' : 'Hero Slider එකෙන් ඉවත් කළා');
+          if (!heroSearch.value.trim()) {
+            document.getElementById('heroTitle').textContent = `🖼️ දැනට Hero Slider එකේ ඇති (${cachedContent.filter(x => x.showInHero === true).length})`;
+          }
+        } catch (err) {
+          console.error(err);
+          cb.checked = !on;   // fail වුනොත් switch එක කලින් තත්ත්වයටම
+          showToast('❌ Error: ' + err.message);
+        } finally {
+          cb.disabled = false;
+        }
+      }
+
       // Firebase load වෙන්න කලින් tab එකක් open කළා නම් දැන් load කරනවා
       const pending = window.__pending || {};
       if (pending.loadManageList) loadManageList();
       if (pending.loadTrending) loadTrending();
+      if (pending.loadHero) loadHero();
       window.__pending = {};
 
     } catch (err) {
