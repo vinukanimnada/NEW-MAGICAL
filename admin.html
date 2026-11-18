@@ -3,72 +3,68 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
   <title>Admin Panel - MAGICAL MOVIE LAND</title>
   <link rel="icon" href="https://files.catbox.moe/nstkne.png" type="image/png">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <script>(function(){ const theme = localStorage.getItem('theme') || 'dark'; document.documentElement.className = theme; })();</script>
+  <script>(function(){ var theme = 'dark'; try { theme = localStorage.getItem('theme') === 'light' ? 'light' : 'dark'; } catch (e) {} document.documentElement.className = theme; })();</script>
   <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html.dark { --bg: #0a0a0a; --bg-alt: #111; --card: #1a1a1a; --card-2: #222; --text: #fff; --text-dim: #aaa; --text-faint: #666; --border: #222; }
   html.light { --bg: #f4f4f4; --bg-alt: #ffffff; --card: #f5f5f5; --card-2: #e8e8e8; --text: #111; --text-dim: #444; --text-faint: #888; --border: #ddd; }
   body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; padding-bottom: 40px; }
-  header { background: var(--bg-alt); padding: 12px 15px; display: flex; align-items: center; position: sticky; top: 0; z-index: 999; border-bottom: 1px solid var(--border); }
-  .logo { font-size: 17px; font-weight: 700; color: var(--text); }
-  .back-btn { font-size: 20px; cursor: pointer; margin-right: 14px; color: var(--text); }
   .btn { display: inline-flex; align-items: center; gap: 8px; border: none; border-radius: 6px; padding: 12px 22px; font-size: 15px; font-weight: 600; cursor: pointer; transition: transform 0.15s, opacity 0.15s; }
   .btn:active { transform: scale(0.97); }
   .btn:disabled { opacity: 0.5; cursor: not-allowed; }
   .btn-primary { background: #ff2d95; color: #fff; }
-  .btn-secondary { background: rgba(255,255,255,0.1); color: var(--text); }
-  .btn-outline { background: transparent; border: 1px solid var(--text-faint); color: var(--text); }
-  .admin-login-wrap { min-height: 80vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+  .btn-secondary { background: rgba(128,128,128,0.2); color: var(--text); }
+  .admin-login-wrap { min-height: 90vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
   .admin-login-card { background: var(--card); border-radius: 14px; padding: 36px 28px; max-width: 360px; width: 100%; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.4); border: 1px solid var(--border); }
   .admin-login-card .lock-icon { font-size: 40px; color: #ff2d95; margin-bottom: 14px; }
   .admin-login-card h2 { font-size: 20px; margin-bottom: 6px; }
   .admin-login-card p { font-size: 13px; color: var(--text-faint); margin-bottom: 22px; }
-  .admin-input { width: 100%; background: var(--bg); border: 1px solid var(--border); color: var(--text); padding: 13px 16px; border-radius: 8px; font-size: 15px; margin-bottom: 12px; outline: none; }
+  /* font-size 16px: iPhone එකේ input එකක් tap කරද්දී page එක zoom වෙන එක නවත්තනවා */
+  .admin-input { width: 100%; background: var(--bg); border: 1px solid var(--border); color: var(--text); padding: 13px 16px; border-radius: 8px; font-size: 16px; margin-bottom: 12px; outline: none; }
   .admin-input:focus { border-color: #ff2d95; }
   .admin-error { color: #ff5b5b; font-size: 13px; margin-bottom: 10px; min-height: 16px; }
-  .admin-panel { display: none; padding: 15px; max-width: 720px; margin: 0 auto; }
+  .admin-panel { display: none; padding: 15px; padding-top: max(15px, env(safe-area-inset-top)); max-width: 720px; margin: 0 auto; }
   .admin-panel.active { display: block; }
   .admin-topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
   .admin-topbar h1 { font-size: 19px; }
   .admin-tabs { display: flex; gap: 8px; margin-bottom: 18px; border-bottom: 1px solid var(--border); }
-  .admin-tab { padding: 10px 16px; font-size: 14px; font-weight: 600; color: var(--text-faint); cursor: pointer; border-bottom: 2px solid transparent; }
+  .admin-tab { flex: 1; text-align: center; padding: 10px 16px; font-size: 14px; font-weight: 600; color: var(--text-faint); cursor: pointer; border-bottom: 2px solid transparent; }
   .admin-tab.active { color: #ff2d95; border-color: #ff2d95; }
   .admin-form-section { display: none; }
   .admin-form-section.active { display: block; }
   .form-group { margin-bottom: 14px; }
   .form-group label { display: block; font-size: 13px; font-weight: 600; color: var(--text-dim); margin-bottom: 6px; }
   .form-row { display: flex; gap: 10px; }
-  .form-row .form-group { flex: 1; }
-  .form-group select { width: 100%; background: var(--bg); border: 1px solid var(--border); color: var(--text); padding: 12px 14px; border-radius: 8px; font-size: 14px; }
-  .form-group textarea { width: 100%; background: var(--bg); border: 1px solid var(--border); color: var(--text); padding: 12px 14px; border-radius: 8px; font-size: 14px; min-height: 90px; resize: vertical; font-family: inherit; }
-  .form-hint { font-size: 11.5px; color: var(--text-faint); margin-top: 4px; }
+  .form-row .form-group { flex: 1; min-width: 0; }
+  .form-group select { width: 100%; background: var(--bg); border: 1px solid var(--border); color: var(--text); padding: 12px 14px; border-radius: 8px; font-size: 16px; }
+  .form-group textarea { width: 100%; background: var(--bg); border: 1px solid var(--border); color: var(--text); padding: 12px 14px; border-radius: 8px; font-size: 16px; min-height: 90px; resize: vertical; font-family: inherit; }
+  .form-hint { font-size: 11.5px; color: var(--text-faint); margin-top: 4px; font-weight: 400; }
   .episode-builder { border: 1px solid var(--border); border-radius: 10px; padding: 12px; margin-top: 8px; }
+  .episode-builder:empty { display: none; }
   .episode-row { margin-bottom: 8px; }
   .admin-list-item { display: flex; align-items: center; gap: 12px; background: var(--card); border-radius: 8px; padding: 10px; margin-bottom: 8px; }
-  .admin-list-item img { width: 46px; height: 66px; object-fit: cover; border-radius: 4px; flex-shrink: 0; }
+  .admin-list-item img { width: 46px; height: 66px; object-fit: cover; border-radius: 4px; flex-shrink: 0; background: var(--card-2); }
   .admin-list-info { flex: 1; min-width: 0; }
   .admin-list-title { font-size: 14px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .admin-list-meta { font-size: 12px; color: var(--text-faint); }
   .admin-list-actions { display: flex; gap: 8px; flex-shrink: 0; }
-  .admin-icon-btn { width: 34px; height: 34px; border-radius: 6px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.08); color: var(--text-dim); cursor: pointer; border: none; }
+  .admin-icon-btn { width: 34px; height: 34px; border-radius: 6px; display: flex; align-items: center; justify-content: center; background: rgba(128,128,128,0.15); color: var(--text-dim); cursor: pointer; border: none; }
   .admin-icon-btn.edit:hover { background: rgba(255,45,149,0.2); color: #ff2d95; }
   .admin-icon-btn.delete:hover { background: rgba(255,60,60,0.2); color: #ff5b5b; }
   .admin-search { margin-bottom: 12px; }
-  .admin-toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--card); border: 1px solid #ff2d95; color: var(--text); padding: 12px 22px; border-radius: 8px; font-size: 14px; z-index: 3000; opacity: 0; transition: 0.25s; pointer-events: none; }
+  .admin-toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--card); border: 1px solid #ff2d95; color: var(--text); padding: 12px 22px; border-radius: 8px; font-size: 14px; z-index: 3000; opacity: 0; transition: 0.25s; pointer-events: none; max-width: 90vw; text-align: center; }
   .admin-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
   .details-skeleton { text-align: center; padding: 60px 20px; color: var(--text-faint); }
   .cast-photo-preview { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 1px solid var(--border); flex-shrink: 0; background: var(--card-2); }
 
-  /* Sections checkbox grid — replaces the old native <select multiple>,
-     which was unreliable on mobile (a tap could deselect everything else
-     instead of adding to the selection). Checkboxes are unambiguous:
-     each one is independently on/off, on every device. */
+  /* Sections checkbox grid (native <select multiple> එක mobile වල අවුල් නිසා checkbox) */
   .sections-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 12px; }
   @media (min-width: 500px) { .sections-grid { grid-template-columns: 1fr 1fr 1fr; } }
-  .section-check { display: flex; align-items: center; gap: 8px; font-size: 13.5px; color: var(--text); cursor: pointer; padding: 6px; border-radius: 6px; }
+  .section-check { display: flex; align-items: center; gap: 8px; font-size: 13.5px; color: var(--text); cursor: pointer; padding: 6px; border-radius: 6px; margin: 0 !important; font-weight: 400 !important; }
   .section-check:hover { background: var(--card); }
   .section-check input[type="checkbox"] { width: 17px; height: 17px; accent-color: #ff2d95; flex-shrink: 0; cursor: pointer; }
 
@@ -87,17 +83,13 @@
   </style>
 </head>
 <body>
-  <header>
-    <i class="fa fa-arrow-left back-btn" onclick="window.location.href='index.html'"></i>
-    <div class="logo">Admin Panel</div>
-  </header>
 
   <div class="admin-login-wrap" id="loginWrap">
     <div class="admin-login-card">
       <div class="lock-icon"><i class="fa fa-lock"></i></div>
       <h2>Admin Panel</h2>
       <p>Content manage කරන්න password එක ඇතුළත් කරන්න</p>
-      <input type="password" class="admin-input" id="passInput" placeholder="Password">
+      <input type="password" class="admin-input" id="passInput" placeholder="Password" autocomplete="current-password">
       <div class="admin-error" id="passError"></div>
       <button class="btn btn-primary" style="width:100%; justify-content:center;" id="unlockBtn">
         <i class="fa fa-unlock"></i> Unlock
@@ -108,31 +100,11 @@
   <div class="admin-panel" id="adminPanel">
     <div class="admin-topbar">
       <h1><i class="fa fa-shield-halved"></i> Admin Panel</h1>
-      <button class="btn btn-outline" id="logoutBtn" style="padding:8px 14px; font-size:13px;">
-        <i class="fa fa-right-from-bracket"></i> Logout
-      </button>
     </div>
 
     <div class="admin-tabs">
       <div class="admin-tab active" data-tab="add">Add New</div>
       <div class="admin-tab" data-tab="manage">Manage Content</div>
-      <div class="admin-tab" data-tab="hero">Hero Banners</div>
-    </div>
-
-    <div class="admin-form-section" id="tab-hero">
-      <div id="heroFormModeLabel" style="font-size:13px; color:#ff2d95; font-weight:600; margin-bottom:10px; display:none;">
-        <i class="fa fa-pen"></i> Editing banner
-        <a href="#" id="cancelHeroEdit" style="color:var(--text-faint); margin-left:8px;">(cancel)</a>
-      </div>
-      <div class="form-group">
-        <label>Banner Image URL *</label>
-        <input type="text" class="admin-input" id="heroImageInput" placeholder="https://...">
-        <div class="form-hint">Home page top eke hero slider eke pennana image eka. Recommended: wide banner image (16:9 ratio wage).</div>
-      </div>
-      <button class="btn btn-primary" id="saveHeroBtn" style="width:100%; justify-content:center; margin-bottom:20px;">
-        <i class="fa fa-save"></i> Save Banner
-      </button>
-      <div id="heroBannerList"><div class="details-skeleton">Loading...</div></div>
     </div>
 
     <div class="admin-form-section active" id="tab-add">
@@ -144,7 +116,7 @@
       <div class="form-group" style="border:1px solid var(--border); border-radius:10px; padding:12px; background:var(--card);">
         <label><i class="fa fa-bolt"></i> Auto-Fill from URL</label>
         <div style="display:flex; gap:8px;">
-          <input type="text" class="admin-input" id="f_autofillUrl" placeholder="TMDB or IMDb URL / IMDb tt-ID" style="margin-bottom:0; flex:1;">
+          <input type="text" class="admin-input" id="f_autofillUrl" placeholder="TMDB or IMDb URL / IMDb tt-ID" style="margin-bottom:0; flex:1; min-width:0;">
           <button class="btn btn-secondary" id="autofillBtn" style="flex-shrink:0; padding:12px 16px;"><i class="fa fa-magic"></i></button>
         </div>
         <div class="form-hint">
@@ -168,14 +140,14 @@
         </div>
         <div class="form-group">
           <label>Year</label>
-          <input type="text" class="admin-input" id="f_year" placeholder="2026">
+          <input type="text" class="admin-input" id="f_year" placeholder="2026" inputmode="numeric">
         </div>
       </div>
 
       <div class="form-row">
         <div class="form-group">
           <label>IMDb Rating</label>
-          <input type="text" class="admin-input" id="f_rating" placeholder="7.8">
+          <input type="text" class="admin-input" id="f_rating" placeholder="7.8" inputmode="decimal">
         </div>
         <div class="form-group" id="durationGroup">
           <label>Duration</label>
@@ -199,12 +171,12 @@
 
       <div class="form-group">
         <label>Poster Image URL *</label>
-        <input type="text" class="admin-input" id="f_poster" placeholder="https://...">
+        <input type="url" class="admin-input" id="f_poster" placeholder="https://...">
       </div>
 
       <div class="form-group">
         <label>Backdrop / Banner Image URL <span class="form-hint">(hero slider + details page)</span></label>
-        <input type="text" class="admin-input" id="f_backdrop" placeholder="https://...">
+        <input type="url" class="admin-input" id="f_backdrop" placeholder="https://...">
         <div class="hero-toggle">
           <div class="hero-toggle-text">
             <div class="hero-toggle-title"><i class="fa fa-images"></i> Show in Home Hero Slider</div>
@@ -229,7 +201,7 @@
 
       <div class="form-group" id="movieVideoGroup">
         <label>Video URL / Embed Link *</label>
-        <input type="text" class="admin-input" id="f_videoUrl" placeholder="Direct .mp4 link or embed/iframe URL">
+        <input type="url" class="admin-input" id="f_videoUrl" placeholder="Direct .mp4 link or embed/iframe URL">
         <div class="form-hint">YouTube link, direct .mp4, or any streaming embed URL — all supported.</div>
       </div>
 
@@ -253,7 +225,7 @@
           <label class="section-check"><input type="checkbox" value="anime"> Anime</label>
           <label class="section-check"><input type="checkbox" value="series"> TV Shows Page</label>
         </div>
-        <div class="form-hint">Meka select kale nathnam home page eke pennanne na</div>
+        <div class="form-hint">Meka select kale nathnam site eke kisima thanaka pennanne na</div>
       </div>
 
       <button class="btn btn-primary" id="saveBtn" style="width:100%; justify-content:center; margin-top:6px;">
@@ -270,19 +242,34 @@
   <div class="admin-toast" id="toast"></div>
 
   <!-- ============================================================
-       LOGIN LOGIC — plain script, NOT a module.
-       Runs immediately, independent of Firebase — Unlock always works
-       even if the Firebase module below fails to load.
+       LOGIN + FORM LOGIC — plain script, NOT a module.
+       Firebase නැතිව වුනත් Unlock වැඩ කරනවා.
   ============================================================ -->
   <script>
     const ADMIN_PASSWORD = "vn";
 
+    // HTML escape — Firestore / user data innerHTML ට දාද්දි XSS සහ අකුරු කැඩීම වළක්වන්න
+    const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
+    window.esc = esc;
+    // via.placeholder.com නැවතිලා — inline placeholder
+    const PH = 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80"><rect width="100%" height="100%" fill="#222"/><text x="50%" y="58%" fill="#777" font-family="Arial" font-size="30" text-anchor="middle">?</text></svg>');
+    window.PH = PH;
+    document.addEventListener('error', e => {
+      const t = e.target;
+      if (t && t.tagName === 'IMG' && !t.dataset.fb) { t.dataset.fb = '1'; t.src = PH; }
+    }, true);
+    const isHttp = u => /^https?:\/\//i.test(String(u || '').trim());
+    window.isHttp = isHttp;
+
+    let toastTimer;
     function showToast(msg) {
       const toast = document.getElementById('toast');
       toast.textContent = msg;
       toast.classList.add('show');
-      setTimeout(() => toast.classList.remove('show'), 2200);
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toast.classList.remove('show'), 2600);
     }
+    window.showToast = showToast;
 
     const loginWrap = document.getElementById('loginWrap');
     const adminPanel = document.getElementById('adminPanel');
@@ -290,16 +277,17 @@
     function unlock() {
       loginWrap.style.display = 'none';
       adminPanel.classList.add('active');
-      if (window.loadManageList) window.loadManageList();
     }
 
-    if (sessionStorage.getItem('mml_admin_auth') === 'true') unlock();
+    let savedAuth = false;
+    try { savedAuth = sessionStorage.getItem('mml_admin_auth') === 'true'; } catch (e) {}
+    if (savedAuth) unlock();
 
     function tryUnlock() {
       const passInput = document.getElementById('passInput');
       const passError = document.getElementById('passError');
       if (passInput.value === ADMIN_PASSWORD) {
-        sessionStorage.setItem('mml_admin_auth', 'true');
+        try { sessionStorage.setItem('mml_admin_auth', 'true'); } catch (e) {}
         passError.textContent = '';
         unlock();
       } else {
@@ -307,12 +295,7 @@
       }
     }
     document.getElementById('unlockBtn').addEventListener('click', tryUnlock);
-    document.getElementById('passInput').addEventListener('keypress', (e) => { if (e.key === 'Enter') tryUnlock(); });
-
-    document.getElementById('logoutBtn').addEventListener('click', () => {
-      sessionStorage.removeItem('mml_admin_auth');
-      location.reload();
-    });
+    document.getElementById('passInput').addEventListener('keydown', (e) => { if (e.key === 'Enter') tryUnlock(); });
 
     const tabs = document.querySelectorAll('.admin-tab');
     tabs.forEach(tab => {
@@ -321,8 +304,10 @@
         tab.classList.add('active');
         document.querySelectorAll('.admin-form-section').forEach(s => s.classList.remove('active'));
         document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
-        if (tab.dataset.tab === 'manage' && window.loadManageList) window.loadManageList();
-        if (tab.dataset.tab === 'hero' && window.loadHeroBanners) window.loadHeroBanners();
+        if (tab.dataset.tab === 'manage') {
+          if (window.loadManageList) window.loadManageList();
+          else window.__pendingManage = true;   // Firebase තාම load වෙන්නේ නම්, ඉවර වුනාම load කරනවා
+        }
       });
     });
 
@@ -353,12 +338,12 @@
       row.style.padding = '10px';
       row.innerHTML = `
         <div style="display:flex; gap:6px; margin-bottom:6px;">
-          <input type="number" class="ep-season admin-input" placeholder="Season" value="${data.season || 1}" style="padding:9px;">
-          <input type="number" class="ep-episode admin-input" placeholder="Ep #" value="${data.episode || ''}" style="padding:9px;">
+          <input type="number" class="ep-season admin-input" placeholder="Season" value="${Number(data.season) || 1}" style="padding:9px; margin-bottom:0;" inputmode="numeric">
+          <input type="number" class="ep-episode admin-input" placeholder="Ep #" value="${Number(data.episode) || ''}" style="padding:9px; margin-bottom:0;" inputmode="numeric">
           <span class="ep-remove" style="color:#ff5b5b; cursor:pointer; display:flex; align-items:center; padding:0 6px;"><i class="fa fa-trash"></i></span>
         </div>
-        <input type="text" class="ep-title admin-input" placeholder="Episode Title" value="${(data.title || '').replace(/"/g,'&quot;')}" style="margin-bottom:6px; padding:9px;">
-        <input type="text" class="ep-videourl admin-input" placeholder="Episode Video URL" value="${(data.videoUrl || '').replace(/"/g,'&quot;')}" style="padding:9px;">
+        <input type="text" class="ep-title admin-input" placeholder="Episode Title" value="${esc(data.title)}" style="margin-bottom:6px; padding:9px;">
+        <input type="text" class="ep-videourl admin-input" placeholder="Episode Video URL" value="${esc(data.videoUrl)}" style="padding:9px; margin-bottom:0;">
       `;
       row.querySelector('.ep-remove').addEventListener('click', () => row.remove());
       episodeBuilder.appendChild(row);
@@ -396,19 +381,20 @@
       row.style.padding = '10px';
       row.innerHTML = `
         <div style="display:flex; gap:6px; margin-bottom:6px; align-items:center;">
-          <img class="cast-photo-preview" src="${(data.photo || '').replace(/"/g,'&quot;') || 'https://via.placeholder.com/40x40/222/fff?text=%3F'}">
-          <input type="text" class="cast-photo-input admin-input" placeholder="Photo URL" value="${(data.photo || '').replace(/"/g,'&quot;')}" style="padding:9px; flex:1; margin-bottom:0;">
+          <img class="cast-photo-preview" src="${esc(data.photo) || PH}" alt="">
+          <input type="text" class="cast-photo-input admin-input" placeholder="Photo URL" value="${esc(data.photo)}" style="padding:9px; flex:1; min-width:0; margin-bottom:0;">
           <span class="cast-remove" style="color:#ff5b5b; cursor:pointer; display:flex; align-items:center; padding:0 6px;"><i class="fa fa-trash"></i></span>
         </div>
         <div style="display:flex; gap:6px;">
-          <input type="text" class="cast-name-input admin-input" placeholder="Actor Name" value="${(data.name || '').replace(/"/g,'&quot;')}" style="padding:9px; flex:1;">
-          <input type="text" class="cast-character-input admin-input" placeholder="Character" value="${(data.character || '').replace(/"/g,'&quot;')}" style="padding:9px; flex:1;">
+          <input type="text" class="cast-name-input admin-input" placeholder="Actor Name" value="${esc(data.name)}" style="padding:9px; flex:1; min-width:0; margin-bottom:0;">
+          <input type="text" class="cast-character-input admin-input" placeholder="Character" value="${esc(data.character)}" style="padding:9px; flex:1; min-width:0; margin-bottom:0;">
         </div>
       `;
       const preview = row.querySelector('.cast-photo-preview');
       const photoInput = row.querySelector('.cast-photo-input');
       photoInput.addEventListener('input', () => {
-        preview.src = photoInput.value.trim() || 'https://via.placeholder.com/40x40/222/fff?text=%3F';
+        delete preview.dataset.fb;
+        preview.src = photoInput.value.trim() || PH;
       });
       row.querySelector('.cast-remove').addEventListener('click', () => row.remove());
       castBuilder.appendChild(row);
@@ -416,8 +402,7 @@
 
     function getCastFromForm() {
       const cast = [];
-      castBuilder.childNodes.forEach(row => {
-        if (!row.querySelector) return;
+      castBuilder.querySelectorAll('.episode-row').forEach(row => {
         const photo = row.querySelector('.cast-photo-input')?.value.trim();
         const name = row.querySelector('.cast-name-input')?.value.trim();
         const character = row.querySelector('.cast-character-input')?.value.trim();
@@ -429,12 +414,6 @@
     function clearCastBuilder() { castBuilder.innerHTML = ''; }
 
     // ---- Sections (checkbox grid) ----
-    // Was a native <select multiple> before — on mobile, a single tap in
-    // the native picker could replace the whole selection instead of
-    // adding to it, so "Anime" would get ticked but any earlier picks (or
-    // the tick itself) silently didn't stick. Checkboxes give one
-    // independent on/off control per section — no ambiguity, works the
-    // same on every device.
     const sectionsGrid = document.getElementById('f_sections');
     function getSectionsFromForm() {
       return Array.from(sectionsGrid.querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.value);
@@ -476,21 +455,6 @@
     }
     cancelEdit.addEventListener('click', (e) => { e.preventDefault(); resetForm(); });
 
-    // ---- Hero Banners form state ----
-    let editingHeroId = null;
-    const heroImageInput = document.getElementById('heroImageInput');
-    const saveHeroBtn = document.getElementById('saveHeroBtn');
-    const heroFormModeLabel = document.getElementById('heroFormModeLabel');
-    const cancelHeroEdit = document.getElementById('cancelHeroEdit');
-
-    function resetHeroForm() {
-      editingHeroId = null;
-      heroFormModeLabel.style.display = 'none';
-      heroImageInput.value = '';
-      saveHeroBtn.innerHTML = '<i class="fa fa-save"></i> Save Banner';
-    }
-    cancelHeroEdit.addEventListener('click', (e) => { e.preventDefault(); resetHeroForm(); });
-
     // ============================================================
     // AUTO-FILL FROM URL (TMDB / IMDb) — uses TMDB API.
     // ============================================================
@@ -498,7 +462,7 @@
     const TMDB_IMG = 'https://image.tmdb.org/t/p';
 
     function getTmdbKey() {
-      return (localStorage.getItem(TMDB_KEY_STORAGE) || '').trim();
+      try { return (localStorage.getItem(TMDB_KEY_STORAGE) || '').trim(); } catch (e) { return ''; }
     }
 
     function promptForTmdbKey() {
@@ -508,7 +472,7 @@
         existing || ''
       );
       if (key !== null) {
-        localStorage.setItem(TMDB_KEY_STORAGE, key.trim());
+        try { localStorage.setItem(TMDB_KEY_STORAGE, key.trim()); } catch (e) {}
         if (key.trim()) showToast('✅ API Key saved');
       }
     }
@@ -523,9 +487,9 @@
       return null;
     }
 
-    async function tmdbFetch(path, keyParam, headers) {
-      const sep = path.includes('?') ? '&' : '?';
-      const res = await fetch(`https://api.themoviedb.org/3${path}${sep}${keyParam}`, { headers });
+    async function tmdbFetch(path, query, headers) {
+      const qs = query ? (path.includes('?') ? '&' : '?') + query : '';
+      const res = await fetch(`https://api.themoviedb.org/3${path}${qs}`, { headers });
       if (!res.ok) {
         if (res.status === 401) throw new Error('API Key එක වැරදියි');
         if (res.status === 404) throw new Error('Record එක හම්බුනේ නෑ');
@@ -539,20 +503,21 @@
       if (!key) { promptForTmdbKey(); throw new Error('TMDB API Key එකක් set කරන්න මුලින්ම'); }
       const isBearer = key.startsWith('eyJ');
       const headers = isBearer ? { Authorization: `Bearer ${key}`, accept: 'application/json' } : {};
-      const keyParam = isBearer ? '' : `api_key=${encodeURIComponent(key)}`;
+      const keyQ = isBearer ? '' : `api_key=${encodeURIComponent(key)}`;
+      const join = (...parts) => parts.filter(Boolean).join('&');
 
       let type, id;
       if (parsed.source === 'tmdb') {
         type = parsed.type;
         id = parsed.id;
       } else {
-        const found = await tmdbFetch(`/find/${parsed.imdbId}`, keyParam ? `${keyParam}&external_source=imdb_id` : `external_source=imdb_id`, headers);
+        const found = await tmdbFetch(`/find/${parsed.imdbId}`, join(keyQ, 'external_source=imdb_id'), headers);
         if (found.movie_results && found.movie_results.length) { type = 'movie'; id = found.movie_results[0].id; }
         else if (found.tv_results && found.tv_results.length) { type = 'tv'; id = found.tv_results[0].id; }
         else throw new Error('මේ IMDb ID එකට TMDB එකේ match වෙන්නක් නෑ');
       }
 
-      const d = await tmdbFetch(`/${type}/${id}`, keyParam ? `${keyParam}&append_to_response=credits,videos` : `append_to_response=credits,videos`, headers);
+      const d = await tmdbFetch(`/${type}/${id}`, join(keyQ, 'append_to_response=credits,videos'), headers);
       return { type, data: d };
     }
 
@@ -615,27 +580,24 @@
       }
     });
 
-    // Firebase-dependent handlers are attached lower down once Firebase loads.
+    // Firebase-dependent handlers are attached below once Firebase loads.
     window.__mmlAdminHelpers = {
       getSectionsFromForm, setSectionsInForm, getEpisodesFromForm, addEpisodeRow,
       clearEpisodeBuilder, getCastFromForm, addCastRow, clearCastBuilder,
       resetForm, updateFieldVisibility, showInHeroInput,
       get editingId() { return editingId; }, set editingId(v) { editingId = v; },
-      formModeLabel, editingTitle, saveBtn, tabs,
-      heroImageInput, saveHeroBtn, heroFormModeLabel, resetHeroForm,
-      get editingHeroId() { return editingHeroId; }, set editingHeroId(v) { editingHeroId = v; }
+      formModeLabel, editingTitle, saveBtn, tabs
     };
   </script>
 
   <!-- ============================================================
        FIREBASE LOGIC — separate module, wrapped in try/catch.
-       If this fails to load, login still works; only Save/Manage
-       will show an error toast.
+       මේක load වුනේ නැතත් login වැඩ කරනවා; Save/Manage විතරක් error පෙන්නනවා.
   ============================================================ -->
   <script type="module">
     try {
       const { initializeApp } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js");
-      const { getFirestore, collection, getDocs, doc, addDoc, updateDoc, deleteDoc } =
+      const { getFirestore, collection, getDocs, doc, addDoc, updateDoc, deleteDoc, deleteField } =
         await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js");
 
       const firebaseConfig = {
@@ -650,32 +612,40 @@
       const db = getFirestore(app);
 
       const H = window.__mmlAdminHelpers;
+      const esc = window.esc, PH = window.PH, isHttp = window.isHttp, showToast = window.showToast;
       let cachedContent = [];
+      let contentLoaded = false;
+
+      async function fetchContent() {
+        const snap = await getDocs(collection(db, "movies"));
+        const items = [];
+        snap.forEach(d => { const data = d.data(); data.id = d.id; items.push(data); });
+        // අලුත්ම ඒවා උඩින්
+        items.sort((a, b) => (Date.parse(b.date) || 0) - (Date.parse(a.date) || 0));
+        cachedContent = items;
+        contentLoaded = true;
+        return items;
+      }
+
+      // trailer: http link හෝ YouTube video ID (අකුරු 11ක්)
+      const validTrailer = t => !t || isHttp(t) || /^[\w-]{11}$/.test(t);
 
       H.saveBtn.addEventListener('click', async () => {
         const title = document.getElementById('f_title').value.trim();
         const poster = document.getElementById('f_poster').value.trim();
         const backdrop = document.getElementById('f_backdrop').value.trim();
+        const trailer = document.getElementById('f_trailer').value.trim();
         const category = document.getElementById('f_category').value;
         const sections = H.getSectionsFromForm();
         const showInHero = H.showInHeroInput.checked;
 
         if (!title || !poster) { showToast('Title සහ Poster URL අනිවාර්යයි'); return; }
+        if (!isHttp(poster)) { showToast('Poster URL එක http:// හෝ https:// වලින් පටන් ගන්න ඕන'); return; }
+        if (backdrop && !isHttp(backdrop)) { showToast('Backdrop URL එක http:// හෝ https:// වලින් පටන් ගන්න ඕන'); return; }
+        if (!validTrailer(trailer)) { showToast('Trailer එක YouTube link එකක් හෝ video ID එකක් වෙන්න ඕන'); return; }
         if (sections.length === 0) { showToast('අඩුම තරමින් Section එකක්වත් select කරන්න'); return; }
         if (showInHero && !backdrop) { showToast('Hero slider එකට දාන්න Backdrop URL එකක් අනිවාර්යයි'); return; }
 
-        // ---- FIX: "edit කරාම list එකේ අන්තිමට යනවා" bug -----------------
-        // Kalin: data object eke "date: new Date().toISOString()" kiyala
-        // hardcode karala thibba nisa, EDIT karana welawatath aluth date
-        // ekak assign wela — movies.html/series.html webpage dෙකම list eka
-        // sort karanne date ascending (parana ewa issella, aluthma ewa
-        // anthimata) widiyata nisa, edit kala movie eka anthimatama pනila.
-        // Dan: "date" field eka data object ekata methanin danne na.
-        //   - Aluth movie ekak add karana welawata witharak "date" ekak
-        //     dagannawa (pahala addDoc call eke).
-        //   - Edit karana welawata "date" field eke touch karanne na —
-        //     ea nisa Firestore eke thiyena parana date ekama thawath
-        //     wenas nathuwa thiyenawa, list eke position eka wenas wenne na.
         const data = {
           title, category,
           type: category === 'series' ? 'series' : 'movie',
@@ -688,7 +658,7 @@
           backdrop,
           showInHero,
           description: document.getElementById('f_description').value.trim(),
-          trailer: document.getElementById('f_trailer').value.trim(),
+          trailer,
           sections
         };
 
@@ -698,27 +668,42 @@
             showToast('⚠️ අඩුම තරමින් එක Episode එකකටවත් Video URL එකක් දාන්න');
             return;
           }
+          if (data.episodes.some(e => !isHttp(e.videoUrl))) {
+            showToast('Episode Video URL සියල්ල http:// හෝ https:// වලින් පටන් ගන්න ඕන');
+            return;
+          }
+          if (H.editingId) data.videoUrl = deleteField();   // Movie → Series වෙනස් කළොත් පරණ videoUrl අයින් වෙන්න
         } else {
           data.videoUrl = document.getElementById('f_videoUrl').value.trim();
+          if (!data.videoUrl) { showToast('Video URL එක අනිවාර්යයි'); return; }
+          if (!isHttp(data.videoUrl)) { showToast('Video URL එක http:// හෝ https:// වලින් පටන් ගන්න ඕන'); return; }
+          if (H.editingId) data.episodes = deleteField();   // Series → Movie වෙනස් කළොත් පරණ episodes අයින් වෙන්න
         }
 
         H.saveBtn.disabled = true;
         H.saveBtn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Saving...';
 
         try {
+          // Site එක එකම නමින් තියෙන titles වලින් එකක් විතරයි පෙන්නන්නේ — ඒ නිසා duplicate එකක් ගැන අනතුරු අඟවනවා
+          if (!contentLoaded) { try { await fetchContent(); } catch (e) {} }
+          const dup = cachedContent.some(m => m.id !== H.editingId && (m.title || '').trim().toLowerCase() === title.toLowerCase());
+          if (dup && !confirm('මේ නමින්ම title එකක් දැනටමත් තියෙනවා. Site එකේ එකම නමින් එකක් විතරයි පෙන්නන්නේ. ඒත් save කරන්නද?')) {
+            return;
+          }
+
           if (H.editingId) {
-            // EDIT: date field එකට අත නොදාන්නම් update කරනවා — original
-            // position eka list eke thiyenawa.
+            // EDIT: "date" field එකට අත නොදාන්නම් — list එකේ position එක වෙනස් වෙන්නේ නෑ
             await updateDoc(doc(db, "movies", H.editingId), data);
             showToast('✅ Updated successfully');
           } else {
-            // NEW: methanata witharak aluth date ekak dagannawa.
+            // NEW: අලුත් title එකට විතරයි date එකක් දාන්නේ
             data.date = new Date().toISOString();
             await addDoc(collection(db, "movies"), data);
             showToast('✅ Added successfully');
           }
           H.resetForm();
-          loadManageList();
+          contentLoaded = false;
+          if (document.getElementById('tab-manage').classList.contains('active')) loadManageList();
         } catch (err) {
           console.error(err);
           showToast('❌ Error: ' + err.message);
@@ -732,29 +717,37 @@
         const list = document.getElementById('manageList');
         list.innerHTML = '<div class="details-skeleton"><i class="fa fa-spinner fa-spin"></i> Loading...</div>';
         try {
-          const snap = await getDocs(collection(db, "movies"));
-          cachedContent = [];
-          snap.forEach(d => { const data = d.data(); data.id = d.id; cachedContent.push(data); });
-          renderManageList(cachedContent);
+          await fetchContent();
+          renderManageList(filteredContent());
         } catch (err) {
+          console.error(err);
           list.innerHTML = '<div class="details-skeleton">⚠️ Load කරගන්න බැරි උනා</div>';
         }
       }
       window.loadManageList = loadManageList;
 
+      function filteredContent() {
+        const q = document.getElementById('manageSearch').value.trim().toLowerCase();
+        return q ? cachedContent.filter(m => (m.title || '').toLowerCase().includes(q)) : cachedContent;
+      }
+
       function renderManageList(items) {
         const list = document.getElementById('manageList');
-        if (items.length === 0) { list.innerHTML = '<div class="details-skeleton">Content නෑ තාම</div>'; return; }
+        if (items.length === 0) {
+          const searching = document.getElementById('manageSearch').value.trim();
+          list.innerHTML = `<div class="details-skeleton">${searching ? 'Match වෙන දෙයක් නෑ' : 'Content නෑ තාම'}</div>`;
+          return;
+        }
         list.innerHTML = items.map(m => `
           <div class="admin-list-item">
-            <img src="${m.poster || 'https://via.placeholder.com/46x66/222/fff'}" loading="lazy">
+            <img src="${esc(m.poster) || PH}" loading="lazy" alt="">
             <div class="admin-list-info">
-              <div class="admin-list-title">${m.title}</div>
-              <div class="admin-list-meta">${m.category === 'series' ? 'TV Series' : 'Movie'} · ${m.year || 'N/A'} ${m.showInHero ? '· <span class="hero-tag"><i class="fa fa-images"></i> Hero</span>' : ''} ${Array.isArray(m.sections) && m.sections.length ? '· ' + m.sections.join(', ') : ''}</div>
+              <div class="admin-list-title">${esc(m.title)}</div>
+              <div class="admin-list-meta">${m.category === 'series' ? 'TV Series' : 'Movie'} · ${esc(m.year || 'N/A')} ${m.showInHero ? '· <span class="hero-tag"><i class="fa fa-images"></i> Hero</span>' : ''} ${Array.isArray(m.sections) && m.sections.length ? '· ' + esc(m.sections.join(', ')) : ''}</div>
             </div>
             <div class="admin-list-actions">
-              <button class="admin-icon-btn edit" data-id="${m.id}"><i class="fa fa-pen"></i></button>
-              <button class="admin-icon-btn delete" data-id="${m.id}"><i class="fa fa-trash"></i></button>
+              <button class="admin-icon-btn edit" data-id="${esc(m.id)}" aria-label="Edit"><i class="fa fa-pen"></i></button>
+              <button class="admin-icon-btn delete" data-id="${esc(m.id)}" aria-label="Delete"><i class="fa fa-trash"></i></button>
             </div>
           </div>
         `).join('');
@@ -762,10 +755,7 @@
         list.querySelectorAll('.delete').forEach(btn => btn.addEventListener('click', () => confirmDelete(btn.dataset.id)));
       }
 
-      document.getElementById('manageSearch').addEventListener('input', (e) => {
-        const q = e.target.value.toLowerCase();
-        renderManageList(cachedContent.filter(m => m.title.toLowerCase().includes(q)));
-      });
+      document.getElementById('manageSearch').addEventListener('input', () => renderManageList(filteredContent()));
 
       function loadIntoForm(id) {
         const m = cachedContent.find(x => x.id === id);
@@ -786,6 +776,7 @@
         document.getElementById('f_description').value = m.description || '';
         document.getElementById('f_trailer').value = m.trailer || '';
         document.getElementById('f_videoUrl').value = m.videoUrl || '';
+        document.getElementById('f_autofillUrl').value = '';
         H.setSectionsInForm(m.sections);
 
         H.clearEpisodeBuilder();
@@ -795,8 +786,8 @@
         if (Array.isArray(m.castMembers) && m.castMembers.length > 0) {
           m.castMembers.forEach(c => H.addCastRow(c));
         } else if (m.cast) {
-          // migrate legacy comma-separated cast string into the builder
-          m.cast.split(',').map(c => c.trim()).filter(Boolean).forEach(name => H.addCastRow({ name }));
+          // පරණ comma-separated cast string එක builder එකට
+          String(m.cast).split(',').map(c => c.trim()).filter(Boolean).forEach(name => H.addCastRow({ name }));
         }
 
         H.updateFieldVisibility();
@@ -811,104 +802,23 @@
         const m = cachedContent.find(x => x.id === id);
         if (!confirm(`"${m?.title || 'this title'}" delete කරන්න ස්ථිර ද?`)) return;
         deleteDoc(doc(db, "movies", id))
-          .then(() => { showToast('🗑️ Deleted'); loadManageList(); })
+          .then(() => {
+            if (H.editingId === id) H.resetForm();   // delete කළ එකම edit කරමින් හිටියොත් form එක clear කරනවා
+            showToast('🗑️ Deleted');
+            loadManageList();
+          })
           .catch(err => showToast('❌ Error: ' + err.message));
       }
 
-      /* =========================================================
-         HERO BANNERS CRUD — separate "heroBanners" collection.
-         Each doc: { imageUrl, date }
-         ========================================================= */
-      let cachedHeroBanners = [];
-
-      H.saveHeroBtn.addEventListener('click', async () => {
-        const imageUrl = H.heroImageInput.value.trim();
-        if (!imageUrl) { showToast('Image URL එක අනිවාර්යයි'); return; }
-
-        H.saveHeroBtn.disabled = true;
-        H.saveHeroBtn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Saving...';
-
-        try {
-          if (H.editingHeroId) {
-            await updateDoc(doc(db, "heroBanners", H.editingHeroId), { imageUrl });
-            showToast('✅ Banner updated');
-          } else {
-            await addDoc(collection(db, "heroBanners"), { imageUrl, date: new Date().toISOString() });
-            showToast('✅ Banner added');
-          }
-          H.resetHeroForm();
-          loadHeroBanners();
-        } catch (err) {
-          console.error(err);
-          showToast('❌ Error: ' + err.message);
-        } finally {
-          H.saveHeroBtn.disabled = false;
-          H.saveHeroBtn.innerHTML = '<i class="fa fa-save"></i> Save Banner';
-        }
-      });
-
-      async function loadHeroBanners() {
-        const list = document.getElementById('heroBannerList');
-        list.innerHTML = '<div class="details-skeleton"><i class="fa fa-spinner fa-spin"></i> Loading...</div>';
-        try {
-          const snap = await getDocs(collection(db, "heroBanners"));
-          cachedHeroBanners = [];
-          snap.forEach(d => { const data = d.data(); data.id = d.id; cachedHeroBanners.push(data); });
-          cachedHeroBanners.sort((a, b) => new Date(a.date || 0) - new Date(b.date || 0));
-          renderHeroBannerList();
-        } catch (err) {
-          list.innerHTML = '<div class="details-skeleton">⚠️ Load කරගන්න බැරි උනා</div>';
-        }
-      }
-      window.loadHeroBanners = loadHeroBanners;
-
-      function renderHeroBannerList() {
-        const list = document.getElementById('heroBannerList');
-        if (cachedHeroBanners.length === 0) { list.innerHTML = '<div class="details-skeleton">Banners නෑ තාම</div>'; return; }
-        list.innerHTML = cachedHeroBanners.map(b => `
-          <div class="admin-list-item">
-            <img src="${b.imageUrl}" loading="lazy" style="width:80px; height:46px; object-fit:cover;">
-            <div class="admin-list-info">
-              <div class="admin-list-title">Banner</div>
-              <div class="admin-list-meta">${b.imageUrl}</div>
-            </div>
-            <div class="admin-list-actions">
-              <button class="admin-icon-btn edit" data-id="${b.id}"><i class="fa fa-pen"></i></button>
-              <button class="admin-icon-btn delete" data-id="${b.id}"><i class="fa fa-trash"></i></button>
-            </div>
-          </div>
-        `).join('');
-        list.querySelectorAll('.edit').forEach(btn => btn.addEventListener('click', () => loadHeroIntoForm(btn.dataset.id)));
-        list.querySelectorAll('.delete').forEach(btn => btn.addEventListener('click', () => confirmDeleteHero(btn.dataset.id)));
-      }
-
-      function loadHeroIntoForm(id) {
-        const b = cachedHeroBanners.find(x => x.id === id);
-        if (!b) return;
-        H.editingHeroId = id;
-        H.heroFormModeLabel.style.display = 'block';
-        H.heroImageInput.value = b.imageUrl || '';
-        H.saveHeroBtn.innerHTML = '<i class="fa fa-save"></i> Update Banner';
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }
-
-      function confirmDeleteHero(id) {
-        if (!confirm('Meka delete කරන්න ස්ථිර ද?')) return;
-        deleteDoc(doc(db, "heroBanners", id))
-          .then(() => { showToast('🗑️ Deleted'); loadHeroBanners(); })
-          .catch(err => showToast('❌ Error: ' + err.message));
-      }
+      // Firebase load වෙන්න කලින් Manage tab එක open කළා නම් දැන් load කරනවා
+      if (window.__pendingManage) { window.__pendingManage = false; loadManageList(); }
 
     } catch (err) {
       console.error('Firebase failed to load:', err);
       const saveBtn = document.getElementById('saveBtn');
       if (saveBtn) saveBtn.addEventListener('click', () => showToast('❌ Firebase load failed — Save unavailable'));
-      const saveHeroBtn = document.getElementById('saveHeroBtn');
-      if (saveHeroBtn) saveHeroBtn.addEventListener('click', () => showToast('❌ Firebase load failed — Save unavailable'));
       const list = document.getElementById('manageList');
       if (list) list.innerHTML = '<div class="details-skeleton">⚠️ Firebase load කරගන්න බැරි උනා</div>';
-      const heroList = document.getElementById('heroBannerList');
-      if (heroList) heroList.innerHTML = '<div class="details-skeleton">⚠️ Firebase load කරගන්න බැරි උනා</div>';
     }
   </script>
 </body>
