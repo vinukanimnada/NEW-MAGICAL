@@ -11,7 +11,7 @@ const cfg = {
 };
 const app = getApps().length ? getApps()[0] : initializeApp(cfg);
 const db = getFirestore(app);
-const DEFAULT_INTRO = 'https://pub-08576c48d56a414dabb33e79de2c0a73.r2.dev/Vinuka/intro.MP4';
+const DEFAULT_INTRO = 'https://pub-08576c48d56a414dabb33e79de2c0a73.r2.dev/Vinuka/intro-defult.MP4';
 const toast = m => (window.showToast ? window.showToast(m) : alert(m));
 const isHttp = u => /^https?:\/\//i.test(String(u || '').trim());
 
