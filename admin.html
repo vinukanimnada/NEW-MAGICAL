@@ -35,6 +35,8 @@
   .admin-tabs::-webkit-scrollbar { display: none; }
   .admin-tab { flex: 0 0 auto; white-space: nowrap; text-align: center; padding: 10px 13px; font-size: 13.5px; font-weight: 600; color: var(--text-faint); cursor: pointer; border-bottom: 2px solid transparent; }
   .admin-tab.active { color: #ff2d95; border-color: #ff2d95; }
+  .tab-badge { display: none; min-width: 18px; height: 18px; padding: 0 5px; margin-left: 4px; border-radius: 9px; background: #ff2d95; color: #fff; font-size: 11px; font-weight: 700; line-height: 18px; text-align: center; vertical-align: 1px; }
+  .tab-badge.show { display: inline-block; }
   .admin-form-section { display: none; }
   .admin-form-section.active { display: block; }
   .form-group { margin-bottom: 14px; }
@@ -81,6 +83,26 @@
   .tgl input:checked + .tgl-track { background: #ff2d95; }
   .tgl input:checked + .tgl-track::after { transform: translateX(22px); }
   .hero-tag { color: #ff2d95; font-weight: 600; }
+
+  /* ===== Requests ===== */
+  .rq-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 14px; margin-bottom: 10px; }
+  .rq-card.done { opacity: 0.65; }
+  .rq-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+  .rq-title { font-size: 15px; font-weight: 700; word-break: break-word; }
+  .rq-type { flex-shrink: 0; font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 12px; background: rgba(255,45,149,0.15); color: #ff2d95; }
+  .rq-type.tvshow { background: rgba(77,195,255,0.15); color: #4dc3ff; }
+  .rq-type.anime { background: rgba(150,80,255,0.18); color: #b58bff; }
+  .rq-meta { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 12.5px; color: var(--text-dim); margin-top: 8px; }
+  .rq-meta i { color: var(--text-faint); margin-right: 4px; }
+  .rq-note { font-size: 13px; color: var(--text-dim); background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 9px 11px; margin-top: 10px; white-space: pre-wrap; word-break: break-word; }
+  .rq-link { display: inline-block; font-size: 12.5px; color: #4dc3ff; margin-top: 8px; word-break: break-all; }
+  .rq-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+  .rq-btn { display: inline-flex; align-items: center; gap: 6px; border: none; border-radius: 8px; padding: 9px 13px; font-size: 13px; font-weight: 600; cursor: pointer; background: rgba(128,128,128,0.18); color: var(--text); }
+  .rq-btn.add { background: #ff2d95; color: #fff; }
+  .rq-btn.del { color: #ff5b5b; }
+  .rq-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .rq-status { font-size: 11.5px; font-weight: 700; color: #22c55e; }
+  .rq-status.pending { color: #ffc107; }
 
   /* ===== Analytics ===== */
   .an-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 14px; }
@@ -138,6 +160,7 @@
     <div class="admin-tabs">
       <div class="admin-tab active" data-tab="add">Add New</div>
       <div class="admin-tab" data-tab="manage">Manage Content</div>
+      <div class="admin-tab" data-tab="requests">Requests <span class="tab-badge" id="reqBadge"></span></div>
       <div class="admin-tab" data-tab="trending">Daily Trending</div>
       <div class="admin-tab" data-tab="hero">Hero Slider</div>
       <div class="admin-tab" data-tab="analytics">Analytics</div>
@@ -147,6 +170,11 @@
       <div id="formModeLabel" style="font-size:13px; color:#ff2d95; font-weight:600; margin-bottom:10px; display:none;">
         <i class="fa fa-pen"></i> Editing existing title — <span id="editingTitle"></span>
         <a href="#" id="cancelEdit" style="color:var(--text-faint); margin-left:8px;">(cancel)</a>
+      </div>
+      <div id="fromReqLabel" style="font-size:13px; color:#ffc107; font-weight:600; margin-bottom:10px; display:none;">
+        <i class="fa fa-inbox"></i> Request එකකින් — <span id="fromReqTitle"></span>
+        <div class="form-hint" style="margin-top:2px;">Details පුරවලා Save කළාම මේ request එක automatic "Done" වෙනවා.</div>
+        <a href="#" id="cancelFromReq" style="color:var(--text-faint); font-size:12px;">(cancel)</a>
       </div>
 
       <div class="form-group" style="border:1px solid var(--border); border-radius:10px; padding:12px; background:var(--card);">
@@ -274,6 +302,20 @@
       <div id="manageList"><div class="details-skeleton">Loading...</div></div>
     </div>
 
+    <div class="admin-form-section" id="tab-requests">
+      <div class="an-toolbar">
+        <div class="an-chips" id="rqChips">
+          <button class="an-chip active" data-f="pending">Pending</button>
+          <button class="an-chip" data-f="done">Done</button>
+          <button class="an-chip" data-f="all">All</button>
+        </div>
+        <button class="admin-icon-btn" id="rqRefresh" aria-label="Refresh"><i class="fa fa-rotate"></i></button>
+      </div>
+      <input type="text" class="admin-input admin-search" id="rqSearch" placeholder="🔍 Search requests...">
+      <div class="form-hint" style="margin:-4px 0 12px;">Site එකේ Request page එකෙන් users යවපු movie / series requests මෙතන පෙන්නනවා. <b>Add</b> ඔබලා Add New form එක auto පුරවගෙන, Save කළාම request එක Done වෙනවා.</div>
+      <div id="requestsList"><div class="details-skeleton">Loading...</div></div>
+    </div>
+
     <div class="admin-form-section" id="tab-trending">
       <div class="form-hint" style="margin-bottom:10px;">Search කරලා කලින් add කරපු movie එකක් Home page එකේ <b>Daily Trending</b> එකට දාන්න. Switch එක On = Daily Trending එකේ පෙන්නනවා, Off = ඉවත් වෙනවා. (Home එකේ පෙන්නන්නේ අලුත්ම 8ක්)</div>
       <input type="text" class="admin-input admin-search" id="trendingSearch" placeholder="🔍 Search කරලා Daily Trending එකට add කරන්න...">
@@ -373,6 +415,7 @@
         document.querySelectorAll('.admin-form-section').forEach(s => s.classList.remove('active'));
         document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
         if (tab.dataset.tab === 'manage') callLoader('loadManageList');
+        if (tab.dataset.tab === 'requests') callLoader('loadRequests');
         if (tab.dataset.tab === 'trending') callLoader('loadTrending');
         if (tab.dataset.tab === 'hero') callLoader('loadHero');
         if (tab.dataset.tab === 'analytics') callLoader('loadAnalytics');
@@ -495,14 +538,18 @@
     const showInHeroInput = document.getElementById('f_showInHero');
 
     let editingId = null;
+    let fromRequestId = null;   // Requests tab එකෙන් "Add" කළ request එකේ id එක
     const saveBtn = document.getElementById('saveBtn');
     const formModeLabel = document.getElementById('formModeLabel');
     const editingTitle = document.getElementById('editingTitle');
     const cancelEdit = document.getElementById('cancelEdit');
+    const fromReqLabel = document.getElementById('fromReqLabel');
 
     function resetForm() {
       editingId = null;
+      fromRequestId = null;
       formModeLabel.style.display = 'none';
+      fromReqLabel.style.display = 'none';
       document.getElementById('f_title').value = '';
       document.getElementById('f_category').value = 'movie';
       document.getElementById('f_year').value = '';
@@ -522,6 +569,7 @@
       updateFieldVisibility();
     }
     cancelEdit.addEventListener('click', (e) => { e.preventDefault(); resetForm(); });
+    document.getElementById('cancelFromReq').addEventListener('click', (e) => { e.preventDefault(); resetForm(); });
 
     // ============================================================
     // AUTO-FILL FROM URL (TMDB / IMDb) — uses TMDB API.
@@ -654,7 +702,8 @@
       clearEpisodeBuilder, getCastFromForm, addCastRow, clearCastBuilder,
       resetForm, updateFieldVisibility, showInHeroInput,
       get editingId() { return editingId; }, set editingId(v) { editingId = v; },
-      formModeLabel, editingTitle, saveBtn, tabs
+      get fromRequestId() { return fromRequestId; }, set fromRequestId(v) { fromRequestId = v; },
+      formModeLabel, editingTitle, fromReqLabel, saveBtn, tabs
     };
   </script>
 
@@ -697,6 +746,14 @@
 
       // trailer: http link හෝ YouTube video ID (අකුරු 11ක්)
       const validTrailer = t => !t || isHttp(t) || /^[\w-]{11}$/.test(t);
+
+      function switchToAddTab() {
+        H.tabs.forEach(t => t.classList.remove('active'));
+        document.querySelector('.admin-tab[data-tab="add"]').classList.add('active');
+        document.querySelectorAll('.admin-form-section').forEach(s => s.classList.remove('active'));
+        document.getElementById('tab-add').classList.add('active');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
 
       H.saveBtn.addEventListener('click', async () => {
         const title = document.getElementById('f_title').value.trim();
@@ -759,6 +816,8 @@
             return;
           }
 
+          const reqId = H.fromRequestId;   // Requests tab එකෙන් ආපු නම්
+
           if (H.editingId) {
             // EDIT: "date" field එකට අත නොදාන්නම් — list එකේ position එක වෙනස් වෙන්නේ නෑ
             await updateDoc(doc(db, "movies", H.editingId), data);
@@ -768,6 +827,17 @@
             data.date = new Date().toISOString();
             await addDoc(collection(db, "movies"), data);
             showToast('✅ Added successfully');
+            // Request එකකින් ආපු නම් ඒක Done කරනවා
+            if (reqId) {
+              try {
+                await updateDoc(doc(db, "requests", reqId), { status: 'done' });
+                const rr = rqData.find(x => x.id === reqId);
+                if (rr) rr.status = 'done';
+                updateReqBadge();
+                if (document.getElementById('tab-requests').classList.contains('active')) renderRequests();
+                showToast('✅ Added — Request එක Done කළා');
+              } catch (e) { console.error(e); }
+            }
           }
           H.resetForm();
           contentLoaded = false;
@@ -829,6 +899,8 @@
         const m = cachedContent.find(x => x.id === id);
         if (!m) return;
         H.editingId = id;
+        H.fromRequestId = null;
+        H.fromReqLabel.style.display = 'none';
         H.formModeLabel.style.display = 'block';
         H.editingTitle.textContent = m.title;
 
@@ -859,11 +931,7 @@
         }
 
         H.updateFieldVisibility();
-        H.tabs.forEach(t => t.classList.remove('active'));
-        document.querySelector('.admin-tab[data-tab="add"]').classList.add('active');
-        document.querySelectorAll('.admin-form-section').forEach(s => s.classList.remove('active'));
-        document.getElementById('tab-add').classList.add('active');
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        switchToAddTab();
       }
 
       function confirmDelete(id) {
@@ -877,6 +945,153 @@
           })
           .catch(err => showToast('❌ Error: ' + err.message));
       }
+
+      /* =========================================================
+         REQUESTS — site එකේ Request page එකෙන් users යවන requests
+         Collection: requests { name, type, title, year, link, note, status, createdAt }
+         status: 'pending' (default) | 'done'
+         ========================================================= */
+      const RQ_RULES = `match /requests/{id} { allow create, read, update, delete: if true; }`;
+      const RQ_TYPES = { movie: 'Movie', tvshow: 'TV Series', anime: 'Anime' };
+      const rqBox = document.getElementById('requestsList');
+      const rqSearch = document.getElementById('rqSearch');
+      let rqData = [], rqFilter = 'pending';
+
+      const rqTime = r => (r.createdAt && typeof r.createdAt.toMillis === 'function') ? r.createdAt.toMillis() : 0;
+      const rqIsDone = r => r.status === 'done';
+      const rqDate = r => { const t = rqTime(r); return t ? new Date(t).toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' }) : '—'; };
+
+      async function fetchRequests() {
+        const snap = await getDocs(collection(db, 'requests'));
+        const list = [];
+        snap.forEach(d => list.push({ ...d.data(), id: d.id }));
+        list.sort((a, b) => rqTime(b) - rqTime(a));   // අලුත්ම ඒවා උඩින්
+        rqData = list;
+        updateReqBadge();
+        return list;
+      }
+
+      function updateReqBadge() {
+        const badge = document.getElementById('reqBadge');
+        const n = rqData.filter(r => !rqIsDone(r)).length;
+        badge.textContent = n > 99 ? '99+' : String(n);
+        badge.classList.toggle('show', n > 0);
+      }
+
+      async function loadRequests() {
+        rqBox.innerHTML = '<div class="details-skeleton"><i class="fa fa-spinner fa-spin"></i> Loading...</div>';
+        try {
+          await fetchRequests();
+          renderRequests();
+        } catch (err) {
+          console.error(err);
+          rqBox.innerHTML = err && err.code === 'permission-denied'
+            ? `<div class="an-section"><div class="an-h">⚠️ Firestore permission නෑ</div><div class="form-hint">Firebase Console → Firestore → Rules වල <b>match /databases/{database}/documents { ... }</b> ඇතුළට මේක එකතු කරන්න (දැනටමත් <b>requests</b> සඳහා create rule එකක් තියෙනවා නම් ඒක මේකෙන් replace කරන්න):</div><div class="an-pre">${esc(RQ_RULES)}</div></div>`
+            : '<div class="details-skeleton">⚠️ Load කරගන්න බැරි උනා</div>';
+        }
+      }
+      window.loadRequests = loadRequests;
+
+      function renderRequests() {
+        const pend = rqData.filter(r => !rqIsDone(r)).length;
+        const done = rqData.length - pend;
+        document.querySelectorAll('#rqChips .an-chip').forEach(c => {
+          const f = c.dataset.f;
+          c.classList.toggle('active', f === rqFilter);
+          c.textContent = (f === 'pending' ? 'Pending' : f === 'done' ? 'Done' : 'All') + ' (' + (f === 'pending' ? pend : f === 'done' ? done : rqData.length) + ')';
+        });
+        const q = rqSearch.value.trim().toLowerCase();
+        const items = rqData.filter(r => {
+          if (rqFilter === 'pending' && rqIsDone(r)) return false;
+          if (rqFilter === 'done' && !rqIsDone(r)) return false;
+          return !q || [r.title, r.name, r.note].some(v => String(v || '').toLowerCase().includes(q));
+        });
+        if (!items.length) {
+          rqBox.innerHTML = `<div class="details-skeleton">${q ? 'Match වෙන දෙයක් නෑ' : rqFilter === 'pending' ? 'Pending requests නෑ 🎉' : 'Requests නෑ'}</div>`;
+          return;
+        }
+        rqBox.innerHTML = items.map(r => {
+          const done = rqIsDone(r);
+          const type = RQ_TYPES[r.type] || esc(r.type || 'Movie');
+          return `
+          <div class="rq-card ${done ? 'done' : ''}">
+            <div class="rq-top">
+              <div class="rq-title">${esc(r.title || '(no title)')}</div>
+              <span class="rq-type ${esc(r.type || '')}">${type}</span>
+            </div>
+            <div class="rq-meta">
+              ${r.year ? `<span><i class="fa fa-calendar"></i>${esc(r.year)}</span>` : ''}
+              <span><i class="fa fa-user"></i>${esc(r.name || 'Unknown')}</span>
+              <span><i class="fa fa-clock"></i>${esc(rqDate(r))}</span>
+              <span class="rq-status ${done ? '' : 'pending'}">${done ? '✓ Done' : '● Pending'}</span>
+            </div>
+            ${r.note ? `<div class="rq-note">${esc(r.note)}</div>` : ''}
+            ${isHttp(r.link) ? `<a class="rq-link" href="${esc(r.link)}" target="_blank" rel="noopener noreferrer"><i class="fa fa-arrow-up-right-from-square"></i> ${esc(r.link)}</a>` : ''}
+            <div class="rq-actions">
+              <button class="rq-btn add" data-act="add" data-id="${esc(r.id)}"><i class="fa fa-plus"></i> Add</button>
+              <button class="rq-btn" data-act="toggle" data-id="${esc(r.id)}"><i class="fa ${done ? 'fa-rotate-left' : 'fa-check'}"></i> ${done ? 'Mark pending' : 'Mark done'}</button>
+              <button class="rq-btn del" data-act="del" data-id="${esc(r.id)}"><i class="fa fa-trash"></i> Delete</button>
+            </div>
+          </div>`;
+        }).join('');
+      }
+
+      rqSearch.addEventListener('input', renderRequests);
+      document.getElementById('rqRefresh').addEventListener('click', loadRequests);
+      document.querySelectorAll('#rqChips .an-chip').forEach(c => c.addEventListener('click', () => { rqFilter = c.dataset.f; renderRequests(); }));
+
+      rqBox.addEventListener('click', async e => {
+        const btn = e.target.closest('[data-act]');
+        if (!btn) return;
+        const r = rqData.find(x => x.id === btn.dataset.id);
+        if (!r) return;
+        const act = btn.dataset.act;
+
+        if (act === 'add') { addFromRequest(r); return; }
+
+        if (act === 'toggle') {
+          const next = rqIsDone(r) ? 'pending' : 'done';
+          btn.disabled = true;
+          try {
+            await updateDoc(doc(db, 'requests', r.id), { status: next });
+            r.status = next;
+            updateReqBadge(); renderRequests();
+            showToast(next === 'done' ? '✅ Done කළා' : 'Pending කළා');
+          } catch (err) { console.error(err); btn.disabled = false; showToast('❌ Error: ' + err.message); }
+          return;
+        }
+
+        if (act === 'del') {
+          if (!confirm(`"${r.title || 'මේ request එක'}" delete කරන්න ස්ථිර ද?`)) return;
+          btn.disabled = true;
+          try {
+            await deleteDoc(doc(db, 'requests', r.id));
+            rqData = rqData.filter(x => x.id !== r.id);
+            updateReqBadge(); renderRequests();
+            showToast('🗑️ Deleted');
+          } catch (err) { console.error(err); btn.disabled = false; showToast('❌ Error: ' + err.message); }
+        }
+      });
+
+      // Request එකක් Add New form එකට පුරවනවා
+      function addFromRequest(r) {
+        H.resetForm();
+        const isTv = r.type === 'tvshow';
+        document.getElementById('f_title').value = r.title || '';
+        document.getElementById('f_category').value = isTv ? 'series' : 'movie';
+        H.updateFieldVisibility();
+        document.getElementById('f_year').value = r.year || '';
+        document.getElementById('f_autofillUrl').value = isHttp(r.link) ? r.link : '';
+        H.setSectionsInForm(isTv ? ['series'] : r.type === 'anime' ? ['anime'] : ['allmovies']);
+        H.fromRequestId = r.id;
+        document.getElementById('fromReqTitle').textContent = r.title || '';
+        H.fromReqLabel.style.display = 'block';
+        switchToAddTab();
+        showToast(isHttp(r.link) ? 'Link එක Auto-Fill එකේ දාලා තියෙනවා — ⚡ ඔබන්න' : 'Details පුරවා Save කරන්න');
+      }
+
+      // Pending count එක tab එකේ badge එකට (permission නැත්නම් නිහඬව)
+      fetchRequests().catch(() => {});
 
       /* =========================================================
          DAILY TRENDING — movie එකක `sections` එකට "trending_home" add / remove
@@ -1214,6 +1429,7 @@ match /analytics_searches/{id} { allow read, write: if true; }`;
       // Firebase load වෙන්න කලින් tab එකක් open කළා නම් දැන් load කරනවා
       const pending = window.__pending || {};
       if (pending.loadManageList) loadManageList();
+      if (pending.loadRequests) loadRequests();
       if (pending.loadTrending) loadTrending();
       if (pending.loadHero) loadHero();
       if (pending.loadAnalytics) loadAnalytics();
